@@ -44,32 +44,32 @@ class FlightDataSource {
     }
 
     /**
-     * Fetches the seat map for a given flight ID.
-     * Returns a Result<List<SeatMapDto>> indicating success or failure.
+     * Fetches a flight by its ID.
      */
-    fun getSeatMap(flightId: String, callback: (Result<List<SeatMapDto>>) -> Unit) {
+    fun getFlightById(flightId: String, callback: (Result<FlightDto>) -> Unit) {
         MySqlHelper.getConnection { connection ->
             if (connection != null) {
                 try {
-                    val sql = "SELECT * FROM SEAT_MAP WHERE flightId = ?"
+                    val sql = "SELECT * FROM FLIGHTS WHERE flightId = ?"
                     val preparedStatement = connection.prepareStatement(sql)
                     preparedStatement.setString(1, flightId)
 
                     val resultSet: ResultSet = preparedStatement.executeQuery()
-                    val seats = mutableListOf<SeatMapDto>()
-                    while (resultSet.next()) {
-                        val seat = SeatMapDto(
-                            seatId = resultSet.getString("seatId"),
+                    if (resultSet.next()) {
+                        val flight = FlightDto(
                             flightId = resultSet.getString("flightId"),
-                            seatNumber = resultSet.getString("seatNumber"),
-                            seatClass = resultSet.getString("seatClass"),
-                            isAvailable = resultSet.getBoolean("isAvailable"),
-                            isPremium = resultSet.getBoolean("isPremium"),
-                            occupiedBy = resultSet.getString("occupiedBy")
+                            flightNumber = resultSet.getString("flightNumber"),
+                            origin = resultSet.getString("origin"),
+                            destination = resultSet.getString("destination"),
+                            departureTime = resultSet.getTimestamp("departureTime"),
+                            arrivalTime = resultSet.getTimestamp("arrivalTime"),
+                            aircraftType = resultSet.getString("aircraftType"),
+                            status = resultSet.getString("status")
                         )
-                        seats.add(seat)
+                        callback(Result.success(flight))
+                    } else {
+                        callback(Result.failure(Exception("Flight with ID $flightId not found")))
                     }
-                    callback(Result.success(seats))
                     connection.close()
                 } catch (e: SQLException) {
                     callback(Result.failure(e))
