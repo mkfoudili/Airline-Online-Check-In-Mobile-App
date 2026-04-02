@@ -28,18 +28,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.check_in_mobile_app.R
+import com.example.check_in_mobile_app.presentation.components.BookingInputField
+import com.example.check_in_mobile_app.presentation.components.PrimaryButton
 import com.example.check_in_mobile_app.presentation.components.TabBarMenu
 import com.example.check_in_mobile_app.presentation.components.TabItem
-import com.example.check_in_mobile_app.R
-
-private val LightGray = Color(0xFFF3F4F6)
-private val MediumGray = Color(0xFF9CA3AF)
-private val DarkText = Color(0xFF111827)
-private val ActiveGreen = Color(0xFF34D399)
-private val BadgeBg = Color(0x26FFFFFF)
-private val BadgeBorder = Color(0x4DFFFFFF)
-private val SubtitleWhite = Color(0xBFFFFFFF)
-private val InputBorder = Color(0xFFE5E7EB)
+import com.example.check_in_mobile_app.ui.theme.*
 
 @Composable
 fun HomeScreen(
@@ -73,15 +67,13 @@ fun HomeScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Column {
-                    Text(
-                        text = "Hello, ${uiState.userName}",
-                        fontSize = 25.sp,
-                        color = Color(0xFF2A3343),
-                        fontWeight = FontWeight.Bold,
-                        letterSpacing = (-0.5).sp
-                    )
-                }
+                Text(
+                    text = "Hello, ${uiState.userName}",
+                    fontSize = 25.sp,
+                    color = DarkText,
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = (-0.5).sp
+                )
 
                 Box(
                     modifier = Modifier
@@ -101,11 +93,13 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
             Box(
-                modifier = Modifier.height(1.dp)
-                    .background(color = Color(0xFFF1F2F4))
+                modifier = Modifier
                     .fillMaxWidth()
+                    .height(1.dp)
+                    .background(DividerColor)
             )
             Spacer(modifier = Modifier.height(24.dp))
+
             ActiveFlightCard(
                 destination = uiState.flightDestination,
                 onCheckInClick = {
@@ -121,18 +115,18 @@ fun HomeScreen(
                 text = "Retrieve Booking",
                 fontSize = 25.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF25316B),
+                color = NavyBlue,
                 letterSpacing = (-0.2).sp
             )
 
             Spacer(modifier = Modifier.height(18.dp))
+
             Column(
                 modifier = Modifier
-                    .height(300.dp)
-                    .width(358.dp)
+                    .fillMaxWidth()
                     .clip(RoundedCornerShape(12.dp))
                     .background(Color.White)
-                    .border(1.dp, Color(0xFFF1F2F4), RoundedCornerShape(12.dp))
+                    .border(1.dp, DividerColor, RoundedCornerShape(12.dp))
                     .padding(16.dp)
             ) {
                 BookingInputField(
@@ -169,28 +163,13 @@ fun HomeScreen(
 
                 Spacer(modifier = Modifier.height(22.dp))
 
-                Button(
+                PrimaryButton(
+                    text = "Find My Flight",
                     onClick = {
                         viewModel.onFindFlight()
                         onFindFlightClick()
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(52.dp),
-                    shape = RoundedCornerShape(14.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF25316B),
-                        contentColor = Color.White
-                    ),
-                    elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp)
-                ) {
-                    Text(
-                        text = "Find My Flight",
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        letterSpacing = (-0.2).sp
-                    )
-                }
+                    }
+                )
             }
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -208,7 +187,7 @@ private fun ActiveFlightCard(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(20.dp))
-            .background(Color(0xFF25316B))
+            .background(NavyBlue)
             .padding(22.dp)
     ) {
         Image(
@@ -255,33 +234,26 @@ private fun ActiveFlightCard(
             )
 
             Spacer(modifier = Modifier.height(6.dp))
-            if(uiState.isCheckInActive) {
-                Text(
-                    text = "Check-in is open for your flight to $destination.",
-                    fontSize = 13.sp,
-                    color = SubtitleWhite,
-                    lineHeight = 19.sp,
-                    modifier = Modifier.widthIn(max = 200.dp)
-                )
-            }
-            else {
-                Text(
-                    text = "Book a flight and check In online with Flight !",
-                    fontSize = 13.sp,
-                    color = SubtitleWhite,
-                    lineHeight = 19.sp,
-                    modifier = Modifier.widthIn(max = 200.dp)
-                )
-            }
 
-            Spacer(modifier = Modifier.height(18.dp))
-            if(uiState.isCheckInActive) {
+            Text(
+                text = if (uiState.isCheckInActive)
+                    "Check-in is open for your flight to $destination."
+                else
+                    "Book a flight and check In online with Flight !",
+                fontSize = 13.sp,
+                color = SubtitleWhite,
+                lineHeight = 19.sp,
+                modifier = Modifier.widthIn(max = 200.dp)
+            )
+
+            if (uiState.isCheckInActive) {
+                Spacer(modifier = Modifier.height(18.dp))
                 Button(
                     onClick = onCheckInClick,
                     shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.White,
-                        contentColor = Color(0xFF25316B)
+                        contentColor = NavyBlue
                     ),
                     contentPadding = PaddingValues(horizontal = 22.dp, vertical = 11.dp),
                     elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp)
@@ -295,52 +267,6 @@ private fun ActiveFlightCard(
                 }
             }
         }
-    }
-}
-
-@Composable
-private fun BookingInputField(
-    label: String,
-    value: String,
-    placeholder: String,
-    onValueChange: (String) -> Unit,
-    leadingIcon: (@Composable () -> Unit)? = null,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default
-) {
-    Column {
-        Text(
-            text = label,
-            fontSize = 11.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = Color(0x992A3343),
-            letterSpacing = 0.8.sp
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        OutlinedTextField(
-            value = value,
-            onValueChange = onValueChange,
-            placeholder = {
-                Text(
-                    text = placeholder,
-                    fontSize = 14.sp,
-                    color = Color(0xFF2A3343)
-                )
-            },
-            leadingIcon = leadingIcon,
-            singleLine = true,
-            keyboardOptions = keyboardOptions,
-            shape = RoundedCornerShape(12.dp),
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color(0xFF2A3343),
-                unfocusedBorderColor = InputBorder,
-                focusedTextColor = DarkText,
-                unfocusedTextColor = DarkText,
-                cursorColor = Color(0xFF2A3343),
-                focusedContainerColor = Color.White,
-                unfocusedContainerColor = Color.White
-            ),
-            modifier = Modifier.fillMaxWidth()
-        )
     }
 }
 
