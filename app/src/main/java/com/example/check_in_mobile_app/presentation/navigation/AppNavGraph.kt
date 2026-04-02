@@ -54,7 +54,10 @@ fun AppNavGraph(
                 onViewAllClick = {
                     navController.navigate(Destination.AllBookings.route)
                 },
-                onTabSelected = navigateToTab
+                onTabSelected = navigateToTab,
+                onCheckInClick = { bookingRef ->
+                    navController.navigate(Destination.FlightDetails.createRoute(bookingRef))
+                }
             )
         }
 
@@ -68,6 +71,23 @@ fun AppNavGraph(
         ) {
             com.example.check_in_mobile_app.presentation.booking.AllBookingsScreen(
                 onNavigateBack = { navController.popBackStack() }
+            )
+        }
+        
+        composable(route = Destination.FlightDetails.route) { backStackEntry ->
+            val bookingRef = backStackEntry.arguments?.getString("bookingRef") ?: ""
+            // Simple mock extraction for UI logic
+            val booking = com.example.data.repository.BookingRepositoryImpl()
+                .getUpcomingBookings()
+                .find { it.bookingRef == bookingRef } 
+                ?: com.example.data.repository.BookingRepositoryImpl().getUpcomingBookings().first()
+                
+            com.example.check_in_mobile_app.presentation.booking.FlightDetailsScreen(
+                booking = booking,
+                onBack = { navController.popBackStack() },
+                onStartCheckIn = {
+                    // navController.navigate(Destination.Boarding.route) // Handle navigation later
+                }
             )
         }
     }

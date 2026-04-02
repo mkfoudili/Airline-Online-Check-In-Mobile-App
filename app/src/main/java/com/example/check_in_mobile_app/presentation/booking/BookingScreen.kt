@@ -42,13 +42,15 @@ import com.example.check_in_mobile_app.ui.theme.Poppins
 fun BookingScreen(
     viewModel: BookingViewModel = viewModel(),
     onViewAllClick: () -> Unit = {},
-    onTabSelected: (TabItem) -> Unit = {}
+    onTabSelected: (TabItem) -> Unit = {},
+    onCheckInClick: (String) -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
     BookingScreenContent(
         uiState = uiState,
         onViewAllClick = onViewAllClick,
-        onTabSelected = onTabSelected
+        onTabSelected = onTabSelected,
+        onCheckInClick = onCheckInClick
     )
 }
 
@@ -57,7 +59,8 @@ fun BookingScreen(
 fun BookingScreenContent(
     uiState: BookingUiState,
     onViewAllClick: () -> Unit = {},
-    onTabSelected: (TabItem) -> Unit = {}
+    onTabSelected: (TabItem) -> Unit = {},
+    onCheckInClick: (String) -> Unit = {}
 ) {
     Scaffold(
         containerColor = Color.White,
@@ -130,7 +133,10 @@ fun BookingScreenContent(
                             .weight(1f)
                     ) {
                         items(state.bookings) { booking ->
-                            BookingCard(booking = booking)
+                            BookingCard(
+                                booking = booking,
+                                onCheckInClick = onCheckInClick
+                            )
                         }
                     }
                 }

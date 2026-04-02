@@ -35,7 +35,10 @@ import com.example.domain.model.Booking
 import com.example.domain.model.CheckInStatus
 
 @Composable
-fun BookingCard(booking: Booking) {
+fun BookingCard(
+    booking: Booking,
+    onCheckInClick: (String) -> Unit = {}
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -163,7 +166,7 @@ fun BookingCard(booking: Booking) {
             CheckInStatus.CHECK_IN_OPEN -> {
                 Spacer(modifier = Modifier.height(12.dp))
                 Button(
-                    onClick = { /* start check-in */ },
+                    onClick = { onCheckInClick(booking.bookingRef) },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(
