@@ -33,6 +33,7 @@ import com.example.check_in_mobile_app.ui.theme.NavyBlue
 @Composable
 fun AllBookingsScreen(
     onNavigateBack: () -> Unit = {},
+    onBoarding: () -> Unit = {},
     viewModel: AllBookingsViewModel = viewModel()
 ) {
     val searchQuery by viewModel.searchQuery.collectAsState()
@@ -42,6 +43,7 @@ fun AllBookingsScreen(
 
     AllBookingsScreenContent(
         onNavigateBack = onNavigateBack,
+        onBoarding = onBoarding,
         searchQuery = searchQuery,
         onSearchQueryChange = viewModel::updateSearchQuery,
         selectedDate = selectedDate,
@@ -57,6 +59,7 @@ fun AllBookingsScreen(
 @Composable
 fun AllBookingsScreenContent(
     onNavigateBack: () -> Unit,
+    onBoarding: () -> Unit,
     searchQuery: String,
     onSearchQueryChange: (String) -> Unit,
     selectedDate: String?,
@@ -142,7 +145,10 @@ fun AllBookingsScreenContent(
                 contentPadding = PaddingValues(bottom = 16.dp)
             ) {
                 items(filteredBookings) { booking ->
-                    BookingCard(booking = booking)
+                    BookingCard(
+                        booking = booking,
+                        onBoarding = onBoarding
+                    )
                 }
             }
         }
@@ -173,6 +179,7 @@ fun AllBookingsScreenPreview() {
     
     AllBookingsScreenContent(
         onNavigateBack = {},
+        onBoarding = {},
         searchQuery = searchQuery.value,
         onSearchQueryChange = { searchQuery.value = it },
         selectedDate = selectedDate.value,

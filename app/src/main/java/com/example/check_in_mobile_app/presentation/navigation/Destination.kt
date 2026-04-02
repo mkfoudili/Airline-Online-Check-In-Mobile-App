@@ -7,4 +7,5 @@ sealed class Destination(val route: String) {
     object FlightDetails : Destination("flight_details/{bookingRef}") {
         fun createRoute(bookingRef: String) = "flight_details/$bookingRef"
     }
-}
+    object Boarding : Destination("boarding")
+}

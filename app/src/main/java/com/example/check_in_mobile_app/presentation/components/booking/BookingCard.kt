@@ -37,7 +37,8 @@ import com.example.domain.model.CheckInStatus
 @Composable
 fun BookingCard(
     booking: Booking,
-    onCheckInClick: (String) -> Unit = {}
+    onCheckInClick: (String) -> Unit = {},
+    onBoarding: () -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -145,7 +146,7 @@ fun BookingCard(
             CheckInStatus.CHECKED_IN -> {
                 Spacer(modifier = Modifier.height(12.dp))
                 Button(
-                    onClick = { /* open boarding pass */ },
+                    onClick = { onBoarding() },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(10.dp),
                     border = androidx.compose.foundation.BorderStroke(1.dp, NavyBlue),
