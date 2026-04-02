@@ -36,6 +36,7 @@ import com.example.check_in_mobile_app.presentation.components.TabBarMenu
 import com.example.check_in_mobile_app.presentation.components.TabItem
 import com.example.check_in_mobile_app.ui.theme.DarkText
 import com.example.check_in_mobile_app.ui.theme.NavyBlue
+import com.example.check_in_mobile_app.ui.theme.Poppins
 
 @Composable
 fun BookingScreen(
@@ -65,10 +66,11 @@ fun BookingScreenContent(
                 title = {
                     Text(
                         text = "My Bookings",
+                        fontFamily = Poppins,
                         fontSize = 25.sp,
-                    color = DarkText,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = (-0.5).sp
+                        color = DarkText,
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = (-0.5).sp
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
