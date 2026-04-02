@@ -13,42 +13,52 @@ Le projet suit une **architecture Clean Architecture** organisée en trois modul
 
 ```
 Check-In-Mobile-App/
-├── app/                        # Module principal (couche Présentation)
-│   └── src/main/
-│       ├── AndroidManifest.xml
-│       ├── java/com/example/check_in_mobile_app/
-│       │   ├── di/             # Injection de dépendances
-│       │   ├── presentation/   # Écrans et ViewModels Compose
-│       │   │   ├── auth/           # Inscription & Connexion (email / Google)
-│       │   │   ├── flight/         # Recherche & récupération de réservation
-│       │   │   ├── checkin/        # Processus d'enregistrement (scan passeport, siège, bagages…)
-│       │   │   ├── boarding/       # Carte d'embarquement & QR Code
-│       │   │   ├── notification/   # Notifications de confirmation
-│       │   │   └── navigation/     # Graphe de navigation Compose
-│       │   └── ui/theme/           # Couleurs, typographie, thème Material 3
-│       └── res/                # Ressources (drawables, valeurs, XML)
-│
-├── domain/                     # Module domaine (logique métier pure)
-│   └── src/main/java/com/example/domain/
-│       ├── model/              # Entités métier (Flight, Passenger, BoardingPass…)
-│       ├── repository/         # Interfaces des repositories
-│       └── usecase/            # Cas d'utilisation (CheckInUseCase, GetFlightUseCase…)
-|       └── state/ 
-|       └── factory/ 
-|       └── strategy/ 
-|       └── validation/ 
-│
-├── data/                       # Module données (implémentations & sources)
-│   └── src/main/java/com/example/data/
-│       ├── remote/             # API REST, DTOs
-│       ├── local/              # Base de données locale (Room), cache offline
-│       └── repository/        # Implémentations des repositories du domaine
-│
-├── gradle/
-│   └── libs.versions.toml      # Catalogue de versions des dépendances
-├── build.gradle.kts            # Configuration Gradle racine
-├── settings.gradle.kts         # Déclaration des modules
-└── README.md
+|-- app/                        # Module principal (couche Presentation)
+|   +-- src/main/
+|       +-- AndroidManifest.xml
+|       +-- java/com/example/check_in_mobile_app/
+|       |   +-- di/                 # Injection de dependances
+|       |   +-- presentation/       # Ecrans et ViewModels Compose
+|       |   |   +-- auth/           # Inscription & Connexion (email / Google)
+|       |   |   +-- flight/         # Recherche & recuperation de reservation
+|       |   |   +-- checkin/        # Processus d'enregistrement (scan passeport, siege, bagages...)
+|       |   |   +-- seat/           # Selection du siege (carte cabine interactive)
+|       |   |   +-- boarding/       # Carte d'embarquement & QR Code
+|       |   |   +-- notification/   # Ecran des notifications
+|       |   |   +-- components/     # Composants Compose reutilisables
+|       |   |   +-- navigation/     # Graphe de navigation Compose
+|       |   +-- ui/theme/           # Couleurs, typographie, theme Material 3
+|       +-- res/                    # Ressources (drawables, valeurs, XML)
+|
+|-- domain/                     # Module domaine (logique metier pure)
+|   +-- src/main/java/com/example/domain/
+|       +-- model/              # Entites metier (Flight, Passenger, BoardingPass...)
+|       +-- repository/         # Interfaces des repositories
+|       +-- usecase/            # Cas d'utilisation
+|       +-- state/              # Machine a etats du check-in (patron State)
+|       +-- factory/            # Creation des sessions check-in (patron Factory)
+|       +-- strategy/           # Strategies d'authentification (patron Strategy)
+|       +-- validation/
+|           +-- registration/   # Validation a l'inscription (patron Chain of Responsibility)
+|           +-- ocr/            # Validation du scan passeport (patron Chain of Responsibility)
+|
+|-- data/                       # Module donnees (implementations & sources)
+|   +-- src/main/java/com/example/data/
+|       +-- remote/
+|       |   +-- api/            # Interfaces Retrofit (appels vers le backend REST)
+|       |   +-- dto/            # Objets JSON recus du serveur
+|       |   +-- ocr/            # Scan passeport via ML Kit (local)
+|       +-- local/              # Base de donnees locale SQLite via Room
+|       |   +-- dao/            # Requetes SQL
+|       |   +-- entity/         # Tables Room
+|       +-- mapper/             # Conversion DTO <-> modele domaine
+|       +-- repository/         # Implementations concretes des interfaces du domaine
+|
++-- gradle/
+|   +-- libs.versions.toml      # Catalogue de versions des dependances
++-- build.gradle.kts            # Configuration Gradle racine
++-- settings.gradle.kts         # Declaration des modules
++-- README.md
 ```
 
 ---
