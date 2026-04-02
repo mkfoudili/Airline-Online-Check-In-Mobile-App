@@ -11,6 +11,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.check_in_mobile_app.presentation.boarding.BoardingScreen
 import com.example.check_in_mobile_app.presentation.booking.BookingScreen
 import com.example.check_in_mobile_app.presentation.components.TabItem
 import com.example.check_in_mobile_app.presentation.home.HomeScreen
@@ -57,6 +58,9 @@ fun AppNavGraph(
                 onTabSelected = navigateToTab,
                 onCheckInClick = { bookingRef ->
                     navController.navigate(Destination.FlightDetails.createRoute(bookingRef))
+                },
+                onBoarding = {
+                    navController.navigate(Destination.Boarding.route)
                 }
             )
         }
@@ -70,7 +74,10 @@ fun AppNavGraph(
             popExitTransition = { slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(300)) }
         ) {
             com.example.check_in_mobile_app.presentation.booking.AllBookingsScreen(
-                onNavigateBack = { navController.popBackStack() }
+                onNavigateBack = { navController.popBackStack() },
+                onBoarding = {
+                    navController.navigate(Destination.Boarding.route)
+                }
             )
         }
         
@@ -90,6 +97,13 @@ fun AppNavGraph(
                 }
             )
         }
+        composable(route = Destination.Boarding.route) {
+            BoardingScreen(
+                onBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
     }
 }
 
@@ -98,4 +112,4 @@ fun AppNavGraph(
 fun AppNavGraphPreview() {
     AppNavGraph()
 }
-
+
