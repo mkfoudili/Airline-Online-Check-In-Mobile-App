@@ -1,5 +1,10 @@
 package com.example.check_in_mobile_app.presentation.navigation
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
@@ -31,7 +36,12 @@ fun AppNavGraph(
 
     NavHost(
         navController = navController,
-        startDestination = Destination.Home.route
+        startDestination = Destination.Home.route,
+        // Tab-level screens: instant switch (no animation) — feels most natural for bottom nav
+        enterTransition = { EnterTransition.None },
+        exitTransition = { ExitTransition.None },
+        popEnterTransition = { EnterTransition.None },
+        popExitTransition = { ExitTransition.None }
     ) {
         composable(route = Destination.Home.route) {
             HomeScreen(
@@ -47,7 +57,15 @@ fun AppNavGraph(
                 onTabSelected = navigateToTab
             )
         }
-        composable(route = Destination.AllBookings.route) {
+
+        // Deeper screen: slide in/out horizontally
+        composable(
+            route = Destination.AllBookings.route,
+            enterTransition = { slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(300)) },
+            exitTransition = { ExitTransition.None },
+            popEnterTransition = { EnterTransition.None },
+            popExitTransition = { slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(300)) }
+        ) {
             com.example.check_in_mobile_app.presentation.booking.AllBookingsScreen(
                 onNavigateBack = { navController.popBackStack() }
             )
@@ -59,4 +77,5 @@ fun AppNavGraph(
 @Composable
 fun AppNavGraphPreview() {
     AppNavGraph()
-}
+}
+

@@ -24,9 +24,11 @@ import java.util.*
 fun DateField(
     selectedDate: String?,
     onDateSelected: (String) -> Unit,
+    onClearDate: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
+    val hasDate = !selectedDate.isNullOrEmpty()
 
     Box(
         modifier = modifier
@@ -34,7 +36,7 @@ fun DateField(
             .height(40.dp)
             .border(1.dp, Color(0xFFE2E8F0), RoundedCornerShape(16.dp))
             .clickable { showDatePicker = true }
-            .padding(horizontal = 12.dp)
+            .padding(start = 12.dp, end = 4.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -44,22 +46,42 @@ fun DateField(
                 painter = painterResource(id = R.drawable.calendar),
                 contentDescription = "Date",
                 tint = NavyBlue,
-                modifier = Modifier.size(25.dp)
+                modifier = Modifier.size(20.dp)
             )
             Spacer(modifier = Modifier.width(8.dp))
             Box(Modifier.weight(1f)) {
-                if (selectedDate.isNullOrEmpty()) {
+                if (!hasDate) {
                     Text("Select Date", fontSize = 14.sp, color = NavyBlue, fontWeight = FontWeight.Medium)
                 } else {
-                    Text(selectedDate, fontSize = 14.sp, color = Color.Black)
+                    Text(selectedDate!!, fontSize = 14.sp, color = Color.Black)
                 }
             }
-            Icon(
-                painter = painterResource(id = R.drawable.chevron_down),
-                contentDescription = "Expand",
-                tint = MediumGray,
-                modifier = Modifier.size(25.dp)
-            )
+            if (hasDate) {
+                // Show clear (X) button when a date is selected
+                IconButton(
+                    onClick = {
+                        onClearDate()
+                    },
+                    modifier = Modifier.size(32.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.close),
+                        contentDescription = "Clear date",
+                        tint = MediumGray,
+                        modifier = Modifier.size(18.dp)
+                    )
+                }
+            } else {
+                // Show chevron when no date selected
+                Icon(
+                    painter = painterResource(id = R.drawable.chevron_down),
+                    contentDescription = "Expand",
+                    tint = MediumGray,
+                    modifier = Modifier
+                        .size(32.dp)
+                        .padding(4.dp)
+                )
+            }
         }
     }
 
@@ -96,3 +118,4 @@ fun DateField(
         }
     }
 }
+

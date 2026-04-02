@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -38,13 +39,13 @@ fun SearchField(
                 modifier = Modifier
                     .fillMaxSize()
                     .border(1.dp, Color(0xFFE2E8F0), RoundedCornerShape(16.dp))
-                    .padding(horizontal = 12.dp)
+                    .padding(start = 12.dp, end = 4.dp)
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.search),
                     contentDescription = "Search",
                     tint = MediumGray,
-                    modifier = Modifier.size(25.dp)
+                    modifier = Modifier.size(20.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Box(Modifier.weight(1f)) {
@@ -53,7 +54,21 @@ fun SearchField(
                     }
                     innerTextField()
                 }
+                if (query.isNotEmpty()) {
+                    IconButton(
+                        onClick = { onQueryChange("") },
+                        modifier = Modifier.size(32.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.close),
+                            contentDescription = "Clear",
+                            tint = MediumGray,
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
+                }
             }
         }
     )
 }
+

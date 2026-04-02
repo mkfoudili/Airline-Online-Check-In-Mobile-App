@@ -46,6 +46,7 @@ fun AllBookingsScreen(
         onSearchQueryChange = viewModel::updateSearchQuery,
         selectedDate = selectedDate,
         onDateSelected = viewModel::updateSelectedDate,
+        onClearDate = { viewModel.updateSelectedDate(null) },
         selectedStatus = selectedStatus,
         onStatusSelect = viewModel::updateSelectedStatus,
         filteredBookings = filteredBookings
@@ -60,6 +61,7 @@ fun AllBookingsScreenContent(
     onSearchQueryChange: (String) -> Unit,
     selectedDate: String?,
     onDateSelected: (String) -> Unit,
+    onClearDate: () -> Unit = {},
     selectedStatus: String,
     onStatusSelect: (String) -> Unit,
     filteredBookings: List<Booking>
@@ -107,6 +109,7 @@ fun AllBookingsScreenContent(
             DateField(
                 selectedDate = selectedDate,
                 onDateSelected = onDateSelected,
+                onClearDate = onClearDate,
                 modifier = Modifier.padding(horizontal = 20.dp)
             )
 
