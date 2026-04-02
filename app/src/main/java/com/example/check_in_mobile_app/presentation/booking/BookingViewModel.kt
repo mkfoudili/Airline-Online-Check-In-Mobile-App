@@ -10,15 +10,8 @@ class BookingViewModel : ViewModel() {
 
     private val useCase = GetUpcomingBookingsUseCase(BookingRepositoryImpl())
 
-    private val _uiState = MutableStateFlow<BookingUiState>(BookingUiState.Loading)
+    private val _uiState = MutableStateFlow<BookingUiState>(
+        BookingUiState.Success(useCase())
+    )
     val uiState: StateFlow<BookingUiState> = _uiState
-
-    init {
-        loadBookings()
-    }
-
-    private fun loadBookings() {
-        val bookings = useCase()
-        _uiState.value = BookingUiState.Success(bookings)
-    }
 }

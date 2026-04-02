@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import com.example.check_in_mobile_app.R
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -58,7 +59,7 @@ fun BookingCard(booking: Booking) {
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    imageVector = BookingIcons.Plane,
+                    painter = painterResource(id = R.drawable.plane2),
                     contentDescription = "Flight",
                     tint = NavyBlue,
                     modifier = Modifier.size(20.dp)
@@ -106,7 +107,7 @@ fun BookingCard(booking: Booking) {
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
-                    imageVector = BookingIcons.Calendar,
+                    painter = painterResource(id = R.drawable.calendar),
                     contentDescription = "Date",
                     tint = NavyBlue,
                     modifier = Modifier.size(14.dp)
@@ -121,7 +122,7 @@ fun BookingCard(booking: Booking) {
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
-                    imageVector = BookingIcons.Clock,
+                    painter = painterResource(id = R.drawable.clock),
                     contentDescription = "Time",
                     tint = NavyBlue,
                     modifier = Modifier.size(14.dp)

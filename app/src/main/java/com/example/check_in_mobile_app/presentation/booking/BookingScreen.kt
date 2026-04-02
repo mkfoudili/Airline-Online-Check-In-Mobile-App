@@ -32,17 +32,22 @@ import com.example.domain.model.Booking
 import com.example.domain.model.CheckInStatus
 import com.example.check_in_mobile_app.presentation.components.booking.BookingCard
 import com.example.check_in_mobile_app.presentation.components.booking.ViewAllButton
+import com.example.check_in_mobile_app.presentation.components.TabBarMenu
+import com.example.check_in_mobile_app.presentation.components.TabItem
+import com.example.check_in_mobile_app.ui.theme.DarkText
 import com.example.check_in_mobile_app.ui.theme.NavyBlue
 
 @Composable
 fun BookingScreen(
     viewModel: BookingViewModel = viewModel(),
-    onViewAllClick: () -> Unit = {}
+    onViewAllClick: () -> Unit = {},
+    onTabSelected: (TabItem) -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
     BookingScreenContent(
         uiState = uiState,
-        onViewAllClick = onViewAllClick
+        onViewAllClick = onViewAllClick,
+        onTabSelected = onTabSelected
     )
 }
 
@@ -50,7 +55,8 @@ fun BookingScreen(
 @Composable
 fun BookingScreenContent(
     uiState: BookingUiState,
-    onViewAllClick: () -> Unit = {}
+    onViewAllClick: () -> Unit = {},
+    onTabSelected: (TabItem) -> Unit = {}
 ) {
     Scaffold(
         containerColor = Color.White,
@@ -59,14 +65,21 @@ fun BookingScreenContent(
                 title = {
                     Text(
                         text = "My Bookings",
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = NavyBlue
+                        fontSize = 25.sp,
+                    color = DarkText,
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = (-0.5).sp
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color.White
                 )
+            )
+        },
+        bottomBar = {
+            TabBarMenu(
+                selectedTab = TabItem.TICKETS,
+                onTabSelected = onTabSelected
             )
         }
 

@@ -39,7 +39,8 @@ import com.example.check_in_mobile_app.ui.theme.*
 fun HomeScreen(
     viewModel: HomeViewModel = viewModel(),
     onCheckInClick: () -> Unit = {},
-    onFindFlightClick: () -> Unit = {}
+    onFindFlightClick: () -> Unit = {},
+    onTabSelected: (TabItem) -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var selectedTab by remember { mutableStateOf(TabItem.HOME) }
@@ -49,7 +50,10 @@ fun HomeScreen(
         bottomBar = {
             TabBarMenu(
                 selectedTab = selectedTab,
-                onTabSelected = { selectedTab = it }
+                onTabSelected = { 
+                    selectedTab = it
+                    onTabSelected(it) 
+                }
             )
         }
     ) { innerPadding ->
