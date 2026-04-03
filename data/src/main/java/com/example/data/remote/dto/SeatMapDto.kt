@@ -1,4 +1,4 @@
-package com.example.data.remote
+package com.example.data.remote.dto
 
 data class SeatMapDto(
     val seatId: String,

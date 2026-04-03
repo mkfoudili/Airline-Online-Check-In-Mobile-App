@@ -1,5 +1,6 @@
 package com.example.data.remote
 
+import com.example.data.remote.dto.UserDto
 import com.example.domain.validation.RegistrationRequest
 import java.sql.PreparedStatement
 import java.sql.ResultSet

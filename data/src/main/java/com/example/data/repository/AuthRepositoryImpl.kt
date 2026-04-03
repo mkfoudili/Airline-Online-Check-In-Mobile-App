@@ -1,7 +1,7 @@
 package com.example.data.repository
 
 import com.example.data.remote.AuthDataSource
-import com.example.data.remote.UserDto
+import com.example.data.remote.dto.UserDto
 import com.example.domain.model.User
 import com.example.domain.repository.AuthRepository
 import com.example.domain.validation.RegistrationRequest

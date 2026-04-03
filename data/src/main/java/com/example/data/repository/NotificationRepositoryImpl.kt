@@ -1,8 +1,7 @@
 package com.example.data.repository
 
-import androidx.compose.ui.input.key.type
 import com.example.data.remote.NotificationDataSource
-import com.example.data.remote.NotificationDto
+import com.example.data.remote.dto.NotificationDto
 import com.example.domain.model.Notification
 import com.example.domain.model.NotificationType
 import com.example.domain.repository.NotificationRepository

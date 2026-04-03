@@ -1,7 +1,7 @@
 package com.example.data.repository
 
 import com.example.data.remote.SeatDataSource
-import com.example.data.remote.SeatMapDto
+import com.example.data.remote.dto.SeatMapDto
 import com.example.domain.model.Seat
 import com.example.domain.repository.SeatRepository
 

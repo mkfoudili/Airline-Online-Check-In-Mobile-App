@@ -1,5 +1,7 @@
 package com.example.data.remote
 
+import com.example.data.remote.dto.BookingDto
+import com.example.data.remote.dto.PassengerDto
 import java.sql.ResultSet
 import java.sql.SQLException
 

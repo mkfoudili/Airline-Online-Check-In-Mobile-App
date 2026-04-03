@@ -1,5 +1,6 @@
 package com.example.data.remote
 
+import com.example.data.remote.dto.SeatMapDto
 import java.sql.ResultSet
 import java.sql.SQLException
 

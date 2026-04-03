@@ -1,10 +1,8 @@
 package com.example.data.repository
 
 import com.example.data.remote.CheckInDataSource
-import com.example.data.remote.CheckinSessionDto
-import com.example.domain.model.BaggageDeclaration
+import com.example.data.remote.dto.CheckinSessionDto
 import com.example.domain.model.CheckInSession
-import com.example.domain.model.SpecialRequests
 import com.example.domain.repository.CheckInRepository
 import java.sql.Timestamp
 

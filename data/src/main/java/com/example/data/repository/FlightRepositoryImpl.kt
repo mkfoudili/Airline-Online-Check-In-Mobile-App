@@ -1,8 +1,8 @@
 package com.example.data.repository
 
 import com.example.data.remote.FlightDataSource
-import com.example.data.remote.FlightDto
-import com.example.data.remote.SeatMapDto
+import com.example.data.remote.dto.FlightDto
+import com.example.data.remote.dto.SeatMapDto
 import com.example.domain.model.Booking
 import com.example.domain.model.Flight
 import com.example.domain.model.FlightItinerary

@@ -1,9 +1,9 @@
 package com.example.data.repository
 
 import com.example.data.remote.BookingDataSource
-import com.example.data.remote.BookingDto
+import com.example.data.remote.dto.BookingDto
 import com.example.data.remote.FlightDataSource
-import com.example.data.remote.PassengerDto
+import com.example.data.remote.dto.PassengerDto
 import com.example.domain.model.Booking
 import com.example.domain.model.Flight
 import com.example.domain.model.Passenger
