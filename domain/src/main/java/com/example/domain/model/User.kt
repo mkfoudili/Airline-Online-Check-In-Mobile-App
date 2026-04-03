@@ -1,4 +1,9 @@
 package com.example.domain.model
 
-class User {
-}
+data class User(
+    val uid: String,
+    val email: String,
+    val displayName: String?,
+    val phoneNumber: String?,
+    val provider: String?
+)
