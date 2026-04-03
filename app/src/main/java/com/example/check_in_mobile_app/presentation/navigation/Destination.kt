@@ -8,4 +8,8 @@ sealed class Destination(val route: String) {
         fun createRoute(bookingRef: String) = "flight_details/$bookingRef"
     }
     object Boarding : Destination("boarding")
+    object Register: Destination("register")
+    object Login : Destination("login")
+    object Splash   : Destination("splash")
+    object Welcome  : Destination("welcome")
 }
