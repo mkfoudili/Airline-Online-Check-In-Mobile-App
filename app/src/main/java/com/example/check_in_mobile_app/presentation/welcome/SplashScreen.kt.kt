@@ -57,7 +57,7 @@ fun SplashScreen() {
                 modifier = Modifier
                     .size(90.dp)
                     .clip(RoundedCornerShape(22.dp))
-                    .background(Color.White.copy(alpha = 0.15f)),
+                    .background(Color.White),
                 contentAlignment = Alignment.Center
             ) {
                 Image(
