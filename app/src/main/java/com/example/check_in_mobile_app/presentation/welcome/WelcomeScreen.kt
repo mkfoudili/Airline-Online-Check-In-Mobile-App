@@ -1,5 +1,6 @@
 package com.example.check_in_mobile_app.presentation.welcome
 
+import android.R.color.white
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
