@@ -21,6 +21,9 @@ import com.example.check_in_mobile_app.ui.theme.BorderLight
 fun ProfileInfoCard(
     email: String,
     phoneNumber: String,
+    onEditEmailClick: () -> Unit,
+    onEditPhoneClick: () -> Unit,
+    onEditPasswordClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -34,7 +37,7 @@ fun ProfileInfoCard(
             icon = Icons.Outlined.Email,
             label = "Email Address",
             value = email,
-            onClick = { /* Handle email click */ }
+            onClick = onEditEmailClick
         )
         
         HorizontalDivider(
@@ -47,7 +50,7 @@ fun ProfileInfoCard(
             icon = Icons.Outlined.Phone,
             label = "Phone Number",
             value = phoneNumber,
-            onClick = { /* Handle phone click */ }
+            onClick = onEditPhoneClick
         )
 
         HorizontalDivider(
@@ -60,7 +63,7 @@ fun ProfileInfoCard(
             icon = Icons.Outlined.Lock,
             label = "Password",
             value = "••••••••••••",
-            onClick = { /* Handle password click */ }
+            onClick = onEditPasswordClick
         )
     }
 }
@@ -71,7 +74,10 @@ fun ProfileInfoCardPreview() {
     Box(modifier = Modifier.padding(16.dp)) {
         ProfileInfoCard(
             email = "mr_mekircha@esi.dz",
-            phoneNumber = "+1 (555) 012-3456"
+            phoneNumber = "+1 (555) 012-3456",
+            onEditEmailClick = {},
+            onEditPhoneClick = {},
+            onEditPasswordClick = {}
         )
     }
 }

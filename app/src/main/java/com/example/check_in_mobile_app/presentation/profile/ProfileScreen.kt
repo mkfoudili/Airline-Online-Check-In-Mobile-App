@@ -1,6 +1,5 @@
 package com.example.check_in_mobile_app.presentation.profile
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -34,6 +33,7 @@ fun ProfileScreen(
 
     ProfileScreenContent(
         uiState = uiState,
+        onEvent = viewModel::onEvent,
         onTabSelected = onTabSelected
     )
 }
@@ -42,6 +42,7 @@ fun ProfileScreen(
 @Composable
 fun ProfileScreenContent(
     uiState: ProfileUiState,
+    onEvent: (ProfileEvent) -> Unit = {},
     onTabSelected: (TabItem) -> Unit = {}
 ) {
     Scaffold(
@@ -111,7 +112,16 @@ fun ProfileScreenContent(
 
             ProfileInfoCard(
                 email = uiState.email,
-                phoneNumber = uiState.phoneNumber
+                phoneNumber = uiState.phoneNumber,
+                onEditEmailClick = {
+                    onEvent(ProfileEvent.OnEditEmailClicked)
+                },
+                onEditPhoneClick = {
+                    onEvent(ProfileEvent.OnEditPhoneClicked)
+                },
+                onEditPasswordClick = {
+                    onEvent(ProfileEvent.OnEditPasswordClicked)
+                }
             )
 
             Spacer(modifier = Modifier.height(24.dp))
