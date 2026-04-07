@@ -33,6 +33,20 @@ fun CheckInSession.toDto(): CheckinSessionDto {
     )
 }
 
+fun CheckInSession.toEntity(): CheckInSessionEntity {
+    return CheckInSessionEntity(
+        sessionId = this.sessionId,
+        passengerId = this.passengerId,
+        bookingId = this.bookingId,
+        currentStep = this.currentStep,
+        passportScanUrl = this.passportScanUrl,
+        ocrValidation = this.ocrValidation,
+        baggageDeclaration = this.baggageDeclaration?.toString(),
+        specialRequests = this.specialRequests?.toString(),
+        completedAt = this.completedAt
+    )
+}
+
 fun CheckInSessionEntity.toDomain(): CheckInSession {
     return CheckInSession(
         sessionId = this.sessionId,
