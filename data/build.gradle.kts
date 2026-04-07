@@ -51,7 +51,6 @@ dependencies {
     
     // MySQL Connector
     implementation(libs.mysql.connector)
-    implementation(libs.core.ktx)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
