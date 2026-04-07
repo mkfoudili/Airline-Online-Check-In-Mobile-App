@@ -1,7 +1,7 @@
 package com.example.data.repository
 
+import com.example.data.mapper.toDomain
 import com.example.data.remote.SeatDataSource
-import com.example.data.remote.dto.SeatMapDto
 import com.example.domain.model.Seat
 import com.example.domain.repository.SeatRepository
 
@@ -31,17 +31,5 @@ class SeatRepositoryImpl(private val seatDataSource: SeatDataSource) : SeatRepos
         seatDataSource.releaseSeat(seatId) { result ->
             callback(result)
         }
-    }
-
-    private fun SeatMapDto.toDomain(): Seat {
-        return Seat(
-            seatId = this.seatId,
-            flightId = this.flightId,
-            seatNumber = this.seatNumber,
-            seatClass = this.seatClass,
-            isAvailable = this.isAvailable,
-            isPremium = this.isPremium,
-            occupiedBy = this.occupiedBy
-        )
     }
 }

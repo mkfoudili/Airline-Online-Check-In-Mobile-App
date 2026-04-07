@@ -1,12 +1,10 @@
 package com.example.data.repository
 
+import com.example.data.mapper.toDomain
 import com.example.data.remote.BookingDataSource
 import com.example.data.remote.dto.BookingDto
 import com.example.data.remote.FlightDataSource
-import com.example.data.remote.dto.PassengerDto
 import com.example.domain.model.Booking
-import com.example.domain.model.Flight
-import com.example.domain.model.Passenger
 import com.example.domain.repository.BookingRepository
 
 class BookingRepositoryImpl(
@@ -63,16 +61,7 @@ class BookingRepositoryImpl(
                             pnr = bookingDto.pnr,
                             lastName = bookingDto.lastName,
                             status = bookingDto.status,
-                            flight = Flight(
-                                flightId = flightDto.flightId,
-                                flightNumber = flightDto.flightNumber,
-                                origin = flightDto.origin,
-                                destination = flightDto.destination,
-                                departureTime = flightDto.departureTime?.time ?: 0L,
-                                arrivalTime = flightDto.arrivalTime?.time ?: 0L,
-                                aircraftType = flightDto.aircraftType,
-                                status = flightDto.status
-                            ),
+                            flight = flightDto.toDomain(),
                             passengers = passengerDtos.map { it.toDomain() }
                         )
                         callback(Result.success(booking))
@@ -84,19 +73,5 @@ class BookingRepositoryImpl(
                 callback(Result.failure(it))
             }
         }
-    }
-
-    private fun PassengerDto.toDomain(): Passenger {
-        return Passenger(
-            passengerId = this.passengerId,
-            uid = this.uid,
-            firstName = this.firstName,
-            lastName = this.lastName,
-            passportNumber = this.passportNumber,
-            nationality = this.nationality,
-            dateOfBirth = this.dateOfBirth,
-            seatNumber = this.seatNumber,
-            checkinStatus = this.checkinStatus
-        )
     }
 }

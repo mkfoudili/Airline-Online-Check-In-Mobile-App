@@ -1,10 +1,10 @@
 package com.example.data.repository
 
+import com.example.data.mapper.toDomain
+import com.example.data.mapper.toDto
 import com.example.data.remote.CheckInDataSource
-import com.example.data.remote.dto.CheckinSessionDto
 import com.example.domain.model.CheckInSession
 import com.example.domain.repository.CheckInRepository
-import java.sql.Timestamp
 
 class CheckInRepositoryImpl(private val checkInDataSource: CheckInDataSource) : CheckInRepository {
 
@@ -38,33 +38,5 @@ class CheckInRepositoryImpl(private val checkInDataSource: CheckInDataSource) : 
                 callback(Result.failure(it))
             }
         }
-    }
-
-    private fun CheckinSessionDto.toDomain(): CheckInSession {
-        return CheckInSession(
-            sessionId = this.sessionId,
-            passengerId = this.passengerId,
-            bookingId = this.bookingId,
-            currentStep = this.currentStep ?: "",
-            passportScanUrl = this.passportScanUrl,
-            ocrValidation = this.ocrValidation,
-            baggageDeclaration = null,
-            specialRequests = null,
-            completedAt = this.completedAt?.time
-        )
-    }
-
-    private fun CheckInSession.toDto(): CheckinSessionDto {
-        return CheckinSessionDto(
-            sessionId = this.sessionId,
-            passengerId = this.passengerId,
-            bookingId = this.bookingId,
-            currentStep = this.currentStep,
-            passportScanUrl = this.passportScanUrl,
-            ocrValidation = this.ocrValidation,
-            baggageDeclaration = this.baggageDeclaration?.toString(),
-            specialRequests = this.specialRequests?.toString(),
-            completedAt = this.completedAt?.let { Timestamp(it) }
-        )
     }
 }

@@ -1,12 +1,10 @@
 package com.example.data.repository
 
+import com.example.data.mapper.toDomain
 import com.example.data.remote.FlightDataSource
-import com.example.data.remote.dto.FlightDto
-import com.example.data.remote.dto.SeatMapDto
 import com.example.domain.model.Booking
 import com.example.domain.model.Flight
 import com.example.domain.model.FlightItinerary
-import com.example.domain.model.Seat
 import com.example.domain.repository.FlightRepository
 
 class FlightRepositoryImpl (private val flightDataSource: FlightDataSource) : FlightRepository {
@@ -46,30 +44,5 @@ class FlightRepositoryImpl (private val flightDataSource: FlightDataSource) : Fl
                 callback(Result.failure(it))
             }
         }
-    }
-
-    private fun FlightDto.toDomain(): Flight {
-        return Flight(
-            flightId = this.flightId,
-            flightNumber = this.flightNumber,
-            origin = this.origin,
-            destination = this.destination,
-            departureTime = this.departureTime?.time ?: 0L,
-            arrivalTime = this.arrivalTime?.time ?: 0L,
-            aircraftType = this.aircraftType,
-            status = this.status
-        )
-    }
-
-    private fun SeatMapDto.toDomain(): Seat {
-        return Seat(
-            seatId = this.seatId,
-            flightId = this.flightId,
-            seatNumber = this.seatNumber,
-            seatClass = this.seatClass,
-            isAvailable = this.isAvailable,
-            isPremium = this.isPremium,
-            occupiedBy = this.occupiedBy
-        )
     }
 }

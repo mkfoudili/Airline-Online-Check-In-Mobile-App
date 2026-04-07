@@ -1,0 +1,16 @@
+package com.example.data.mapper
+
+import com.example.data.remote.dto.SeatMapDto
+import com.example.domain.model.Seat
+
+fun SeatMapDto.toDomain(): Seat {
+    return Seat(
+        seatId = this.seatId,
+        flightId = this.flightId,
+        seatNumber = this.seatNumber,
+        seatClass = this.seatClass,
+        isAvailable = this.isAvailable,
+        isPremium = this.isPremium,
+        occupiedBy = this.occupiedBy
+    )
+}
