@@ -1,7 +1,7 @@
 package com.example.data.repository
 
+import com.example.data.mapper.toDomain
 import com.example.data.remote.AuthDataSource
-import com.example.data.remote.dto.UserDto
 import com.example.domain.model.User
 import com.example.domain.repository.AuthRepository
 import com.example.domain.validation.RegistrationRequest
@@ -32,15 +32,5 @@ class AuthRepositoryImpl(private val authDataSource: AuthDataSource) : AuthRepos
         authDataSource.emailExists(email) { exists ->
             callback(Result.success(exists))
         }
-    }
-
-    private fun UserDto.toDomain(): User {
-        return User(
-            uid = this.uid,
-            email = this.email ?: "",
-            displayName = this.displayName,
-            phoneNumber = this.phoneNumber,
-            provider = this.provider
-        )
     }
 }
