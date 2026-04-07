@@ -23,6 +23,7 @@ class FlightRepositoryImpl(
                 if (localFlight != null) {
                     callback(Result.success(localFlight.toDomain()))
                 } else {
+                    //Cache local
                     flightDataSource.getFlightById(flightId) { result ->
                         result.onSuccess { flightDto ->
                             callback(Result.success(flightDto.toDomain()))

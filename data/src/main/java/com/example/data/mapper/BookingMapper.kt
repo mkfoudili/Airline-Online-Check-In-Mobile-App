@@ -37,6 +37,21 @@ fun PassengerEntity.toDomain(): Passenger {
     )
 }
 
+fun Passenger.toEntity(bookingId: String): PassengerEntity {
+    return PassengerEntity(
+        passengerId = this.passengerId,
+        bookingId = bookingId,
+        uid = this.uid,
+        firstName = this.firstName,
+        lastName = this.lastName,
+        passportNumber = this.passportNumber,
+        nationality = this.nationality,
+        dateOfBirth = this.dateOfBirth,
+        seatNumber = this.seatNumber,
+        checkinStatus = this.checkinStatus
+    )
+}
+
 fun BookingEntity.toDomain(flight: Flight, passengers: List<Passenger>): Booking {
     return Booking(
         bookingId = this.bookingId,
@@ -45,6 +60,19 @@ fun BookingEntity.toDomain(flight: Flight, passengers: List<Passenger>): Booking
         status = this.status,
         flight = flight,
         passengers = passengers
+    )
+}
+
+fun Booking.toEntity(uid: String = ""): BookingEntity {
+    return BookingEntity(
+        bookingId = this.bookingId,
+        flightId = this.flight.flightId,
+        uid = uid,
+        pnr = this.pnr,
+        lastName = this.lastName,
+        status = this.status,
+        checkinDeadline = this.flight.departureTime - 3600000, // Default 1h before
+        createdAt = System.currentTimeMillis()
     )
 }
 

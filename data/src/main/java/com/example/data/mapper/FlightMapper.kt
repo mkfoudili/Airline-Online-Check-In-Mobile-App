@@ -29,3 +29,16 @@ fun FlightEntity.toDomain(): Flight {
         status = this.status
     )
 }
+
+fun Flight.toEntity(): FlightEntity {
+    return FlightEntity(
+        flightId = this.flightId,
+        flightNumber = this.flightNumber,
+        origin = this.origin,
+        destination = this.destination,
+        departureTime = this.departureTime,
+        arrivalTime = this.arrivalTime,
+        aircraftType = this.aircraftType,
+        status = this.status
+    )
+}
