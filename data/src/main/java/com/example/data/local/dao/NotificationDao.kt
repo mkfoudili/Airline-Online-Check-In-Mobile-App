@@ -16,6 +16,9 @@ interface NotificationDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entity: NotificationEntity)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(entities: List<NotificationEntity>)
+
     @Query("UPDATE notifications SET isRead = 1 WHERE notificationId = :notificationId")
     suspend fun markAsRead(notificationId: String)
 

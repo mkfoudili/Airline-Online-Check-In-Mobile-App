@@ -36,3 +36,17 @@ fun NotificationEntity.toDomain(): Notification {
         createdAt = this.createdAt ?: 0L
     )
 }
+
+fun Notification.toEntity(uid: String): NotificationEntity {
+    return NotificationEntity(
+        notificationId = this.notificationId,
+        uid = uid,
+        passengerId = this.passengerId,
+        flightId = null,
+        type = this.type.name,
+        title = this.title,
+        body = this.body,
+        isRead = this.isRead,
+        createdAt = this.createdAt
+    )
+}
