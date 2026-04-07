@@ -9,8 +9,8 @@ data class FlightEntity(
     val flightNumber: String,
     val origin: String,
     val destination: String,
-    val departureTime: Long,
-    val arrivalTime: Long,
+    val departureTime: Long?,
+    val arrivalTime: Long?,
     val aircraftType: String?,
     val status: String?
 )

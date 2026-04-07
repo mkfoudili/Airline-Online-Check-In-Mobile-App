@@ -6,12 +6,12 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "checkin_sessions")
 data class CheckInSessionEntity(
     @PrimaryKey val sessionId: String,
+    val passengerId: String,
     val bookingId: String,
-    val flightId: String,
-    val startTime: Long,
-    val lastUpdateTime: Long,
-    val status: String,
-    val selectedSeatId: String? = null
+    val currentStep: String?,
+    val passportScanUrl: String?,
+    val ocrValidation: String?,
+    val baggageDeclaration: String?,
+    val specialRequests: String?,
+    val completedAt: Long?
 )
-// + passengerId + currentStep + passportScanUrl + ocrValidation + baggageDeclaration + specialRequests + completedAt
-// - last update time - selectedSeatId - passportScanUrl
