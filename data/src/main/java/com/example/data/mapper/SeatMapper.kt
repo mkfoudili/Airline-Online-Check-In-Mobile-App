@@ -27,3 +27,15 @@ fun SeatMapEntity.toDomain(): Seat {
         occupiedBy = this.occupiedBy
     )
 }
+
+fun Seat.toEntity(): SeatMapEntity {
+    return SeatMapEntity(
+        seatId = this.seatId,
+        flightId = this.flightId,
+        seatNumber = this.seatNumber,
+        seatClass = this.seatClass,
+        isAvailable = this.isAvailable,
+        isPremium = this.isPremium,
+        occupiedBy = this.occupiedBy
+    )
+}

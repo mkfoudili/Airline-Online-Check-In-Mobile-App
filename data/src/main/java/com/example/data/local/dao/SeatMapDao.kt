@@ -14,8 +14,8 @@ interface SeatMapDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSeats(entities: List<SeatMapEntity>)
 
-    @Query("UPDATE seats SET isAvailable = :isAvailable WHERE seatId = :seatId")
-    suspend fun updateSeatAvailability(seatId: String, isAvailable: Boolean)
+    @Query("UPDATE seats SET isAvailable = :isAvailable, occupiedBy = :passengerId WHERE seatId = :seatId")
+    suspend fun updateSeatReservation(seatId: String, isAvailable: Boolean, passengerId: String?)
 
     @Query("DELETE FROM seats WHERE flightId = :flightId")
     suspend fun deleteByFlightId(flightId: String)
