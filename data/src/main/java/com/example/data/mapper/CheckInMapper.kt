@@ -1,5 +1,6 @@
 package com.example.data.mapper
 
+import com.example.data.local.entity.CheckInSessionEntity
 import com.example.data.remote.dto.CheckinSessionDto
 import com.example.domain.model.CheckInSession
 import java.sql.Timestamp
@@ -29,5 +30,19 @@ fun CheckInSession.toDto(): CheckinSessionDto {
         baggageDeclaration = this.baggageDeclaration?.toString(),
         specialRequests = this.specialRequests?.toString(),
         completedAt = this.completedAt?.let { Timestamp(it) }
+    )
+}
+
+fun CheckInSessionEntity.toDomain(): CheckInSession {
+    return CheckInSession(
+        sessionId = this.sessionId,
+        passengerId = this.passengerId,
+        bookingId = this.bookingId,
+        currentStep = this.currentStep ?: "",
+        passportScanUrl = this.passportScanUrl,
+        ocrValidation = this.ocrValidation,
+        baggageDeclaration = null, // Defini loic te3 hedi
+        specialRequests = null,    // Defini loic te3 hedi
+        completedAt = this.completedAt
     )
 }

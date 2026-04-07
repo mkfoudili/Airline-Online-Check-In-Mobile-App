@@ -1,5 +1,6 @@
 package com.example.data.mapper
 
+import com.example.data.local.entity.FlightEntity
 import com.example.data.remote.dto.FlightDto
 import com.example.domain.model.Flight
 
@@ -11,6 +12,19 @@ fun FlightDto.toDomain(): Flight {
         destination = this.destination,
         departureTime = this.departureTime?.time ?: 0L,
         arrivalTime = this.arrivalTime?.time ?: 0L,
+        aircraftType = this.aircraftType,
+        status = this.status
+    )
+}
+
+fun FlightEntity.toDomain(): Flight {
+    return Flight(
+        flightId = this.flightId,
+        flightNumber = this.flightNumber,
+        origin = this.origin,
+        destination = this.destination,
+        departureTime = this.departureTime ?: 0L,
+        arrivalTime = this.arrivalTime ?: 0L,
         aircraftType = this.aircraftType,
         status = this.status
     )
