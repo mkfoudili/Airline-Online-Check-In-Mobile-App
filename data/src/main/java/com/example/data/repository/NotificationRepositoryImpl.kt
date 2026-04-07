@@ -1,17 +1,43 @@
 package com.example.data.repository
 
+import com.example.data.local.dao.NotificationDao
+import com.example.data.mapper.toDomain
+import com.example.data.mapper.toEntity
 import com.example.data.remote.NotificationDataSource
-import com.example.data.remote.dto.NotificationDto
 import com.example.domain.model.Notification
-import com.example.domain.model.NotificationType
 import com.example.domain.repository.NotificationRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-class NotificationRepositoryImpl(val notificationDataSource: NotificationDataSource): NotificationRepository {
+class NotificationRepositoryImpl(
+    private val notificationDataSource: NotificationDataSource,
+    private val notificationDao: NotificationDao
+) : NotificationRepository {
+
     override fun getNotifications(uid: String, callback: (Result<List<Notification>>) -> Unit) {
-        notificationDataSource.getNotifications(uid) { result ->
-            result.onSuccess { dtos ->
-                callback(Result.success(dtos.map { it.toDomain() }))
-            }.onFailure { callback(Result.failure(it)) }
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val localNotifications = notificationDao.getAll(uid)
+                if (localNotifications.isNotEmpty()) {
+                    callback(Result.success(localNotifications.map { it.toDomain() }))
+                } else {
+                    notificationDataSource.getNotifications(uid) { result ->
+                        result.onSuccess { dtos ->
+                            val domainNotifications = dtos.map { it.toDomain() }
+                            // Cache locally
+                            CoroutineScope(Dispatchers.IO).launch {
+                                notificationDao.insertAll(domainNotifications.map { it.toEntity(uid) })
+                            }
+                            callback(Result.success(domainNotifications))
+                        }.onFailure {
+                            callback(Result.failure(it))
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                callback(Result.failure(e))
+            }
         }
     }
 
@@ -25,18 +51,5 @@ class NotificationRepositoryImpl(val notificationDataSource: NotificationDataSou
 
     override fun markAsRead(notificationId: String, callback: (Result<Unit>) -> Unit) {
         TODO("Not yet implemented")
-    }
-
-    private fun NotificationDto.toDomain(): Notification {
-        return Notification(
-            notificationId = this.notificationId,
-            passengerId = this.passengerId ?: "",
-            title = this.title ?: "",
-            body = this.body ?: "",
-            type = try { NotificationType.valueOf(this.type ?: "DELAY") }
-            catch (e: Exception) { NotificationType.DELAY },
-            isRead = this.isRead,
-            createdAt = this.createdAt?.time ?: 0L
-        )
     }
 }
