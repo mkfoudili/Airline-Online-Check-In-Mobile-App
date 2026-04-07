@@ -14,4 +14,8 @@ data class ProfileUiState(
     val isOnline: Boolean = false,
     val errorMessage: String? = null,
     val error: String? = null,
+    val isEditing: Boolean = false,
+    val editedName: String = "",
+    val editedEmail: String = "",
+    val editedPhoneNumber: String = ""
 )
