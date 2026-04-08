@@ -11,13 +11,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -28,6 +22,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -55,17 +51,26 @@ fun ProfileScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    if (uiState.isEditing) {
-        EditProfileScreen(
-            uiState = uiState,
-            onEvent = viewModel::onEvent
-        )
-    } else {
-        ProfileScreenContent(
-            uiState = uiState,
-            onEvent = viewModel::onEvent,
-            onTabSelected = onTabSelected
-        )
+    when {
+        uiState.isChangingPassword -> {
+            ChangePasswordScreen(
+                uiState = uiState,
+                onEvent = viewModel::onEvent
+            )
+        }
+        uiState.isEditing -> {
+            EditProfileScreen(
+                uiState = uiState,
+                onEvent = viewModel::onEvent
+            )
+        }
+        else -> {
+            ProfileScreenContent(
+                uiState = uiState,
+                onEvent = viewModel::onEvent,
+                onTabSelected = onTabSelected
+            )
+        }
     }
 }
 
@@ -216,6 +221,45 @@ fun EditProfileScreen(
                 )
                 HorizontalDivider(color = Color(0xFFF1F5F9), thickness = 1.dp)
             }
+        },
+        bottomBar = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.White)
+                    .padding(horizontal = 24.dp, vertical = 20.dp)
+            ) {
+                HorizontalDivider(color = Color(0xFFF1F5F9), thickness = 1.dp)
+                Spacer(modifier = Modifier.height(24.dp))
+                
+                ProfileActionButton(
+                    text = "Save Changes",
+                    onClick = { onEvent(ProfileEvent.OnSaveClicked) },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.CheckCircle,
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp),
+                            tint = Color.White
+                        )
+                    }
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                ProfileSecondaryActionButton(
+                    text = "Cancel",
+                    onClick = { onEvent(ProfileEvent.OnCancelClicked) },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp),
+                            tint = NavyBlue
+                        )
+                    }
+                )
+            }
         }
     ) { innerPadding ->
         Column(
@@ -243,7 +287,7 @@ fun EditProfileScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Person, // Replace with Camera icon if available
+                        imageVector = Icons.Default.Person,
                         contentDescription = "Change Photo",
                         tint = Color.White,
                         modifier = Modifier.size(16.dp)
@@ -373,40 +417,197 @@ fun EditProfileScreen(
                     )
                 }
             }
+            
+            Spacer(modifier = Modifier.height(32.dp))
+        }
+    }
+}
 
-            Spacer(modifier = Modifier.height(40.dp))
-
-            ProfileActionButton(
-                text = "Save Changes",
-                onClick = { onEvent(ProfileEvent.OnSaveClicked) },
-                icon = {
-                    Icon(
-                        imageVector = Icons.Default.CheckCircle,
-                        contentDescription = null,
-                        modifier = Modifier.size(18.dp),
-                        tint = Color.White
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ChangePasswordScreen(
+    uiState: ProfileUiState,
+    onEvent: (ProfileEvent) -> Unit
+) {
+    Scaffold(
+        containerColor = Color.White,
+        topBar = {
+            Column {
+                TopAppBar(
+                    title = {
+                        Text(
+                            text = "Change Password",
+                            fontFamily = Poppins,
+                            fontSize = 18.sp,
+                            color = NavyBlue,
+                            fontWeight = FontWeight.Bold
+                        )
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = { onEvent(ProfileEvent.OnBackClicked) }) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Back",
+                                tint = NavyBlue
+                            )
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = Color.White
                     )
+                )
+                HorizontalDivider(color = Color(0xFFF1F5F9), thickness = 1.dp)
+            }
+        },
+        bottomBar = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.White)
+                    .padding(horizontal = 24.dp, vertical = 20.dp)
+            ) {
+                HorizontalDivider(color = Color(0xFFF1F5F9), thickness = 1.dp)
+                Spacer(modifier = Modifier.height(24.dp))
+
+                ProfileActionButton(
+                    text = "Save Password",
+                    onClick = { onEvent(ProfileEvent.OnSavePasswordClicked) }
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                ProfileSecondaryActionButton(
+                    text = "Cancel",
+                    onClick = { onEvent(ProfileEvent.OnCancelClicked) }
+                )
+            }
+        }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Security Info Banner
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(16.dp),
+                color = Color(0xFFFEF9C3).copy(alpha = 0.3f),
+                border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFFEF08A))
+            ) {
+                Row(
+                    modifier = Modifier.padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(48.dp)
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(Color.White),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Lock,
+                            contentDescription = null,
+                            tint = Color(0xFFA16207),
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Column {
+                        Text(
+                            text = "Secure your account",
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFFA16207)
+                        )
+                        Text(
+                            text = "Choose a password that's at least 8 characters long and includes a mix of letters and numbers.",
+                            fontSize = 12.sp,
+                            color = Color(0xFFA16207).copy(alpha = 0.7f),
+                            lineHeight = 18.sp
+                        )
+                    }
                 }
+            }
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            PasswordInputField(
+                label = "Current Password",
+                value = uiState.currentPassword,
+                placeholder = "Enter current password",
+                onValueChange = { onEvent(ProfileEvent.OnCurrentPasswordChanged(it)) },
+                isVisible = uiState.isCurrentPasswordVisible,
+                onToggleVisibility = { onEvent(ProfileEvent.OnToggleCurrentPasswordVisibility) }
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
-            ProfileSecondaryActionButton(
-                text = "Cancel",
-                onClick = { onEvent(ProfileEvent.OnCancelClicked) },
-                icon = {
-                    Icon(
-                        imageVector = Icons.Default.Close,
-                        contentDescription = null,
-                        modifier = Modifier.size(18.dp),
-                        tint = NavyBlue
-                    )
-                }
+            PasswordInputField(
+                label = "New Password",
+                value = uiState.newPassword,
+                placeholder = "Enter new password",
+                onValueChange = { onEvent(ProfileEvent.OnNewPasswordChanged(it)) },
+                isVisible = uiState.isNewPasswordVisible,
+                onToggleVisibility = { onEvent(ProfileEvent.OnToggleNewPasswordVisibility) }
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            PasswordInputField(
+                label = "Confirm New Password",
+                value = uiState.confirmPassword,
+                placeholder = "Re-type new password",
+                onValueChange = { onEvent(ProfileEvent.OnConfirmPasswordChanged(it)) },
+                isVisible = uiState.isConfirmPasswordVisible,
+                onToggleVisibility = { onEvent(ProfileEvent.OnToggleConfirmPasswordVisibility) }
             )
             
             Spacer(modifier = Modifier.height(32.dp))
         }
     }
+}
+
+@Composable
+fun PasswordInputField(
+    label: String,
+    value: String,
+    placeholder: String,
+    onValueChange: (String) -> Unit,
+    isVisible: Boolean,
+    onToggleVisibility: () -> Unit
+) {
+    BookingInputField(
+        label = label,
+        value = value,
+        placeholder = placeholder,
+        onValueChange = onValueChange,
+        visualTransformation = if (isVisible) VisualTransformation.None else PasswordVisualTransformation(),
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Default.Lock,
+                contentDescription = null,
+                modifier = Modifier.size(20.dp),
+                tint = DarkText.copy(alpha = 0.6f)
+            )
+        },
+        trailingIcon = {
+            IconButton(onClick = onToggleVisibility) {
+                Icon(
+                    painter = if (isVisible) painterResource(id = R.drawable.user) else painterResource(id = R.drawable.user),
+                    contentDescription = if (isVisible) "Hide Password" else "Show Password",
+                    tint = DarkText.copy(alpha = 0.6f),
+                    modifier = Modifier.size(20.dp)
+                )
+            }
+        }
+    )
 }
 
 @Preview(showBackground = true)
@@ -431,6 +632,17 @@ fun EditProfileScreenPreview() {
             editedName = "Djerfi Fatima",
             editedEmail = "mr_mikircha@esi.dz",
             editedPhoneNumber = "+1 (555) 012-4567"
+        ),
+        onEvent = {}
+    )
+}
+
+@Preview(showBackground = true, device = "spec:width=411dp,height=891dp")
+@Composable
+fun ChangePasswordScreenPreview() {
+    ChangePasswordScreen(
+        uiState = ProfileUiState(
+            isChangingPassword = true
         ),
         onEvent = {}
     )
