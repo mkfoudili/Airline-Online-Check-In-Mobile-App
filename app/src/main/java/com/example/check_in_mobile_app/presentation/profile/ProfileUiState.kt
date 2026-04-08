@@ -17,5 +17,12 @@ data class ProfileUiState(
     val isEditing: Boolean = false,
     val editedName: String = "",
     val editedEmail: String = "",
-    val editedPhoneNumber: String = ""
+    val editedPhoneNumber: String = "",
+    val isChangingPassword: Boolean = false,
+    val currentPassword: String = "",
+    val newPassword: String = "",
+    val confirmPassword: String = "",
+    val isCurrentPasswordVisible: Boolean = false,
+    val isNewPasswordVisible: Boolean = false,
+    val isConfirmPasswordVisible: Boolean = false
 )

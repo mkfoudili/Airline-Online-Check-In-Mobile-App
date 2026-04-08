@@ -2,6 +2,7 @@ package com.example.check_in_mobile_app.presentation.profile
 
 import com.example.domain.usecase.profile.GetProfileUseCase
 import com.example.domain.usecase.profile.UpdateProfileUseCase
+import com.example.domain.usecase.profile.UpdatePasswordUseCase
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -14,7 +15,8 @@ import kotlinx.coroutines.launch
 
 class ProfileViewModel(
     private val getProfileUseCase: GetProfileUseCase,
-    private val updateProfileUseCase: UpdateProfileUseCase
+    private val updateProfileUseCase: UpdateProfileUseCase,
+    private val updatePasswordUseCase: UpdatePasswordUseCase
 ): ViewModel() {
     private val _uiState = MutableStateFlow(ProfileUiState())
     val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
@@ -57,9 +59,23 @@ class ProfileViewModel(
     private fun enterEditMode() {
         _uiState.value = _uiState.value.copy(
             isEditing = true,
+            isChangingPassword = false,
             editedName = _uiState.value.name,
             editedEmail = _uiState.value.email,
             editedPhoneNumber = _uiState.value.phoneNumber
+        )
+    }
+
+    private fun enterChangePasswordMode() {
+        _uiState.value = _uiState.value.copy(
+            isChangingPassword = true,
+            isEditing = false,
+            currentPassword = "",
+            newPassword = "",
+            confirmPassword = "",
+            isCurrentPasswordVisible = false,
+            isNewPasswordVisible = false,
+            isConfirmPasswordVisible = false
         )
     }
 
@@ -73,7 +89,7 @@ class ProfileViewModel(
                     enterEditMode()
                 }
                 ProfileEvent.OnEditPasswordClicked -> {
-                    _uiAction.emit(ProfileUiAction.NavigateToEditPassword)
+                    enterChangePasswordMode()
                 }
                 ProfileEvent.OnEditProfileClicked -> {
                     enterEditMode()
@@ -110,17 +126,66 @@ class ProfileViewModel(
                     }
                 }
                 ProfileEvent.OnCancelClicked -> {
-                    _uiState.value = _uiState.value.copy(isEditing = false)
+                    _uiState.value = _uiState.value.copy(
+                        isEditing = false,
+                        isChangingPassword = false
+                    )
                 }
                 ProfileEvent.OnBackClicked -> {
-                    if (_uiState.value.isEditing) {
-                        _uiState.value = _uiState.value.copy(isEditing = false)
+                    if (_uiState.value.isEditing || _uiState.value.isChangingPassword) {
+                        _uiState.value = _uiState.value.copy(
+                            isEditing = false,
+                            isChangingPassword = false
+                        )
                     } else {
                         _uiAction.emit(ProfileUiAction.NavigateBack)
                     }
                 }
                 ProfileEvent.OnChangePhotoClicked -> {
                     // Handle photo change
+                }
+                is ProfileEvent.OnCurrentPasswordChanged -> {
+                    _uiState.value = _uiState.value.copy(currentPassword = event.value)
+                }
+                is ProfileEvent.OnNewPasswordChanged -> {
+                    _uiState.value = _uiState.value.copy(newPassword = event.value)
+                }
+                is ProfileEvent.OnConfirmPasswordChanged -> {
+                    _uiState.value = _uiState.value.copy(confirmPassword = event.value)
+                }
+                ProfileEvent.OnToggleCurrentPasswordVisibility -> {
+                    _uiState.value = _uiState.value.copy(isCurrentPasswordVisible = !_uiState.value.isCurrentPasswordVisible)
+                }
+                ProfileEvent.OnToggleNewPasswordVisibility -> {
+                    _uiState.value = _uiState.value.copy(isNewPasswordVisible = !_uiState.value.isNewPasswordVisible)
+                }
+                ProfileEvent.OnToggleConfirmPasswordVisibility -> {
+                    _uiState.value = _uiState.value.copy(isConfirmPasswordVisible = !_uiState.value.isConfirmPasswordVisible)
+                }
+                ProfileEvent.OnSavePasswordClicked -> {
+                    if (_uiState.value.newPassword != _uiState.value.confirmPassword) {
+                        _uiState.value = _uiState.value.copy(error = "Passwords do not match")
+                        return@launch
+                    }
+
+                    _uiState.value = _uiState.value.copy(isLoading = true)
+                    val result = updatePasswordUseCase(
+                        currentPassword = _uiState.value.currentPassword,
+                        newPassword = _uiState.value.newPassword
+                    )
+                    
+                    if (result.isSuccess) {
+                        _uiState.value = _uiState.value.copy(
+                            isLoading = false,
+                            isChangingPassword = false,
+                            error = null
+                        )
+                    } else {
+                        _uiState.value = _uiState.value.copy(
+                            isLoading = false,
+                            error = result.exceptionOrNull()?.message ?: "Update failed"
+                        )
+                    }
                 }
             }
         }

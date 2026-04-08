@@ -12,4 +12,11 @@ sealed class ProfileEvent {
     object OnCancelClicked : ProfileEvent()
     object OnBackClicked : ProfileEvent()
     object OnChangePhotoClicked : ProfileEvent()
+    data class OnCurrentPasswordChanged(val value: String) : ProfileEvent()
+    data class OnNewPasswordChanged(val value: String) : ProfileEvent()
+    data class OnConfirmPasswordChanged(val value: String) : ProfileEvent()
+    object OnToggleCurrentPasswordVisibility : ProfileEvent()
+    object OnToggleNewPasswordVisibility : ProfileEvent()
+    object OnToggleConfirmPasswordVisibility : ProfileEvent()
+    object OnSavePasswordClicked : ProfileEvent()
 }
