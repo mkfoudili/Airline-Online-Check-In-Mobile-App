@@ -13,3 +13,4 @@ data class NotificationDto(
     val isRead: Boolean,
     val createdAt: Timestamp?
 )
+// - isRead

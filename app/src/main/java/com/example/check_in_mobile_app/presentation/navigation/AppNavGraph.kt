@@ -6,15 +6,21 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.check_in_mobile_app.presentation.auth.LoginScreen
+import com.example.check_in_mobile_app.presentation.auth.RegisterScreen
 import com.example.check_in_mobile_app.presentation.boarding.BoardingScreen
 import com.example.check_in_mobile_app.presentation.booking.BookingScreen
 import com.example.check_in_mobile_app.presentation.components.TabItem
 import com.example.check_in_mobile_app.presentation.home.HomeScreen
+import com.example.check_in_mobile_app.presentation.welcome.SplashScreen
+import com.example.check_in_mobile_app.presentation.welcome.WelcomeScreen
+import kotlinx.coroutines.delay
 
 @Composable
 fun AppNavGraph(
@@ -37,13 +43,33 @@ fun AppNavGraph(
 
     NavHost(
         navController = navController,
-        startDestination = Destination.Home.route,
+        startDestination = Destination.Splash.route,
         // Tab-level screens: instant switch (no animation) — feels most natural for bottom nav
         enterTransition = { EnterTransition.None },
         exitTransition = { ExitTransition.None },
         popEnterTransition = { EnterTransition.None },
         popExitTransition = { ExitTransition.None }
     ) {
+        composable(route = Destination.Splash.route) {
+            SplashScreen()
+
+            LaunchedEffect(Unit) {
+                delay(5_000L)
+                navController.navigate(Destination.Welcome.route) {
+                    popUpTo(Destination.Splash.route) { inclusive = true }
+                }
+            }
+        }
+        composable(route = Destination.Welcome.route) {
+            WelcomeScreen(
+                onGetStarted = {
+                    navController.navigate(Destination.Register.route)
+                },
+                onSignIn = {
+                    navController.navigate(Destination.Login.route)
+                }
+            )
+        }
         composable(route = Destination.Home.route) {
             HomeScreen(
                 onTabSelected = navigateToTab
@@ -102,6 +128,20 @@ fun AppNavGraph(
                 onBack = {
                     navController.popBackStack()
                 }
+            )
+        }
+        composable(Destination.Login.route) {
+            LoginScreen(
+                onNavigateBack = { navController.popBackStack() },
+                onLoginSuccess = { navController.navigate(Destination.Home.route) },
+                onNavigateToRegister = { navController.navigate(Destination.Register.route) }
+            )
+        }
+        composable(Destination.Register.route) {
+            RegisterScreen(
+                onNavigateBack = { navController.popBackStack() },
+                onRegisterSuccess = { navController.navigate(Destination.Home.route) },
+                onNavigateToLogin = { navController.navigate(Destination.Login.route) }
             )
         }
     }
