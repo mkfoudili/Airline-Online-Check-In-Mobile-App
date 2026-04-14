@@ -4,8 +4,9 @@ data class Booking(
     val bookingId: String,
     val pnr: String,
     val lastName: String,
-    val status: String,
+    val status: CheckInStatus,
     val flight: Flight,
-    val passengers: List<Passenger>
+    val passengers: List<Passenger>,
+    val gate: String = "",
+    val bookingRef: String = ""
 )
-// to fix passengers
