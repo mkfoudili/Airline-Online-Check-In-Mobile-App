@@ -34,7 +34,10 @@ fun AppNavGraph(
         }
         if (route != null) {
             navController.navigate(route) {
-                popUpTo(navController.graph.startDestinationId) { saveState = true }
+                popUpTo(Destination.Home.route) {
+                    saveState = true
+                    inclusive = false
+                }
                 launchSingleTop = true
                 restoreState = true
             }
@@ -72,7 +75,10 @@ fun AppNavGraph(
         }
         composable(route = Destination.Home.route) {
             HomeScreen(
-                onTabSelected = navigateToTab
+                onTabSelected = navigateToTab,
+                onNavigateToBoardingScreen = {
+                    navController.navigate(Destination.Boarding.route)
+                }
             )
         }
 
