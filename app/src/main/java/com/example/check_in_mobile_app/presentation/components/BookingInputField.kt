@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.check_in_mobile_app.ui.theme.BorderColor
@@ -30,6 +31,7 @@ fun BookingInputField(
     leadingIcon: (@Composable () -> Unit)? = null,
     trailingIcon: (@Composable () -> Unit)? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
     singleLine: Boolean = true,
     enabled: Boolean = true
 ) {
@@ -57,6 +59,7 @@ fun BookingInputField(
             trailingIcon = trailingIcon,
             singleLine = singleLine,
             keyboardOptions = keyboardOptions,
+            visualTransformation = visualTransformation,
             shape = RoundedCornerShape(12.dp),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor   = MaterialTheme.colorScheme.primary,
