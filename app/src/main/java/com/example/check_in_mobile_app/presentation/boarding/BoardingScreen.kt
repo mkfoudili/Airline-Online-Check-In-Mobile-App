@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -28,6 +26,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.ui.theme.*
+import com.example.check_in_mobile_app.presentation.components.OfflineBanner
 
 @Composable
 fun BoardingScreen(
@@ -54,7 +53,13 @@ fun BoardingScreen(
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
         ) {
-            OfflineBanner()
+            OfflineBanner(
+                iconId = R.drawable.wifi_off,
+                iconDescription = "Info icon",
+                title = "Available Offline",
+                description = "This pass is saved to your local storage.",
+                isVerifiedBadge = true
+            )
 
             Spacer(modifier = Modifier.height(20.dp))
 
@@ -116,78 +121,8 @@ private fun BoardingTopBar(onBack: () -> Unit) {
                 )
             }
         },
-        actions = {
-            IconButton(onClick = {}) {
-                Icon(
-                    imageVector = Icons.Outlined.Info,
-                    contentDescription = "Info",
-                    tint = DarkText,
-                    modifier = Modifier.size(24.dp)
-                )
-            }
-        },
         colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White),
     )
-    HorizontalDivider(color = BorderLight, thickness = 1.dp)
-}
-
-@Composable
-private fun OfflineBanner() {
-    HorizontalDivider(color = BorderLight, thickness = 1.dp)
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(SurfaceGray)
-            .padding(horizontal = 16.dp, vertical = 10.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
-            modifier = Modifier.weight(1f)
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.wifi_off),
-                contentDescription = "Wifi-off icon",
-            )
-            Column(
-                modifier = Modifier.padding(10.dp, 0.dp)
-            ) {
-                Text(
-                    text = "Available Offline",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 13.sp,
-                    color = DarkText
-                )
-                Text(
-                    text = "This pass is saved to your local storage.",
-                    fontSize = 11.sp,
-                    color = SubtleText,
-                    lineHeight = 15.sp
-                )
-            }
-        }
-
-        Box(
-            modifier = Modifier
-                .clip(RoundedCornerShape(20.dp))
-                .background(Color(0xFFDCFCE7))
-                .border(
-                    1.dp,
-                    Color(0xFF22C55E).copy(alpha = 0.3f),
-                    RoundedCornerShape(20.dp)
-                )
-                .padding(horizontal = 12.dp, vertical = 4.dp)
-        ) {
-            Text(
-                text = "Verified",
-                color = Color(0xFF166534),
-                fontSize = 12.sp,
-                fontWeight = FontWeight.SemiBold
-            )
-        }
-    }
     HorizontalDivider(color = BorderLight, thickness = 1.dp)
 }
 
