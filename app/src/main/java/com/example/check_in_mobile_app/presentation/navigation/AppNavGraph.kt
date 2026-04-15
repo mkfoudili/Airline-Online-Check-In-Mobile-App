@@ -8,6 +8,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -15,12 +16,18 @@ import androidx.navigation.compose.rememberNavController
 import com.example.check_in_mobile_app.presentation.auth.LoginScreen
 import com.example.check_in_mobile_app.presentation.auth.RegisterScreen
 import com.example.check_in_mobile_app.presentation.boarding.BoardingScreen
+import com.example.check_in_mobile_app.presentation.booking.AllBookingsScreen
 import com.example.check_in_mobile_app.presentation.booking.BookingScreen
+import com.example.check_in_mobile_app.presentation.booking.FlightDetailsScreen
+import com.example.check_in_mobile_app.presentation.checkin.baggage.BaggageScreen
+import com.example.check_in_mobile_app.presentation.checkin.baggage.BaggageViewModel
+import com.example.check_in_mobile_app.presentation.checkin.confirmation.ConfirmationScreen
 import com.example.check_in_mobile_app.presentation.checkin.passportscan.PassportScanScreen
 import com.example.check_in_mobile_app.presentation.components.TabItem
 import com.example.check_in_mobile_app.presentation.home.HomeScreen
 import com.example.check_in_mobile_app.presentation.welcome.SplashScreen
 import com.example.check_in_mobile_app.presentation.welcome.WelcomeScreen
+import com.example.data.repository.BookingRepositoryImpl
 import kotlinx.coroutines.delay
 
 @Composable
@@ -106,7 +113,7 @@ fun AppNavGraph(
             popEnterTransition = { EnterTransition.None },
             popExitTransition = { slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(300)) }
         ) {
-            com.example.check_in_mobile_app.presentation.booking.AllBookingsScreen(
+            AllBookingsScreen(
                 onNavigateBack = { navController.popBackStack() },
                 onBoarding = {
                     navController.navigate(Destination.Boarding.route)
@@ -117,12 +124,12 @@ fun AppNavGraph(
         composable(route = Destination.FlightDetails.route) { backStackEntry ->
             val bookingRef = backStackEntry.arguments?.getString("bookingRef") ?: ""
             // Simple mock extraction for UI logic
-            val booking = com.example.data.repository.BookingRepositoryImpl()
+            val booking = BookingRepositoryImpl()
                 .getUpcomingBookings()
                 .find { it.bookingRef == bookingRef } 
-                ?: com.example.data.repository.BookingRepositoryImpl().getUpcomingBookings().first()
-                
-            com.example.check_in_mobile_app.presentation.booking.FlightDetailsScreen(
+                ?: BookingRepositoryImpl().getUpcomingBookings().first()
+
+            FlightDetailsScreen(
                 booking = booking,
                 onBack = { navController.popBackStack() },
                 onStartCheckIn = {
@@ -146,7 +153,27 @@ fun AppNavGraph(
         ) {
             PassportScanScreen(
                 onBack = { navController.popBackStack() },
-                onContinue = { /* next check-in step */ }
+                onContinue = {
+                    /* To the next step */
+                }
+            )
+        }
+        composable(route = Destination.Baggage.route) {
+            BaggageScreen(
+                viewModel = viewModel<BaggageViewModel>(),
+                onBackClick = { navController.popBackStack() },
+                onContinueClick = {
+                    navController.navigate(Destination.Boarding.route)
+                }
+            )
+        }
+        composable(route = Destination.Confirmation.route) {
+            ConfirmationScreen (
+                onNavigateToHomeScreen = {
+                    navController.navigate(Destination.Home.route) {
+                        popUpTo(Destination.Home.route) { inclusive = true }
+                    }
+                }
             )
         }
         composable(Destination.Login.route) {
