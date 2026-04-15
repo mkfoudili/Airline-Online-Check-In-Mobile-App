@@ -45,6 +45,7 @@ class BookingRepositoryImpl(
             passportNumber = "AB123456",
             nationality = "Algerian",
             dateOfBirth = "1990-01-01",
+            expiryDate = null,
             seatNumber = "12A",
             checkinStatus = "PENDING"
         )

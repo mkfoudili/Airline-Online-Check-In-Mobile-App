@@ -19,6 +19,7 @@ fun PassengerDto.toDomain(): Passenger {
         passportNumber = this.passportNumber,
         nationality = this.nationality,
         dateOfBirth = this.dateOfBirth,
+        expiryDate = null,
         seatNumber = this.seatNumber,
         checkinStatus = this.checkinStatus
     )
@@ -33,6 +34,7 @@ fun PassengerEntity.toDomain(): Passenger {
         passportNumber = this.passportNumber,
         nationality = this.nationality,
         dateOfBirth = this.dateOfBirth,
+        expiryDate = null,
         seatNumber = this.seatNumber,
         checkinStatus = this.checkinStatus
     )
