@@ -7,16 +7,17 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalWindowInfo
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.check_in_mobile_app.presentation.components.TabBarMenu
 import com.example.check_in_mobile_app.presentation.components.TabItem
-import com.example.check_in_mobile_app.presentation.navigation.Destination
 import com.example.domain.model.Booking
 import com.example.domain.model.CheckInStatus
+import com.example.domain.model.Flight
+import com.example.domain.model.Passenger
 
 @Composable
 fun HomeScreen(
@@ -30,24 +31,44 @@ fun HomeScreen(
     val uiState by viewModel.uiState.collectAsState()
     var selectedTab by remember { mutableStateOf(TabItem.HOME) }
     val scrollState = remember(isOnline) { ScrollState(initial = 0) }
-    val screenWidth = with(LocalDensity.current) {
-        LocalWindowInfo.current.containerSize.width.toDp()
-    }
+    val screenWidth: Dp = LocalConfiguration.current.screenWidthDp.dp
 
-    // Simple mock for now
-//    val booking = Booking(
-//        bookingRef = "00001",
-//        flightNumber = "UA2402",
-//        origin = "SFO",
-//        destination = "JFK",
-//        departureDate = "2024-10-24",
-//        departureTime = "15:30",
-//        boardingTime = "14:30",
-//        status = CheckInStatus.CHECK_IN_OPEN,
-//        duration = "5h 45m",
-//        originCity = "San Francisco",
-//        destinationCity = "New York",
-//    )
+    //Simple mock for now
+    val booking = Booking(
+        bookingId = "b1",
+        bookingRef = "BB9XC2",
+        pnr = "BB9XC2",
+        lastName = "Fatma",
+        status = CheckInStatus.CHECK_IN_OPEN,
+        gate = "G24",
+        passengers = listOf(
+            Passenger(
+                passengerId = "p1",
+                uid = "u1",
+                firstName = "Djerfi",
+                lastName = "Fatma",
+                passportNumber = "AB123456",
+                nationality = "Algerian",
+                dateOfBirth = "1990-01-01",
+                seatNumber = "12A",
+                checkinStatus = "PENDING"
+            )
+        ),
+        flight = Flight(
+            flightId = "f1",
+            flightNumber = "UA2402",
+            origin = "SFO",
+            originCity = "San Francisco",
+            destination = "JFK",
+            destinationCity = "New York",
+            departureTime = System.currentTimeMillis() + 86400000,
+            arrivalTime = System.currentTimeMillis() + 90000000,
+            checkInOpensTime = "06:15",
+            boardingTime = "08:00",
+            aircraftType = "Boeing 737",
+            status = "Scheduled"
+        )
+    )
 
     Scaffold(
         containerColor = Color.White,
@@ -87,11 +108,11 @@ fun HomeScreen(
                         screenWidth = screenWidth
                     )
                 } else {
-//                    OfflineHomeScreen(
-//                        onNavigateToBoardingScreen = onNavigateToBoardingScreen,
-//                        screenWidth = screenWidth,
-//                        booking = booking
-//                    )
+                    OfflineHomeScreen(
+                        onNavigateToBoardingScreen = onNavigateToBoardingScreen,
+                        screenWidth = screenWidth,
+                        booking = booking
+                    )
                 }
             }
 

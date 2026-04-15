@@ -142,7 +142,7 @@ fun FlightDetailsScreen(
                 fontFamily = Poppins
             )
             Spacer(modifier = Modifier.height(12.dp))
-            PassengerCard(booking)
+            PassengerCard(booking, infoText = "PNR: ${booking.pnr}")
 
             Spacer(modifier = Modifier.height(24.dp))
 
