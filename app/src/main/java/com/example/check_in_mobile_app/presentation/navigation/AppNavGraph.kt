@@ -16,6 +16,7 @@ import com.example.check_in_mobile_app.presentation.auth.LoginScreen
 import com.example.check_in_mobile_app.presentation.auth.RegisterScreen
 import com.example.check_in_mobile_app.presentation.boarding.BoardingScreen
 import com.example.check_in_mobile_app.presentation.booking.BookingScreen
+import com.example.check_in_mobile_app.presentation.checkin.SeatSelection
 import com.example.check_in_mobile_app.presentation.components.TabItem
 import com.example.check_in_mobile_app.presentation.home.HomeScreen
 import com.example.check_in_mobile_app.presentation.welcome.SplashScreen
@@ -43,7 +44,7 @@ fun AppNavGraph(
 
     NavHost(
         navController = navController,
-        startDestination = Destination.Splash.route,
+        startDestination = Destination.Selection.route,
         // Tab-level screens: instant switch (no animation) — feels most natural for bottom nav
         enterTransition = { EnterTransition.None },
         exitTransition = { ExitTransition.None },
@@ -59,6 +60,11 @@ fun AppNavGraph(
                     popUpTo(Destination.Splash.route) { inclusive = true }
                 }
             }
+        }
+        composable(route = Destination.Selection.route) {
+            SeatSelection(
+                onNavigateBack = { navController.popBackStack() }
+            )
         }
         composable(route = Destination.Welcome.route) {
             WelcomeScreen(
