@@ -26,22 +26,26 @@ import com.example.domain.model.Booking
 fun ScheduleTimeline(booking: Booking, modifier: Modifier = Modifier) {
     Column(modifier = modifier) {
         TimelineItem(
-            time = booking.checkInOpensTime,
+            time = booking.flight.checkInOpensTime,
             title = "Check-In Opens",
             iconRes = R.drawable.suitcase
         )
         TimelineSpacing()
         TimelineItem(
-            time = booking.boardingTime,
+            time = booking.flight.boardingTime,
             title = "Boarding Starts",
             subtitle = "Gate ${booking.gate}",
             iconRes = R.drawable.clock
         )
         TimelineSpacing()
+        
+        val sdfTime = java.text.SimpleDateFormat("HH:mm", java.util.Locale.getDefault())
+        val depTimeStr = sdfTime.format(java.util.Date(booking.flight.departureTime))
+        
         TimelineItem(
-            time = booking.departureTime,
+            time = depTimeStr,
             title = "Departure",
-            subtitle = "${booking.originCity} (${booking.origin})",
+            subtitle = "${booking.flight.originCity} (${booking.flight.origin})",
             iconRes = R.drawable.plane_up
         )
     }

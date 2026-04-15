@@ -55,7 +55,7 @@ fun PassengerCard(booking: Booking, modifier: Modifier = Modifier) {
 
         Column {
             Text(
-                text = booking.passengerName,
+                text = booking.passengers[0].firstName + ' ' + booking.passengers[0].lastName,
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Bold,
                 color = DarkText

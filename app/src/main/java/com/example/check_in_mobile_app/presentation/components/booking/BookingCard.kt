@@ -73,7 +73,7 @@ fun BookingCard(
             Spacer(modifier = Modifier.width(8.dp))
 
             Text(
-                text = booking.flightNumber,
+                text = booking.flight.flightNumber,
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Bold,
                 color = NavyBlue,
@@ -89,12 +89,19 @@ fun BookingCard(
 
 
         // ── Row 2: Origin ── ✈ duration ── Destination ──────────────
+        val durationDiff = booking.flight.arrivalTime - booking.flight.departureTime
+        val durationFormatted = if (durationDiff > 0) {
+            val hours = durationDiff / (1000 * 60 * 60)
+            val mins = (durationDiff / (1000 * 60)) % 60
+            "${hours}H ${mins}M"
+        } else ""
+
         FlightRouteRow(
-            origin = booking.origin,
-            originCity = booking.originCity,
-            destination = booking.destination,
-            destinationCity = booking.destinationCity,
-            duration = booking.duration
+            origin = booking.flight.origin,
+            originCity = booking.flight.originCity,
+            destination = booking.flight.destination,
+            destinationCity = booking.flight.destinationCity,
+            duration = durationFormatted
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -117,8 +124,11 @@ fun BookingCard(
                     modifier = Modifier.size(14.dp)
                 )
                 Spacer(modifier = Modifier.width(6.dp))
+                val sdfDate = java.text.SimpleDateFormat("dd MMM", java.util.Locale.getDefault())
+                val departureDate = sdfDate.format(java.util.Date(booking.flight.departureTime))
+                
                 Text(
-                    text = booking.departureDate,
+                    text = departureDate,
                     fontSize = 13.sp,
                     color = NavyBlue,
                     fontWeight = FontWeight.Medium
@@ -132,8 +142,11 @@ fun BookingCard(
                     modifier = Modifier.size(14.dp)
                 )
                 Spacer(modifier = Modifier.width(6.dp))
+                val sdfTime = java.text.SimpleDateFormat("HH:mm", java.util.Locale.getDefault())
+                val departureTime = sdfTime.format(java.util.Date(booking.flight.departureTime))
+                
                 Text(
-                    text = booking.departureTime,
+                    text = departureTime,
                     fontSize = 13.sp,
                     color = NavyBlue,
                     fontWeight = FontWeight.Medium
@@ -167,7 +180,7 @@ fun BookingCard(
             CheckInStatus.CHECK_IN_OPEN -> {
                 Spacer(modifier = Modifier.height(12.dp))
                 Button(
-                    onClick = { onCheckInClick(booking.bookingRef) },
+                    onClick = { onCheckInClick(booking.bookingId) },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(

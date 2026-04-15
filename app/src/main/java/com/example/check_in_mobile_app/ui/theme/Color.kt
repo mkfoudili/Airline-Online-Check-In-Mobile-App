@@ -19,6 +19,7 @@ val QrBorder      = Color(0xFFBDC1CA) // QR code border
 val SubtleText  = Color(0x992A3343)   // UPPERCASE labels, meta-info
 val MediumGray  = Color(0xFF9CA3AF)   // inactive icons, placeholders
 val Slate500    = Color(0xFF64748B)   // dark grey for texts
+val lightTextGrey = Color(0xFF94A3B8)
 val CoolGray    = Color(0xFF91959C)   // light grey for texts
 
 // Status colors
