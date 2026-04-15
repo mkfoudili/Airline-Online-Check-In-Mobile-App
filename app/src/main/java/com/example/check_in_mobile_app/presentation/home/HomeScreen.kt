@@ -35,19 +35,19 @@ fun HomeScreen(
     }
 
     // Simple mock for now
-    val booking = Booking(
-        bookingRef = "00001",
-        flightNumber = "UA2402",
-        origin = "SFO",
-        destination = "JFK",
-        departureDate = "2024-10-24",
-        departureTime = "15:30",
-        boardingTime = "14:30",
-        status = CheckInStatus.CHECK_IN_OPEN,
-        duration = "5h 45m",
-        originCity = "San Francisco",
-        destinationCity = "New York",
-    )
+//    val booking = Booking(
+//        bookingRef = "00001",
+//        flightNumber = "UA2402",
+//        origin = "SFO",
+//        destination = "JFK",
+//        departureDate = "2024-10-24",
+//        departureTime = "15:30",
+//        boardingTime = "14:30",
+//        status = CheckInStatus.CHECK_IN_OPEN,
+//        duration = "5h 45m",
+//        originCity = "San Francisco",
+//        destinationCity = "New York",
+//    )
 
     Scaffold(
         containerColor = Color.White,
@@ -87,11 +87,11 @@ fun HomeScreen(
                         screenWidth = screenWidth
                     )
                 } else {
-                    OfflineHomeScreen(
-                        onNavigateToBoardingScreen = onNavigateToBoardingScreen,
-                        screenWidth = screenWidth,
-                        booking = booking
-                    )
+//                    OfflineHomeScreen(
+//                        onNavigateToBoardingScreen = onNavigateToBoardingScreen,
+//                        screenWidth = screenWidth,
+//                        booking = booking
+//                    )
                 }
             }
 

@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -30,6 +31,7 @@ private val CameraBackground = Color(0xFF1A1A2E)
 private val FrameWhite = Color.White
 private val OverlayDark = Color(0xCC000000)
 
+
 @Composable
 fun CameraViewfinder(
     capturedBitmap: Bitmap?,
@@ -37,10 +39,12 @@ fun CameraViewfinder(
     hasCameraPermission: Boolean = false,
     modifier: Modifier = Modifier
 ) {
+    val screenHeight = androidx.compose.ui.platform.LocalConfiguration.current.screenHeightDp.dp
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(260.dp)
+            .height(screenHeight * 0.5f)
+            .clipToBounds()
             .background(CameraBackground),
         contentAlignment = Alignment.Center
     ) {
@@ -64,38 +68,79 @@ fun CameraViewfinder(
             )
         }
 
-        // Dashed alignment frame drawn on canvas
-        Canvas(modifier = Modifier.fillMaxSize()) {
-            val frameW = size.width * 0.82f
-            val frameH = size.height * 0.72f
-            val left = (size.width - frameW) / 2f
-            val top = (size.height - frameH) / 2f
-            val cornerLen = 32.dp.toPx()
-            val cornerRadius = 8.dp.toPx()
-            val dashEffect = PathEffect.dashPathEffect(floatArrayOf(14f, 8f))
+        if (capturedBitmap == null) { //  Dashed alignment frame drawn on canvas
+            Canvas(modifier = Modifier.fillMaxSize()) {
+                val frameW = size.width * 0.82f
+                val frameH = size.height * 0.72f
+                val left = (size.width - frameW) / 2f
+                val top = (size.height - frameH) / 2f
+                val cornerLen = 32.dp.toPx()
+                val cornerRadius = 8.dp.toPx()
+                val dashEffect = PathEffect.dashPathEffect(floatArrayOf(14f, 8f))
 
-            // Dashed border rectangle
-            drawRoundRect(
-                color = FrameWhite.copy(alpha = 0.7f),
-                topLeft = Offset(left, top),
-                size = Size(frameW, frameH),
-                cornerRadius = CornerRadius(cornerRadius),
-                style = Stroke(width = 2.dp.toPx(), pathEffect = dashEffect)
-            )
+                // Dashed border rectangle
+                drawRoundRect(
+                    color = FrameWhite.copy(alpha = 0.7f),
+                    topLeft = Offset(left, top),
+                    size = Size(frameW, frameH),
+                    cornerRadius = CornerRadius(cornerRadius),
+                    style = Stroke(width = 2.dp.toPx(), pathEffect = dashEffect)
+                )
 
-            // Solid corner accents — top-left
-            drawLine(FrameWhite, Offset(left, top + cornerLen), Offset(left, top + cornerRadius), strokeWidth = 4.dp.toPx())
-            drawLine(FrameWhite, Offset(left + cornerRadius, top), Offset(left + cornerLen, top), strokeWidth = 4.dp.toPx())
-            // top-right
-            drawLine(FrameWhite, Offset(left + frameW, top + cornerLen), Offset(left + frameW, top + cornerRadius), strokeWidth = 4.dp.toPx())
-            drawLine(FrameWhite, Offset(left + frameW - cornerLen, top), Offset(left + frameW - cornerRadius, top), strokeWidth = 4.dp.toPx())
-            // bottom-left
-            drawLine(FrameWhite, Offset(left, top + frameH - cornerLen), Offset(left, top + frameH - cornerRadius), strokeWidth = 4.dp.toPx())
-            drawLine(FrameWhite, Offset(left + cornerRadius, top + frameH), Offset(left + cornerLen, top + frameH), strokeWidth = 4.dp.toPx())
-            // bottom-right
-            drawLine(FrameWhite, Offset(left + frameW, top + frameH - cornerLen), Offset(left + frameW, top + frameH - cornerRadius), strokeWidth = 4.dp.toPx())
-            drawLine(FrameWhite, Offset(left + frameW - cornerLen, top + frameH), Offset(left + frameW - cornerRadius, top + frameH), strokeWidth = 4.dp.toPx())
-        }
+                // Solid corner accents — top-left
+                drawLine(
+                    FrameWhite,
+                    Offset(left, top + cornerLen),
+                    Offset(left, top + cornerRadius),
+                    strokeWidth = 4.dp.toPx()
+                )
+                drawLine(
+                    FrameWhite,
+                    Offset(left + cornerRadius, top),
+                    Offset(left + cornerLen, top),
+                    strokeWidth = 4.dp.toPx()
+                )
+                // top-right
+                drawLine(
+                    FrameWhite,
+                    Offset(left + frameW, top + cornerLen),
+                    Offset(left + frameW, top + cornerRadius),
+                    strokeWidth = 4.dp.toPx()
+                )
+                drawLine(
+                    FrameWhite,
+                    Offset(left + frameW - cornerLen, top),
+                    Offset(left + frameW - cornerRadius, top),
+                    strokeWidth = 4.dp.toPx()
+                )
+                // bottom-left
+                drawLine(
+                    FrameWhite,
+                    Offset(left, top + frameH - cornerLen),
+                    Offset(left, top + frameH - cornerRadius),
+                    strokeWidth = 4.dp.toPx()
+                )
+                drawLine(
+                    FrameWhite,
+                    Offset(left + cornerRadius, top + frameH),
+                    Offset(left + cornerLen, top + frameH),
+                    strokeWidth = 4.dp.toPx()
+                )
+                // bottom-right
+                drawLine(
+                    FrameWhite,
+                    Offset(left + frameW, top + frameH - cornerLen),
+                    Offset(left + frameW, top + frameH - cornerRadius),
+                    strokeWidth = 4.dp.toPx()
+                )
+                drawLine(
+                    FrameWhite,
+                    Offset(left + frameW - cornerLen, top + frameH),
+                    Offset(left + frameW - cornerRadius, top + frameH),
+                    strokeWidth = 4.dp.toPx()
+                )
+            }
+    }
 
 
         if (capturedBitmap == null) {
@@ -137,3 +182,5 @@ fun CameraViewfinder(
         }
     }
 }
+
+

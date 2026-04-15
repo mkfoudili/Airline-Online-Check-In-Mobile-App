@@ -45,6 +45,8 @@ fun PassportScanScreenContent(
     val context = LocalContext.current
     val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
 
+    val screenHeight = androidx.compose.ui.platform.LocalConfiguration.current.screenHeightDp.dp
+
     var hasCameraPermission by remember {
         mutableStateOf(
             androidx.core.content.ContextCompat.checkSelfPermission(
@@ -71,28 +73,56 @@ fun PassportScanScreenContent(
             bindToLifecycle(lifecycleOwner)
         }
     }
-    
-    val mainExecutor = remember { androidx.core.content.ContextCompat.getMainExecutor(context) }
+
+    val mainExecutor = remember {
+        androidx.core.content.ContextCompat.getMainExecutor(context)
+    }
 
     fun capturePhoto() {
         if (!hasCameraPermission) {
             permissionLauncher.launch(android.Manifest.permission.CAMERA)
             return
         }
+
         cameraController.takePicture(
             mainExecutor,
             object : androidx.camera.core.ImageCapture.OnImageCapturedCallback() {
                 override fun onCaptureSuccess(image: androidx.camera.core.ImageProxy) {
-                    val bitmap = image.toBitmap()
-                    onPassportCaptured(bitmap)
+
+                    val rawBitmap = image.toBitmap()
+
+
+                    val rotationDegrees = image.imageInfo.rotationDegrees.toFloat()
+
+
+                    val matrix = android.graphics.Matrix().apply {
+                        postRotate(rotationDegrees)
+                    }
+
+
+                    val rotatedBitmap = Bitmap.createBitmap(
+                        rawBitmap,
+                        0,
+                        0,
+                        rawBitmap.width,
+                        rawBitmap.height,
+                        matrix,
+                        true
+                    )
+
+
+                    onPassportCaptured(rotatedBitmap)
+
+
                     image.close()
                 }
+
                 override fun onError(exception: androidx.camera.core.ImageCaptureException) {
+
                 }
             }
         )
     }
-
 
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
@@ -108,38 +138,45 @@ fun PassportScanScreenContent(
         containerColor = Color.White,
         topBar = { PassportScanTopBar(onBack = onBack) }
     ) { innerPadding ->
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .verticalScroll(rememberScrollState())
         ) {
-            // Camera viewfinder — shows captured image when available
+
+
             CameraViewfinder(
                 capturedBitmap = capturedBitmap,
                 cameraController = cameraController,
-                hasCameraPermission = hasCameraPermission
+                hasCameraPermission = hasCameraPermission,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(screenHeight * 0.5f)
             )
 
-            Spacer(modifier = Modifier.height(20.dp))
 
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState())
                     .padding(horizontal = 20.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
 
-                AlignmentGuideCard()
+                Spacer(modifier = Modifier.height(20.dp))
+
+
 
                 ScanPassportButton(onClick = { capturePhoto() })
 
-                UploadFromLibraryButton(onClick = { galleryLauncher.launch("image/*") })
+                UploadFromLibraryButton(
+                    onClick = { galleryLauncher.launch("image/*") }
+                )
 
-                // Step 3 — display result via capturedBitmap passed to CameraViewfinder above
-                PassportPreviewCard(capturedBitmap = capturedBitmap)
-
-                Spacer(modifier = Modifier.height(32.dp))
+                PassportPreviewCard(
+                    capturedBitmap = capturedBitmap,
+                    onDelete = { onPassportCaptured(null) }
+                )
 
                 ScanContinueButton(
                     isPending = capturedBitmap == null,
@@ -151,7 +188,6 @@ fun PassportScanScreenContent(
         }
     }
 }
-
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun PassportScanScreenPreview() {

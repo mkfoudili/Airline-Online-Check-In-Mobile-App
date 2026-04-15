@@ -32,7 +32,7 @@ fun ScanContinueButton(
             containerColor = NavyBlue,
             contentColor = Color.White,
             disabledContainerColor = SurfaceGray,
-            disabledContentColor = Slate500
+            disabledContentColor = Color(0xFF91959C)
         ),
         enabled = !isPending
     ) {

@@ -5,7 +5,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,6 +23,7 @@ import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -29,6 +33,7 @@ import com.example.check_in_mobile_app.ui.theme.ActiveGreen
 import com.example.check_in_mobile_app.ui.theme.BorderLight
 import com.example.check_in_mobile_app.ui.theme.CheckedInText
 import com.example.check_in_mobile_app.ui.theme.DarkText
+import com.example.check_in_mobile_app.ui.theme.ErrorRed
 import com.example.check_in_mobile_app.ui.theme.LightGray
 import com.example.check_in_mobile_app.ui.theme.MediumGray
 import com.example.check_in_mobile_app.ui.theme.Slate500
@@ -73,6 +78,7 @@ fun Modifier.dashedBorder(
 @Composable
 fun PassportPreviewCard(
     capturedBitmap: Bitmap?,
+    onDelete: () -> Unit, // 1. Added callback parameter
     modifier: Modifier = Modifier
 ) {
     val isPending = capturedBitmap == null
@@ -81,7 +87,7 @@ fun PassportPreviewCard(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(14.dp))
-            .background(SurfaceGray)
+            .background(if (isPending) SurfaceGray else Color(0xFFDCFCE7).copy(alpha=0.5f))
             .dashedBorder(
                 color        = if (isPending) BorderLight else Color(0xFFDCFCE7),
                 strokeWidth  = 1.dp,
@@ -130,23 +136,43 @@ fun PassportPreviewCard(
             Text(
                 text = if (isPending) "No image captured yet" else "Image captured",
                 fontSize = 12.sp,
-                color = if (isPending) LightGray else ActiveGreen
+                fontStyle = FontStyle.Italic,
+                color = if (isPending) Color(0xFF94A3B8) else ActiveGreen
             )
         }
 
-        // Status pill
-        Box(
-            modifier = Modifier
-                .clip(RoundedCornerShape(20.dp))
-                .background(if (isPending) BorderLight else Color(0xFFDCFCE7))
-                .padding(horizontal = 12.dp, vertical = 5.dp)
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Text(
-                text = if (isPending) "Pending" else "Ready",
-                fontSize = 12.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = if (isPending)  Slate500 else CheckedInText
-            )
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(20.dp))
+                    .background(if (isPending) BorderLight else Color(0xFFDCFCE7))
+                    .padding(horizontal = 12.dp, vertical = 5.dp)
+            ) {
+                Text(
+                    text = if (isPending) "Pending" else "Ready",
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = if (isPending) Slate500 else CheckedInText
+                )
+            }
+
+
+            if (!isPending) {
+                IconButton(
+                    onClick = onDelete,
+                    modifier = Modifier.size(32.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Delete,
+                        contentDescription = "Delete captured passport",
+                        tint = ErrorRed.copy(alpha = 0.8f)
+                    )
+                }
+            }
         }
     }
 }
