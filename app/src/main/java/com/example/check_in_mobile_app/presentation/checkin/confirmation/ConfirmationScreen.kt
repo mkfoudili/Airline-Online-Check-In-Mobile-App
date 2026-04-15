@@ -144,7 +144,7 @@ fun ConfirmationScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        painter = painterResource(id = R.drawable.circle_check),
+                        painter = painterResource(id = R.drawable.circle_check2),
                         contentDescription = "Profile",
                         tint = ConfirmationGreen,
                         modifier = Modifier.size(40.dp)
