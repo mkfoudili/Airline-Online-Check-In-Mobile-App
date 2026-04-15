@@ -8,6 +8,7 @@ data class Passenger(
     val passportNumber: String?,
     val nationality: String?,
     val dateOfBirth: String?,
+    val expiryDate: String?,
     val seatNumber: String?,
     val checkinStatus: String?
 )

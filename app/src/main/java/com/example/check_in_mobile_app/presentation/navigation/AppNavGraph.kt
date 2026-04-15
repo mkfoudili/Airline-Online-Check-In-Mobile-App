@@ -16,6 +16,7 @@ import com.example.check_in_mobile_app.presentation.auth.LoginScreen
 import com.example.check_in_mobile_app.presentation.auth.RegisterScreen
 import com.example.check_in_mobile_app.presentation.boarding.BoardingScreen
 import com.example.check_in_mobile_app.presentation.booking.BookingScreen
+import com.example.check_in_mobile_app.presentation.checkin.checkingdetailsreview.CheckingDetailsReviewScreen
 import com.example.check_in_mobile_app.presentation.checkin.passportscan.PassportScanScreen
 import com.example.check_in_mobile_app.presentation.components.TabItem
 import com.example.check_in_mobile_app.presentation.home.HomeScreen
@@ -146,7 +147,21 @@ fun AppNavGraph(
         ) {
             PassportScanScreen(
                 onBack = { navController.popBackStack() },
-                onContinue = { /* next check-in step */ }
+                onContinue = {
+                    navController.navigate(Destination.CheckingDetailsReview.route)
+                }
+            )
+        }
+        composable(
+            route = Destination.CheckingDetailsReview.route,
+            enterTransition = { slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(300)) },
+            exitTransition = { ExitTransition.None },
+            popEnterTransition = { EnterTransition.None },
+            popExitTransition = { slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(300)) }
+        ) {
+            CheckingDetailsReviewScreen(
+                onBack = { navController.popBackStack() },
+                onContinue = { /* Step 3: Seat Selection — coming soon */ }
             )
         }
         composable(Destination.Login.route) {
