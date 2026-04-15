@@ -51,7 +51,8 @@ fun HomeScreen(
                 nationality = "Algerian",
                 dateOfBirth = "1990-01-01",
                 seatNumber = "12A",
-                checkinStatus = "PENDING"
+                checkinStatus = "PENDING",
+                expiryDate = "2025-01-01"
             )
         ),
         flight = Flight(
