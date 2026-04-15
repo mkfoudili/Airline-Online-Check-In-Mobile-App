@@ -10,6 +10,7 @@ sealed class Destination(val route: String) {
     object Boarding : Destination("boarding")
     object PassportScan : Destination("passport_scan")
     object Baggage : Destination("baggage")
+    object CheckingDetailsReview : Destination("checking_details_review")
     object Register: Destination("register")
     object Login : Destination("login")
     object Splash   : Destination("splash")

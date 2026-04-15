@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.check_in_mobile_app.presentation.components.checkin.*
+import com.example.check_in_mobile_app.presentation.components.checkin.CheckInTopBar
 
 @Composable
 fun PassportScanScreen(
@@ -136,7 +137,7 @@ fun PassportScanScreenContent(
 
     Scaffold(
         containerColor = Color.White,
-        topBar = { PassportScanTopBar(onBack = onBack) }
+        topBar = { CheckInTopBar(onBack = onBack, currentStep = 1, title = "Step 1: Passport") }
     ) { innerPadding ->
 
         Column(
