@@ -23,10 +23,10 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun SeatGrid(
     seats: List<SeatModel> = generateFallbackSeats(),
+    selectedSeatId: String? = null,
     onSeatSelected: (SeatModel) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
-    val selectedSeats = remember { mutableStateListOf<String>() }
     val rows = seats.chunked(6)
 
     LazyColumn(
@@ -42,7 +42,7 @@ fun SeatGrid(
                 rowSeats.take(3).forEach { seat ->
                     val seatState = when {
                         !seat.isAvailable                   -> SeatState.BLOCKED
-                        selectedSeats.contains(seat.seatId) -> SeatState.SELECTED
+                        seat.seatId == selectedSeatId       -> SeatState.SELECTED
                         else                                -> SeatState.AVAILABLE
                     }
                     val seatType = if (seat.isPremium) SeatType.PREMIUM else SeatType.REGULAR
@@ -51,10 +51,7 @@ fun SeatGrid(
                         seatState = seatState,
                         seatType = seatType,
                         onClick = {
-                            if (selectedSeats.contains(seat.seatId)) {
-                                selectedSeats.remove(seat.seatId)
-                            } else {
-                                selectedSeats.add(seat.seatId)
+                            if (seat.isAvailable) {
                                 onSeatSelected(seat)
                             }
                         }
@@ -73,7 +70,7 @@ fun SeatGrid(
                 rowSeats.drop(3).forEach { seat ->
                     val seatState = when {
                         !seat.isAvailable                   -> SeatState.BLOCKED
-                        selectedSeats.contains(seat.seatId) -> SeatState.SELECTED
+                        seat.seatId == selectedSeatId       -> SeatState.SELECTED
                         else                                -> SeatState.AVAILABLE
                     }
                     val seatType = if (seat.isPremium) SeatType.PREMIUM else SeatType.REGULAR
@@ -82,10 +79,7 @@ fun SeatGrid(
                         seatState = seatState,
                         seatType = seatType,
                         onClick = {
-                            if (selectedSeats.contains(seat.seatId)) {
-                                selectedSeats.remove(seat.seatId)
-                            } else {
-                                selectedSeats.add(seat.seatId)
+                            if (seat.isAvailable) {
                                 onSeatSelected(seat)
                             }
                         }

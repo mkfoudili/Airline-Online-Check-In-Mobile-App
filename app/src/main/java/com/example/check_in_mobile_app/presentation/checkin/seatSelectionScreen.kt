@@ -50,6 +50,7 @@ import com.example.check_in_mobile_app.presentation.components.checkin.CheckInTo
 @Composable
 fun SeatSelection(
     onNavigateBack: () -> Unit = {},
+    onContinue: () -> Unit = {}
 ) {
 
     var selectedSeat by remember { mutableStateOf<SeatModel?>(null) }
@@ -78,6 +79,7 @@ fun SeatSelection(
             SeatGrid(
                 modifier = Modifier.weight(1f).
                 background(color = Color(0xFFF9FAFA)),
+                selectedSeatId = selectedSeat?.seatId,
                 onSeatSelected = { seat ->
                     selectedSeat = seat
                 }
@@ -86,7 +88,7 @@ fun SeatSelection(
             selectedSeat?.let { seat ->
                 SelectedSeatBottomBar(
                     seat = seat,
-                    onConfirm = { /* navigate to next step */ }
+                    onConfirm = onContinue
                 )
             }
         }
