@@ -1,0 +1,85 @@
+package com.example.check_in_mobile_app.presentation.notifications
+
+import androidx.lifecycle.ViewModel
+import com.example.domain.model.Notification
+import com.example.domain.usecase.notification.GetNotificationsUseCase
+import com.example.domain.usecase.notification.MarkAllNotificationsReadUseCase
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+
+class NotificationsViewModel(
+    private val getNotificationsUseCase: GetNotificationsUseCase,
+    private val markAllNotificationsReadUseCase: MarkAllNotificationsReadUseCase
+) : ViewModel() {
+
+    private val _uiState = MutableStateFlow(NotificationsUiState())
+    val uiState: StateFlow<NotificationsUiState> = _uiState.asStateFlow()
+
+    init {
+        loadNotifications()
+    }
+
+    fun loadNotifications() {
+        _uiState.update { it.copy(isLoading = true) }
+        // Mock user id
+        getNotificationsUseCase("user123") { result ->
+            result.onSuccess { domainNotifications ->
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        notifications = domainNotifications.map { domain ->
+                            NotificationItem(
+                                id = domain.notificationId,
+                                title = domain.title,
+                                description = domain.body,
+                                flightCode = if (domain.title.contains("Boarding", ignoreCase = true)) "AA241" else null,
+                                timeAgo = formatTimeAgo(domain.createdAt),
+                                isRead = domain.isRead,
+                                type = mapToUiType(domain.type)
+                            )
+                        },
+                        errorMessage = null
+                    )
+                }
+            }.onFailure { error ->
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        errorMessage = error.message ?: "Failed to load notifications"
+                    )
+                }
+            }
+        }
+    }
+
+    fun markAllAsRead() {
+        markAllNotificationsReadUseCase("user123") { result ->
+            if (result.isSuccess) {
+                loadNotifications()
+            }
+        }
+    }
+
+    private fun mapToUiType(domainType: com.example.domain.model.NotificationType): NotificationType {
+        return when (domainType) {
+            com.example.domain.model.NotificationType.BOARDING_REMINDER -> NotificationType.BOARDING
+            com.example.domain.model.NotificationType.CHECK_IN_CONFIRMATION -> NotificationType.CHECK_IN
+            else -> NotificationType.DOCUMENT
+        }
+    }
+
+    private fun formatTimeAgo(createdAt: Long): String {
+        val diff = System.currentTimeMillis() - createdAt
+        val minutes = diff / (1000 * 60)
+        val hours = minutes / 60
+        val days = hours / 24
+
+        return when {
+            minutes < 60 -> "${minutes}m ago"
+            hours < 24 -> "${hours}h ago"
+            else -> "${days}d ago"
+        }
+    }
+}
