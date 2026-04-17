@@ -1,10 +1,10 @@
 package com.example.check_in_mobile_app.presentation.profile
 
-import com.example.domain.usecase.profile.GetProfileUseCase
-import com.example.domain.usecase.profile.UpdateProfileUseCase
-import com.example.domain.usecase.profile.UpdatePasswordUseCase
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.domain.usecase.profile.GetProfileUseCase
+import com.example.domain.usecase.profile.UpdatePasswordUseCase
+import com.example.domain.usecase.profile.UpdateProfileUseCase
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -14,10 +14,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(
-    private val getProfileUseCase: GetProfileUseCase,
-    private val updateProfileUseCase: UpdateProfileUseCase,
-    private val updatePasswordUseCase: UpdatePasswordUseCase
-): ViewModel() {
+    private val getProfileUseCase: GetProfileUseCase = GetProfileUseCase(),
+    private val updateProfileUseCase: UpdateProfileUseCase = UpdateProfileUseCase(),
+    private val updatePasswordUseCase: UpdatePasswordUseCase = UpdatePasswordUseCase()
+) : ViewModel() {
     private val _uiState = MutableStateFlow(ProfileUiState())
     val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
 
@@ -35,7 +35,7 @@ class ProfileViewModel(
             try {
                 val profile = getProfileUseCase()
 
-                _uiState.value = ProfileUiState(
+                _uiState.value = _uiState.value.copy(
                     name = profile.fullName,
                     email = profile.email,
                     phoneNumber = profile.phoneNumber,
