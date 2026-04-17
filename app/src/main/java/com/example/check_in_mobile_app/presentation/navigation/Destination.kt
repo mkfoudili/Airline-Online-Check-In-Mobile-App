@@ -12,4 +12,7 @@ sealed class Destination(val route: String) {
     object Login : Destination("login")
     object Splash   : Destination("splash")
     object Welcome  : Destination("welcome")
+    object Profile : Destination("profile")
+    object Notifications : Destination("notifications")
+    object Baggage : Destination("baggage")
 }

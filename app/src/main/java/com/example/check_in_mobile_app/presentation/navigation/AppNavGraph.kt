@@ -18,6 +18,7 @@ import com.example.check_in_mobile_app.presentation.boarding.BoardingScreen
 import com.example.check_in_mobile_app.presentation.booking.BookingScreen
 import com.example.check_in_mobile_app.presentation.components.TabItem
 import com.example.check_in_mobile_app.presentation.home.HomeScreen
+import com.example.check_in_mobile_app.presentation.profile.ProfileScreen
 import com.example.check_in_mobile_app.presentation.welcome.SplashScreen
 import com.example.check_in_mobile_app.presentation.welcome.WelcomeScreen
 import kotlinx.coroutines.delay
@@ -30,6 +31,7 @@ fun AppNavGraph(
         val route = when (tab) {
             TabItem.HOME -> Destination.Home.route
             TabItem.TICKETS -> Destination.Booking.route
+            TabItem.PROFILE -> Destination.Profile.route
             else -> null
         }
         if (route != null) {
@@ -92,6 +94,7 @@ fun AppNavGraph(
         }
 
         // Deeper screen: slide in/out horizontally
+
         composable(
             route = Destination.AllBookings.route,
             enterTransition = { slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(300)) },
@@ -106,15 +109,17 @@ fun AppNavGraph(
                 }
             )
         }
-        
+
+
+
         composable(route = Destination.FlightDetails.route) { backStackEntry ->
             val bookingRef = backStackEntry.arguments?.getString("bookingRef") ?: ""
             // Simple mock extraction for UI logic
             val booking = com.example.data.repository.BookingRepositoryImpl()
                 .getUpcomingBookings()
-                .find { it.bookingRef == bookingRef } 
+                .find { it.bookingRef == bookingRef }
                 ?: com.example.data.repository.BookingRepositoryImpl().getUpcomingBookings().first()
-                
+
             com.example.check_in_mobile_app.presentation.booking.FlightDetailsScreen(
                 booking = booking,
                 onBack = { navController.popBackStack() },
@@ -142,6 +147,11 @@ fun AppNavGraph(
                 onNavigateBack = { navController.popBackStack() },
                 onRegisterSuccess = { navController.navigate(Destination.Home.route) },
                 onNavigateToLogin = { navController.navigate(Destination.Login.route) }
+            )
+        }
+        composable(Destination.Profile.route) {
+            ProfileScreen(
+                onTabSelected = navigateToTab
             )
         }
     }
