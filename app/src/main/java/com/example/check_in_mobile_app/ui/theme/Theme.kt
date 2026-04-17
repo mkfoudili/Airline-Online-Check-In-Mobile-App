@@ -30,7 +30,8 @@ private val LightColorScheme = lightColorScheme(
 // Dark scheme minimal (à compléter plus tard)
 private val DarkColorScheme = darkColorScheme(
     primary   = NavyBlue,
-    onPrimary = Color.White
+    onPrimary = Color.White,
+    background         = Color.White,
 )
 
 @Composable
