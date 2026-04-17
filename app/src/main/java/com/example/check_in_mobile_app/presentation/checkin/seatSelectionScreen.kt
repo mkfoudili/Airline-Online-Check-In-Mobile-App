@@ -44,49 +44,24 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
+import com.example.check_in_mobile_app.presentation.components.checkin.CheckInTopBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SeatSelection(
     onNavigateBack: () -> Unit = {},
 ) {
-    // track selected seat at screen level
+
     var selectedSeat by remember { mutableStateOf<SeatModel?>(null) }
 
     Scaffold(
-
         topBar = {
-            Column {
-                TopAppBar(
-                    title = {
-                        Text(
-                            text = "Step 3: Choose Seat",
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = NavyBlue
-                        )
-                    },
-                    navigationIcon = {
-                        IconButton(onClick = onNavigateBack) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.chevron_left),
-                                contentDescription = "Back",
-                                tint = NavyBlue,
-                                modifier = Modifier.size(20.dp)
-                            )
-                        }
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.background
-                    )
-                )
-                ProgressBar(
-                    progress = 0.6f,
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
-            }
+            CheckInTopBar(
+                onBack = onNavigateBack,
+                currentStep = 3,
+                title = "Step 3: Choose Seat"
+            )
         },
-
     ) { paddingValues ->
         Column(
 

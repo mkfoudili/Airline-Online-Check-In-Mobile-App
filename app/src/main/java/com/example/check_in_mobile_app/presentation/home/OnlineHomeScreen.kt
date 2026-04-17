@@ -26,6 +26,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
@@ -48,6 +50,9 @@ fun OnlineHomeScreen(
     onLastNameChange: (String) -> Unit = {},
     onCheckInClick: () -> Unit = {},
     onFindFlightClick: () -> Unit = {},
+    screenWidth : Dp = with(LocalDensity.current) {
+        LocalWindowInfo.current.containerSize.width.toDp()
+    }
     screenWidth: Dp = LocalConfiguration.current.screenWidthDp.dp
 ) {
     Spacer(modifier = Modifier.height(24.dp))
@@ -85,6 +90,7 @@ fun OnlineHomeScreen(
     Box(
         modifier = Modifier
             .requiredWidth(screenWidth)
+            .requiredWidth(screenWidth) // Extend beyond screen width for full bleed effect
             .height(1.dp)
             .background(DividerColor)
     )

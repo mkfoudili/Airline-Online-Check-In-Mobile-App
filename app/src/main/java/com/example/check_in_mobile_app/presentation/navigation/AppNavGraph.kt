@@ -18,10 +18,10 @@ import com.example.check_in_mobile_app.presentation.auth.RegisterScreen
 import com.example.check_in_mobile_app.presentation.boarding.BoardingScreen
 import com.example.check_in_mobile_app.presentation.booking.AllBookingsScreen
 import com.example.check_in_mobile_app.presentation.booking.BookingScreen
-<<<<<<< HEAD
+
 import com.example.check_in_mobile_app.presentation.checkin.SeatSelection
 import com.example.check_in_mobile_app.presentation.checkin.specialRequest
-=======
+
 import com.example.check_in_mobile_app.presentation.booking.FlightDetailsScreen
 import com.example.check_in_mobile_app.presentation.checkin.baggage.BaggageScreen
 import com.example.check_in_mobile_app.presentation.checkin.baggage.BaggageViewModel
@@ -60,7 +60,7 @@ fun AppNavGraph(
 
     NavHost(
         navController = navController,
-        startDestination = Destination.Welcome.route,
+        startDestination = Destination.Splash.route,
         // Tab-level screens: instant switch (no animation) — feels most natural for bottom nav
         enterTransition = { EnterTransition.None },
         exitTransition = { ExitTransition.None },
@@ -76,16 +76,6 @@ fun AppNavGraph(
                     popUpTo(Destination.Splash.route) { inclusive = true }
                 }
             }
-        }
-        composable(route = Destination.Selection.route) {
-            SeatSelection(
-                onNavigateBack = { navController.popBackStack() }
-            )
-        }
-        composable(route = Destination.preference.route) {
-            specialRequest(
-                onNavigateBack = { navController.popBackStack() }
-            )
         }
         composable(route = Destination.Welcome.route) {
             WelcomeScreen(
@@ -219,6 +209,16 @@ fun AppNavGraph(
             )
         }
 
+        composable(route = Destination.Selection.route) {
+            SeatSelection(
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+        composable(route = Destination.preference.route) {
+            specialRequest(
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
     }
 }
 

@@ -43,7 +43,6 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 }
 
 dependencies {
-    implementation("androidx.compose.material:material-icons-extended:<your_compose_version>")
     implementation(project(":domain"))
     implementation(project(":data"))
     implementation("androidx.compose.material:material-icons-extended")
@@ -56,11 +55,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
-<<<<<<< HEAD
-    implementation(libs.androidx.material3)
-    implementation(libs.androidx.ui)
-=======
-    
+
     // CameraX dependencies
     implementation(libs.androidx.camera.core)
     implementation(libs.androidx.camera.camera2)
@@ -68,7 +63,6 @@ dependencies {
     implementation(libs.androidx.camera.view)
     implementation(libs.androidx.compose.foundation)
 
->>>>>>> b46eaf59e471c2ba0dbf3ebf8609cf97e9ae06c7
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

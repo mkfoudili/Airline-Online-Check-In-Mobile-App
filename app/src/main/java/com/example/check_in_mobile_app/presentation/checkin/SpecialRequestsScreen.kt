@@ -40,9 +40,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.check_in_mobile_app.R
+import com.example.check_in_mobile_app.presentation.components.checkin.CheckInTopBar
 import com.example.check_in_mobile_app.presentation.components.checkin.PreferenceCard
 import com.example.check_in_mobile_app.presentation.components.checkin.PreferenceSectionLabel
-import com.example.check_in_mobile_app.presentation.components.checkin.ProgressBar
 import com.example.check_in_mobile_app.presentation.components.checkin.SafetyNoteCard
 import com.example.check_in_mobile_app.ui.theme.NavyBlue
 
@@ -60,35 +60,11 @@ fun specialRequest(
     var serviceAnimal by remember { mutableStateOf(false) }
     Scaffold(
         topBar = {
-            Column {
-                TopAppBar(
-                    title = {
-                        Text(
-                            text = "Step 5: Requests",
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = NavyBlue
-                        )
-                    },
-                    navigationIcon = {
-                        IconButton(onClick = onNavigateBack) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.chevron_left),
-                                contentDescription = "Back",
-                                tint = NavyBlue,
-                                modifier = Modifier.size(20.dp)
-                            )
-                        }
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.background
-                    )
-                )
-                ProgressBar(
-                    progress = 1f,
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
-            }
+            CheckInTopBar(
+                onBack = onNavigateBack,
+                currentStep = 5,
+                title = "Step 5: Requests"
+            )
         },
 
         bottomBar = {

@@ -23,6 +23,7 @@ val lightTextGrey = Color(0xFF94A3B8)
 val CoolGray    = Color(0xFF91959C)   // light grey for texts
 val InfoGray    = Color(0xFF576B75)
 
+
 // Status colors
 val ActiveGreen   = Color(0xFF34D399) // check-in open / active
 val WarningAmber  = Color(0xFFF59E0B) // boarding in progress

@@ -29,6 +29,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
@@ -46,6 +48,9 @@ import com.example.domain.model.Booking
 fun OfflineHomeScreen(
     onNavigateToBoardingScreen: () -> Unit = {},
     screenWidth : Dp = LocalConfiguration.current.screenWidthDp.dp,
+    screenWidth : Dp = with(LocalDensity.current) {
+        LocalWindowInfo.current.containerSize.width.toDp()
+    },
     booking: Booking
 ) {
     Row (
