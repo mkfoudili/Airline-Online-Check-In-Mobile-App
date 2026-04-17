@@ -212,6 +212,7 @@ fun LoginForm(
 
         Row(
             horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,  // Add this
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
@@ -222,13 +223,14 @@ fun LoginForm(
             )
             TextButton(
                 onClick = onSignUpClick,
-                contentPadding = PaddingValues(0.dp)
+                contentPadding = PaddingValues(0.dp),
+                modifier = Modifier.defaultMinSize(minHeight = 1.dp)
             ) {
                 Text(
                     text = "Sign Up",
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
-                    color = linkColor
+                    color = NavyBlue
                 )
             }
         }
