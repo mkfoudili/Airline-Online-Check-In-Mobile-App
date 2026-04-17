@@ -28,7 +28,6 @@ import com.example.check_in_mobile_app.presentation.checkin.baggage.BaggageViewM
 import com.example.check_in_mobile_app.presentation.checkin.confirmation.ConfirmationScreen
 import com.example.check_in_mobile_app.presentation.checkin.checkingdetailsreview.CheckingDetailsReviewScreen
 import com.example.check_in_mobile_app.presentation.checkin.passportscan.PassportScanScreen
->>>>>>> b46eaf59e471c2ba0dbf3ebf8609cf97e9ae06c7
 import com.example.check_in_mobile_app.presentation.components.TabItem
 import com.example.check_in_mobile_app.presentation.home.HomeScreen
 import com.example.check_in_mobile_app.presentation.welcome.SplashScreen
@@ -38,8 +37,7 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun AppNavGraph(
-    navController: NavHostController = rememberNavController()
-) {
+    navController: NavHostController = rememberNavController() ) {
     val navigateToTab: (TabItem) -> Unit = { tab ->
         val route = when (tab) {
             TabItem.HOME -> Destination.Home.route
