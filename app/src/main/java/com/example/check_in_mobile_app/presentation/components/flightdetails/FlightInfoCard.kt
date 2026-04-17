@@ -28,6 +28,14 @@ import com.example.domain.model.Booking
 
 @Composable
 fun FlightInfoCard(booking: Booking, modifier: Modifier = Modifier) {
+    val durationMs = booking.flight.arrivalTime - booking.flight.departureTime
+    val hours = java.util.concurrent.TimeUnit.MILLISECONDS.toHours(durationMs)
+    val minutes = java.util.concurrent.TimeUnit.MILLISECONDS.toMinutes(durationMs) % 60
+    val durationText = "${hours}h ${minutes}m".uppercase()
+
+    val sdf = java.text.SimpleDateFormat("dd MMM yyyy", java.util.Locale.getDefault())
+    val departureDateText = sdf.format(java.util.Date(booking.flight.departureTime)).uppercase()
+
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -53,7 +61,7 @@ fun FlightInfoCard(booking: Booking, modifier: Modifier = Modifier) {
                     modifier = Modifier.size(16.dp)
                 )
                 Text(
-                    text = "FLIGHT ${booking.flightNumber}",
+                    text = "FLIGHT ${booking.flight.flightNumber}",
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
@@ -75,14 +83,14 @@ fun FlightInfoCard(booking: Booking, modifier: Modifier = Modifier) {
                 // Origin
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = booking.origin,
+                        text = booking.flight.origin,
                         fontSize = 32.sp,
                         fontWeight = FontWeight.Bold,
                         color = NavyBlue,
                         letterSpacing = (-1).sp
                     )
                     Text(
-                        text = booking.originCity,
+                        text = booking.flight.originCity,
                         fontSize = 11.sp,
                         color = SubtleText,
                         letterSpacing = 0.5.sp
@@ -125,7 +133,7 @@ fun FlightInfoCard(booking: Booking, modifier: Modifier = Modifier) {
                     }
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = booking.duration.uppercase(),
+                        text = durationText,
                         fontSize = 10.sp,
                         color = SubtleText,
                         fontWeight = FontWeight.Bold,
@@ -139,7 +147,7 @@ fun FlightInfoCard(booking: Booking, modifier: Modifier = Modifier) {
                     horizontalAlignment = Alignment.End
                 ) {
                     Text(
-                        text = booking.destination,
+                        text = booking.flight.destination,
                         fontSize = 32.sp,
                         fontWeight = FontWeight.Bold,
                         color = NavyBlue,
@@ -147,7 +155,7 @@ fun FlightInfoCard(booking: Booking, modifier: Modifier = Modifier) {
                         textAlign = TextAlign.End
                     )
                     Text(
-                        text = booking.destinationCity,
+                        text = booking.flight.destinationCity,
                         fontSize = 11.sp,
                         color = SubtleText,
                         letterSpacing = 0.5.sp,
@@ -205,7 +213,7 @@ fun FlightInfoCard(booking: Booking, modifier: Modifier = Modifier) {
                             letterSpacing = 0.5.sp
                         )
                         Text(
-                            text = booking.departureDate,
+                            text = departureDateText,
                             fontSize = 13.sp,
                             fontWeight = FontWeight.Bold,
                             color = NavyBlue
@@ -239,7 +247,7 @@ fun FlightInfoCard(booking: Booking, modifier: Modifier = Modifier) {
                             letterSpacing = 0.5.sp
                         )
                         Text(
-                            text = booking.boardingTime,
+                            text = booking.flight.boardingTime,
                             fontSize = 13.sp,
                             fontWeight = FontWeight.Bold,
                             color = NavyBlue

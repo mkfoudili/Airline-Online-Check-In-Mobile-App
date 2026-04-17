@@ -24,7 +24,7 @@ import com.example.check_in_mobile_app.ui.theme.SurfaceGray
 import com.example.domain.model.Booking
 
 @Composable
-fun PassengerCard(booking: Booking, modifier: Modifier = Modifier) {
+fun PassengerCard(booking: Booking, modifier: Modifier = Modifier, infoText : String) {
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -55,14 +55,14 @@ fun PassengerCard(booking: Booking, modifier: Modifier = Modifier) {
 
         Column {
             Text(
-                text = booking.passengerName,
+                text = booking.passengers[0].firstName + ' ' + booking.passengers[0].lastName,
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Bold,
                 color = DarkText
             )
             Spacer(modifier = Modifier.height(2.dp))
             Text(
-                text = "PNR: ${booking.pnr}",
+                text = infoText/*"PNR: ${booking.pnr}"*/,
                 fontSize = 12.sp,
                 color = MediumGray,
                 fontWeight = FontWeight.Medium

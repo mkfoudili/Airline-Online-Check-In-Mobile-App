@@ -4,6 +4,7 @@ import com.example.data.local.dao.FlightDao
 import com.example.data.mapper.toDomain
 import com.example.data.remote.FlightDataSource
 import com.example.domain.model.Booking
+import com.example.domain.model.CheckInStatus
 import com.example.domain.model.Flight
 import com.example.domain.model.FlightItinerary
 import com.example.domain.repository.FlightRepository
@@ -53,7 +54,7 @@ class FlightRepositoryImpl(
                                     bookingId = "MOCK_ID",
                                     pnr = "MOCK_PNR",
                                     lastName = "MOCK_NAME",
-                                    status = "CONFIRMED",
+                                    status = CheckInStatus.CONFIRMED,
                                     flight = domainFlight,
                                     passengers = emptyList()
                                 ),

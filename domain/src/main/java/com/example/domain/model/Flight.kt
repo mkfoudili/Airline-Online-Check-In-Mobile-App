@@ -8,5 +8,9 @@ data class Flight(
     val departureTime: Long,
     val arrivalTime: Long,
     val aircraftType: String?,
-    val status: String?
+    val status: String?,
+    val originCity: String = "",
+    val destinationCity: String = "",
+    val checkInOpensTime: String = "",
+    val boardingTime: String = ""
 )

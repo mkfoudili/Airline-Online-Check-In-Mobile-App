@@ -19,6 +19,9 @@ val QrBorder      = Color(0xFFBDC1CA) // QR code border
 val SubtleText  = Color(0x992A3343)   // UPPERCASE labels, meta-info
 val MediumGray  = Color(0xFF9CA3AF)   // inactive icons, placeholders
 val Slate500    = Color(0xFF64748B)   // dark grey for texts
+val lightTextGrey = Color(0xFF94A3B8)
+val CoolGray    = Color(0xFF91959C)   // light grey for texts
+val InfoGray    = Color(0xFF576B75)
 
 // Status colors
 val ActiveGreen   = Color(0xFF34D399) // check-in open / active
@@ -32,3 +35,4 @@ val SubtitleWhite = Color(0xBFFFFFFF) // subtitle on blue card
 // Status badge specific (no direct equivalent in design system)
 val CheckedInBg   = Color(0xFFDCFCE7) // green pill background
 val CheckedInText = Color(0xFF166534) // green pill text
+val ConfirmationGreen = Color(0xFF10B981)
