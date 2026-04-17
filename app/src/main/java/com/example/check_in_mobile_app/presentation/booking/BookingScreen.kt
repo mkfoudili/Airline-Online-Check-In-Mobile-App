@@ -152,54 +152,57 @@ fun BookingScreenContent(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun BookingScreenPreview() {
+    val mockFlight = com.example.domain.model.Flight(
+        flightId = "f1",
+        flightNumber = "BA342",
+        origin = "LHR",
+        originCity = "SAN FRANCISCO",
+        destination = "CDG",
+        destinationCity = "LONDON",
+        departureTime = System.currentTimeMillis() + 86400000,
+        arrivalTime = System.currentTimeMillis() + 90000000 + (11 * 60 * 60 * 1000) + (20 * 60 * 1000), // ~11h 20m later
+        checkInOpensTime = "06:15",
+        boardingTime = "22:15",
+        aircraftType = "Boeing 737",
+        status = "Scheduled"
+    )
+
     val dummyBookings = listOf(
         Booking(
-            bookingRef = "REF001",
-            flightNumber = "BA342",
-            origin = "LHR",
-            originCity = "SAN FRANCISCO",
-            destination = "CDG",
-            destinationCity = "LONDON",
-            departureDate = "Oct 28, 2023",
-            departureTime = "23:00",
-            duration = "11h 20m",
-            status = CheckInStatus.CHECKED_IN
+            bookingId = "b1",
+            pnr = "REF001",
+            lastName = "Smith",
+            status = CheckInStatus.CHECK_IN_OPEN,
+            flight = mockFlight,
+            passengers = emptyList(),
+            bookingRef = "REF001"
         ),
         Booking(
-            bookingRef = "REF002",
-            flightNumber = "BA342",
-            origin = "LHR",
-            originCity = "SAN FRANCISCO",
-            destination = "CDG",
-            destinationCity = "LONDON",
-            departureDate = "Oct 28, 2023",
-            departureTime = "23:00",
-            duration = "11h 20m",
-            status = CheckInStatus.CHECK_IN_OPEN
+            bookingId = "b2",
+            pnr = "REF002",
+            lastName = "Smith",
+            status = CheckInStatus.CHECK_IN_OPEN,
+            flight = mockFlight,
+            passengers = emptyList(),
+            bookingRef = "REF002"
         ),
         Booking(
-            bookingRef = "REF003",
-            flightNumber = "BA342",
-            origin = "LHR",
-            originCity = "SAN FRANCISCO",
-            destination = "CDG",
-            destinationCity = "LONDON",
-            departureDate = "Oct 28, 2023",
-            departureTime = "23:00",
-            duration = "11h 20m",
-            status = CheckInStatus.CONFIRMED
+            bookingId = "b3",
+            pnr = "REF003",
+            lastName = "Smith",
+            status = CheckInStatus.CONFIRMED,
+            flight = mockFlight,
+            passengers = emptyList(),
+            bookingRef = "REF003"
         ),
         Booking(
-            bookingRef = "REF004",
-            flightNumber = "BA342",
-            origin = "LHR",
-            originCity = "SAN FRANCISCO",
-            destination = "CDG",
-            destinationCity = "LONDON",
-            departureDate = "Oct 28, 2023",
-            departureTime = "23:00",
-            duration = "11h 20m",
-            status = CheckInStatus.PASSED
+            bookingId = "b4",
+            pnr = "REF004",
+            lastName = "Smith",
+            status = CheckInStatus.PASSED,
+            flight = mockFlight,
+            passengers = emptyList(),
+            bookingRef = "REF004"
         )
     )
     BookingScreenContent(

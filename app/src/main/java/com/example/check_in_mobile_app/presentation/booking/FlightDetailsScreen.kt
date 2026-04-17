@@ -142,7 +142,7 @@ fun FlightDetailsScreen(
                 fontFamily = Poppins
             )
             Spacer(modifier = Modifier.height(12.dp))
-            PassengerCard(booking)
+            PassengerCard(booking, infoText = "PNR: ${booking.pnr}")
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -169,21 +169,40 @@ fun FlightDetailsScreen(
 fun FlightDetailsScreenPreview() {
     FlightDetailsScreen(
         booking = Booking(
+            bookingId = "b1",
             bookingRef = "BB9XC2",
-            flightNumber = "UA2402",
-            origin = "SFO",
-            originCity = "San Francisco",
-            destination = "JFK",
-            destinationCity = "New York",
-            departureDate = "Oct 24, 2023",
-            departureTime = "08:45",
-            duration = "5H 45M",
-            passengerName = "Djerfi Fatma",
             pnr = "BB9XC2",
-            checkInOpensTime = "06:15",
-            boardingTime = "08:00",
+            lastName = "Fatma",
+            status = CheckInStatus.CHECK_IN_OPEN,
             gate = "G24",
-            status = CheckInStatus.CHECK_IN_OPEN
+            passengers = listOf(
+                com.example.domain.model.Passenger(
+                    passengerId = "p1",
+                    uid = "u1",
+                    firstName = "Djerfi",
+                    lastName = "Fatma",
+                    passportNumber = "AB123456",
+                    nationality = "Algerian",
+                    dateOfBirth = "1990-01-01",
+                    expiryDate = null,
+                    seatNumber = "12A",
+                    checkinStatus = "PENDING"
+                )
+            ),
+            flight = com.example.domain.model.Flight(
+                flightId = "f1",
+                flightNumber = "UA2402",
+                origin = "SFO",
+                originCity = "San Francisco",
+                destination = "JFK",
+                destinationCity = "New York",
+                departureTime = System.currentTimeMillis() + 86400000,
+                arrivalTime = System.currentTimeMillis() + 90000000,
+                checkInOpensTime = "06:15",
+                boardingTime = "08:00",
+                aircraftType = "Boeing 737",
+                status = "Scheduled"
+            )
         )
     )
 }
