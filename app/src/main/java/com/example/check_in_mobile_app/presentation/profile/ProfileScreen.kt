@@ -131,7 +131,7 @@ fun ProfileScreenContent(
 
             // Avatar Section
             ProfileAvatar(
-                isOnline = uiState.isOnline
+                isOnline = uiState.profileData.isOnline
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -142,7 +142,7 @@ fun ProfileScreenContent(
                 modifier = Modifier.clickable { onEvent(ProfileEvent.OnEditProfileClicked) }
             ) {
                 Text(
-                    text = uiState.name,
+                    text = uiState.profileData.name,
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold,
                     color = NavyBlue,
@@ -169,8 +169,8 @@ fun ProfileScreenContent(
             Spacer(modifier = Modifier.height(12.dp))
 
             ProfileInfoCard(
-                email = uiState.email,
-                phoneNumber = uiState.phoneNumber,
+                email = uiState.profileData.email,
+                phoneNumber = uiState.profileData.phoneNumber,
                 onEditEmailClick = {
                     onEvent(ProfileEvent.OnEditEmailClicked)
                 },
@@ -329,7 +329,7 @@ fun EditProfileScreen(
 
             BookingInputField(
                 label = stringResource(R.string.common_full_name),
-                value = uiState.editedName,
+                value = uiState.editData.name,
                 placeholder = stringResource(R.string.profile_full_name_placeholder),
                 onValueChange = { onEvent(ProfileEvent.OnNameChanged(it)) },
                 leadingIcon = {
@@ -346,7 +346,7 @@ fun EditProfileScreen(
 
             BookingInputField(
                 label = stringResource(R.string.common_email_address),
-                value = uiState.editedEmail,
+                value = uiState.editData.email,
                 placeholder = stringResource(R.string.profile_email_placeholder),
                 onValueChange = { onEvent(ProfileEvent.OnEmailChanged(it)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
@@ -364,7 +364,7 @@ fun EditProfileScreen(
 
             BookingInputField(
                 label = stringResource(R.string.common_phone_number),
-                value = uiState.editedPhoneNumber,
+                value = uiState.editData.phoneNumber,
                 placeholder = stringResource(R.string.profile_phone_placeholder),
                 onValueChange = { onEvent(ProfileEvent.OnPhoneNumberChanged(it)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
@@ -560,10 +560,10 @@ fun ChangePasswordScreen(
 
             PasswordInputField(
                 label = stringResource(R.string.profile_current_password_label),
-                value = uiState.currentPassword,
+                value = uiState.changePasswordData.currentPassword,
                 placeholder = stringResource(R.string.profile_current_password_placeholder),
                 onValueChange = { onEvent(ProfileEvent.OnCurrentPasswordChanged(it)) },
-                isVisible = uiState.isCurrentPasswordVisible,
+                isVisible = uiState.changePasswordData.isCurrentPasswordVisible,
                 onToggleVisibility = { onEvent(ProfileEvent.OnToggleCurrentPasswordVisibility) }
             )
 
@@ -571,10 +571,10 @@ fun ChangePasswordScreen(
 
             PasswordInputField(
                 label = stringResource(R.string.profile_new_password_label),
-                value = uiState.newPassword,
+                value = uiState.changePasswordData.newPassword,
                 placeholder = stringResource(R.string.profile_new_password_placeholder),
                 onValueChange = { onEvent(ProfileEvent.OnNewPasswordChanged(it)) },
-                isVisible = uiState.isNewPasswordVisible,
+                isVisible = uiState.changePasswordData.isNewPasswordVisible,
                 onToggleVisibility = { onEvent(ProfileEvent.OnToggleNewPasswordVisibility) }
             )
 
@@ -582,10 +582,10 @@ fun ChangePasswordScreen(
 
             PasswordInputField(
                 label = stringResource(R.string.profile_confirm_password_label),
-                value = uiState.confirmPassword,
+                value = uiState.changePasswordData.confirmPassword,
                 placeholder = stringResource(R.string.profile_confirm_password_placeholder),
                 onValueChange = { onEvent(ProfileEvent.OnConfirmPasswordChanged(it)) },
-                isVisible = uiState.isConfirmPasswordVisible,
+                isVisible = uiState.changePasswordData.isConfirmPasswordVisible,
                 onToggleVisibility = { onEvent(ProfileEvent.OnToggleConfirmPasswordVisibility) }
             )
             
@@ -635,10 +635,12 @@ fun PasswordInputField(
 fun ProfileScreenPreview() {
     ProfileScreenContent(
         uiState = ProfileUiState(
-            name = "Djerfi Fatima",
-            email = "mr_mikircha@esi.dz",
-            phoneNumber = "+1 (555) 012-3456",
-            isOnline = true
+            profileData = ProfileData(
+                name = "Djerfi Fatima",
+                email = "mr_mikircha@esi.dz",
+                phoneNumber = "+1 (555) 012-3456",
+                isOnline = true
+            )
         )
     )
 }
@@ -649,9 +651,11 @@ fun EditProfileScreenPreview() {
     EditProfileScreen(
         uiState = ProfileUiState(
             isEditing = true,
-            editedName = "Djerfi Fatima",
-            editedEmail = "mr_mikircha@esi.dz",
-            editedPhoneNumber = "+1 (555) 012-4567"
+            editData = EditProfileData(
+                name = "Djerfi Fatima",
+                email = "mr_mikircha@esi.dz",
+                phoneNumber = "+1 (555) 012-4567"
+            )
         ),
         onEvent = {}
     )

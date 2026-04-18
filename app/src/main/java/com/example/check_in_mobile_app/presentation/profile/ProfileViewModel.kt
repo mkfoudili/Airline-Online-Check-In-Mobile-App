@@ -36,15 +36,17 @@ class ProfileViewModel(
                 val profile = getProfileUseCase()
 
                 _uiState.value = _uiState.value.copy(
-                    name = profile.fullName,
-                    email = profile.email,
-                    phoneNumber = profile.phoneNumber,
-                    passwordMasked = "************",
-                    profileImageUrl = profile.avatarUrl,
-                    isVerified = profile.isVerified,
-                    securityLevel = profile.securityLevel,
-                    isLoading = false,
-                    isOnline = profile.isOnline,
+                    profileData = ProfileData(
+                        name = profile.fullName,
+                        email = profile.email,
+                        phoneNumber = profile.phoneNumber,
+                        passwordMasked = "************",
+                        profileImageUrl = profile.avatarUrl,
+                        isVerified = profile.isVerified,
+                        securityLevel = profile.securityLevel,
+                        isOnline = profile.isOnline,
+                    ),
+                    isLoading = false
                 )
 
             } catch (e: Exception) {
@@ -60,9 +62,11 @@ class ProfileViewModel(
         _uiState.value = _uiState.value.copy(
             isEditing = true,
             isChangingPassword = false,
-            editedName = _uiState.value.name,
-            editedEmail = _uiState.value.email,
-            editedPhoneNumber = _uiState.value.phoneNumber
+            editData = EditProfileData(
+                name = _uiState.value.profileData.name,
+                email = _uiState.value.profileData.email,
+                phoneNumber = _uiState.value.profileData.phoneNumber
+            )
         )
     }
 
@@ -70,12 +74,7 @@ class ProfileViewModel(
         _uiState.value = _uiState.value.copy(
             isChangingPassword = true,
             isEditing = false,
-            currentPassword = "",
-            newPassword = "",
-            confirmPassword = "",
-            isCurrentPasswordVisible = false,
-            isNewPasswordVisible = false,
-            isConfirmPasswordVisible = false
+            changePasswordData = ChangePasswordData()
         )
     }
 
@@ -95,28 +94,36 @@ class ProfileViewModel(
                     enterEditMode()
                 }
                 is ProfileEvent.OnNameChanged -> {
-                    _uiState.value = _uiState.value.copy(editedName = event.name)
+                    _uiState.value = _uiState.value.copy(
+                        editData = _uiState.value.editData.copy(name = event.name)
+                    )
                 }
                 is ProfileEvent.OnEmailChanged -> {
-                    _uiState.value = _uiState.value.copy(editedEmail = event.email)
+                    _uiState.value = _uiState.value.copy(
+                        editData = _uiState.value.editData.copy(email = event.email)
+                    )
                 }
                 is ProfileEvent.OnPhoneNumberChanged -> {
-                    _uiState.value = _uiState.value.copy(editedPhoneNumber = event.phoneNumber)
+                    _uiState.value = _uiState.value.copy(
+                        editData = _uiState.value.editData.copy(phoneNumber = event.phoneNumber)
+                    )
                 }
                 ProfileEvent.OnSaveClicked -> {
                     _uiState.value = _uiState.value.copy(isLoading = true)
                     try {
                         val updatedProfile = updateProfileUseCase(
-                            fullName = _uiState.value.editedName,
-                            email = _uiState.value.editedEmail,
-                            phoneNumber = _uiState.value.editedPhoneNumber
+                            fullName = _uiState.value.editData.name,
+                            email = _uiState.value.editData.email,
+                            phoneNumber = _uiState.value.editData.phoneNumber
                         )
                         _uiState.value = _uiState.value.copy(
                             isEditing = false,
                             isLoading = false,
-                            name = updatedProfile.fullName,
-                            email = updatedProfile.email,
-                            phoneNumber = updatedProfile.phoneNumber
+                            profileData = _uiState.value.profileData.copy(
+                                name = updatedProfile.fullName,
+                                email = updatedProfile.email,
+                                phoneNumber = updatedProfile.phoneNumber
+                            )
                         )
                     } catch (e: Exception) {
                         _uiState.value = _uiState.value.copy(
@@ -145,33 +152,52 @@ class ProfileViewModel(
                     // Handle photo change
                 }
                 is ProfileEvent.OnCurrentPasswordChanged -> {
-                    _uiState.value = _uiState.value.copy(currentPassword = event.value)
+                    _uiState.value = _uiState.value.copy(
+                        changePasswordData = _uiState.value.changePasswordData.copy(currentPassword = event.value)
+                    )
                 }
                 is ProfileEvent.OnNewPasswordChanged -> {
-                    _uiState.value = _uiState.value.copy(newPassword = event.value)
+                    _uiState.value = _uiState.value.copy(
+                        changePasswordData = _uiState.value.changePasswordData.copy(newPassword = event.value)
+                    )
                 }
                 is ProfileEvent.OnConfirmPasswordChanged -> {
-                    _uiState.value = _uiState.value.copy(confirmPassword = event.value)
+                    _uiState.value = _uiState.value.copy(
+                        changePasswordData = _uiState.value.changePasswordData.copy(confirmPassword = event.value)
+                    )
                 }
                 ProfileEvent.OnToggleCurrentPasswordVisibility -> {
-                    _uiState.value = _uiState.value.copy(isCurrentPasswordVisible = !_uiState.value.isCurrentPasswordVisible)
+                    _uiState.value = _uiState.value.copy(
+                        changePasswordData = _uiState.value.changePasswordData.copy(
+                            isCurrentPasswordVisible = !_uiState.value.changePasswordData.isCurrentPasswordVisible
+                        )
+                    )
                 }
                 ProfileEvent.OnToggleNewPasswordVisibility -> {
-                    _uiState.value = _uiState.value.copy(isNewPasswordVisible = !_uiState.value.isNewPasswordVisible)
+                    _uiState.value = _uiState.value.copy(
+                        changePasswordData = _uiState.value.changePasswordData.copy(
+                            isNewPasswordVisible = !_uiState.value.changePasswordData.isNewPasswordVisible
+                        )
+                    )
                 }
                 ProfileEvent.OnToggleConfirmPasswordVisibility -> {
-                    _uiState.value = _uiState.value.copy(isConfirmPasswordVisible = !_uiState.value.isConfirmPasswordVisible)
+                    _uiState.value = _uiState.value.copy(
+                        changePasswordData = _uiState.value.changePasswordData.copy(
+                            isConfirmPasswordVisible = !_uiState.value.changePasswordData.isConfirmPasswordVisible
+                        )
+                    )
                 }
                 ProfileEvent.OnSavePasswordClicked -> {
-                    if (_uiState.value.newPassword != _uiState.value.confirmPassword) {
+                    val passwordData = _uiState.value.changePasswordData
+                    if (passwordData.newPassword != passwordData.confirmPassword) {
                         _uiState.value = _uiState.value.copy(error = "Passwords do not match")
                         return@launch
                     }
 
                     _uiState.value = _uiState.value.copy(isLoading = true)
                     val result = updatePasswordUseCase(
-                        currentPassword = _uiState.value.currentPassword,
-                        newPassword = _uiState.value.newPassword
+                        currentPassword = passwordData.currentPassword,
+                        newPassword = passwordData.newPassword
                     )
                     
                     if (result.isSuccess) {
