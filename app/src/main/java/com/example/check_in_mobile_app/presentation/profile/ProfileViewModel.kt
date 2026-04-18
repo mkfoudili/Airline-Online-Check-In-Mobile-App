@@ -77,138 +77,162 @@ class ProfileViewModel(
     }
 
     fun onEvent(event: ProfileEvent) {
-        viewModelScope.launch {
-            when (event) {
-                ProfileEvent.OnEditEmailClicked -> {
-                    enterEditMode()
-                }
-                ProfileEvent.OnEditPhoneClicked -> {
-                    enterEditMode()
-                }
-                ProfileEvent.OnEditPasswordClicked -> {
-                    enterChangePasswordMode()
-                }
-                ProfileEvent.OnEditProfileClicked -> {
-                    enterEditMode()
-                }
-                is ProfileEvent.OnNameChanged -> {
-                    _uiState.value = _uiState.value.copy(
-                        editData = _uiState.value.editData.copy(name = event.name)
-                    )
-                }
-                is ProfileEvent.OnEmailChanged -> {
-                    _uiState.value = _uiState.value.copy(
-                        editData = _uiState.value.editData.copy(email = event.email)
-                    )
-                }
-                is ProfileEvent.OnPhoneNumberChanged -> {
-                    _uiState.value = _uiState.value.copy(
-                        editData = _uiState.value.editData.copy(phoneNumber = event.phoneNumber)
-                    )
-                }
-                ProfileEvent.OnSaveClicked -> {
-                    _uiState.value = _uiState.value.copy(isLoading = true)
-                    try {
-                        val updatedProfile = updateProfileUseCase(
-                            fullName = _uiState.value.editData.name,
-                            email = _uiState.value.editData.email,
-                            phoneNumber = _uiState.value.editData.phoneNumber
-                        )
-                        _uiState.value = _uiState.value.copy(
-                            screenMode = ProfileScreenMode.VIEW,
-                            isLoading = false,
-                            profileData = _uiState.value.profileData.copy(
-                                name = updatedProfile.fullName,
-                                email = updatedProfile.email,
-                                phoneNumber = updatedProfile.phoneNumber
-                            )
-                        )
-                    } catch (e: Exception) {
-                        _uiState.value = _uiState.value.copy(
-                            isLoading = false,
-                            error = e.message ?: "Update failed"
-                        )
-                    }
-                }
-                ProfileEvent.OnCancelClicked -> {
-                    _uiState.value = _uiState.value.copy(
-                        screenMode = ProfileScreenMode.VIEW
-                    )
-                }
-                ProfileEvent.OnBackClicked -> {
-                    if (_uiState.value.screenMode != ProfileScreenMode.VIEW) {
-                        _uiState.value = _uiState.value.copy(
-                            screenMode = ProfileScreenMode.VIEW
-                        )
-                    } else {
-                        _uiAction.emit(ProfileUiAction.NavigateBack)
-                    }
-                }
-                ProfileEvent.OnChangePhotoClicked -> {
-                    // Handle photo change
-                }
-                is ProfileEvent.OnCurrentPasswordChanged -> {
-                    _uiState.value = _uiState.value.copy(
-                        changePasswordData = _uiState.value.changePasswordData.copy(currentPassword = event.value)
-                    )
-                }
-                is ProfileEvent.OnNewPasswordChanged -> {
-                    _uiState.value = _uiState.value.copy(
-                        changePasswordData = _uiState.value.changePasswordData.copy(newPassword = event.value)
-                    )
-                }
-                is ProfileEvent.OnConfirmPasswordChanged -> {
-                    _uiState.value = _uiState.value.copy(
-                        changePasswordData = _uiState.value.changePasswordData.copy(confirmPassword = event.value)
-                    )
-                }
-                ProfileEvent.OnToggleCurrentPasswordVisibility -> {
-                    _uiState.value = _uiState.value.copy(
-                        changePasswordData = _uiState.value.changePasswordData.copy(
-                            isCurrentPasswordVisible = !_uiState.value.changePasswordData.isCurrentPasswordVisible
-                        )
-                    )
-                }
-                ProfileEvent.OnToggleNewPasswordVisibility -> {
-                    _uiState.value = _uiState.value.copy(
-                        changePasswordData = _uiState.value.changePasswordData.copy(
-                            isNewPasswordVisible = !_uiState.value.changePasswordData.isNewPasswordVisible
-                        )
-                    )
-                }
-                ProfileEvent.OnToggleConfirmPasswordVisibility -> {
-                    _uiState.value = _uiState.value.copy(
-                        changePasswordData = _uiState.value.changePasswordData.copy(
-                            isConfirmPasswordVisible = !_uiState.value.changePasswordData.isConfirmPasswordVisible
-                        )
-                    )
-                }
-                ProfileEvent.OnSavePasswordClicked -> {
-                    val passwordData = _uiState.value.changePasswordData
-                    if (passwordData.newPassword != passwordData.confirmPassword) {
-                        _uiState.value = _uiState.value.copy(error = "Passwords do not match")
-                        return@launch
-                    }
+        when (event) {
+            ProfileEvent.OnEditEmailClicked,
+            ProfileEvent.OnEditPhoneClicked,
+            ProfileEvent.OnEditProfileClicked -> enterEditMode()
+            ProfileEvent.OnEditPasswordClicked -> enterChangePasswordMode()
+            is ProfileEvent.OnNameChanged -> onNameChanged(event.name)
+            is ProfileEvent.OnEmailChanged -> onEmailChanged(event.email)
+            is ProfileEvent.OnPhoneNumberChanged -> onPhoneNumberChanged(event.phoneNumber)
+            ProfileEvent.OnSaveClicked -> onSaveClicked()
+            ProfileEvent.OnCancelClicked -> onCancelClicked()
+            ProfileEvent.OnBackClicked -> onBackClicked()
+            ProfileEvent.OnChangePhotoClicked -> onChangePhotoClicked()
+            is ProfileEvent.OnCurrentPasswordChanged -> onCurrentPasswordChanged(event.value)
+            is ProfileEvent.OnNewPasswordChanged -> onNewPasswordChanged(event.value)
+            is ProfileEvent.OnConfirmPasswordChanged -> onConfirmPasswordChanged(event.value)
+            ProfileEvent.OnToggleCurrentPasswordVisibility -> toggleCurrentPasswordVisibility()
+            ProfileEvent.OnToggleNewPasswordVisibility -> toggleNewPasswordVisibility()
+            ProfileEvent.OnToggleConfirmPasswordVisibility -> toggleConfirmPasswordVisibility()
+            ProfileEvent.OnSavePasswordClicked -> onSavePasswordClicked()
+        }
+    }
 
-                    _uiState.value = _uiState.value.copy(isLoading = true)
-                    val result = updatePasswordUseCase(
-                        currentPassword = passwordData.currentPassword,
-                        newPassword = passwordData.newPassword
+    private fun onNameChanged(name: String) {
+        _uiState.value = _uiState.value.copy(
+            editData = _uiState.value.editData.copy(name = name)
+        )
+    }
+
+    private fun onEmailChanged(email: String) {
+        _uiState.value = _uiState.value.copy(
+            editData = _uiState.value.editData.copy(email = email)
+        )
+    }
+
+    private fun onPhoneNumberChanged(phoneNumber: String) {
+        _uiState.value = _uiState.value.copy(
+            editData = _uiState.value.editData.copy(phoneNumber = phoneNumber)
+        )
+    }
+
+    private fun onSaveClicked() {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isLoading = true)
+            try {
+                val updatedProfile = updateProfileUseCase(
+                    fullName = _uiState.value.editData.name,
+                    email = _uiState.value.editData.email,
+                    phoneNumber = _uiState.value.editData.phoneNumber
+                )
+                _uiState.value = _uiState.value.copy(
+                    screenMode = ProfileScreenMode.VIEW,
+                    isLoading = false,
+                    profileData = _uiState.value.profileData.copy(
+                        name = updatedProfile.fullName,
+                        email = updatedProfile.email,
+                        phoneNumber = updatedProfile.phoneNumber
                     )
-                    
-                    if (result.isSuccess) {
-                        _uiState.value = _uiState.value.copy(
-                            isLoading = false,
-                            screenMode = ProfileScreenMode.VIEW,
-                            error = null
-                        )
-                    } else {
-                        _uiState.value = _uiState.value.copy(
-                            isLoading = false,
-                            error = result.exceptionOrNull()?.message ?: "Update failed"
-                        )
-                    }
-                }
+                )
+            } catch (e: Exception) {
+                _uiState.value = _uiState.value.copy(
+                    isLoading = false,
+                    error = e.message ?: "Update failed"
+                )
+            }
+        }
+    }
+
+    private fun onCancelClicked() {
+        _uiState.value = _uiState.value.copy(
+            screenMode = ProfileScreenMode.VIEW
+        )
+    }
+
+    private fun onBackClicked() {
+        viewModelScope.launch {
+            if (_uiState.value.screenMode != ProfileScreenMode.VIEW) {
+                _uiState.value = _uiState.value.copy(
+                    screenMode = ProfileScreenMode.VIEW
+                )
+            } else {
+                _uiAction.emit(ProfileUiAction.NavigateBack)
+            }
+        }
+    }
+
+    private fun onChangePhotoClicked() {
+        // Handle photo change
+    }
+
+    private fun onCurrentPasswordChanged(value: String) {
+        _uiState.value = _uiState.value.copy(
+            changePasswordData = _uiState.value.changePasswordData.copy(currentPassword = value)
+        )
+    }
+
+    private fun onNewPasswordChanged(value: String) {
+        _uiState.value = _uiState.value.copy(
+            changePasswordData = _uiState.value.changePasswordData.copy(newPassword = value)
+        )
+    }
+
+    private fun onConfirmPasswordChanged(value: String) {
+        _uiState.value = _uiState.value.copy(
+            changePasswordData = _uiState.value.changePasswordData.copy(confirmPassword = value)
+        )
+    }
+
+    private fun toggleCurrentPasswordVisibility() {
+        _uiState.value = _uiState.value.copy(
+            changePasswordData = _uiState.value.changePasswordData.copy(
+                isCurrentPasswordVisible = !_uiState.value.changePasswordData.isCurrentPasswordVisible
+            )
+        )
+    }
+
+    private fun toggleNewPasswordVisibility() {
+        _uiState.value = _uiState.value.copy(
+            changePasswordData = _uiState.value.changePasswordData.copy(
+                isNewPasswordVisible = !_uiState.value.changePasswordData.isNewPasswordVisible
+            )
+        )
+    }
+
+    private fun toggleConfirmPasswordVisibility() {
+        _uiState.value = _uiState.value.copy(
+            changePasswordData = _uiState.value.changePasswordData.copy(
+                isConfirmPasswordVisible = !_uiState.value.changePasswordData.isConfirmPasswordVisible
+            )
+        )
+    }
+
+    private fun onSavePasswordClicked() {
+        viewModelScope.launch {
+            val passwordData = _uiState.value.changePasswordData
+            if (passwordData.newPassword != passwordData.confirmPassword) {
+                _uiState.value = _uiState.value.copy(error = "Passwords do not match")
+                return@launch
+            }
+
+            _uiState.value = _uiState.value.copy(isLoading = true)
+            val result = updatePasswordUseCase(
+                currentPassword = passwordData.currentPassword,
+                newPassword = passwordData.newPassword
+            )
+
+            if (result.isSuccess) {
+                _uiState.value = _uiState.value.copy(
+                    isLoading = false,
+                    screenMode = ProfileScreenMode.VIEW,
+                    error = null
+                )
+            } else {
+                _uiState.value = _uiState.value.copy(
+                    isLoading = false,
+                    error = result.exceptionOrNull()?.message ?: "Update failed"
+                )
             }
         }
     }
