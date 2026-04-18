@@ -2,6 +2,7 @@ package com.example.check_in_mobile_app.presentation.home
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,7 +15,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -40,11 +44,14 @@ import com.example.check_in_mobile_app.presentation.components.flightdetails.Fli
 import com.example.check_in_mobile_app.ui.theme.ErrorRed
 import com.example.check_in_mobile_app.ui.theme.NavyBlue
 import com.example.check_in_mobile_app.ui.theme.CoolGray
+import com.example.check_in_mobile_app.ui.theme.LightGray
+import com.example.check_in_mobile_app.ui.theme.MediumGray
 import com.example.domain.model.Booking
 
 @Composable
 fun OfflineHomeScreen(
     onNavigateToBoardingScreen: () -> Unit = {},
+    onProfileClick: () -> Unit = {},
     screenWidth : Dp = LocalConfiguration.current.screenWidthDp.dp,
     booking: Booking
 ) {
@@ -58,12 +65,32 @@ fun OfflineHomeScreen(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(
-            text = "Offline Dashboard",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            color = NavyBlue
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Offline Dashboard",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = NavyBlue
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Box(
+                modifier = Modifier
+                    .size(32.dp)
+                    .clip(CircleShape)
+                    .background(LightGray)
+                    .clickable { onProfileClick() },
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Person,
+                    contentDescription = "Profile",
+                    tint = MediumGray,
+                    modifier = Modifier.size(18.dp)
+                )
+            }
+        }
         Row(
             modifier = Modifier
                 .width(70.dp),

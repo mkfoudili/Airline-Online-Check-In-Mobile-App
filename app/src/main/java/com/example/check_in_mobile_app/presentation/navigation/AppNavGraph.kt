@@ -52,7 +52,6 @@ fun AppNavGraph(
             navController.navigate(route) {
                 popUpTo(Destination.Home.route) {
                     saveState = true
-                    inclusive = false
                 }
                 launchSingleTop = true
                 restoreState = true
@@ -94,6 +93,9 @@ fun AppNavGraph(
                 onTabSelected = navigateToTab,
                 onNavigateToBoardingScreen = {
                     navController.navigate(Destination.Boarding.route)
+                },
+                onProfileClick = {
+                    navigateToTab(TabItem.PROFILE)
                 }
             )
         }
