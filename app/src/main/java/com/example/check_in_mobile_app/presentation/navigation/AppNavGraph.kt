@@ -228,7 +228,12 @@ fun AppNavGraph(
         }
         composable(route = Destination.Profile.route) {
             ProfileScreen(
-                onTabSelected = navigateToTab
+                onTabSelected = navigateToTab,
+                onLogout = {
+                    navController.navigate(Destination.Welcome.route) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                }
             )
         }
     }

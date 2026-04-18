@@ -10,6 +10,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -47,7 +48,8 @@ import com.example.check_in_mobile_app.ui.theme.SubtleText
 @Composable
 fun ProfileScreen(
     viewModel: ProfileViewModel = viewModel(),
-    onTabSelected: (TabItem) -> Unit = {}
+    onTabSelected: (TabItem) -> Unit = {},
+    onLogout: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -68,7 +70,8 @@ fun ProfileScreen(
             ProfileScreenContent(
                 uiState = uiState,
                 onEvent = viewModel::onEvent,
-                onTabSelected = onTabSelected
+                onTabSelected = onTabSelected,
+                onLogout = onLogout
             )
         }
     }
@@ -79,7 +82,8 @@ fun ProfileScreen(
 fun ProfileScreenContent(
     uiState: ProfileUiState,
     onEvent: (ProfileEvent) -> Unit = {},
-    onTabSelected: (TabItem) -> Unit = {}
+    onTabSelected: (TabItem) -> Unit = {},
+    onLogout: () -> Unit = {}
 ) {
     Scaffold(
         containerColor = Color.White,
@@ -180,6 +184,21 @@ fun ProfileScreenContent(
             Spacer(modifier = Modifier.height(24.dp))
 
             SecurityStatusBanner()
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            ProfileSecondaryActionButton(
+                text = "Logout",
+                onClick = onLogout,
+                icon = {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ExitToApp,
+                        contentDescription = "Logout",
+                        modifier = Modifier.size(18.dp),
+                        tint = NavyBlue
+                    )
+                }
+            )
 
             Spacer(modifier = Modifier.height(32.dp))
         }
