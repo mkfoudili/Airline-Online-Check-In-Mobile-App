@@ -45,6 +45,9 @@ import com.example.check_in_mobile_app.ui.theme.DarkText
 import com.example.check_in_mobile_app.ui.theme.NavyBlue
 import com.example.check_in_mobile_app.ui.theme.Poppins
 import com.example.check_in_mobile_app.ui.theme.SubtleText
+import com.example.check_in_mobile_app.ui.theme.DividerColor
+import com.example.check_in_mobile_app.ui.theme.SurfaceGray
+import com.example.check_in_mobile_app.ui.theme.BorderLight
 
 @Composable
 fun ProfileScreen(
@@ -89,7 +92,7 @@ private fun ProfileBaseScreen(
     content: @Composable ColumnScope.() -> Unit
 ) {
     Scaffold(
-        containerColor = Color.White,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             Column {
                 TopAppBar(
@@ -115,10 +118,10 @@ private fun ProfileBaseScreen(
                     },
                     actions = actions,
                     colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = Color.White
+                        containerColor = MaterialTheme.colorScheme.background
                     )
                 )
-                HorizontalDivider(color = Color(0xFFF1F5F9), thickness = 1.dp)
+                HorizontalDivider(color = DividerColor, thickness = 1.dp)
             }
         },
         bottomBar = bottomBar
@@ -147,10 +150,10 @@ private fun ProfileBottomActions(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.background)
             .padding(horizontal = 24.dp, vertical = 20.dp)
     ) {
-        HorizontalDivider(color = Color(0xFFF1F5F9), thickness = 1.dp)
+        HorizontalDivider(color = DividerColor, thickness = 1.dp)
         Spacer(modifier = Modifier.height(24.dp))
 
         ProfileActionButton(
@@ -288,7 +291,7 @@ fun EditProfileScreen(
                         imageVector = Icons.Default.CheckCircle,
                         contentDescription = null,
                         modifier = Modifier.size(18.dp),
-                        tint = Color.White
+                        tint = MaterialTheme.colorScheme.onPrimary
                     )
                 },
                 secondaryIcon = {
@@ -321,7 +324,7 @@ fun EditProfileScreen(
                 Icon(
                     imageVector = Icons.Default.Person,
                     contentDescription = stringResource(R.string.profile_change_photo_desc),
-                    tint = Color.White,
+                    tint = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier.size(16.dp)
                 )
             }
@@ -331,9 +334,10 @@ fun EditProfileScreen(
 
         Text(
             text = stringResource(R.string.profile_change_photo_label),
-            fontSize = 14.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = NavyBlue,
+            style = MaterialTheme.typography.labelLarge.copy(
+                fontWeight = FontWeight.SemiBold,
+                color = NavyBlue
+            ),
             modifier = Modifier.clickable { onEvent(ProfileEvent.OnChangePhotoClicked) }
         )
 
@@ -404,8 +408,8 @@ fun EditProfileScreen(
                 .fillMaxWidth()
                 .clickable { onEvent(ProfileEvent.OnEditPasswordClicked) },
             shape = RoundedCornerShape(12.dp),
-            color = Color(0xFFF8FAFC),
-            border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFE2E8F0))
+            color = SurfaceGray,
+            border = androidx.compose.foundation.BorderStroke(1.dp, BorderLight)
         ) {
             Row(
                 modifier = Modifier.padding(16.dp),
@@ -415,7 +419,7 @@ fun EditProfileScreen(
                     modifier = Modifier
                         .size(40.dp)
                         .clip(CircleShape)
-                        .background(Color(0xFFE2E8F0)),
+                        .background(BorderLight),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
@@ -431,14 +435,16 @@ fun EditProfileScreen(
                 Column(modifier = Modifier.weight(1.0f)) {
                     Text(
                         text = stringResource(R.string.common_change_password),
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = NavyBlue
+                        style = MaterialTheme.typography.titleSmall.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = NavyBlue
+                        )
                     )
                     Text(
                         text = stringResource(R.string.profile_keep_account_secure),
-                        fontSize = 12.sp,
-                        color = SubtleText
+                        style = MaterialTheme.typography.bodySmall.copy(
+                            color = SubtleText
+                        )
                     )
                 }
 
@@ -488,7 +494,7 @@ fun ChangePasswordScreen(
                     modifier = Modifier
                         .size(48.dp)
                         .clip(RoundedCornerShape(12.dp))
-                        .background(Color.White),
+                        .background(MaterialTheme.colorScheme.background),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
@@ -502,15 +508,17 @@ fun ChangePasswordScreen(
                 Column {
                     Text(
                         text = stringResource(R.string.profile_secure_your_account),
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFFA16207)
+                        style = MaterialTheme.typography.titleSmall.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFFA16207)
+                        )
                     )
                     Text(
                         text = stringResource(R.string.profile_password_requirement_hint),
-                        fontSize = 12.sp,
-                        color = Color(0xFFA16207).copy(alpha = 0.7f),
-                        lineHeight = 18.sp
+                        style = MaterialTheme.typography.bodySmall.copy(
+                            color = Color(0xFFA16207).copy(alpha = 0.7f),
+                            lineHeight = 18.sp
+                        )
                     )
                 }
             }
