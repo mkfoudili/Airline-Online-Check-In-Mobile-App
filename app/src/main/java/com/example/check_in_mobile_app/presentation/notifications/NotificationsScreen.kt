@@ -10,11 +10,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.presentation.components.TabBarMenu
 import com.example.check_in_mobile_app.presentation.components.TabItem
 import com.example.check_in_mobile_app.presentation.components.notifications.NotificationCard
@@ -48,7 +50,7 @@ fun NotificationsContent(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Notifications",
+                        text = stringResource(R.string.notification_title),
                         style = MaterialTheme.typography.headlineSmall.copy(
                             fontWeight = FontWeight.Bold,
                             color = NavyBlue
@@ -87,11 +89,16 @@ fun NotificationsContent(
                     contentPadding = PaddingValues(16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    val groups = listOf("Today", "Yesterday", "This Week", "Earlier")
+                    val groups = listOf(
+                        "Today" to R.string.notification_group_today,
+                        "Yesterday" to R.string.notification_group_yesterday,
+                        "This Week" to R.string.notification_group_this_week,
+                        "Earlier" to R.string.notification_group_earlier
+                    )
                     var hasNotifications = false
 
-                    groups.forEach { groupName ->
-                        val notifications = uiState.groupedNotifications[groupName]
+                    groups.forEach { (groupKey, groupResId) ->
+                        val notifications = uiState.groupedNotifications[groupKey]
                         if (!notifications.isNullOrEmpty()) {
                             hasNotifications = true
                             item {
@@ -103,17 +110,17 @@ fun NotificationsContent(
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Text(
-                                        text = groupName.uppercase(),
+                                        text = stringResource(groupResId).uppercase(),
                                         style = MaterialTheme.typography.labelLarge.copy(
                                             fontWeight = FontWeight.Bold,
                                             color = Slate500,
                                             letterSpacing = 1.sp
                                         )
                                     )
-                                    if (groupName == "Today") {
+                                    if (groupKey == "Today") {
                                         TextButton(onClick = onMarkAllRead) {
                                             Text(
-                                                text = "Mark all read",
+                                                text = stringResource(R.string.notification_mark_all_read),
                                                 style = MaterialTheme.typography.labelMedium.copy(
                                                     color = Slate500
                                                 )
@@ -138,7 +145,10 @@ fun NotificationsContent(
                                 modifier = Modifier.fillParentMaxSize(),
                                 contentAlignment = Alignment.Center
                             ) {
-                                Text(text = "No notifications", color = Slate500)
+                                Text(
+                                    text = stringResource(R.string.notification_empty_state),
+                                    color = Slate500
+                                )
                             }
                         }
                     }
