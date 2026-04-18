@@ -2,9 +2,14 @@ package com.example.check_in_mobile_app.presentation.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.compose.ui.platform.LocalContext
 import com.example.domain.usecase.profile.GetProfileUseCase
 import com.example.domain.usecase.profile.UpdatePasswordUseCase
 import com.example.domain.usecase.profile.UpdateProfileUseCase
+import com.example.domain.usecase.language.ChangeLanguageUseCase
+import com.example.domain.usecase.language.GetSavedLanguageUseCase
+import com.example.domain.preferences.LanguageRepository
+import com.example.check_in_mobile_app.AppContainer
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -13,7 +18,12 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
+val context = LocalContext.current
+
 class ProfileViewModel(
+    private val repo: LanguageRepository = AppContainer.provideLanguageRepository(context),
+    private val changeLanguageUseCase: ChangeLanguageUseCase = ChangeLanguageUseCase(repo),
+    private val getSavedLanguageUseCase: GetSavedLanguageUseCase = GetSavedLanguageUseCase(repo),
     private val getProfileUseCase: GetProfileUseCase = GetProfileUseCase(),
     private val updateProfileUseCase: UpdateProfileUseCase = UpdateProfileUseCase(),
     private val updatePasswordUseCase: UpdatePasswordUseCase = UpdatePasswordUseCase()
