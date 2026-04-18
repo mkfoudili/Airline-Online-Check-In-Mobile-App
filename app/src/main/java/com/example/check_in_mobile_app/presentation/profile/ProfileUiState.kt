@@ -2,14 +2,19 @@ package com.example.check_in_mobile_app.presentation.profile
 
 import com.example.domain.model.SecurityLevel
 
+enum class ProfileScreenMode {
+    VIEW,
+    EDIT,
+    CHANGE_PASSWORD
+}
+
 data class ProfileUiState(
     val profileData: ProfileData = ProfileData(),
     val editData: EditProfileData = EditProfileData(),
     val changePasswordData: ChangePasswordData = ChangePasswordData(),
     val isLoading: Boolean = false,
     val error: String? = null,
-    val isEditing: Boolean = false,
-    val isChangingPassword: Boolean = false
+    val screenMode: ProfileScreenMode = ProfileScreenMode.VIEW
 )
 
 data class ProfileData(

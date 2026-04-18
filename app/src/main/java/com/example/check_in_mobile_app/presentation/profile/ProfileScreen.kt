@@ -54,20 +54,20 @@ fun ProfileScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    when {
-        uiState.isChangingPassword -> {
+    when (uiState.screenMode) {
+        ProfileScreenMode.CHANGE_PASSWORD -> {
             ChangePasswordScreen(
                 uiState = uiState,
                 onEvent = viewModel::onEvent
             )
         }
-        uiState.isEditing -> {
+        ProfileScreenMode.EDIT -> {
             EditProfileScreen(
                 uiState = uiState,
                 onEvent = viewModel::onEvent
             )
         }
-        else -> {
+        ProfileScreenMode.VIEW -> {
             ProfileScreenContent(
                 uiState = uiState,
                 onEvent = viewModel::onEvent,
@@ -650,7 +650,7 @@ fun ProfileScreenPreview() {
 fun EditProfileScreenPreview() {
     EditProfileScreen(
         uiState = ProfileUiState(
-            isEditing = true,
+            screenMode = ProfileScreenMode.EDIT,
             editData = EditProfileData(
                 name = "Djerfi Fatima",
                 email = "mr_mikircha@esi.dz",
@@ -666,7 +666,7 @@ fun EditProfileScreenPreview() {
 fun ChangePasswordScreenPreview() {
     ChangePasswordScreen(
         uiState = ProfileUiState(
-            isChangingPassword = true
+            screenMode = ProfileScreenMode.CHANGE_PASSWORD
         ),
         onEvent = {}
     )

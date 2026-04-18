@@ -60,8 +60,7 @@ class ProfileViewModel(
 
     private fun enterEditMode() {
         _uiState.value = _uiState.value.copy(
-            isEditing = true,
-            isChangingPassword = false,
+            screenMode = ProfileScreenMode.EDIT,
             editData = EditProfileData(
                 name = _uiState.value.profileData.name,
                 email = _uiState.value.profileData.email,
@@ -72,8 +71,7 @@ class ProfileViewModel(
 
     private fun enterChangePasswordMode() {
         _uiState.value = _uiState.value.copy(
-            isChangingPassword = true,
-            isEditing = false,
+            screenMode = ProfileScreenMode.CHANGE_PASSWORD,
             changePasswordData = ChangePasswordData()
         )
     }
@@ -117,7 +115,7 @@ class ProfileViewModel(
                             phoneNumber = _uiState.value.editData.phoneNumber
                         )
                         _uiState.value = _uiState.value.copy(
-                            isEditing = false,
+                            screenMode = ProfileScreenMode.VIEW,
                             isLoading = false,
                             profileData = _uiState.value.profileData.copy(
                                 name = updatedProfile.fullName,
@@ -134,15 +132,13 @@ class ProfileViewModel(
                 }
                 ProfileEvent.OnCancelClicked -> {
                     _uiState.value = _uiState.value.copy(
-                        isEditing = false,
-                        isChangingPassword = false
+                        screenMode = ProfileScreenMode.VIEW
                     )
                 }
                 ProfileEvent.OnBackClicked -> {
-                    if (_uiState.value.isEditing || _uiState.value.isChangingPassword) {
+                    if (_uiState.value.screenMode != ProfileScreenMode.VIEW) {
                         _uiState.value = _uiState.value.copy(
-                            isEditing = false,
-                            isChangingPassword = false
+                            screenMode = ProfileScreenMode.VIEW
                         )
                     } else {
                         _uiAction.emit(ProfileUiAction.NavigateBack)
@@ -203,7 +199,7 @@ class ProfileViewModel(
                     if (result.isSuccess) {
                         _uiState.value = _uiState.value.copy(
                             isLoading = false,
-                            isChangingPassword = false,
+                            screenMode = ProfileScreenMode.VIEW,
                             error = null
                         )
                     } else {
