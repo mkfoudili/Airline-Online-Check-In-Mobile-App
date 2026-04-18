@@ -14,6 +14,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.check_in_mobile_app.presentation.components.TabBarMenu
+import com.example.check_in_mobile_app.presentation.components.TabItem
 import com.example.check_in_mobile_app.presentation.components.notifications.NotificationCard
 import com.example.check_in_mobile_app.ui.theme.CheckInMobileAppTheme
 import com.example.check_in_mobile_app.ui.theme.NavyBlue
@@ -22,12 +25,14 @@ import com.example.check_in_mobile_app.ui.theme.SurfaceGray
 
 @Composable
 fun NotificationsScreen(
-    viewModel: NotificationsViewModel
+    viewModel: NotificationsViewModel = viewModel(),
+    onTabSelected: (TabItem) -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
     NotificationsContent(
         uiState = uiState,
-        onMarkAllRead = { viewModel.markAllAsRead() }
+        onMarkAllRead = { viewModel.markAllAsRead() },
+        onTabSelected = onTabSelected
     )
 }
 
@@ -35,7 +40,8 @@ fun NotificationsScreen(
 @Composable
 fun NotificationsContent(
     uiState: NotificationsUiState,
-    onMarkAllRead: () -> Unit
+    onMarkAllRead: () -> Unit,
+    onTabSelected: (TabItem) -> Unit = {}
 ) {
     Scaffold(
         topBar = {
@@ -52,6 +58,12 @@ fun NotificationsContent(
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color.White
                 )
+            )
+        },
+        bottomBar = {
+            TabBarMenu(
+                selectedTab = TabItem.NOTIFICATIONS,
+                onTabSelected = onTabSelected
             )
         },
         containerColor = SurfaceGray

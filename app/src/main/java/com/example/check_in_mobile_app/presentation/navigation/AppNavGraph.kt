@@ -8,7 +8,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -28,10 +27,12 @@ import com.example.check_in_mobile_app.presentation.checkin.passportscan.Passpor
 import com.example.check_in_mobile_app.presentation.checkin.specialRequest
 import com.example.check_in_mobile_app.presentation.components.TabItem
 import com.example.check_in_mobile_app.presentation.home.HomeScreen
+import com.example.check_in_mobile_app.presentation.notifications.NotificationsScreen
 import com.example.check_in_mobile_app.presentation.profile.ProfileScreen
 import com.example.check_in_mobile_app.presentation.welcome.SplashScreen
 import com.example.check_in_mobile_app.presentation.welcome.WelcomeScreen
 import com.example.data.repository.BookingRepositoryImpl
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 import kotlinx.coroutines.delay
 
@@ -43,6 +44,7 @@ fun AppNavGraph(
         val route = when (tab) {
             TabItem.HOME -> Destination.Home.route
             TabItem.TICKETS -> Destination.Booking.route
+            TabItem.NOTIFICATIONS -> Destination.Notifications.route
             TabItem.PROFILE -> Destination.Profile.route
             else -> null
         }
@@ -234,6 +236,11 @@ fun AppNavGraph(
                         popUpTo(0) { inclusive = true }
                     }
                 }
+            )
+        }
+        composable(route = Destination.Notifications.route) {
+            NotificationsScreen(
+                onTabSelected = navigateToTab
             )
         }
     }

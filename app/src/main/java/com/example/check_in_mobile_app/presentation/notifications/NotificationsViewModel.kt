@@ -1,6 +1,7 @@
 package com.example.check_in_mobile_app.presentation.notifications
 
 import androidx.lifecycle.ViewModel
+import com.example.data.repository.NotificationRepositoryImpl
 import com.example.domain.model.Notification
 import com.example.domain.usecase.notification.GetNotificationsUseCase
 import com.example.domain.usecase.notification.MarkAllNotificationsReadUseCase
@@ -10,8 +11,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 class NotificationsViewModel(
-    private val getNotificationsUseCase: GetNotificationsUseCase,
-    private val markAllNotificationsReadUseCase: MarkAllNotificationsReadUseCase
+    private val getNotificationsUseCase: GetNotificationsUseCase = GetNotificationsUseCase(NotificationRepositoryImpl()),
+    private val markAllNotificationsReadUseCase: MarkAllNotificationsReadUseCase = MarkAllNotificationsReadUseCase(NotificationRepositoryImpl())
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(NotificationsUiState())
