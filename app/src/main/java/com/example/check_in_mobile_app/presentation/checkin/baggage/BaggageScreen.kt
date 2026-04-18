@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -63,13 +64,13 @@ fun BaggageContent(
                     IconButton(onClick = onBackClick) {
                         Icon(
                             painter = painterResource(id = R.drawable.chevron_left),
-                            contentDescription = "Back",
+                            contentDescription = stringResource(R.string.common_back),
                             tint = NavyBlue
                         )
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "Step 4: Baggage",
+                        text = stringResource(R.string.checkin_baggage_step_title),
                         style = Typography.bodyLarge.copy(
                             fontWeight = FontWeight.Bold,
                             color = NavyBlue,
@@ -102,7 +103,7 @@ fun BaggageContent(
                 .padding(24.dp)
         ) {
             Text(
-                text = "Baggage Declaration",
+                text = stringResource(R.string.checkin_baggage_declaration),
                 style = Typography.bodyLarge.copy(
                     fontWeight = FontWeight.Bold,
                     color = NavyBlue,
@@ -111,7 +112,7 @@ fun BaggageContent(
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Select the number of bags you plan to check in for your flight.",
+                text = stringResource(R.string.checkin_baggage_description),
                 style = Typography.bodyLarge.copy(
                     color = Slate500,
                     fontSize = 16.sp,
@@ -123,8 +124,8 @@ fun BaggageContent(
 
             BaggageCard(
                 iconResId = R.drawable.suitcase,
-                title = "Checked Baggage",
-                description = "Large suitcases or bags stored in the aircraft hold.",
+                title = stringResource(R.string.checkin_checked_baggage),
+                description = stringResource(R.string.checkin_checked_baggage_desc),
                 quantity = uiState.checkedBaggageCount,
                 onIncrement = { onCheckedBaggageChange(uiState.checkedBaggageCount + 1) },
                 onDecrement = { onCheckedBaggageChange((uiState.checkedBaggageCount - 1).coerceAtLeast(0)) }
@@ -134,8 +135,8 @@ fun BaggageContent(
 
             BaggageCard(
                 iconResId = R.drawable.suitcase, // Using suitcase as placeholder for special equipment
-                title = "Special Equipment",
-                description = "Bicycles, skis, or oversized sports gear.",
+                title = stringResource(R.string.checkin_special_equipment),
+                description = stringResource(R.string.checkin_special_equipment_desc),
                 quantity = uiState.specialEquipmentCount,
                 onIncrement = { onSpecialEquipmentChange(uiState.specialEquipmentCount + 1) },
                 onDecrement = { onSpecialEquipmentChange((uiState.specialEquipmentCount - 1).coerceAtLeast(0)) }
@@ -152,7 +153,7 @@ fun BaggageContent(
             Spacer(modifier = Modifier.height(32.dp))
 
             PrimaryButton(
-                text = "Continue to Step 5",
+                text = stringResource(R.string.checkin_continue_to_step_5),
                 onClick = onContinueClick,
                 containerColor = NavyBlue,
                 contentColor = Color.White
