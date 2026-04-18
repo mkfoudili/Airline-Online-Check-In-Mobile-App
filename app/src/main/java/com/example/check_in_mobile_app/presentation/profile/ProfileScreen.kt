@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -92,7 +93,7 @@ fun ProfileScreenContent(
                 TopAppBar(
                     title = {
                         Text(
-                            text = "Profile",
+                            text = stringResource(R.string.profile_title),
                             fontFamily = Poppins,
                             fontSize = 22.sp,
                             color = NavyBlue,
@@ -101,7 +102,7 @@ fun ProfileScreenContent(
                     },
                     actions = {
                         TextButton(onClick = { onEvent(ProfileEvent.OnEditProfileClicked) }) {
-                            Text(text = "Edit", color = MaterialTheme.colorScheme.primary)
+                            Text(text = stringResource(R.string.common_edit), color = MaterialTheme.colorScheme.primary)
                         }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
@@ -151,7 +152,7 @@ fun ProfileScreenContent(
                 Spacer(modifier = Modifier.width(8.dp))
                 Icon(
                     imageVector = Icons.Default.Edit,
-                    contentDescription = "Edit Name",
+                    contentDescription = stringResource(R.string.profile_edit_name_desc),
                     modifier = Modifier.size(20.dp),
                     tint = NavyBlue.copy(alpha = 0.5f)
                 )
@@ -161,7 +162,7 @@ fun ProfileScreenContent(
 
             // Personal Information Section
             SectionLabel(
-                text = "PERSONAL INFORMATION",
+                text = stringResource(R.string.profile_personal_info_label),
                 modifier = Modifier.align(Alignment.Start)
             )
             
@@ -188,12 +189,12 @@ fun ProfileScreenContent(
             Spacer(modifier = Modifier.height(32.dp))
 
             ProfileSecondaryActionButton(
-                text = "Logout",
+                text = stringResource(R.string.profile_logout),
                 onClick = onLogout,
                 icon = {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ExitToApp,
-                        contentDescription = "Logout",
+                        contentDescription = stringResource(R.string.profile_logout),
                         modifier = Modifier.size(18.dp),
                         tint = NavyBlue
                     )
@@ -218,7 +219,7 @@ fun EditProfileScreen(
                 TopAppBar(
                     title = {
                         Text(
-                            text = "Edit Profile",
+                            text = stringResource(R.string.profile_edit_title),
                             fontFamily = Poppins,
                             fontSize = 18.sp,
                             color = NavyBlue,
@@ -229,7 +230,7 @@ fun EditProfileScreen(
                         IconButton(onClick = { onEvent(ProfileEvent.OnBackClicked) }) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = "Back",
+                                contentDescription = stringResource(R.string.common_back),
                                 tint = NavyBlue
                             )
                         }
@@ -252,7 +253,7 @@ fun EditProfileScreen(
                 Spacer(modifier = Modifier.height(24.dp))
                 
                 ProfileActionButton(
-                    text = "Save Changes",
+                    text = stringResource(R.string.common_save_changes),
                     onClick = { onEvent(ProfileEvent.OnSaveClicked) },
                     icon = {
                         Icon(
@@ -267,7 +268,7 @@ fun EditProfileScreen(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 ProfileSecondaryActionButton(
-                    text = "Cancel",
+                    text = stringResource(R.string.common_cancel),
                     onClick = { onEvent(ProfileEvent.OnCancelClicked) },
                     icon = {
                         Icon(
@@ -307,7 +308,7 @@ fun EditProfileScreen(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Person,
-                        contentDescription = "Change Photo",
+                        contentDescription = stringResource(R.string.profile_change_photo_desc),
                         tint = Color.White,
                         modifier = Modifier.size(16.dp)
                     )
@@ -317,7 +318,7 @@ fun EditProfileScreen(
             Spacer(modifier = Modifier.height(12.dp))
             
             Text(
-                text = "Change Profile Photo",
+                text = stringResource(R.string.profile_change_photo_label),
                 fontSize = 14.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = NavyBlue,
@@ -327,9 +328,9 @@ fun EditProfileScreen(
             Spacer(modifier = Modifier.height(32.dp))
 
             BookingInputField(
-                label = "Full Name",
+                label = stringResource(R.string.common_full_name),
                 value = uiState.editedName,
-                placeholder = "Enter your full name",
+                placeholder = stringResource(R.string.profile_full_name_placeholder),
                 onValueChange = { onEvent(ProfileEvent.OnNameChanged(it)) },
                 leadingIcon = {
                     Icon(
@@ -344,9 +345,9 @@ fun EditProfileScreen(
             Spacer(modifier = Modifier.height(20.dp))
 
             BookingInputField(
-                label = "Email Address",
+                label = stringResource(R.string.common_email_address),
                 value = uiState.editedEmail,
-                placeholder = "Enter your email",
+                placeholder = stringResource(R.string.profile_email_placeholder),
                 onValueChange = { onEvent(ProfileEvent.OnEmailChanged(it)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 leadingIcon = {
@@ -362,9 +363,9 @@ fun EditProfileScreen(
             Spacer(modifier = Modifier.height(20.dp))
 
             BookingInputField(
-                label = "Phone Number",
+                label = stringResource(R.string.common_phone_number),
                 value = uiState.editedPhoneNumber,
-                placeholder = "Enter your phone number",
+                placeholder = stringResource(R.string.profile_phone_placeholder),
                 onValueChange = { onEvent(ProfileEvent.OnPhoneNumberChanged(it)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                 leadingIcon = {
@@ -380,7 +381,7 @@ fun EditProfileScreen(
             Spacer(modifier = Modifier.height(32.dp))
 
             SectionLabel(
-                text = "Security",
+                text = stringResource(R.string.common_security),
                 modifier = Modifier.align(Alignment.Start)
             )
 
@@ -417,13 +418,13 @@ fun EditProfileScreen(
                     
                     Column(modifier = Modifier.weight(1.0f)) {
                         Text(
-                            text = "Change Password",
+                            text = stringResource(R.string.common_change_password),
                             fontSize = 15.sp,
                             fontWeight = FontWeight.Bold,
                             color = NavyBlue
                         )
                         Text(
-                            text = "Keep your account secure",
+                            text = stringResource(R.string.profile_keep_account_secure),
                             fontSize = 12.sp,
                             color = SubtleText
                         )
@@ -455,7 +456,7 @@ fun ChangePasswordScreen(
                 TopAppBar(
                     title = {
                         Text(
-                            text = "Change Password",
+                            text = stringResource(R.string.profile_change_password_title),
                             fontFamily = Poppins,
                             fontSize = 18.sp,
                             color = NavyBlue,
@@ -466,7 +467,7 @@ fun ChangePasswordScreen(
                         IconButton(onClick = { onEvent(ProfileEvent.OnBackClicked) }) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = "Back",
+                                contentDescription = stringResource(R.string.common_back),
                                 tint = NavyBlue
                             )
                         }
@@ -489,14 +490,14 @@ fun ChangePasswordScreen(
                 Spacer(modifier = Modifier.height(24.dp))
 
                 ProfileActionButton(
-                    text = "Save Password",
+                    text = stringResource(R.string.profile_save_password),
                     onClick = { onEvent(ProfileEvent.OnSavePasswordClicked) }
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
 
                 ProfileSecondaryActionButton(
-                    text = "Cancel",
+                    text = stringResource(R.string.common_cancel),
                     onClick = { onEvent(ProfileEvent.OnCancelClicked) }
                 )
             }
@@ -540,13 +541,13 @@ fun ChangePasswordScreen(
                     Spacer(modifier = Modifier.width(16.dp))
                     Column {
                         Text(
-                            text = "Secure your account",
+                            text = stringResource(R.string.profile_secure_your_account),
                             fontSize = 15.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color(0xFFA16207)
                         )
                         Text(
-                            text = "Choose a password that's at least 8 characters long and includes a mix of letters and numbers.",
+                            text = stringResource(R.string.profile_password_requirement_hint),
                             fontSize = 12.sp,
                             color = Color(0xFFA16207).copy(alpha = 0.7f),
                             lineHeight = 18.sp
@@ -558,9 +559,9 @@ fun ChangePasswordScreen(
             Spacer(modifier = Modifier.height(32.dp))
 
             PasswordInputField(
-                label = "Current Password",
+                label = stringResource(R.string.profile_current_password_label),
                 value = uiState.currentPassword,
-                placeholder = "Enter current password",
+                placeholder = stringResource(R.string.profile_current_password_placeholder),
                 onValueChange = { onEvent(ProfileEvent.OnCurrentPasswordChanged(it)) },
                 isVisible = uiState.isCurrentPasswordVisible,
                 onToggleVisibility = { onEvent(ProfileEvent.OnToggleCurrentPasswordVisibility) }
@@ -569,9 +570,9 @@ fun ChangePasswordScreen(
             Spacer(modifier = Modifier.height(20.dp))
 
             PasswordInputField(
-                label = "New Password",
+                label = stringResource(R.string.profile_new_password_label),
                 value = uiState.newPassword,
-                placeholder = "Enter new password",
+                placeholder = stringResource(R.string.profile_new_password_placeholder),
                 onValueChange = { onEvent(ProfileEvent.OnNewPasswordChanged(it)) },
                 isVisible = uiState.isNewPasswordVisible,
                 onToggleVisibility = { onEvent(ProfileEvent.OnToggleNewPasswordVisibility) }
@@ -580,9 +581,9 @@ fun ChangePasswordScreen(
             Spacer(modifier = Modifier.height(20.dp))
 
             PasswordInputField(
-                label = "Confirm New Password",
+                label = stringResource(R.string.profile_confirm_password_label),
                 value = uiState.confirmPassword,
-                placeholder = "Re-type new password",
+                placeholder = stringResource(R.string.profile_confirm_password_placeholder),
                 onValueChange = { onEvent(ProfileEvent.OnConfirmPasswordChanged(it)) },
                 isVisible = uiState.isConfirmPasswordVisible,
                 onToggleVisibility = { onEvent(ProfileEvent.OnToggleConfirmPasswordVisibility) }
@@ -620,7 +621,7 @@ fun PasswordInputField(
             IconButton(onClick = onToggleVisibility) {
                 Icon(
                     painter = if (isVisible) painterResource(id = R.drawable.user) else painterResource(id = R.drawable.user),
-                    contentDescription = if (isVisible) "Hide Password" else "Show Password",
+                    contentDescription = if (isVisible) stringResource(R.string.common_hide_password) else stringResource(R.string.common_show_password),
                     tint = DarkText.copy(alpha = 0.6f),
                     modifier = Modifier.size(20.dp)
                 )
