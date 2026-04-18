@@ -8,7 +8,10 @@ class GetNotificationsUseCase(
     private val repository: NotificationRepository
 ) {
     operator fun invoke(uid: String, callback: (Result<List<Notification>>) -> Unit) {
-        // Mocking behavior: returning a static list of notifications instead of calling the repository
+        val now = System.currentTimeMillis()
+        val hour = 3600000L
+        val day = 86400000L
+
         val mockNotifications = listOf(
             Notification(
                 notificationId = "1",
@@ -17,7 +20,7 @@ class GetNotificationsUseCase(
                 body = "Your check-in for flight AA123 was successful. You can now view your boarding pass.",
                 type = NotificationType.CHECK_IN_CONFIRMATION,
                 isRead = false,
-                createdAt = System.currentTimeMillis() - 3600000 // 1 hour ago
+                createdAt = now - (2 * hour)
             ),
             Notification(
                 notificationId = "2",
@@ -26,7 +29,7 @@ class GetNotificationsUseCase(
                 body = "Boarding for flight AA123 starts in 30 minutes at Gate B12. Please proceed to the gate.",
                 type = NotificationType.BOARDING_REMINDER,
                 isRead = false,
-                createdAt = System.currentTimeMillis() - 7200000 // 2 hours ago
+                createdAt = now - (5 * hour)
             ),
             Notification(
                 notificationId = "3",
@@ -35,7 +38,7 @@ class GetNotificationsUseCase(
                 body = "Flight AA123 gate has been changed from B12 to C05.",
                 type = NotificationType.GATE_CHANGE,
                 isRead = true,
-                createdAt = System.currentTimeMillis() - 10800000 // 3 hours ago
+                createdAt = now - (26 * hour)
             ),
             Notification(
                 notificationId = "4",
@@ -44,7 +47,16 @@ class GetNotificationsUseCase(
                 body = "Flight AA123 is delayed by 45 minutes due to weather conditions.",
                 type = NotificationType.DELAY,
                 isRead = true,
-                createdAt = System.currentTimeMillis() - 86400000 // 1 day ago
+                createdAt = now - (3 * day)
+            ),
+            Notification(
+                notificationId = "5",
+                passengerId = uid,
+                title = "Flight Status Updated",
+                body = "Your flight AA123 status has been updated.",
+                type = NotificationType.FLIGHT_STATUS_UPDATE,
+                isRead = true,
+                createdAt = now - (10 * day)
             )
         )
         callback(Result.success(mockNotifications))

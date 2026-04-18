@@ -87,43 +87,52 @@ fun NotificationsContent(
                     contentPadding = PaddingValues(16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    if (uiState.notifications.isNotEmpty()) {
-                        item {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(bottom = 8.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(
-                                    text = "TODAY",
-                                    style = MaterialTheme.typography.labelLarge.copy(
-                                        fontWeight = FontWeight.Bold,
-                                        color = Slate500,
-                                        letterSpacing = 1.sp
-                                    )
-                                )
-                                TextButton(onClick = onMarkAllRead) {
+                    val groups = listOf("Today", "Yesterday", "This Week", "Earlier")
+                    var hasNotifications = false
+
+                    groups.forEach { groupName ->
+                        val notifications = uiState.groupedNotifications[groupName]
+                        if (!notifications.isNullOrEmpty()) {
+                            hasNotifications = true
+                            item {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(top = 8.dp, bottom = 8.dp),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
                                     Text(
-                                        text = "Mark all read",
-                                        style = MaterialTheme.typography.labelMedium.copy(
-                                            color = Slate500
+                                        text = groupName.uppercase(),
+                                        style = MaterialTheme.typography.labelLarge.copy(
+                                            fontWeight = FontWeight.Bold,
+                                            color = Slate500,
+                                            letterSpacing = 1.sp
                                         )
                                     )
+                                    if (groupName == "Today") {
+                                        TextButton(onClick = onMarkAllRead) {
+                                            Text(
+                                                text = "Mark all read",
+                                                style = MaterialTheme.typography.labelMedium.copy(
+                                                    color = Slate500
+                                                )
+                                            )
+                                        }
+                                    }
                                 }
+                            }
+
+                            items(notifications) { notification ->
+                                NotificationCard(
+                                    notification = notification,
+                                    onClick = { /* Handle notification click */ }
+                                )
                             }
                         }
                     }
 
-                    items(uiState.notifications) { notification ->
-                        NotificationCard(
-                            notification = notification,
-                            onClick = { /* Handle notification click */ }
-                        )
-                    }
-
-                    if (uiState.notifications.isEmpty()) {
+                    if (!hasNotifications) {
                         item {
                             Box(
                                 modifier = Modifier.fillParentMaxSize(),
@@ -145,42 +154,28 @@ fun NotificationsScreenPreview() {
     CheckInMobileAppTheme {
         NotificationsContent(
             uiState = NotificationsUiState(
-                notifications = listOf(
-                    NotificationItem(
-                        id = "1",
-                        title = "Boarding Starts in 30m",
-                        description = "Prepare your boarding pass and ID. Boarding for Group 1 will start soon.",
-                        flightCode = "AA241",
-                        timeAgo = "45m ago",
-                        isRead = false,
-                        type = NotificationType.BOARDING
+                groupedNotifications = mapOf(
+                    "Today" to listOf(
+                        NotificationItem(
+                            id = "1",
+                            title = "Boarding Starts in 30m",
+                            description = "Prepare your boarding pass and ID. Boarding for Group 1 will start soon.",
+                            flightCode = "AA241",
+                            timeAgo = "45m ago",
+                            isRead = false,
+                            type = NotificationType.BOARDING
+                        )
                     ),
-                    NotificationItem(
-                        id = "2",
-                        title = "Boarding Starts in 2hrs",
-                        description = "Prepare your boarding pass and ID. Boarding for Group 1 will start soon.",
-                        flightCode = "AA241",
-                        timeAgo = "2h ago",
-                        isRead = false,
-                        type = NotificationType.BOARDING
-                    ),
-                    NotificationItem(
-                        id = "3",
-                        title = "Check-in Confirmed",
-                        description = "Check-in successful! Your seat 14C is confirmed. View your boarding pass.",
-                        flightCode = "AA241",
-                        timeAgo = "2h ago",
-                        isRead = true,
-                        type = NotificationType.CHECK_IN
-                    ),
-                    NotificationItem(
-                        id = "4",
-                        title = "Travel Document Verified",
-                        description = "Your passport scan has been successfully processed and verified.",
-                        flightCode = null,
-                        timeAgo = "5h ago",
-                        isRead = true,
-                        type = NotificationType.DOCUMENT
+                    "Yesterday" to listOf(
+                        NotificationItem(
+                            id = "3",
+                            title = "Check-in Confirmed",
+                            description = "Check-in successful! Your seat 14C is confirmed. View your boarding pass.",
+                            flightCode = "AA241",
+                            timeAgo = "1d ago",
+                            isRead = true,
+                            type = NotificationType.CHECK_IN
+                        )
                     )
                 )
             ),
