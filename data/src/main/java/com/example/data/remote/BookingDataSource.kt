@@ -2,6 +2,7 @@ package com.example.data.remote
 
 import com.example.data.remote.dto.BookingDto
 import com.example.data.remote.dto.PassengerDto
+import com.example.domain.model.CheckInStatus
 import java.sql.ResultSet
 import java.sql.SQLException
 
@@ -26,7 +27,7 @@ class BookingDataSource {
                             uid = resultSet.getString("uid"),
                             pnr = resultSet.getString("pnr"),
                             lastName = resultSet.getString("lastName"),
-                            status = resultSet.getString("status"),
+                            status = CheckInStatus.valueOf(resultSet.getString("status")),
                             checkinDeadline = resultSet.getTimestamp("checkinDeadline"),
                             createdAt = resultSet.getTimestamp("createdAt")
                         )
@@ -63,7 +64,7 @@ class BookingDataSource {
                             uid = resultSet.getString("uid"),
                             pnr = resultSet.getString("pnr"),
                             lastName = resultSet.getString("lastName"),
-                            status = resultSet.getString("status"),
+                            status = CheckInStatus.valueOf(resultSet.getString("status")),
                             checkinDeadline = resultSet.getTimestamp("checkinDeadline"),
                             createdAt = resultSet.getTimestamp("createdAt")
                         )

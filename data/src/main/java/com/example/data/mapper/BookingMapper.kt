@@ -5,6 +5,7 @@ import com.example.data.local.entity.FlightItineraryEntity
 import com.example.data.local.entity.PassengerEntity
 import com.example.data.remote.dto.PassengerDto
 import com.example.domain.model.Booking
+import com.example.domain.model.CheckInStatus
 import com.example.domain.model.Flight
 import com.example.domain.model.FlightItinerary
 import com.example.domain.model.Passenger
@@ -18,6 +19,7 @@ fun PassengerDto.toDomain(): Passenger {
         passportNumber = this.passportNumber,
         nationality = this.nationality,
         dateOfBirth = this.dateOfBirth,
+        expiryDate = null,
         seatNumber = this.seatNumber,
         checkinStatus = this.checkinStatus
     )
@@ -32,6 +34,7 @@ fun PassengerEntity.toDomain(): Passenger {
         passportNumber = this.passportNumber,
         nationality = this.nationality,
         dateOfBirth = this.dateOfBirth,
+        expiryDate = null,
         seatNumber = this.seatNumber,
         checkinStatus = this.checkinStatus
     )
@@ -57,7 +60,7 @@ fun BookingEntity.toDomain(flight: Flight, passengers: List<Passenger>): Booking
         bookingId = this.bookingId,
         pnr = this.pnr,
         lastName = this.lastName,
-        status = this.status,
+        status = try { CheckInStatus.valueOf(this.status.uppercase()) } catch (e: Exception) { CheckInStatus.CONFIRMED },
         flight = flight,
         passengers = passengers
     )
@@ -70,7 +73,7 @@ fun Booking.toEntity(uid: String = ""): BookingEntity {
         uid = uid,
         pnr = this.pnr,
         lastName = this.lastName,
-        status = this.status,
+        status = this.status.name,
         checkinDeadline = this.flight.departureTime - 3600000, // Default 1h before
         createdAt = System.currentTimeMillis()
     )

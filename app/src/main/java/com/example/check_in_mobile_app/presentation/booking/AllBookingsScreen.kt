@@ -1,21 +1,16 @@
 package com.example.check_in_mobile_app.presentation.booking
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.res.painterResource
 import com.example.check_in_mobile_app.R
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -23,7 +18,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.domain.model.Booking
-import com.example.domain.model.CheckInStatus
 import com.example.check_in_mobile_app.presentation.components.booking.BookingCard
 import com.example.check_in_mobile_app.presentation.components.booking.DateField
 import com.example.check_in_mobile_app.presentation.components.booking.FilterChipsRow
@@ -168,11 +162,15 @@ fun AllBookingsScreenPreview() {
 
     val filteredBookings = allBookings.filter { booking ->
         val matchesQuery = searchQuery.value.isBlank() || 
-                           booking.destinationCity.contains(searchQuery.value, ignoreCase = true) || 
-                           booking.originCity.contains(searchQuery.value, ignoreCase = true) ||
-                           booking.destination.contains(searchQuery.value, ignoreCase = true)
-        val matchesDate = selectedDate.value == null || booking.departureDate == selectedDate.value
-        val matchesStatus = selectedStatus.value == "All" || booking.status.name.replace("_", " ").equals(selectedStatus.value, ignoreCase = true)
+                           booking.flight.destinationCity.contains(searchQuery.value, ignoreCase = true) ||                            
+                           booking.flight.destination.contains(searchQuery.value, ignoreCase = true)
+        
+        val sdfDate = java.text.SimpleDateFormat("dd MMM", java.util.Locale.getDefault())
+        val depDateStr = sdfDate.format(java.util.Date(booking.flight.departureTime))
+        val matchesDate = selectedDate.value == null || depDateStr == selectedDate.value
+        
+        val uiStatus = try { com.example.domain.model.CheckInStatus.valueOf(booking.status.name) } catch (e: Exception) { com.example.domain.model.CheckInStatus.CONFIRMED }
+        val matchesStatus = selectedStatus.value == "All" || uiStatus.name.replace("_", " ").equals(selectedStatus.value, ignoreCase = true)
         
         matchesQuery && matchesDate && matchesStatus
     }

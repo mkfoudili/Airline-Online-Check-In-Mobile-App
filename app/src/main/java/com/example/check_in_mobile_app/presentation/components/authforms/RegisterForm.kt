@@ -210,6 +210,7 @@ fun RegisterForm(
         // ── Already have an account? Sign In ───────────────────────────
         Row(
             horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
@@ -220,7 +221,8 @@ fun RegisterForm(
             )
             TextButton(
                 onClick = onSignInClick,
-                contentPadding = PaddingValues(0.dp)
+                contentPadding = PaddingValues(0.dp),
+                modifier = Modifier.defaultMinSize(minHeight = 1.dp)
             ) {
                 Text(
                     text = "Sign In",
