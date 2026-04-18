@@ -1,8 +1,3 @@
-
-
-
-
-
 package com.example.check_in_mobile_app.presentation.navigation
 
 import androidx.compose.animation.EnterTransition
@@ -33,6 +28,7 @@ import com.example.check_in_mobile_app.presentation.checkin.passportscan.Passpor
 import com.example.check_in_mobile_app.presentation.checkin.specialRequest
 import com.example.check_in_mobile_app.presentation.components.TabItem
 import com.example.check_in_mobile_app.presentation.home.HomeScreen
+import com.example.check_in_mobile_app.presentation.profile.ProfileScreen
 import com.example.check_in_mobile_app.presentation.welcome.SplashScreen
 import com.example.check_in_mobile_app.presentation.welcome.WelcomeScreen
 import com.example.data.repository.BookingRepositoryImpl
@@ -47,6 +43,7 @@ fun AppNavGraph(
         val route = when (tab) {
             TabItem.HOME -> Destination.Home.route
             TabItem.TICKETS -> Destination.Booking.route
+            TabItem.PROFILE -> Destination.Profile.route
             else -> null
         }
         if (route != null) {
@@ -229,6 +226,11 @@ fun AppNavGraph(
                 onNavigateToLogin = { navController.navigate(Destination.Login.route) }
             )
         }
+        composable(route = Destination.Profile.route) {
+            ProfileScreen(
+                onTabSelected = navigateToTab
+            )
+        }
     }
 }
 
@@ -238,4 +240,3 @@ fun AppNavGraphPreview() {
     // NavHost cannot render in preview mode
     androidx.compose.material3.Text("Nav Graph — run on device to preview")
 }
-

@@ -19,4 +19,5 @@ sealed class Destination (val route: String) {
     object Selection : Destination("seat-select")
     object preference : Destination("preference")
     object Confirmation : Destination("confirmation")
+    object Profile : Destination("profile")
 }
