@@ -80,11 +80,13 @@ fun ProfileScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreenContent(
-    uiState: ProfileUiState,
-    onEvent: (ProfileEvent) -> Unit = {},
-    onTabSelected: (TabItem) -> Unit = {},
-    onLogout: () -> Unit = {}
+private fun ProfileBaseScreen(
+    title: String,
+    titleFontSize: Int = 18,
+    onBackClick: (() -> Unit)? = null,
+    actions: @Composable RowScope.() -> Unit = {},
+    bottomBar: @Composable () -> Unit = {},
+    content: @Composable ColumnScope.() -> Unit
 ) {
     Scaffold(
         containerColor = Color.White,
@@ -93,23 +95,93 @@ fun ProfileScreenContent(
                 TopAppBar(
                     title = {
                         Text(
-                            text = stringResource(R.string.profile_title),
+                            text = title,
                             fontFamily = Poppins,
-                            fontSize = 22.sp,
+                            fontSize = titleFontSize.sp,
                             color = NavyBlue,
                             fontWeight = FontWeight.Bold
                         )
                     },
-                    actions = {
-                        TextButton(onClick = { onEvent(ProfileEvent.OnEditProfileClicked) }) {
-                            Text(text = stringResource(R.string.common_edit), color = MaterialTheme.colorScheme.primary)
+                    navigationIcon = {
+                        if (onBackClick != null) {
+                            IconButton(onClick = onBackClick) {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                    contentDescription = stringResource(R.string.common_back),
+                                    tint = NavyBlue
+                                )
+                            }
                         }
                     },
+                    actions = actions,
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = Color.White
                     )
                 )
                 HorizontalDivider(color = Color(0xFFF1F5F9), thickness = 1.dp)
+            }
+        },
+        bottomBar = bottomBar
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            content = content
+        )
+    }
+}
+
+@Composable
+private fun ProfileBottomActions(
+    primaryText: String,
+    onPrimaryClick: () -> Unit,
+    secondaryText: String,
+    onSecondaryClick: () -> Unit,
+    primaryIcon: @Composable (() -> Unit)? = null,
+    secondaryIcon: @Composable (() -> Unit)? = null
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.White)
+            .padding(horizontal = 24.dp, vertical = 20.dp)
+    ) {
+        HorizontalDivider(color = Color(0xFFF1F5F9), thickness = 1.dp)
+        Spacer(modifier = Modifier.height(24.dp))
+
+        ProfileActionButton(
+            text = primaryText,
+            onClick = onPrimaryClick,
+            icon = primaryIcon
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        ProfileSecondaryActionButton(
+            text = secondaryText,
+            onClick = onSecondaryClick,
+            icon = secondaryIcon
+        )
+    }
+}
+
+@Composable
+fun ProfileScreenContent(
+    uiState: ProfileUiState,
+    onEvent: (ProfileEvent) -> Unit = {},
+    onTabSelected: (TabItem) -> Unit = {},
+    onLogout: () -> Unit = {}
+) {
+    ProfileBaseScreen(
+        title = stringResource(R.string.profile_title),
+        titleFontSize = 22,
+        actions = {
+            TextButton(onClick = { onEvent(ProfileEvent.OnEditProfileClicked) }) {
+                Text(text = stringResource(R.string.common_edit), color = MaterialTheme.colorScheme.primary)
             }
         },
         bottomBar = {
@@ -118,479 +190,366 @@ fun ProfileScreenContent(
                 onTabSelected = onTabSelected
             )
         }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Spacer(modifier = Modifier.height(32.dp))
+
+        // Avatar Section
+        ProfileAvatar(
+            isOnline = uiState.profileData.isOnline
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // User Name with Edit Icon
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.clickable { onEvent(ProfileEvent.OnEditProfileClicked) }
         ) {
-            Spacer(modifier = Modifier.height(32.dp))
-
-            // Avatar Section
-            ProfileAvatar(
-                isOnline = uiState.profileData.isOnline
+            Text(
+                text = uiState.profileData.name,
+                fontSize = 28.sp,
+                fontWeight = FontWeight.Bold,
+                color = NavyBlue,
+                fontFamily = Poppins,
+                letterSpacing = (-0.5).sp
             )
+            Spacer(modifier = Modifier.width(8.dp))
+            Icon(
+                imageVector = Icons.Default.Edit,
+                contentDescription = stringResource(R.string.profile_edit_name_desc),
+                modifier = Modifier.size(20.dp),
+                tint = NavyBlue.copy(alpha = 0.5f)
+            )
+        }
 
-            Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(40.dp))
 
-            // User Name with Edit Icon
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.clickable { onEvent(ProfileEvent.OnEditProfileClicked) }
-            ) {
-                Text(
-                    text = uiState.profileData.name,
-                    fontSize = 28.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = NavyBlue,
-                    fontFamily = Poppins,
-                    letterSpacing = (-0.5).sp
-                )
-                Spacer(modifier = Modifier.width(8.dp))
+        // Personal Information Section
+        SectionLabel(
+            text = stringResource(R.string.profile_personal_info_label),
+            modifier = Modifier.align(Alignment.Start)
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        ProfileInfoCard(
+            email = uiState.profileData.email,
+            phoneNumber = uiState.profileData.phoneNumber,
+            onEditEmailClick = {
+                onEvent(ProfileEvent.OnEditEmailClicked)
+            },
+            onEditPhoneClick = {
+                onEvent(ProfileEvent.OnEditPhoneClicked)
+            },
+            onEditPasswordClick = {
+                onEvent(ProfileEvent.OnEditPasswordClicked)
+            }
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        SecurityStatusBanner()
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        ProfileSecondaryActionButton(
+            text = stringResource(R.string.profile_logout),
+            onClick = onLogout,
+            icon = {
                 Icon(
-                    imageVector = Icons.Default.Edit,
-                    contentDescription = stringResource(R.string.profile_edit_name_desc),
-                    modifier = Modifier.size(20.dp),
-                    tint = NavyBlue.copy(alpha = 0.5f)
+                    imageVector = Icons.AutoMirrored.Filled.ExitToApp,
+                    contentDescription = stringResource(R.string.profile_logout),
+                    modifier = Modifier.size(18.dp),
+                    tint = NavyBlue
                 )
             }
+        )
 
-            Spacer(modifier = Modifier.height(40.dp))
-
-            // Personal Information Section
-            SectionLabel(
-                text = stringResource(R.string.profile_personal_info_label),
-                modifier = Modifier.align(Alignment.Start)
-            )
-            
-            Spacer(modifier = Modifier.height(12.dp))
-
-            ProfileInfoCard(
-                email = uiState.profileData.email,
-                phoneNumber = uiState.profileData.phoneNumber,
-                onEditEmailClick = {
-                    onEvent(ProfileEvent.OnEditEmailClicked)
-                },
-                onEditPhoneClick = {
-                    onEvent(ProfileEvent.OnEditPhoneClicked)
-                },
-                onEditPasswordClick = {
-                    onEvent(ProfileEvent.OnEditPasswordClicked)
-                }
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            SecurityStatusBanner()
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            ProfileSecondaryActionButton(
-                text = stringResource(R.string.profile_logout),
-                onClick = onLogout,
-                icon = {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ExitToApp,
-                        contentDescription = stringResource(R.string.profile_logout),
-                        modifier = Modifier.size(18.dp),
-                        tint = NavyBlue
-                    )
-                }
-            )
-
-            Spacer(modifier = Modifier.height(32.dp))
-        }
+        Spacer(modifier = Modifier.height(32.dp))
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditProfileScreen(
     uiState: ProfileUiState,
     onEvent: (ProfileEvent) -> Unit
 ) {
-    Scaffold(
-        containerColor = Color.White,
-        topBar = {
-            Column {
-                TopAppBar(
-                    title = {
-                        Text(
-                            text = stringResource(R.string.profile_edit_title),
-                            fontFamily = Poppins,
-                            fontSize = 18.sp,
-                            color = NavyBlue,
-                            fontWeight = FontWeight.Bold
-                        )
-                    },
-                    navigationIcon = {
-                        IconButton(onClick = { onEvent(ProfileEvent.OnBackClicked) }) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = stringResource(R.string.common_back),
-                                tint = NavyBlue
-                            )
-                        }
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = Color.White
-                    )
-                )
-                HorizontalDivider(color = Color(0xFFF1F5F9), thickness = 1.dp)
-            }
-        },
+    ProfileBaseScreen(
+        title = stringResource(R.string.profile_edit_title),
+        onBackClick = { onEvent(ProfileEvent.OnBackClicked) },
         bottomBar = {
-            Column(
+            ProfileBottomActions(
+                primaryText = stringResource(R.string.common_save_changes),
+                onPrimaryClick = { onEvent(ProfileEvent.OnSaveClicked) },
+                secondaryText = stringResource(R.string.common_cancel),
+                onSecondaryClick = { onEvent(ProfileEvent.OnCancelClicked) },
+                primaryIcon = {
+                    Icon(
+                        imageVector = Icons.Default.CheckCircle,
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp),
+                        tint = Color.White
+                    )
+                },
+                secondaryIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp),
+                        tint = NavyBlue
+                    )
+                }
+            )
+        }
+    ) {
+        Spacer(modifier = Modifier.height(32.dp))
+
+        // Avatar Section
+        Box(contentAlignment = Alignment.BottomEnd) {
+            ProfileAvatar(
+                isOnline = false
+            )
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.White)
-                    .padding(horizontal = 24.dp, vertical = 20.dp)
+                    .size(32.dp)
+                    .clip(CircleShape)
+                    .background(NavyBlue)
+                    .padding(8.dp)
+                    .clickable { onEvent(ProfileEvent.OnChangePhotoClicked) },
+                contentAlignment = Alignment.Center
             ) {
-                HorizontalDivider(color = Color(0xFFF1F5F9), thickness = 1.dp)
-                Spacer(modifier = Modifier.height(24.dp))
-                
-                ProfileActionButton(
-                    text = stringResource(R.string.common_save_changes),
-                    onClick = { onEvent(ProfileEvent.OnSaveClicked) },
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Default.CheckCircle,
-                            contentDescription = null,
-                            modifier = Modifier.size(18.dp),
-                            tint = Color.White
-                        )
-                    }
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                ProfileSecondaryActionButton(
-                    text = stringResource(R.string.common_cancel),
-                    onClick = { onEvent(ProfileEvent.OnCancelClicked) },
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Default.Close,
-                            contentDescription = null,
-                            modifier = Modifier.size(18.dp),
-                            tint = NavyBlue
-                        )
-                    }
+                Icon(
+                    imageVector = Icons.Default.Person,
+                    contentDescription = stringResource(R.string.profile_change_photo_desc),
+                    tint = Color.White,
+                    modifier = Modifier.size(16.dp)
                 )
             }
         }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Spacer(modifier = Modifier.height(32.dp))
 
-            // Avatar Section
-            Box(contentAlignment = Alignment.BottomEnd) {
-                ProfileAvatar(
-                    isOnline = false
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Text(
+            text = stringResource(R.string.profile_change_photo_label),
+            fontSize = 14.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = NavyBlue,
+            modifier = Modifier.clickable { onEvent(ProfileEvent.OnChangePhotoClicked) }
+        )
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        BookingInputField(
+            label = stringResource(R.string.common_full_name),
+            value = uiState.editData.name,
+            placeholder = stringResource(R.string.profile_full_name_placeholder),
+            onValueChange = { onEvent(ProfileEvent.OnNameChanged(it)) },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Person,
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp),
+                    tint = DarkText.copy(alpha = 0.6f)
                 )
+            }
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        BookingInputField(
+            label = stringResource(R.string.common_email_address),
+            value = uiState.editData.email,
+            placeholder = stringResource(R.string.profile_email_placeholder),
+            onValueChange = { onEvent(ProfileEvent.OnEmailChanged(it)) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Email,
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp),
+                    tint = DarkText.copy(alpha = 0.6f)
+                )
+            }
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        BookingInputField(
+            label = stringResource(R.string.common_phone_number),
+            value = uiState.editData.phoneNumber,
+            placeholder = stringResource(R.string.profile_phone_placeholder),
+            onValueChange = { onEvent(ProfileEvent.OnPhoneNumberChanged(it)) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Phone,
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp),
+                    tint = DarkText.copy(alpha = 0.6f)
+                )
+            }
+        )
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        SectionLabel(
+            text = stringResource(R.string.common_security),
+            modifier = Modifier.align(Alignment.Start)
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onEvent(ProfileEvent.OnEditPasswordClicked) },
+            shape = RoundedCornerShape(12.dp),
+            color = Color(0xFFF8FAFC),
+            border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFE2E8F0))
+        ) {
+            Row(
+                modifier = Modifier.padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Box(
                     modifier = Modifier
-                        .size(32.dp)
+                        .size(40.dp)
                         .clip(CircleShape)
-                        .background(NavyBlue)
-                        .padding(8.dp)
-                        .clickable { onEvent(ProfileEvent.OnChangePhotoClicked) },
+                        .background(Color(0xFFE2E8F0)),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Person,
-                        contentDescription = stringResource(R.string.profile_change_photo_desc),
-                        tint = Color.White,
-                        modifier = Modifier.size(16.dp)
+                        imageVector = Icons.Default.Lock,
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp),
+                        tint = NavyBlue
                     )
                 }
+
+                Spacer(modifier = Modifier.width(16.dp))
+
+                Column(modifier = Modifier.weight(1.0f)) {
+                    Text(
+                        text = stringResource(R.string.common_change_password),
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = NavyBlue
+                    )
+                    Text(
+                        text = stringResource(R.string.profile_keep_account_secure),
+                        fontSize = 12.sp,
+                        color = SubtleText
+                    )
+                }
+
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                    contentDescription = null,
+                    tint = SubtleText
+                )
             }
-
-            Spacer(modifier = Modifier.height(12.dp))
-            
-            Text(
-                text = stringResource(R.string.profile_change_photo_label),
-                fontSize = 14.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = NavyBlue,
-                modifier = Modifier.clickable { onEvent(ProfileEvent.OnChangePhotoClicked) }
-            )
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            BookingInputField(
-                label = stringResource(R.string.common_full_name),
-                value = uiState.editData.name,
-                placeholder = stringResource(R.string.profile_full_name_placeholder),
-                onValueChange = { onEvent(ProfileEvent.OnNameChanged(it)) },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Person,
-                        contentDescription = null,
-                        modifier = Modifier.size(20.dp),
-                        tint = DarkText.copy(alpha = 0.6f)
-                    )
-                }
-            )
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            BookingInputField(
-                label = stringResource(R.string.common_email_address),
-                value = uiState.editData.email,
-                placeholder = stringResource(R.string.profile_email_placeholder),
-                onValueChange = { onEvent(ProfileEvent.OnEmailChanged(it)) },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Email,
-                        contentDescription = null,
-                        modifier = Modifier.size(20.dp),
-                        tint = DarkText.copy(alpha = 0.6f)
-                    )
-                }
-            )
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            BookingInputField(
-                label = stringResource(R.string.common_phone_number),
-                value = uiState.editData.phoneNumber,
-                placeholder = stringResource(R.string.profile_phone_placeholder),
-                onValueChange = { onEvent(ProfileEvent.OnPhoneNumberChanged(it)) },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Phone,
-                        contentDescription = null,
-                        modifier = Modifier.size(20.dp),
-                        tint = DarkText.copy(alpha = 0.6f)
-                    )
-                }
-            )
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            SectionLabel(
-                text = stringResource(R.string.common_security),
-                modifier = Modifier.align(Alignment.Start)
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Surface(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { onEvent(ProfileEvent.OnEditPasswordClicked) },
-                shape = RoundedCornerShape(12.dp),
-                color = Color(0xFFF8FAFC),
-                border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFE2E8F0))
-            ) {
-                Row(
-                    modifier = Modifier.padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(40.dp)
-                            .clip(CircleShape)
-                            .background(Color(0xFFE2E8F0)),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Lock,
-                            contentDescription = null,
-                            modifier = Modifier.size(20.dp),
-                            tint = NavyBlue
-                        )
-                    }
-                    
-                    Spacer(modifier = Modifier.width(16.dp))
-                    
-                    Column(modifier = Modifier.weight(1.0f)) {
-                        Text(
-                            text = stringResource(R.string.common_change_password),
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = NavyBlue
-                        )
-                        Text(
-                            text = stringResource(R.string.profile_keep_account_secure),
-                            fontSize = 12.sp,
-                            color = SubtleText
-                        )
-                    }
-                    
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                        contentDescription = null,
-                        tint = SubtleText
-                    )
-                }
-            }
-            
-            Spacer(modifier = Modifier.height(32.dp))
         }
+
+        Spacer(modifier = Modifier.height(32.dp))
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChangePasswordScreen(
     uiState: ProfileUiState,
     onEvent: (ProfileEvent) -> Unit
 ) {
-    Scaffold(
-        containerColor = Color.White,
-        topBar = {
-            Column {
-                TopAppBar(
-                    title = {
-                        Text(
-                            text = stringResource(R.string.profile_change_password_title),
-                            fontFamily = Poppins,
-                            fontSize = 18.sp,
-                            color = NavyBlue,
-                            fontWeight = FontWeight.Bold
-                        )
-                    },
-                    navigationIcon = {
-                        IconButton(onClick = { onEvent(ProfileEvent.OnBackClicked) }) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = stringResource(R.string.common_back),
-                                tint = NavyBlue
-                            )
-                        }
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = Color.White
-                    )
-                )
-                HorizontalDivider(color = Color(0xFFF1F5F9), thickness = 1.dp)
-            }
-        },
+    ProfileBaseScreen(
+        title = stringResource(R.string.profile_change_password_title),
+        onBackClick = { onEvent(ProfileEvent.OnBackClicked) },
         bottomBar = {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.White)
-                    .padding(horizontal = 24.dp, vertical = 20.dp)
-            ) {
-                HorizontalDivider(color = Color(0xFFF1F5F9), thickness = 1.dp)
-                Spacer(modifier = Modifier.height(24.dp))
-
-                ProfileActionButton(
-                    text = stringResource(R.string.profile_save_password),
-                    onClick = { onEvent(ProfileEvent.OnSavePasswordClicked) }
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                ProfileSecondaryActionButton(
-                    text = stringResource(R.string.common_cancel),
-                    onClick = { onEvent(ProfileEvent.OnCancelClicked) }
-                )
-            }
+            ProfileBottomActions(
+                primaryText = stringResource(R.string.profile_save_password),
+                onPrimaryClick = { onEvent(ProfileEvent.OnSavePasswordClicked) },
+                secondaryText = stringResource(R.string.common_cancel),
+                onSecondaryClick = { onEvent(ProfileEvent.OnCancelClicked) }
+            )
         }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Spacer(modifier = Modifier.height(24.dp))
+    ) {
+        Spacer(modifier = Modifier.height(24.dp))
 
-            // Security Info Banner
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(16.dp),
-                color = Color(0xFFFEF9C3).copy(alpha = 0.3f),
-                border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFFEF08A))
+        // Security Info Banner
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
+            color = Color(0xFFFEF9C3).copy(alpha = 0.3f),
+            border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFFEF08A))
+        ) {
+            Row(
+                modifier = Modifier.padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    modifier = Modifier.padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                Box(
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(Color.White),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .size(48.dp)
-                            .clip(RoundedCornerShape(12.dp))
-                            .background(Color.White),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Lock,
-                            contentDescription = null,
-                            tint = Color(0xFFA16207),
-                            modifier = Modifier.size(24.dp)
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(16.dp))
-                    Column {
-                        Text(
-                            text = stringResource(R.string.profile_secure_your_account),
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color(0xFFA16207)
-                        )
-                        Text(
-                            text = stringResource(R.string.profile_password_requirement_hint),
-                            fontSize = 12.sp,
-                            color = Color(0xFFA16207).copy(alpha = 0.7f),
-                            lineHeight = 18.sp
-                        )
-                    }
+                    Icon(
+                        imageVector = Icons.Default.Lock,
+                        contentDescription = null,
+                        tint = Color(0xFFA16207),
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+                Spacer(modifier = Modifier.width(16.dp))
+                Column {
+                    Text(
+                        text = stringResource(R.string.profile_secure_your_account),
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFFA16207)
+                    )
+                    Text(
+                        text = stringResource(R.string.profile_password_requirement_hint),
+                        fontSize = 12.sp,
+                        color = Color(0xFFA16207).copy(alpha = 0.7f),
+                        lineHeight = 18.sp
+                    )
                 }
             }
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            PasswordInputField(
-                label = stringResource(R.string.profile_current_password_label),
-                value = uiState.changePasswordData.currentPassword,
-                placeholder = stringResource(R.string.profile_current_password_placeholder),
-                onValueChange = { onEvent(ProfileEvent.OnCurrentPasswordChanged(it)) },
-                isVisible = uiState.changePasswordData.isCurrentPasswordVisible,
-                onToggleVisibility = { onEvent(ProfileEvent.OnToggleCurrentPasswordVisibility) }
-            )
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            PasswordInputField(
-                label = stringResource(R.string.profile_new_password_label),
-                value = uiState.changePasswordData.newPassword,
-                placeholder = stringResource(R.string.profile_new_password_placeholder),
-                onValueChange = { onEvent(ProfileEvent.OnNewPasswordChanged(it)) },
-                isVisible = uiState.changePasswordData.isNewPasswordVisible,
-                onToggleVisibility = { onEvent(ProfileEvent.OnToggleNewPasswordVisibility) }
-            )
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            PasswordInputField(
-                label = stringResource(R.string.profile_confirm_password_label),
-                value = uiState.changePasswordData.confirmPassword,
-                placeholder = stringResource(R.string.profile_confirm_password_placeholder),
-                onValueChange = { onEvent(ProfileEvent.OnConfirmPasswordChanged(it)) },
-                isVisible = uiState.changePasswordData.isConfirmPasswordVisible,
-                onToggleVisibility = { onEvent(ProfileEvent.OnToggleConfirmPasswordVisibility) }
-            )
-            
-            Spacer(modifier = Modifier.height(32.dp))
         }
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        PasswordInputField(
+            label = stringResource(R.string.profile_current_password_label),
+            value = uiState.changePasswordData.currentPassword,
+            placeholder = stringResource(R.string.profile_current_password_placeholder),
+            onValueChange = { onEvent(ProfileEvent.OnCurrentPasswordChanged(it)) },
+            isVisible = uiState.changePasswordData.isCurrentPasswordVisible,
+            onToggleVisibility = { onEvent(ProfileEvent.OnToggleCurrentPasswordVisibility) }
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        PasswordInputField(
+            label = stringResource(R.string.profile_new_password_label),
+            value = uiState.changePasswordData.newPassword,
+            placeholder = stringResource(R.string.profile_new_password_placeholder),
+            onValueChange = { onEvent(ProfileEvent.OnNewPasswordChanged(it)) },
+            isVisible = uiState.changePasswordData.isNewPasswordVisible,
+            onToggleVisibility = { onEvent(ProfileEvent.OnToggleNewPasswordVisibility) }
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        PasswordInputField(
+            label = stringResource(R.string.profile_confirm_password_label),
+            value = uiState.changePasswordData.confirmPassword,
+            placeholder = stringResource(R.string.profile_confirm_password_placeholder),
+            onValueChange = { onEvent(ProfileEvent.OnConfirmPasswordChanged(it)) },
+            isVisible = uiState.changePasswordData.isConfirmPasswordVisible,
+            onToggleVisibility = { onEvent(ProfileEvent.OnToggleConfirmPasswordVisibility) }
+        )
+
+        Spacer(modifier = Modifier.height(32.dp))
     }
 }
 
