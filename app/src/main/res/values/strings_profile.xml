@@ -5,6 +5,16 @@
     <string name="profile_personal_info_label">PERSONAL INFORMATION</string>
     <string name="profile_logout">Logout</string>
 
+    <!-- Profile Info Card -->
+    <string name="profile_label_email">Email Address</string>
+    <string name="profile_label_phone">Phone Number</string>
+    <string name="profile_label_language">Language</string>
+    <string name="profile_label_password">Password</string>
+
+    <!-- Security Banner -->
+    <string name="profile_security_level_high">Security Level: High</string>
+    <string name="profile_security_verified_desc">Your account is 100% verified and secure.</string>
+
     <!-- Edit Profile -->
     <string name="profile_edit_title">Edit Profile</string>
     <string name="profile_change_photo_desc">Change Photo</string>
@@ -12,6 +22,10 @@
     <string name="profile_full_name_placeholder">Enter your full name</string>
     <string name="profile_email_placeholder">Enter your email</string>
     <string name="profile_phone_placeholder">Enter your phone number</string>
+    <string name="profile_language_label">LANGUAGE</string>
+    <string name="language_english">English</string>
+    <string name="language_french">French</string>
+    <string name="language_arabic">Arabic</string>
 
     <!-- Change Password -->
     <string name="profile_change_password_title">Change Password</string>

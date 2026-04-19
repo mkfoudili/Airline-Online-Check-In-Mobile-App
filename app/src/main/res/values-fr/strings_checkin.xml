@@ -1,0 +1,11 @@
+<resources>
+    <!-- Baggage Screen -->
+    <string name="checkin_baggage_step_title">Étape 4 : Bagages</string>
+    <string name="checkin_baggage_declaration">Déclaration de bagages</string>
+    <string name="checkin_baggage_description">Sélectionnez le nombre de bagages que vous prévoyez d\'enregistrer pour votre vol.</string>
+    <string name="checkin_checked_baggage">Bagages enregistrés</string>
+    <string name="checkin_checked_baggage_desc">Grandes valises ou sacs rangés dans la soute de l\'avion.</string>
+    <string name="checkin_special_equipment">Équipement spécial</string>
+    <string name="checkin_special_equipment_desc">Vélos, skis ou équipements de sport surdimensionnés.</string>
+    <string name="checkin_continue_to_step_5">Continuer vers l\'étape 5</string>
+</resources>

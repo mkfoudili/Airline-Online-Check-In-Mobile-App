@@ -1,0 +1,18 @@
+<resources>
+    <!-- Common UI Actions -->
+    <string name="common_back">Retour</string>
+    <string name="common_cancel">Annuler</string>
+    <string name="common_edit">Modifier</string>
+    <string name="common_save_changes">Enregistrer les modifications</string>
+
+    <!-- Common Form Labels -->
+    <string name="common_full_name">Nom complet</string>
+    <string name="common_email_address">Adresse e-mail</string>
+    <string name="common_phone_number">Numéro de téléphone</string>
+
+    <!-- Common Security -->
+    <string name="common_security">Sécurité</string>
+    <string name="common_change_password">Changer le mot de passe</string>
+    <string name="common_hide_password">Masquer le mot de passe</string>
+    <string name="common_show_password">Afficher le mot de passe</string>
+</resources>

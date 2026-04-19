@@ -1,0 +1,11 @@
+<resources>
+    <!-- Baggage Screen -->
+    <string name="checkin_baggage_step_title">الخطوة 4: الأمتعة</string>
+    <string name="checkin_baggage_declaration">إقرار الأمتعة</string>
+    <string name="checkin_baggage_description">حدد عدد الحقائب التي تخطط لتسجيلها لرحلتك.</string>
+    <string name="checkin_checked_baggage">الأمتعة المسجلة</string>
+    <string name="checkin_checked_baggage_desc">حقائب كبيرة أو أكياس يتم تخزينها في مستودع الطائرة.</string>
+    <string name="checkin_special_equipment">معدات خاصة</string>
+    <string name="checkin_special_equipment_desc">دراجات، زلاجات، أو معدات رياضية ضخمة.</string>
+    <string name="checkin_continue_to_step_5">متابعة للخطوة 5</string>
+</resources>
