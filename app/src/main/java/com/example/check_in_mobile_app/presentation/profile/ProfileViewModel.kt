@@ -1,14 +1,14 @@
 package com.example.check_in_mobile_app.presentation.profile
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.domain.usecase.profile.GetProfileUseCase
 import com.example.domain.usecase.profile.UpdatePasswordUseCase
 import com.example.domain.usecase.profile.UpdateProfileUseCase
 import com.example.domain.usecase.language.ChangeLanguageUseCase
 import com.example.domain.usecase.language.GetSavedLanguageUseCase
-import com.example.domain.preferences.LanguageRepository
 import com.example.check_in_mobile_app.AppContainer
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,17 +16,15 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-val context = LocalContext.current
-
 class ProfileViewModel(
-    private val repo: LanguageRepository = AppContainer.provideLanguageRepository(context),
-    private val changeLanguageUseCase: ChangeLanguageUseCase = ChangeLanguageUseCase(repo),
-    private val getSavedLanguageUseCase: GetSavedLanguageUseCase = GetSavedLanguageUseCase(repo),
-    private val getProfileUseCase: GetProfileUseCase = GetProfileUseCase(),
-    private val updateProfileUseCase: UpdateProfileUseCase = UpdateProfileUseCase(),
-    private val updatePasswordUseCase: UpdatePasswordUseCase = UpdatePasswordUseCase()
+    private val changeLanguageUseCase: ChangeLanguageUseCase,
+    private val getSavedLanguageUseCase: GetSavedLanguageUseCase,
+    private val getProfileUseCase: GetProfileUseCase,
+    private val updateProfileUseCase: UpdateProfileUseCase,
+    private val updatePasswordUseCase: UpdatePasswordUseCase
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ProfileUiState())
     val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
@@ -36,6 +34,18 @@ class ProfileViewModel(
 
     init {
         fetchProfile()
+        observeLanguage()
+    }
+
+    private fun observeLanguage() {
+        viewModelScope.launch {
+            getSavedLanguageUseCase().collectLatest { langTag ->
+                val languageName = mapTagToLanguage(langTag ?: "en")
+                _uiState.value = _uiState.value.copy(
+                    profileData = _uiState.value.profileData.copy(language = languageName)
+                )
+            }
+        }
     }
 
     private fun fetchProfile() {
@@ -46,7 +56,7 @@ class ProfileViewModel(
                 val profile = getProfileUseCase()
 
                 _uiState.value = _uiState.value.copy(
-                    profileData = ProfileData(
+                    profileData = _uiState.value.profileData.copy(
                         name = profile.fullName,
                         email = profile.email,
                         phoneNumber = profile.phoneNumber,
@@ -74,7 +84,8 @@ class ProfileViewModel(
             editData = EditProfileData(
                 name = _uiState.value.profileData.name,
                 email = _uiState.value.profileData.email,
-                phoneNumber = _uiState.value.profileData.phoneNumber
+                phoneNumber = _uiState.value.profileData.phoneNumber,
+                language = _uiState.value.profileData.language
             )
         )
     }
@@ -95,6 +106,8 @@ class ProfileViewModel(
             is ProfileEvent.OnNameChanged -> onNameChanged(event.name)
             is ProfileEvent.OnEmailChanged -> onEmailChanged(event.email)
             is ProfileEvent.OnPhoneNumberChanged -> onPhoneNumberChanged(event.phoneNumber)
+            is ProfileEvent.OnLanguageChanged -> onLanguageChanged(event.language)
+            ProfileEvent.OnToggleLanguageDropdown -> toggleLanguageDropdown()
             ProfileEvent.OnSaveClicked -> onSaveClicked()
             ProfileEvent.OnCancelClicked -> onCancelClicked()
             ProfileEvent.OnBackClicked -> onBackClicked()
@@ -127,22 +140,52 @@ class ProfileViewModel(
         )
     }
 
+    private fun onLanguageChanged(language: String) {
+        _uiState.value = _uiState.value.copy(
+            editData = _uiState.value.editData.copy(
+                language = language,
+                isLanguageDropdownExpanded = false
+            )
+        )
+    }
+
+    private fun toggleLanguageDropdown() {
+        _uiState.value = _uiState.value.copy(
+            editData = _uiState.value.editData.copy(
+                isLanguageDropdownExpanded = !_uiState.value.editData.isLanguageDropdownExpanded
+            )
+        )
+    }
+
     private fun onSaveClicked() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
             try {
+                // Update basic profile info
                 val updatedProfile = updateProfileUseCase(
                     fullName = _uiState.value.editData.name,
                     email = _uiState.value.editData.email,
                     phoneNumber = _uiState.value.editData.phoneNumber
                 )
+
+                // Update language if changed
+                val selectedLanguage = _uiState.value.editData.language
+                if (selectedLanguage != _uiState.value.profileData.language) {
+                    val langTag = mapLanguageToTag(selectedLanguage)
+                    changeLanguageUseCase(langTag)
+                    _uiAction.emit(ProfileUiAction.ShowToast("Language updated to $selectedLanguage"))
+                } else {
+                    _uiAction.emit(ProfileUiAction.ShowToast("Profile updated successfully"))
+                }
+
                 _uiState.value = _uiState.value.copy(
                     screenMode = ProfileScreenMode.VIEW,
                     isLoading = false,
                     profileData = _uiState.value.profileData.copy(
                         name = updatedProfile.fullName,
                         email = updatedProfile.email,
-                        phoneNumber = updatedProfile.phoneNumber
+                        phoneNumber = updatedProfile.phoneNumber,
+                        language = selectedLanguage
                     )
                 )
             } catch (e: Exception) {
@@ -151,6 +194,22 @@ class ProfileViewModel(
                     error = e.message ?: "Update failed"
                 )
             }
+        }
+    }
+
+    private fun mapLanguageToTag(language: String): String {
+        return when (language) {
+            "French" -> "fr"
+            "Arabic" -> "ar"
+            else -> "en"
+        }
+    }
+
+    private fun mapTagToLanguage(tag: String): String {
+        return when (tag) {
+            "fr" -> "French"
+            "ar" -> "Arabic"
+            else -> "English"
         }
     }
 
@@ -233,6 +292,7 @@ class ProfileViewModel(
             )
 
             if (result.isSuccess) {
+                _uiAction.emit(ProfileUiAction.ShowToast("Password changed successfully"))
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,
                     screenMode = ProfileScreenMode.VIEW,
@@ -243,6 +303,26 @@ class ProfileViewModel(
                     isLoading = false,
                     error = result.exceptionOrNull()?.message ?: "Update failed"
                 )
+            }
+        }
+    }
+
+    companion object {
+        val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(
+                modelClass: Class<T>,
+                extras: CreationExtras
+            ): T {
+                val application = checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY])
+                
+                return ProfileViewModel(
+                    changeLanguageUseCase = AppContainer.provideChangeLanguageUseCase(application),
+                    getSavedLanguageUseCase = AppContainer.provideGetSavedLanguageUseCase(application),
+                    getProfileUseCase = GetProfileUseCase(),
+                    updateProfileUseCase = UpdateProfileUseCase(),
+                    updatePasswordUseCase = UpdatePasswordUseCase()
+                ) as T
             }
         }
     }
