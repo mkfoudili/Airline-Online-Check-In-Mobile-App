@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Email
+import androidx.compose.material.icons.outlined.Language
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Phone
 import androidx.compose.material3.HorizontalDivider
@@ -21,9 +22,11 @@ import com.example.check_in_mobile_app.ui.theme.BorderLight
 fun ProfileInfoCard(
     email: String,
     phoneNumber: String,
+    language: String,
     onEditEmailClick: () -> Unit,
     onEditPhoneClick: () -> Unit,
     onEditPasswordClick: () -> Unit,
+    onEditLanguageClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -60,6 +63,19 @@ fun ProfileInfoCard(
         )
 
         ProfileInfoRow(
+            icon = Icons.Outlined.Language,
+            label = "Language",
+            value = language,
+            onClick = onEditLanguageClick
+        )
+
+        HorizontalDivider(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            thickness = 1.dp,
+            color = BorderLight
+        )
+
+        ProfileInfoRow(
             icon = Icons.Outlined.Lock,
             label = "Password",
             value = "••••••••••••",
@@ -75,9 +91,11 @@ fun ProfileInfoCardPreview() {
         ProfileInfoCard(
             email = "mr_mekircha@esi.dz",
             phoneNumber = "+1 (555) 012-3456",
+            language = "English",
             onEditEmailClick = {},
             onEditPhoneClick = {},
-            onEditPasswordClick = {}
+            onEditPasswordClick = {},
+            onEditLanguageClick = {}
         )
     }
 }

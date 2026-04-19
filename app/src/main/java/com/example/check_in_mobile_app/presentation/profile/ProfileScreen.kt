@@ -1,5 +1,6 @@
 package com.example.check_in_mobile_app.presentation.profile
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -15,11 +16,13 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -48,14 +51,32 @@ import com.example.check_in_mobile_app.ui.theme.SubtleText
 import com.example.check_in_mobile_app.ui.theme.DividerColor
 import com.example.check_in_mobile_app.ui.theme.SurfaceGray
 import com.example.check_in_mobile_app.ui.theme.BorderLight
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun ProfileScreen(
-    viewModel: ProfileViewModel = viewModel(),
+    viewModel: ProfileViewModel = viewModel(factory = ProfileViewModel.Factory),
     onTabSelected: (TabItem) -> Unit = {},
     onLogout: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        viewModel.uiAction.collectLatest { action ->
+            when (action) {
+                is ProfileUiAction.ShowToast -> {
+                    Toast.makeText(context, action.message, Toast.LENGTH_SHORT).show()
+                }
+                ProfileUiAction.NavigateBack -> {
+                    // Handled by navigation
+                }
+                ProfileUiAction.NavigateToEditPassword -> {
+                    // Handled by screen mode
+                }
+            }
+        }
+    }
 
     when (uiState.screenMode) {
         ProfileScreenMode.CHANGE_PASSWORD -> {
@@ -238,6 +259,7 @@ fun ProfileScreenContent(
         ProfileInfoCard(
             email = uiState.profileData.email,
             phoneNumber = uiState.profileData.phoneNumber,
+            language = uiState.profileData.language,
             onEditEmailClick = {
                 onEvent(ProfileEvent.OnEditEmailClicked)
             },
@@ -246,6 +268,9 @@ fun ProfileScreenContent(
             },
             onEditPasswordClick = {
                 onEvent(ProfileEvent.OnEditPasswordClicked)
+            },
+            onEditLanguageClick = {
+                onEvent(ProfileEvent.OnEditProfileClicked)
             }
         )
 
@@ -394,6 +419,15 @@ fun EditProfileScreen(
             }
         )
 
+        Spacer(modifier = Modifier.height(20.dp))
+
+        LanguageDropdownField(
+            selectedLanguage = uiState.editData.language,
+            isExpanded = uiState.editData.isLanguageDropdownExpanded,
+            onToggle = { onEvent(ProfileEvent.OnToggleLanguageDropdown) },
+            onLanguageSelected = { onEvent(ProfileEvent.OnLanguageChanged(it)) }
+        )
+
         Spacer(modifier = Modifier.height(32.dp))
 
         SectionLabel(
@@ -457,6 +491,83 @@ fun EditProfileScreen(
         }
 
         Spacer(modifier = Modifier.height(32.dp))
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun LanguageDropdownField(
+    selectedLanguage: String,
+    isExpanded: Boolean,
+    onToggle: () -> Unit,
+    onLanguageSelected: (String) -> Unit
+) {
+    val languages = listOf("English", "French", "Arabic")
+
+    Column {
+        Text(
+            text = "LANGUAGE",
+            fontSize = 11.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = SubtleText,
+            letterSpacing = 0.8.sp
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        ExposedDropdownMenuBox(
+            expanded = isExpanded,
+            onExpandedChange = { onToggle() },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            OutlinedTextField(
+                value = selectedLanguage,
+                onValueChange = {},
+                readOnly = true,
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded) },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Language,
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp),
+                        tint = DarkText.copy(alpha = 0.6f)
+                    )
+                },
+                shape = RoundedCornerShape(12.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = BorderLight,
+                    focusedTextColor = DarkText,
+                    unfocusedTextColor = DarkText,
+                    cursorColor = MaterialTheme.colorScheme.primary,
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White
+                ),
+                modifier = Modifier
+                    .menuAnchor()
+                    .fillMaxWidth()
+            )
+
+            ExposedDropdownMenu(
+                expanded = isExpanded,
+                onDismissRequest = onToggle,
+                modifier = Modifier.background(Color.White)
+            ) {
+                languages.forEach { language ->
+                    DropdownMenuItem(
+                        text = {
+                            Text(
+                                text = language,
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = DarkText
+                            )
+                        },
+                        onClick = {
+                            onLanguageSelected(language)
+                        },
+                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp)
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -606,6 +717,7 @@ fun ProfileScreenPreview() {
                 name = "Djerfi Fatima",
                 email = "mr_mikircha@esi.dz",
                 phoneNumber = "+1 (555) 012-3456",
+                language = "English",
                 isOnline = true
             )
         )
@@ -621,7 +733,8 @@ fun EditProfileScreenPreview() {
             editData = EditProfileData(
                 name = "Djerfi Fatima",
                 email = "mr_mikircha@esi.dz",
-                phoneNumber = "+1 (555) 012-4567"
+                phoneNumber = "+1 (555) 012-4567",
+                language = "English"
             )
         ),
         onEvent = {}
