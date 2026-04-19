@@ -21,6 +21,7 @@ data class ProfileData(
     val name: String = "",
     val email: String = "",
     val phoneNumber: String = "",
+    val language: String = "English",
     val passwordMasked: String = "************",
     val profileImageUrl: String? = null,
     val isVerified: Boolean = false,
@@ -31,7 +32,9 @@ data class ProfileData(
 data class EditProfileData(
     val name: String = "",
     val email: String = "",
-    val phoneNumber: String = ""
+    val phoneNumber: String = "",
+    val language: String = "English",
+    val isLanguageDropdownExpanded: Boolean = false
 )
 
 data class ChangePasswordData(

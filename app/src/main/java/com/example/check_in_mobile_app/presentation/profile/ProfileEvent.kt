@@ -8,6 +8,8 @@ sealed class ProfileEvent {
     data class OnNameChanged(val name: String) : ProfileEvent()
     data class OnEmailChanged(val email: String) : ProfileEvent()
     data class OnPhoneNumberChanged(val phoneNumber: String) : ProfileEvent()
+    data class OnLanguageChanged(val language: String) : ProfileEvent()
+    object OnToggleLanguageDropdown : ProfileEvent()
     object OnSaveClicked : ProfileEvent()
     object OnCancelClicked : ProfileEvent()
     object OnBackClicked : ProfileEvent()
