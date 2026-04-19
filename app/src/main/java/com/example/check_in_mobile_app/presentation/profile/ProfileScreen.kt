@@ -502,11 +502,15 @@ fun LanguageDropdownField(
     onToggle: () -> Unit,
     onLanguageSelected: (String) -> Unit
 ) {
-    val languages = listOf("English", "French", "Arabic")
+    val languages = listOf(
+        stringResource(R.string.language_english),
+        stringResource(R.string.language_french),
+        stringResource(R.string.language_arabic)
+    )
 
     Column {
         Text(
-            text = "LANGUAGE",
+            text = stringResource(R.string.profile_language_label),
             fontSize = 11.sp,
             fontWeight = FontWeight.SemiBold,
             color = SubtleText,

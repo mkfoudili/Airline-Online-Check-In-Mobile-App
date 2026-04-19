@@ -14,10 +14,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.ui.theme.ActiveGreen
 import com.example.check_in_mobile_app.ui.theme.SurfaceGray
 
@@ -66,14 +68,14 @@ fun SecurityStatusBanner(
 
         Column {
             Text(
-                text = "Security Level: High",
+                text = stringResource(R.string.profile_security_level_high),
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Bold,
                 color = ActiveGreen
             )
             Spacer(modifier = Modifier.height(2.dp))
             Text(
-                text = "Your account is 100% verified and secure.",
+                text = stringResource(R.string.profile_security_verified_desc),
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Medium,
                 color = ActiveGreen

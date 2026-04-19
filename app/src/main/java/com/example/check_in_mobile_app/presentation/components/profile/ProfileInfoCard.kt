@@ -14,8 +14,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.ui.theme.BorderLight
 
 @Composable
@@ -38,7 +40,7 @@ fun ProfileInfoCard(
     ) {
         ProfileInfoRow(
             icon = Icons.Outlined.Email,
-            label = "Email Address",
+            label = stringResource(R.string.profile_label_email),
             value = email,
             onClick = onEditEmailClick
         )
@@ -51,7 +53,7 @@ fun ProfileInfoCard(
 
         ProfileInfoRow(
             icon = Icons.Outlined.Phone,
-            label = "Phone Number",
+            label = stringResource(R.string.profile_label_phone),
             value = phoneNumber,
             onClick = onEditPhoneClick
         )
@@ -64,7 +66,7 @@ fun ProfileInfoCard(
 
         ProfileInfoRow(
             icon = Icons.Outlined.Language,
-            label = "Language",
+            label = stringResource(R.string.profile_label_language),
             value = language,
             onClick = onEditLanguageClick
         )
@@ -77,7 +79,7 @@ fun ProfileInfoCard(
 
         ProfileInfoRow(
             icon = Icons.Outlined.Lock,
-            label = "Password",
+            label = stringResource(R.string.profile_label_password),
             value = "••••••••••••",
             onClick = onEditPasswordClick
         )
