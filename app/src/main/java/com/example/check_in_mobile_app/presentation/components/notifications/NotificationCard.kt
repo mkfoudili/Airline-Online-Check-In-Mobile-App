@@ -21,8 +21,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.check_in_mobile_app.presentation.notifications.NotificationItem
-import com.example.check_in_mobile_app.presentation.notifications.NotificationType
+import com.example.check_in_mobile_app.presentation.main.notifications.NotificationItem
+import com.example.check_in_mobile_app.presentation.main.notifications.NotificationType
 import com.example.check_in_mobile_app.ui.theme.*
 
 @Composable

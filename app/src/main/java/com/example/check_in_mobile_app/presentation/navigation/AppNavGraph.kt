@@ -20,10 +20,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.check_in_mobile_app.presentation.auth.LoginScreen
 import com.example.check_in_mobile_app.presentation.auth.RegisterScreen
-import com.example.check_in_mobile_app.presentation.boarding.BoardingScreen
-import com.example.check_in_mobile_app.presentation.booking.AllBookingsScreen
-import com.example.check_in_mobile_app.presentation.booking.BookingScreen
-import com.example.check_in_mobile_app.presentation.booking.FlightDetailsScreen
+import com.example.check_in_mobile_app.presentation.checkin.boarding.BoardingScreen
+import com.example.check_in_mobile_app.presentation.main.booking.AllBookingsScreen
+import com.example.check_in_mobile_app.presentation.main.booking.BookingScreen
+import com.example.check_in_mobile_app.presentation.main.booking.FlightDetailsScreen
 import com.example.check_in_mobile_app.presentation.checkin.SeatSelection
 import com.example.check_in_mobile_app.presentation.checkin.baggage.BaggageScreen
 import com.example.check_in_mobile_app.presentation.checkin.baggage.BaggageViewModel
@@ -32,9 +32,9 @@ import com.example.check_in_mobile_app.presentation.checkin.checkingdetailsrevie
 import com.example.check_in_mobile_app.presentation.checkin.passportscan.PassportScanScreen
 import com.example.check_in_mobile_app.presentation.checkin.specialRequest
 import com.example.check_in_mobile_app.presentation.components.TabItem
-import com.example.check_in_mobile_app.presentation.home.HomeScreen
-import com.example.check_in_mobile_app.presentation.welcome.SplashScreen
-import com.example.check_in_mobile_app.presentation.welcome.WelcomeScreen
+import com.example.check_in_mobile_app.presentation.main.home.HomeScreen
+import com.example.check_in_mobile_app.presentation.auth.welcome.SplashScreen
+import com.example.check_in_mobile_app.presentation.auth.welcome.WelcomeScreen
 import com.example.data.repository.BookingRepositoryImpl
 
 import kotlinx.coroutines.delay
