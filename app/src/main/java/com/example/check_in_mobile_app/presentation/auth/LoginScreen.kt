@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.auth
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -11,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -20,17 +23,41 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.presentation.components.authforms.LoginForm
 import com.example.check_in_mobile_app.ui.theme.*
+import kotlin.jvm.java
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
     onNavigateBack: () -> Unit = {},
     onLoginSuccess: () -> Unit = {},
+//    onNavigateToHomeScreen: () -> Unit = {},
     onNavigateToRegister: () -> Unit = {},
     viewModel: AuthViewModel = viewModel()
 ) {
-    val state = viewModel.uiState
 
+    val state = viewModel.uiState
+    val googleSignInLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+        try {
+            val account = task.getResult(ApiException::class.java)
+            val idToken = account.idToken ?: return@rememberLauncherForActivityResult
+            viewModel.signInWithGoogle(idToken) // ✅ Pass token to ViewModel
+        } catch (e: ApiException) {
+            // handle error
+        }
+    }
+
+
+    val context = LocalContext.current
+    val googleSignInClient = remember {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken("YOUR_WEB_CLIENT_ID") // from google-services.json
+            .requestEmail()
+            .build()
+        GoogleSignIn.getClient(context, gso)
+    }
     LaunchedEffect(state.isSuccess) {
         if (state.isSuccess) onLoginSuccess()
     }
@@ -117,8 +144,9 @@ fun LoginScreen(
                 modifier = Modifier.fillMaxWidth(),
                 onSignInClick = { email, password ->
                     viewModel.login(email, password)
+//                    onNavigateToHomeScreen()
                 },
-                onGoogleSignInClick = { /* TODO */ },
+                onGoogleSignInClick = {  googleSignInLauncher.launch(googleSignInClient.signInIntent) },
                 onSignUpClick = onNavigateToRegister
             )
         }
