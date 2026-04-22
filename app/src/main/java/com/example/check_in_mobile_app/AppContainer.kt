@@ -12,7 +12,7 @@ private val Context.dataStore by preferencesDataStore("user_prefs")
 object AppContainer {
 
     fun provideLanguageRepository(context: Context): LanguageRepository {
-        return UserPreferencesRepository(context.dataStore)
+        return UserPreferencesRepository(context.applicationContext.dataStore)
     }
 
     fun provideChangeLanguageUseCase(context: Context): ChangeLanguageUseCase {
