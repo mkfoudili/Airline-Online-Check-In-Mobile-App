@@ -1,4 +1,4 @@
-package com.example.check_in_mobile_app.presentation.profile
+package com.example.check_in_mobile_app.presentation.main.profile
 
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -44,20 +44,13 @@ import com.example.check_in_mobile_app.presentation.components.TabItem
 import com.example.check_in_mobile_app.presentation.components.profile.ProfileAvatar
 import com.example.check_in_mobile_app.presentation.components.profile.ProfileInfoCard
 import com.example.check_in_mobile_app.presentation.components.profile.SecurityStatusBanner
-import com.example.check_in_mobile_app.presentation.main.profile.EditProfileData
-import com.example.check_in_mobile_app.presentation.main.profile.ProfileData
-import com.example.check_in_mobile_app.presentation.main.profile.ProfileEvent
-import com.example.check_in_mobile_app.presentation.main.profile.ProfileScreenMode
-import com.example.check_in_mobile_app.presentation.main.profile.ProfileUiAction
-import com.example.check_in_mobile_app.presentation.main.profile.ProfileUiState
-import com.example.check_in_mobile_app.presentation.main.profile.ProfileViewModel
+import com.example.check_in_mobile_app.ui.theme.BorderLight
 import com.example.check_in_mobile_app.ui.theme.DarkText
 import com.example.check_in_mobile_app.ui.theme.NavyBlue
 import com.example.check_in_mobile_app.ui.theme.Poppins
 import com.example.check_in_mobile_app.ui.theme.SubtleText
 import com.example.check_in_mobile_app.ui.theme.DividerColor
 import com.example.check_in_mobile_app.ui.theme.SurfaceGray
-import com.example.check_in_mobile_app.ui.theme.BorderLight
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable

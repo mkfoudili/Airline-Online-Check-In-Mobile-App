@@ -1,11 +1,7 @@
-package com.example.check_in_mobile_app.presentation.notifications
+package com.example.check_in_mobile_app.presentation.main.notifications
 
 import androidx.lifecycle.ViewModel
-import com.example.check_in_mobile_app.presentation.main.notifications.NotificationItem
-import com.example.check_in_mobile_app.presentation.main.notifications.NotificationType
-import com.example.check_in_mobile_app.presentation.main.notifications.NotificationsUiState
 import com.example.data.repository.NotificationRepositoryImpl
-import com.example.domain.model.Notification
 import com.example.domain.usecase.notification.GetNotificationsUseCase
 import com.example.domain.usecase.notification.MarkAllNotificationsReadUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
