@@ -30,12 +30,16 @@ import kotlin.jvm.java
 fun LoginScreen(
     onNavigateBack: () -> Unit = {},
     onLoginSuccess: () -> Unit = {},
-//    onNavigateToHomeScreen: () -> Unit = {},
     onNavigateToRegister: () -> Unit = {},
     viewModel: AuthViewModel = viewModel()
 ) {
+    val uiState = viewModel.uiState
 
-
+    LaunchedEffect(uiState.isSuccess) {
+        if (uiState.isSuccess) {
+            onLoginSuccess()
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -114,16 +118,29 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
+            if (uiState.errorMessage != null) {
+                Text(
+                    text = uiState.errorMessage,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(horizontal = 32.dp),
+                    textAlign = TextAlign.Center
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+
             // ── Login Form ─────────────────────────────────────────────
             LoginForm(
                 modifier = Modifier.fillMaxWidth(),
                 onSignInClick = { email, password ->
                     viewModel.login(email, password)
-//                    onNavigateToHomeScreen()
                 },
-                 onGoogleSignInClick = {  },
+                onGoogleSignInClick = {  },
                 onSignUpClick = onNavigateToRegister
             )
+
+            if (uiState.isLoading) {
+                CircularProgressIndicator(modifier = Modifier.padding(16.dp))
+            }
         }
     }
 }

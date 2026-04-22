@@ -24,10 +24,28 @@ class AuthViewModel : ViewModel() {
     }
 
     fun login(email: String, password: String) {
-        uiState = uiState.copy(isLoading = true)
+        uiState = uiState.copy(isLoading = true, errorMessage = null)
 
         viewModelScope.launch {
             delay(1000)
+            if (email == "test@gmail.com" && password == "test123") {
+                uiState = uiState.copy(isLoading = false, isSuccess = true)
+            } else {
+                uiState = uiState.copy(
+                    isLoading = false,
+                    isSuccess = false,
+                    errorMessage = "Invalid email or password"
+                )
+            }
+        }
+    }
+
+    fun signInWithGoogle(idToken: String) {
+        uiState = uiState.copy(isLoading = true, errorMessage = null)
+
+        viewModelScope.launch {
+            delay(1000)
+            // TODO: replace with real repository call
             uiState = uiState.copy(isLoading = false, isSuccess = true)
         }
     }
