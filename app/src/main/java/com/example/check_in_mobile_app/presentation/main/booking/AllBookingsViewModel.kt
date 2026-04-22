@@ -2,20 +2,18 @@ package com.example.check_in_mobile_app.presentation.main.booking
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.check_in_mobile_app.di.AppContainer
 import com.example.domain.model.Booking
-import com.example.domain.model.CheckInStatus
-import com.example.domain.model.Flight
-import com.example.domain.model.Passenger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 class AllBookingsViewModel : ViewModel() {
+
+    // Dependencies from DI container
+    private val searchBookingsUseCase = AppContainer.searchBookingsUseCase
 
     // Base data
     private val allBookingsAmount = MutableStateFlow<List<Booking>>(emptyList())
@@ -35,75 +33,17 @@ class AllBookingsViewModel : ViewModel() {
     }
 
     private fun loadBookings() {
-        val mockFlight = Flight(
-            flightId = "f1",
-            flightNumber = "SW402",
-            origin = "LHR",
-            originCity = "London",
-            destination = "CDG",
-            destinationCity = "Paris",
-            departureTime = System.currentTimeMillis() + 86400000,
-            arrivalTime = System.currentTimeMillis() + 90000000,
-            checkInOpensTime = "06:15",
-            boardingTime = "08:00",
-            aircraftType = "Boeing 737",
-            status = "Scheduled"
-        )
-        val mockPassenger = Passenger(
-            passengerId = "p1",
-            uid = "u1",
-            firstName = "Djerfi",
-            lastName = "Fatma",
-            passportNumber = "AB123456",
-            nationality = "Algerian",
-            dateOfBirth = "1990-01-01",
-            expiryDate = null,
-            seatNumber = "12A",
-            checkinStatus = "PENDING"
-        )
-        allBookingsAmount.value = listOf(
-            Booking(
-                bookingId = "BB9XC2",
-                pnr = "BB9XC2",
-                lastName = "Fatma",
-                status = CheckInStatus.CONFIRMED,
-                flight = mockFlight,
-                passengers = listOf(mockPassenger),
-                gate = "G24"
-            ),
-            Booking(
-                bookingId = "AA1BB2",
-                pnr = "AA1BB2",
-                lastName = "Fatma",
-                status = CheckInStatus.CHECK_IN_OPEN,
-                flight = mockFlight.copy(flightNumber = "SW405"),
-                passengers = listOf(mockPassenger),
-                gate = "H12"
-            )
-        )
+        // We use the use case even for the initial load
+        allBookingsAmount.value = searchBookingsUseCase()
     }
 
     val filteredBookings: StateFlow<List<Booking>> = combine(
-        allBookingsAmount,
         _searchQuery,
         _selectedDate,
         _selectedStatus
-    ) { bookings, query, date, status ->
-        bookings.filter { booking ->
-            val matchesQuery = query.isBlank() || 
-                booking.flight.destinationCity.contains(query, ignoreCase = true) || 
-                booking.flight.destination.contains(query, ignoreCase = true) ||
-                booking.flight.originCity.contains(query, ignoreCase = true) ||
-                booking.flight.origin.contains(query, ignoreCase = true)
-            
-            val sdfDate = SimpleDateFormat("dd MMM", Locale.getDefault())
-            val depDateStr = sdfDate.format(Date(booking.flight.departureTime))
-            val matchesDate = date == null || depDateStr == date
-            
-            val matchesStatus = status == "All" || booking.status.name.replace("_", " ").equals(status, ignoreCase = true)
-
-            matchesQuery && matchesDate && matchesStatus
-        }
+    ) { query, date, status ->
+        // The business logic of "matching" is now in the Use Case
+        searchBookingsUseCase(query, date, status)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     fun updateSearchQuery(query: String) {
@@ -118,3 +58,5 @@ class AllBookingsViewModel : ViewModel() {
         _selectedStatus.value = status
     }
 }
+
+

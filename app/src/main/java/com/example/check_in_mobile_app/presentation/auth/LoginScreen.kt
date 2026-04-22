@@ -119,7 +119,7 @@ fun LoginScreen(
                 modifier = Modifier.fillMaxWidth(),
                 onSignInClick = { email, password ->
                     viewModel.login(email, password)
-//                    onNavigateToHomeScreen()
+                    onLoginSuccess()
                 },
                  onGoogleSignInClick = {  },
                 onSignUpClick = onNavigateToRegister
