@@ -35,32 +35,7 @@ fun LoginScreen(
     viewModel: AuthViewModel = viewModel()
 ) {
 
-    val state = viewModel.uiState
-    val googleSignInLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-        try {
-            val account = task.getResult(ApiException::class.java)
-            val idToken = account.idToken ?: return@rememberLauncherForActivityResult
-            viewModel.signInWithGoogle(idToken) // ✅ Pass token to ViewModel
-        } catch (e: ApiException) {
-            // handle error
-        }
-    }
 
-
-    val context = LocalContext.current
-    val googleSignInClient = remember {
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken("YOUR_WEB_CLIENT_ID") // from google-services.json
-            .requestEmail()
-            .build()
-        GoogleSignIn.getClient(context, gso)
-    }
-    LaunchedEffect(state.isSuccess) {
-        if (state.isSuccess) onLoginSuccess()
-    }
 
     Scaffold(
         topBar = {
@@ -146,7 +121,7 @@ fun LoginScreen(
                     viewModel.login(email, password)
 //                    onNavigateToHomeScreen()
                 },
-                onGoogleSignInClick = {  googleSignInLauncher.launch(googleSignInClient.signInIntent) },
+                 onGoogleSignInClick = {  },
                 onSignUpClick = onNavigateToRegister
             )
         }
