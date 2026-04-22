@@ -1,6 +1,8 @@
-package com.example.check_in_mobile_app.presentation.components.checkin
+package com.example.check_in_mobile_app.presentation.components.checkin.checkingpassportscan
 
 import android.graphics.Bitmap
+import androidx.camera.view.LifecycleCameraController
+import androidx.camera.view.PreviewView
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -21,10 +23,12 @@ import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
 import com.example.check_in_mobile_app.ui.theme.NavyBlue
 
 private val CameraBackground = Color(0xFF1A1A2E)
@@ -35,11 +39,11 @@ private val OverlayDark = Color(0xCC000000)
 @Composable
 fun CameraViewfinder(
     capturedBitmap: Bitmap?,
-    cameraController: androidx.camera.view.LifecycleCameraController? = null,
+    cameraController: LifecycleCameraController? = null,
     hasCameraPermission: Boolean = false,
     modifier: Modifier = Modifier
 ) {
-    val screenHeight = androidx.compose.ui.platform.LocalConfiguration.current.screenHeightDp.dp
+    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -57,11 +61,11 @@ fun CameraViewfinder(
                 contentScale = ContentScale.Crop
             )
         } else if (hasCameraPermission && cameraController != null) {
-            androidx.compose.ui.viewinterop.AndroidView(
+            AndroidView(
                 modifier = Modifier.fillMaxSize(),
                 factory = { ctx ->
-                    androidx.camera.view.PreviewView(ctx).apply {
-                        scaleType = androidx.camera.view.PreviewView.ScaleType.FILL_CENTER
+                    PreviewView(ctx).apply {
+                        scaleType = PreviewView.ScaleType.FILL_CENTER
                         controller = cameraController
                     }
                 }

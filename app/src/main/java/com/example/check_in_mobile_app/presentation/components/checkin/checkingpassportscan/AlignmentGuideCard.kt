@@ -1,4 +1,4 @@
-package com.example.check_in_mobile_app.presentation.components.checkin
+package com.example.check_in_mobile_app.presentation.components.checkin.checkingpassportscan
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*

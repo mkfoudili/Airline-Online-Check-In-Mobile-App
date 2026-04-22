@@ -19,6 +19,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.check_in_mobile_app.presentation.components.checkin.*
 import com.example.check_in_mobile_app.presentation.components.checkin.CheckInTopBar
+import com.example.check_in_mobile_app.presentation.components.checkin.checkingpassportscan.CameraViewfinder
+import com.example.check_in_mobile_app.presentation.components.checkin.checkingpassportscan.PassportPreviewCard
+import com.example.check_in_mobile_app.presentation.components.checkin.checkingpassportscan.ScanContinueButton
+import com.example.check_in_mobile_app.presentation.components.checkin.checkingpassportscan.ScanPassportButton
 
 @Composable
 fun PassportScanScreen(

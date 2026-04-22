@@ -49,7 +49,6 @@ fun AppNavGraph(
     NavHost(
         navController = navController,
         startDestination = Destination.Splash.route,
-        // Tab-level screens: instant switch (no animation) — feels most natural for bottom nav
         enterTransition = { EnterTransition.None },
         exitTransition = { ExitTransition.None },
         popEnterTransition = { EnterTransition.None },
@@ -98,8 +97,6 @@ fun AppNavGraph(
                 }
             )
         }
-
-        // Deeper screen: slide in/out horizontally
         composable(
             route = Destination.AllBookings.route,
             enterTransition = { slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(300)) },

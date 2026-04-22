@@ -1,6 +1,7 @@
-package com.example.check_in_mobile_app.presentation.components.checkin
+package com.example.check_in_mobile_app.presentation.components.checkin.checkingpassportscan
 
 import android.graphics.Bitmap
+import android.graphics.DashPathEffect
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -18,7 +19,6 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
@@ -34,11 +34,8 @@ import com.example.check_in_mobile_app.ui.theme.BorderLight
 import com.example.check_in_mobile_app.ui.theme.CheckedInText
 import com.example.check_in_mobile_app.ui.theme.DarkText
 import com.example.check_in_mobile_app.ui.theme.ErrorRed
-import com.example.check_in_mobile_app.ui.theme.LightGray
-import com.example.check_in_mobile_app.ui.theme.MediumGray
 import com.example.check_in_mobile_app.ui.theme.Slate500
 import com.example.check_in_mobile_app.ui.theme.SurfaceGray
-import com.example.check_in_mobile_app.ui.theme.lightTextGrey
 
 fun Modifier.dashedBorder(
     color: Color,
@@ -54,7 +51,7 @@ fun Modifier.dashedBorder(
                 style = android.graphics.Paint.Style.STROKE
                 this.strokeWidth = strokeWidth.toPx()
                 this.color = android.graphics.Color.TRANSPARENT
-                pathEffect = android.graphics.DashPathEffect(
+                pathEffect = DashPathEffect(
                     floatArrayOf(dashWidth.toPx(), dashGap.toPx()), 0f
                 )
                 this.color = color.toArgb()

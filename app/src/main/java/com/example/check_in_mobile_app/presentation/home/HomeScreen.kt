@@ -14,9 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.check_in_mobile_app.presentation.components.TabBarMenu
 import com.example.check_in_mobile_app.presentation.components.TabItem
-import com.example.check_in_mobile_app.presentation.navigation.Destination
-import com.example.domain.model.Booking
-import com.example.domain.model.CheckInStatus
+
 
 @Composable
 fun HomeScreen(
