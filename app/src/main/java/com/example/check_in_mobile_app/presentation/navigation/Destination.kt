@@ -1,6 +1,6 @@
 package com.example.check_in_mobile_app.presentation.navigation
 
-sealed class Destination(val route: String) {
+sealed class Destination (val route: String) {
     object Home : Destination("home")
     object Booking : Destination("booking")
     object AllBookings : Destination("all_bookings")
@@ -9,9 +9,14 @@ sealed class Destination(val route: String) {
     }
     object Boarding : Destination("boarding")
     object PassportScan : Destination("passport_scan")
+    object Baggage : Destination("baggage")
     object CheckingDetailsReview : Destination("checking_details_review")
     object Register: Destination("register")
     object Login : Destination("login")
     object Splash   : Destination("splash")
     object Welcome  : Destination("welcome")
+
+    object Selection : Destination("seat-select")
+    object preference : Destination("preference")
+    object Confirmation : Destination("confirmation")
 }

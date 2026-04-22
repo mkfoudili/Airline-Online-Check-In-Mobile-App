@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Check-In-Mobile-App</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_chekin">ChekinActivity</string>
 </resources>

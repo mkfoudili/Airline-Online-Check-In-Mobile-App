@@ -55,7 +55,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
-    
+
     // CameraX dependencies
     implementation(libs.androidx.camera.core)
     implementation(libs.androidx.camera.camera2)
