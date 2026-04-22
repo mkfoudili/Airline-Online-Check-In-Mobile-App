@@ -82,6 +82,7 @@ fun LoginForm(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             shape = RoundedCornerShape(10.dp),
             colors = OutlinedTextFieldDefaults.colors(
+                focusedTextColor = Color.Black,
                 unfocusedBorderColor = borderColor,
                 focusedBorderColor = primaryColor,
                 unfocusedContainerColor = Color.White,

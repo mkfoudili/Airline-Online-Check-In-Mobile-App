@@ -31,7 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.check_in_mobile_app.R
-import com.example.check_in_mobile_app.presentation.home.HomeUiState
+import com.example.check_in_mobile_app.presentation.main.home.HomeUiState
 import com.example.check_in_mobile_app.ui.theme.ActiveGreen
 import com.example.check_in_mobile_app.ui.theme.BadgeBg
 import com.example.check_in_mobile_app.ui.theme.NavyBlue

@@ -1,3 +1,8 @@
+
+
+
+
+
 package com.example.check_in_mobile_app.presentation.navigation
 
 import androidx.compose.animation.EnterTransition
@@ -8,16 +13,17 @@ import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.check_in_mobile_app.presentation.auth.LoginScreen
 import com.example.check_in_mobile_app.presentation.auth.RegisterScreen
-import com.example.check_in_mobile_app.presentation.boarding.BoardingScreen
-import com.example.check_in_mobile_app.presentation.booking.AllBookingsScreen
-import com.example.check_in_mobile_app.presentation.booking.BookingScreen
-import com.example.check_in_mobile_app.presentation.booking.FlightDetailsScreen
+import com.example.check_in_mobile_app.presentation.checkin.boarding.BoardingScreen
+import com.example.check_in_mobile_app.presentation.main.booking.AllBookingsScreen
+import com.example.check_in_mobile_app.presentation.main.booking.BookingScreen
+import com.example.check_in_mobile_app.presentation.main.booking.FlightDetailsScreen
 import com.example.check_in_mobile_app.presentation.checkin.SeatSelection
 import com.example.check_in_mobile_app.presentation.checkin.baggage.BaggageScreen
 import com.example.check_in_mobile_app.presentation.checkin.baggage.BaggageViewModel
@@ -31,6 +37,9 @@ import com.example.check_in_mobile_app.presentation.notifications.NotificationsS
 import com.example.check_in_mobile_app.presentation.profile.ProfileScreen
 import com.example.check_in_mobile_app.presentation.welcome.SplashScreen
 import com.example.check_in_mobile_app.presentation.welcome.WelcomeScreen
+import com.example.check_in_mobile_app.presentation.main.home.HomeScreen
+import com.example.check_in_mobile_app.presentation.auth.welcome.SplashScreen
+import com.example.check_in_mobile_app.presentation.auth.welcome.WelcomeScreen
 import com.example.data.repository.BookingRepositoryImpl
 import androidx.lifecycle.viewmodel.compose.viewModel
 
@@ -62,7 +71,6 @@ fun AppNavGraph(
     NavHost(
         navController = navController,
         startDestination = Destination.Splash.route,
-        // Tab-level screens: instant switch (no animation) — feels most natural for bottom nav
         enterTransition = { EnterTransition.None },
         exitTransition = { ExitTransition.None },
         popEnterTransition = { EnterTransition.None },

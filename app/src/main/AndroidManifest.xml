@@ -2,6 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission
         android:name="android.permission.READ_MEDIA_IMAGES"
@@ -9,6 +16,7 @@
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:name=".BaseApplication"
@@ -21,19 +29,30 @@
         android:supportsRtl="true"
         android:localeConfig="@xml/locales_config"
         android:theme="@style/Theme.CheckInMobileApp">
+
         <activity
-            android:name=".MainActivity"
+            android:name=".presentation.auth.LoginActivity"
             android:exported="true"
-            android:label="@string/app_name"
+            android:label="@string/title_activity_login"
             android:theme="@style/Theme.CheckInMobileApp">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    </application>
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+        <activity
+            android:name=".presentation.main.MainActivity"
+            android:exported="false"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.CheckInMobileApp" />
+
+        <activity
+            android:name=".presentation.checkin.CheckInActivity"
+            android:exported="false"
+            android:label="@string/title_activity_chekin"
+            android:theme="@style/Theme.CheckInMobileApp" />
+
+    </application>
 
 </manifest>

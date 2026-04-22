@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.auth
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -11,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -20,6 +23,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.presentation.components.authforms.LoginForm
 import com.example.check_in_mobile_app.ui.theme.*
+import kotlin.jvm.java
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,10 +33,12 @@ fun LoginScreen(
     onNavigateToRegister: () -> Unit = {},
     viewModel: AuthViewModel = viewModel()
 ) {
-    val state = viewModel.uiState
+    val uiState = viewModel.uiState
 
-    LaunchedEffect(state.isSuccess) {
-        if (state.isSuccess) onLoginSuccess()
+    LaunchedEffect(uiState.isSuccess) {
+        if (uiState.isSuccess) {
+            onLoginSuccess()
+        }
     }
 
     Scaffold(
@@ -112,15 +118,29 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
+            if (uiState.errorMessage != null) {
+                Text(
+                    text = uiState.errorMessage,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(horizontal = 32.dp),
+                    textAlign = TextAlign.Center
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+
             // ── Login Form ─────────────────────────────────────────────
             LoginForm(
                 modifier = Modifier.fillMaxWidth(),
                 onSignInClick = { email, password ->
                     viewModel.login(email, password)
                 },
-                onGoogleSignInClick = { /* TODO */ },
+                onGoogleSignInClick = {  },
                 onSignUpClick = onNavigateToRegister
             )
+
+            if (uiState.isLoading) {
+                CircularProgressIndicator(modifier = Modifier.padding(16.dp))
+            }
         }
     }
 }
