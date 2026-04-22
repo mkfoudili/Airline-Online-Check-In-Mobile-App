@@ -20,6 +20,7 @@ import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.presentation.components.TabBarMenu
 import com.example.check_in_mobile_app.presentation.components.TabItem
 import com.example.check_in_mobile_app.presentation.components.notifications.NotificationCard
+import com.example.check_in_mobile_app.presentation.notifications.NotificationsViewModel
 import com.example.check_in_mobile_app.ui.theme.CheckInMobileAppTheme
 import com.example.check_in_mobile_app.ui.theme.NavyBlue
 import com.example.check_in_mobile_app.ui.theme.Slate500

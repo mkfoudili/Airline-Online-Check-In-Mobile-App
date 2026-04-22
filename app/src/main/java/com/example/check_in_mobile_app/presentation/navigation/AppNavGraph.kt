@@ -32,16 +32,16 @@ import com.example.check_in_mobile_app.presentation.checkin.checkingdetailsrevie
 import com.example.check_in_mobile_app.presentation.checkin.passportscan.PassportScanScreen
 import com.example.check_in_mobile_app.presentation.checkin.specialRequest
 import com.example.check_in_mobile_app.presentation.components.TabItem
-import com.example.check_in_mobile_app.presentation.home.HomeScreen
-import com.example.check_in_mobile_app.presentation.notifications.NotificationsScreen
+// import com.example.check_in_mobile_app.presentation.home.HomeScreen
 import com.example.check_in_mobile_app.presentation.profile.ProfileScreen
-import com.example.check_in_mobile_app.presentation.welcome.SplashScreen
-import com.example.check_in_mobile_app.presentation.welcome.WelcomeScreen
+// import com.example.check_in_mobile_app.presentation.welcome.SplashScreen
+// import com.example.check_in_mobile_app.presentation.welcome.WelcomeScreen
 import com.example.check_in_mobile_app.presentation.main.home.HomeScreen
 import com.example.check_in_mobile_app.presentation.auth.welcome.SplashScreen
 import com.example.check_in_mobile_app.presentation.auth.welcome.WelcomeScreen
 import com.example.data.repository.BookingRepositoryImpl
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.check_in_mobile_app.presentation.main.notifications.NotificationsScreen
 
 import kotlinx.coroutines.delay
 

@@ -1,6 +1,9 @@
 package com.example.check_in_mobile_app.presentation.notifications
 
 import androidx.lifecycle.ViewModel
+import com.example.check_in_mobile_app.presentation.main.notifications.NotificationItem
+import com.example.check_in_mobile_app.presentation.main.notifications.NotificationType
+import com.example.check_in_mobile_app.presentation.main.notifications.NotificationsUiState
 import com.example.data.repository.NotificationRepositoryImpl
 import com.example.domain.model.Notification
 import com.example.domain.usecase.notification.GetNotificationsUseCase
@@ -33,7 +36,11 @@ class NotificationsViewModel(
                         id = domain.notificationId,
                         title = domain.title,
                         description = domain.body,
-                        flightCode = if (domain.title.contains("AA123", ignoreCase = true)) "AA123" else null,
+                        flightCode = if (domain.title.contains(
+                                "AA123",
+                                ignoreCase = true
+                            )
+                        ) "AA123" else null,
                         timeAgo = formatTimeAgo(domain.createdAt),
                         isRead = domain.isRead,
                         type = mapToUiType(domain.type),
