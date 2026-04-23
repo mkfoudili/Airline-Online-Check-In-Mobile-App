@@ -11,29 +11,29 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class NotificationRepositoryImpl(
-    private val notificationDataSource: NotificationDataSource,
-    private val notificationDao: NotificationDao
+    private val notificationDataSource: NotificationDataSource? = null,
+    private val notificationDao: NotificationDao? = null
 ) : NotificationRepository {
 
     override fun getNotifications(uid: String, callback: (Result<List<Notification>>) -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val localNotifications = notificationDao.getAll(uid)
+                val localNotifications = notificationDao?.getAll(uid) ?: emptyList()
                 if (localNotifications.isNotEmpty()) {
                     callback(Result.success(localNotifications.map { it.toDomain() }))
                 } else {
-                    notificationDataSource.getNotifications(uid) { result ->
+                    notificationDataSource?.getNotifications(uid) { result ->
                         result.onSuccess { dtos ->
                             val domainNotifications = dtos.map { it.toDomain() }
                             // Cache locally
                             CoroutineScope(Dispatchers.IO).launch {
-                                notificationDao.insertAll(domainNotifications.map { it.toEntity(uid) })
+                                notificationDao?.insertAll(domainNotifications.map { it.toEntity(uid) })
                             }
                             callback(Result.success(domainNotifications))
                         }.onFailure {
                             callback(Result.failure(it))
                         }
-                    }
+                    } ?: callback(Result.failure(Exception("NotificationDataSource is null")))
                 }
             } catch (e: Exception) {
                 callback(Result.failure(e))
@@ -42,14 +42,14 @@ class NotificationRepositoryImpl(
     }
 
     override fun getUnreadCount(uid: String, callback: (Result<Int>) -> Unit) {
-        TODO("Not yet implemented")
+        notificationDataSource?.getUnreadCount(uid, callback) ?: callback(Result.success(0))
     }
 
     override fun markAllAsRead(uid: String, callback: (Result<Unit>) -> Unit) {
-        TODO("Not yet implemented")
+        notificationDataSource?.markAllAsRead(uid, callback) ?: callback(Result.success(Unit))
     }
 
     override fun markAsRead(notificationId: String, callback: (Result<Unit>) -> Unit) {
-        TODO("Not yet implemented")
+        notificationDataSource?.markAsRead(notificationId, callback) ?: callback(Result.success(Unit))
     }
 }

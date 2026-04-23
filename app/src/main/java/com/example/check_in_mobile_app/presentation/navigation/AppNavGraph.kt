@@ -1,8 +1,3 @@
-
-
-
-
-
 package com.example.check_in_mobile_app.presentation.navigation
 
 import androidx.compose.animation.EnterTransition
@@ -33,10 +28,11 @@ import com.example.check_in_mobile_app.presentation.checkin.passportscan.Passpor
 import com.example.check_in_mobile_app.presentation.checkin.specialRequest
 import com.example.check_in_mobile_app.presentation.components.TabItem
 import com.example.check_in_mobile_app.presentation.main.home.HomeScreen
+import com.example.check_in_mobile_app.presentation.main.profile.ProfileScreen
+import com.example.check_in_mobile_app.presentation.main.notifications.NotificationsScreen
 import com.example.check_in_mobile_app.presentation.auth.welcome.SplashScreen
 import com.example.check_in_mobile_app.presentation.auth.welcome.WelcomeScreen
 import com.example.data.repository.BookingRepositoryImpl
-
 import kotlinx.coroutines.delay
 
 @Composable
@@ -47,13 +43,14 @@ fun AppNavGraph(
         val route = when (tab) {
             TabItem.HOME -> Destination.Home.route
             TabItem.TICKETS -> Destination.Booking.route
+            TabItem.NOTIFICATIONS -> Destination.Notifications.route
+            TabItem.PROFILE -> Destination.Profile.route
             else -> null
         }
         if (route != null) {
             navController.navigate(route) {
                 popUpTo(Destination.Home.route) {
                     saveState = true
-                    inclusive = false
                 }
                 launchSingleTop = true
                 restoreState = true
@@ -94,6 +91,9 @@ fun AppNavGraph(
                 onTabSelected = navigateToTab,
                 onNavigateToBoardingScreen = {
                     navController.navigate(Destination.Boarding.route)
+                },
+                onProfileClick = {
+                    navigateToTab(TabItem.PROFILE)
                 }
             )
         }
@@ -112,6 +112,8 @@ fun AppNavGraph(
                 }
             )
         }
+
+        // Deeper screen: slide in/out horizontally
         composable(
             route = Destination.AllBookings.route,
             enterTransition = { slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(300)) },
@@ -226,6 +228,21 @@ fun AppNavGraph(
                 onNavigateToLogin = { navController.navigate(Destination.Login.route) }
             )
         }
+        composable(route = Destination.Profile.route) {
+            ProfileScreen(
+                onTabSelected = navigateToTab,
+                onLogout = {
+                    navController.navigate(Destination.Welcome.route) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                }
+            )
+        }
+        composable(route = Destination.Notifications.route) {
+            NotificationsScreen(
+                onTabSelected = navigateToTab
+            )
+        }
     }
 }
 
@@ -235,4 +252,3 @@ fun AppNavGraphPreview() {
     // NavHost cannot render in preview mode
     androidx.compose.material3.Text("Nav Graph — run on device to preview")
 }
-

@@ -1,0 +1,42 @@
+<resources>
+    <!-- Profile Screen -->
+    <string name="profile_title">Profil</string>
+    <string name="profile_edit_name_desc">Modifier le nom</string>
+    <string name="profile_personal_info_label">INFORMATIONS PERSONNELLES</string>
+    <string name="profile_logout">Déconnexion</string>
+
+    <!-- Profile Info Card -->
+    <string name="profile_label_email">Adresse e-mail</string>
+    <string name="profile_label_phone">Numéro de téléphone</string>
+    <string name="profile_label_language">Langue</string>
+    <string name="profile_label_password">Mot de passe</string>
+
+    <!-- Security Banner -->
+    <string name="profile_security_level_high">Niveau de sécurité : Élevé</string>
+    <string name="profile_security_verified_desc">Votre compte est vérifié à 100 % et sécurisé.</string>
+
+    <!-- Edit Profile -->
+    <string name="profile_edit_title">Modifier le profil</string>
+    <string name="profile_change_photo_desc">Modifier la photo</string>
+    <string name="profile_change_photo_label">Modifier la photo de profil</string>
+    <string name="profile_full_name_placeholder">Entrez votre nom complet</string>
+    <string name="profile_email_placeholder">Entrez votre e-mail</string>
+    <string name="profile_phone_placeholder">Entrez votre numéro de téléphone</string>
+    <string name="profile_language_label">LANGUE</string>
+    <string name="language_english">Anglais</string>
+    <string name="language_french">Français</string>
+    <string name="language_arabic">Arabe</string>
+
+    <!-- Change Password -->
+    <string name="profile_change_password_title">Changer le mot de passe</string>
+    <string name="profile_keep_account_secure">Gardez votre compte en sécurité</string>
+    <string name="profile_save_password">Enregistrer le mot de passe</string>
+    <string name="profile_secure_your_account">Sécurisez votre compte</string>
+    <string name="profile_password_requirement_hint">Choisissez un mot de passe d\'au moins 8 caractères contenant un mélange de lettres et de chiffres.</string>
+    <string name="profile_current_password_label">Mot de passe actuel</string>
+    <string name="profile_current_password_placeholder">Entrez le mot de passe actuel</string>
+    <string name="profile_new_password_label">Nouveau mot de passe</string>
+    <string name="profile_new_password_placeholder">Entrez le nouveau mot de passe</string>
+    <string name="profile_confirm_password_label">Confirmer le nouveau mot de passe</string>
+    <string name="profile_confirm_password_placeholder">Saisissez à nouveau le nouveau mot de passe</string>
+</resources>

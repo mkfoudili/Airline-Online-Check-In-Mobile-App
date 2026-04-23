@@ -2,6 +2,7 @@ package com.example.check_in_mobile_app.presentation.main.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -48,6 +49,7 @@ fun OnlineHomeScreen(
     onLastNameChange: (String) -> Unit = {},
     onCheckInClick: () -> Unit = {},
     onFindFlightClick: () -> Unit = {},
+    onProfileClick: () -> Unit = {},
     screenWidth: Dp = LocalConfiguration.current.screenWidthDp.dp
 ) {
     Spacer(modifier = Modifier.height(24.dp))
@@ -69,7 +71,8 @@ fun OnlineHomeScreen(
             modifier = Modifier
                 .size(42.dp)
                 .clip(CircleShape)
-                .background(LightGray),
+                .background(LightGray)
+                .clickable { onProfileClick() },
             contentAlignment = Alignment.Center
         ) {
             Icon(

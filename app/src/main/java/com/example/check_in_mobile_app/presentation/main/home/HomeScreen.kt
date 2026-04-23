@@ -25,11 +25,11 @@ fun HomeScreen(
     onCheckInClick: () -> Unit = {},
     onFindFlightClick: () -> Unit = {},
     onNavigateToBoardingScreen: () -> Unit = {},
+    onProfileClick: () -> Unit = {},
     onTabSelected: (TabItem) -> Unit = {}
 ) {
     val isOnline by viewModel.isOnline.collectAsState()
     val uiState by viewModel.uiState.collectAsState()
-    var selectedTab by remember { mutableStateOf(TabItem.HOME) }
     val scrollState = remember(isOnline) { ScrollState(initial = 0) }
     val screenWidth: Dp = LocalConfiguration.current.screenWidthDp.dp
 
@@ -75,13 +75,8 @@ fun HomeScreen(
         containerColor = Color.White,
         bottomBar = {
             TabBarMenu(
-                selectedTab = selectedTab,
-                onTabSelected = { tab ->
-                    if (tab != selectedTab) {
-                        selectedTab = tab
-                        onTabSelected(tab)
-                    }
-                }
+                selectedTab = TabItem.HOME,
+                onTabSelected = onTabSelected
             )
         }
     ) { innerPadding ->
@@ -106,11 +101,13 @@ fun HomeScreen(
                             viewModel.onFindFlight()
                             onFindFlightClick()
                         },
+                        onProfileClick = onProfileClick,
                         screenWidth = screenWidth
                     )
                 } else {
                     OfflineHomeScreen(
                         onNavigateToBoardingScreen = onNavigateToBoardingScreen,
+                        onProfileClick = onProfileClick,
                         screenWidth = screenWidth,
                         booking = booking
                     )

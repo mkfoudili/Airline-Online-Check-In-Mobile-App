@@ -1,0 +1,42 @@
+<resources>
+    <!-- Profile Screen -->
+    <string name="profile_title">Profile</string>
+    <string name="profile_edit_name_desc">Edit Name</string>
+    <string name="profile_personal_info_label">PERSONAL INFORMATION</string>
+    <string name="profile_logout">Logout</string>
+
+    <!-- Profile Info Card -->
+    <string name="profile_label_email">Email Address</string>
+    <string name="profile_label_phone">Phone Number</string>
+    <string name="profile_label_language">Language</string>
+    <string name="profile_label_password">Password</string>
+
+    <!-- Security Banner -->
+    <string name="profile_security_level_high">Security Level: High</string>
+    <string name="profile_security_verified_desc">Your account is 100% verified and secure.</string>
+
+    <!-- Edit Profile -->
+    <string name="profile_edit_title">Edit Profile</string>
+    <string name="profile_change_photo_desc">Change Photo</string>
+    <string name="profile_change_photo_label">Change Profile Photo</string>
+    <string name="profile_full_name_placeholder">Enter your full name</string>
+    <string name="profile_email_placeholder">Enter your email</string>
+    <string name="profile_phone_placeholder">Enter your phone number</string>
+    <string name="profile_language_label">LANGUAGE</string>
+    <string name="language_english">English</string>
+    <string name="language_french">French</string>
+    <string name="language_arabic">Arabic</string>
+
+    <!-- Change Password -->
+    <string name="profile_change_password_title">Change Password</string>
+    <string name="profile_keep_account_secure">Keep your account secure</string>
+    <string name="profile_save_password">Save Password</string>
+    <string name="profile_secure_your_account">Secure your account</string>
+    <string name="profile_password_requirement_hint">Choose a password that\'s at least 8 characters long and includes a mix of letters and numbers.</string>
+    <string name="profile_current_password_label">Current Password</string>
+    <string name="profile_current_password_placeholder">Enter current password</string>
+    <string name="profile_new_password_label">New Password</string>
+    <string name="profile_new_password_placeholder">Enter new password</string>
+    <string name="profile_confirm_password_label">Confirm New Password</string>
+    <string name="profile_confirm_password_placeholder">Re-type new password</string>
+</resources>

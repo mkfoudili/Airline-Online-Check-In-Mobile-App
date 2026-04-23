@@ -1,0 +1,9 @@
+<resources>
+    <string name="notification_title">الإشعارات</string>
+    <string name="notification_group_today">اليوم</string>
+    <string name="notification_group_yesterday">أمس</string>
+    <string name="notification_group_this_week">هذا الأسبوع</string>
+    <string name="notification_group_earlier">سابقاً</string>
+    <string name="notification_mark_all_read">تحديد الكل كمقروء</string>
+    <string name="notification_empty_state">لا توجد إشعارات</string>
+</resources>

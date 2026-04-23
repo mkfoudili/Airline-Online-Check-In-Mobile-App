@@ -1,0 +1,18 @@
+<resources>
+    <!-- Common UI Actions -->
+    <string name="common_back">رجوع</string>
+    <string name="common_cancel">إلغاء</string>
+    <string name="common_edit">تعديل</string>
+    <string name="common_save_changes">حفظ التغييرات</string>
+
+    <!-- Common Form Labels -->
+    <string name="common_full_name">الاسم الكامل</string>
+    <string name="common_email_address">البريد الإلكتروني</string>
+    <string name="common_phone_number">رقم الهاتف</string>
+
+    <!-- Common Security -->
+    <string name="common_security">الأمان</string>
+    <string name="common_change_password">تغيير كلمة المرور</string>
+    <string name="common_hide_password">إخفاء كلمة المرور</string>
+    <string name="common_show_password">إظهار كلمة المرور</string>
+</resources>

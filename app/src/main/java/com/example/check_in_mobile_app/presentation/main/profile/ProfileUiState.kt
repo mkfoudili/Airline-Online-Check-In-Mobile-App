@@ -2,23 +2,42 @@ package com.example.check_in_mobile_app.presentation.main.profile
 
 import com.example.domain.model.SecurityLevel
 
+enum class ProfileScreenMode {
+    VIEW,
+    EDIT,
+    CHANGE_PASSWORD
+}
+
 data class ProfileUiState(
+    val profileData: ProfileData = ProfileData(),
+    val editData: EditProfileData = EditProfileData(),
+    val changePasswordData: ChangePasswordData = ChangePasswordData(),
+    val isLoading: Boolean = false,
+    val error: String? = null,
+    val screenMode: ProfileScreenMode = ProfileScreenMode.VIEW
+)
+
+data class ProfileData(
     val name: String = "",
     val email: String = "",
     val phoneNumber: String = "",
+    val language: String = "English",
     val passwordMasked: String = "************",
     val profileImageUrl: String? = null,
     val isVerified: Boolean = false,
     val securityLevel: SecurityLevel = SecurityLevel.HIGH,
-    val isLoading: Boolean = false,
-    val isOnline: Boolean = false,
-    val errorMessage: String? = null,
-    val error: String? = null,
-    val isEditing: Boolean = false,
-    val editedName: String = "",
-    val editedEmail: String = "",
-    val editedPhoneNumber: String = "",
-    val isChangingPassword: Boolean = false,
+    val isOnline: Boolean = false
+)
+
+data class EditProfileData(
+    val name: String = "",
+    val email: String = "",
+    val phoneNumber: String = "",
+    val language: String = "English",
+    val isLanguageDropdownExpanded: Boolean = false
+)
+
+data class ChangePasswordData(
     val currentPassword: String = "",
     val newPassword: String = "",
     val confirmPassword: String = "",

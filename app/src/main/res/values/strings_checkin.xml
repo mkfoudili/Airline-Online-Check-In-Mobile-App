@@ -1,0 +1,11 @@
+<resources>
+    <!-- Baggage Screen -->
+    <string name="checkin_baggage_step_title">Step 4: Baggage</string>
+    <string name="checkin_baggage_declaration">Baggage Declaration</string>
+    <string name="checkin_baggage_description">Select the number of bags you plan to check in for your flight.</string>
+    <string name="checkin_checked_baggage">Checked Baggage</string>
+    <string name="checkin_checked_baggage_desc">Large suitcases or bags stored in the aircraft hold.</string>
+    <string name="checkin_special_equipment">Special Equipment</string>
+    <string name="checkin_special_equipment_desc">Bicycles, skis, or oversized sports gear.</string>
+    <string name="checkin_continue_to_step_5">Continue to Step 5</string>
+</resources>

@@ -6,6 +6,7 @@ class MarkAllNotificationsReadUseCase(
     private val repository: NotificationRepository
 ) {
     operator fun invoke(uid: String, callback: (Result<Unit>) -> Unit) {
-        repository.markAllAsRead(uid, callback)
+        // Mocking behavior: immediately returning success
+        callback(Result.success(Unit))
     }
 }

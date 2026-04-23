@@ -1,16 +1,18 @@
 package com.example.check_in_mobile_app.presentation.main.notifications
 
 import androidx.lifecycle.ViewModel
+import com.example.data.repository.NotificationRepositoryImpl
 import com.example.domain.usecase.notification.GetNotificationsUseCase
 import com.example.domain.usecase.notification.MarkAllNotificationsReadUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import java.util.Calendar
 
 class NotificationsViewModel(
-    private val getNotificationsUseCase: GetNotificationsUseCase,
-    private val markAllNotificationsReadUseCase: MarkAllNotificationsReadUseCase
+    private val getNotificationsUseCase: GetNotificationsUseCase = GetNotificationsUseCase(NotificationRepositoryImpl()),
+    private val markAllNotificationsReadUseCase: MarkAllNotificationsReadUseCase = MarkAllNotificationsReadUseCase(NotificationRepositoryImpl())
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(NotificationsUiState())
@@ -25,20 +27,29 @@ class NotificationsViewModel(
         // Mock user id
         getNotificationsUseCase("user123") { result ->
             result.onSuccess { domainNotifications ->
+                val items = domainNotifications.map { domain ->
+                    NotificationItem(
+                        id = domain.notificationId,
+                        title = domain.title,
+                        description = domain.body,
+                        flightCode = if (domain.title.contains(
+                                "AA123",
+                                ignoreCase = true
+                            )
+                        ) "AA123" else null,
+                        timeAgo = formatTimeAgo(domain.createdAt),
+                        isRead = domain.isRead,
+                        type = mapToUiType(domain.type),
+                        createdAt = domain.createdAt
+                    )
+                }
+                
+                val grouped = groupNotifications(items)
+                
                 _uiState.update {
                     it.copy(
                         isLoading = false,
-                        notifications = domainNotifications.map { domain ->
-                            NotificationItem(
-                                id = domain.notificationId,
-                                title = domain.title,
-                                description = domain.body,
-                                flightCode = if (domain.title.contains("Boarding", ignoreCase = true)) "AA241" else null,
-                                timeAgo = formatTimeAgo(domain.createdAt),
-                                isRead = domain.isRead,
-                                type = mapToUiType(domain.type)
-                            )
-                        },
+                        groupedNotifications = grouped,
                         errorMessage = null
                     )
                 }
@@ -49,6 +60,28 @@ class NotificationsViewModel(
                         errorMessage = error.message ?: "Failed to load notifications"
                     )
                 }
+            }
+        }
+    }
+
+    private fun groupNotifications(items: List<NotificationItem>): Map<String, List<NotificationItem>> {
+        val now = Calendar.getInstance()
+        val today = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
+        val yesterday = (today.clone() as Calendar).apply { add(Calendar.DATE, -1) }
+        val thisWeek = (today.clone() as Calendar).apply { add(Calendar.DATE, -7) }
+
+        return items.groupBy { item ->
+            val itemCal = Calendar.getInstance().apply { timeInMillis = item.createdAt }
+            when {
+                itemCal.after(today) -> "Today"
+                itemCal.after(yesterday) -> "Yesterday"
+                itemCal.after(thisWeek) -> "This Week"
+                else -> "Earlier"
             }
         }
     }

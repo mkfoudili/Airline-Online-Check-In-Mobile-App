@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Email
+import androidx.compose.material.icons.outlined.Language
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Phone
 import androidx.compose.material3.HorizontalDivider
@@ -13,17 +14,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.ui.theme.BorderLight
 
 @Composable
 fun ProfileInfoCard(
     email: String,
     phoneNumber: String,
+    language: String,
     onEditEmailClick: () -> Unit,
     onEditPhoneClick: () -> Unit,
     onEditPasswordClick: () -> Unit,
+    onEditLanguageClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -35,7 +40,7 @@ fun ProfileInfoCard(
     ) {
         ProfileInfoRow(
             icon = Icons.Outlined.Email,
-            label = "Email Address",
+            label = stringResource(R.string.profile_label_email),
             value = email,
             onClick = onEditEmailClick
         )
@@ -48,7 +53,7 @@ fun ProfileInfoCard(
 
         ProfileInfoRow(
             icon = Icons.Outlined.Phone,
-            label = "Phone Number",
+            label = stringResource(R.string.profile_label_phone),
             value = phoneNumber,
             onClick = onEditPhoneClick
         )
@@ -60,8 +65,21 @@ fun ProfileInfoCard(
         )
 
         ProfileInfoRow(
+            icon = Icons.Outlined.Language,
+            label = stringResource(R.string.profile_label_language),
+            value = language,
+            onClick = onEditLanguageClick
+        )
+
+        HorizontalDivider(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            thickness = 1.dp,
+            color = BorderLight
+        )
+
+        ProfileInfoRow(
             icon = Icons.Outlined.Lock,
-            label = "Password",
+            label = stringResource(R.string.profile_label_password),
             value = "••••••••••••",
             onClick = onEditPasswordClick
         )
@@ -75,9 +93,11 @@ fun ProfileInfoCardPreview() {
         ProfileInfoCard(
             email = "mr_mekircha@esi.dz",
             phoneNumber = "+1 (555) 012-3456",
+            language = "English",
             onEditEmailClick = {},
             onEditPhoneClick = {},
-            onEditPasswordClick = {}
+            onEditPasswordClick = {},
+            onEditLanguageClick = {}
         )
     }
 }

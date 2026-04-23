@@ -1,0 +1,9 @@
+<resources>
+    <string name="notification_title">Notifications</string>
+    <string name="notification_group_today">Today</string>
+    <string name="notification_group_yesterday">Yesterday</string>
+    <string name="notification_group_this_week">This Week</string>
+    <string name="notification_group_earlier">Earlier</string>
+    <string name="notification_mark_all_read">Mark all read</string>
+    <string name="notification_empty_state">No notifications</string>
+</resources>

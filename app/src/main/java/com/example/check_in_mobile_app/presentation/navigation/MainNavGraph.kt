@@ -15,6 +15,8 @@ import com.example.check_in_mobile_app.presentation.main.booking.BookingScreen
 import com.example.check_in_mobile_app.presentation.main.booking.FlightDetailsScreen
 import com.example.check_in_mobile_app.presentation.components.TabItem
 import com.example.check_in_mobile_app.presentation.main.home.HomeScreen
+import com.example.check_in_mobile_app.presentation.main.profile.ProfileScreen
+import com.example.check_in_mobile_app.presentation.main.notifications.NotificationsScreen
 import com.example.data.repository.BookingRepositoryImpl
 
 @Composable
@@ -25,17 +27,16 @@ fun MainNavGraph(onCheckInClick: (String) -> Unit) {
         val route = when (tab) {
             TabItem.HOME -> Destination.Home.route
             TabItem.TICKETS -> Destination.Booking.route
-            else -> null
+            TabItem.NOTIFICATIONS -> Destination.Notifications.route
+            TabItem.PROFILE -> Destination.Profile.route
         }
-        if (route != null) {
-            navController.navigate(route) {
-                popUpTo(Destination.Home.route) {
-                    saveState = true
-                    inclusive = false
-                }
-                launchSingleTop = true
-                restoreState = true
+        navController.navigate(route) {
+            popUpTo(Destination.Home.route) {
+                saveState = true
+                inclusive = false
             }
+            launchSingleTop = true
+            restoreState = true
         }
     }
 
@@ -52,6 +53,9 @@ fun MainNavGraph(onCheckInClick: (String) -> Unit) {
                 onTabSelected = navigateToTab,
                 onNavigateToBoardingScreen = {
                     navController.navigate(Destination.Boarding.route)
+                },
+                onProfileClick = {
+                    navigateToTab(TabItem.PROFILE)
                 }
             )
         }
@@ -87,12 +91,23 @@ fun MainNavGraph(onCheckInClick: (String) -> Unit) {
             FlightDetailsScreen(
                 booking = booking,
                 onBack = { navController.popBackStack() },
-                onStartCheckIn = { onCheckInClick(bookingRef) } // ✅ bubbles up to MainActivity
+                onStartCheckIn = { onCheckInClick(bookingRef) }
             )
         }
         composable(Destination.Boarding.route) {
             BoardingScreen(
                 onBack = { navController.popBackStack() }
+            )
+        }
+        composable(Destination.Profile.route) {
+            ProfileScreen(
+                onTabSelected = navigateToTab,
+                onLogout = { /* Logout logic */ }
+            )
+        }
+        composable(Destination.Notifications.route) {
+            NotificationsScreen(
+                onTabSelected = navigateToTab
             )
         }
     }
