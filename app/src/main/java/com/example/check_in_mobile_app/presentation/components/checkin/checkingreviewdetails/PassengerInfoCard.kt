@@ -16,6 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -44,7 +45,7 @@ fun PassengerInfoCard(passenger: Passenger) {
                     .padding(horizontal = 16.dp, vertical = 14.dp)
             ) {
                 Text(
-                    text = "DOCUMENT DETAILS",
+                    text = stringResource(R.string.review_document_details),
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
@@ -56,7 +57,7 @@ fun PassengerInfoCard(passenger: Passenger) {
             InfoRow(
                 iconRes = R.drawable.checking_review_passport,
                 iconBgColor = LightGray,
-                label = "PASSPORT NUMBER",
+                label = stringResource(R.string.review_passport_number_label),
                 initialValue = passenger.passportNumber ?: "—"
             )
             HorizontalDivider(color = Color(0xFFF1F2F4), thickness = 1.dp)
@@ -64,7 +65,7 @@ fun PassengerInfoCard(passenger: Passenger) {
             InfoRow(
                 iconRes = R.drawable.checkin_review_globe,
                 iconBgColor =  LightGray,
-                label = "NATIONALITY",
+                label = stringResource(R.string.review_nationality_label),
                 initialValue = passenger.nationality ?: "—"
             )
             HorizontalDivider(color = Color(0xFFF1F2F4), thickness = 1.dp)
@@ -72,7 +73,7 @@ fun PassengerInfoCard(passenger: Passenger) {
             InfoRow(
                 iconRes = R.drawable.checkin_review_calendar,
                 iconBgColor =  LightGray,
-                label = "DATE OF BIRTH",
+                label = stringResource(R.string.review_dob_label),
                 initialValue = passenger.dateOfBirth ?: "—"
             )
             HorizontalDivider(color = Color(0xFFF1F2F4), thickness = 1.dp)
@@ -80,7 +81,7 @@ fun PassengerInfoCard(passenger: Passenger) {
             InfoRow(
                 iconRes = R.drawable.checking_review_warning,
                 iconBgColor =  LightGray,
-                label = "EXPIRY DATE",
+                label = stringResource(R.string.review_expiry_label),
                 initialValue = passenger.expiryDate ?: "—"
             )
         }
@@ -171,7 +172,7 @@ private fun InfoRow(
         ) {
             Icon(
                 imageVector = if (isEditing) Icons.Default.Check else Icons.Outlined.Edit,
-                contentDescription = if (isEditing) "Save" else "Edit",
+                contentDescription = if (isEditing) stringResource(R.string.common_save_changes) else stringResource(R.string.common_edit),
                 tint = if (isEditing) NavyBlue else CoolGray,
                 modifier = Modifier.size(20.dp)
             )

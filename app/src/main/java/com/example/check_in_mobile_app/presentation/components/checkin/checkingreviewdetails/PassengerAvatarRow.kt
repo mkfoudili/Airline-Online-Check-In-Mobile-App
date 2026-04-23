@@ -19,6 +19,8 @@ import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.ui.theme.NavyBlue
 import com.example.domain.model.Passenger
 
+import androidx.compose.ui.res.stringResource
+
 @Composable
 fun PassengerAvatarRow(passenger: Passenger) {
     Row(
@@ -66,7 +68,7 @@ fun PassengerAvatarRow(passenger: Passenger) {
                     modifier = Modifier.size(25.dp)
                 )
                 Text(
-                    text = "PASSPORT SCANNED",
+                    text = stringResource(R.string.review_passport_scanned),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = Color(0xFF10B981),

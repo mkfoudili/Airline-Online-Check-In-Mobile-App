@@ -12,8 +12,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.ui.theme.NavyBlue
 import com.example.check_in_mobile_app.ui.theme.SurfaceGray
+import androidx.compose.ui.res.stringResource
 
 @Composable
 fun ScanContinueButton(
@@ -36,7 +38,7 @@ fun ScanContinueButton(
         enabled = !isPending
     ) {
         Text(
-            text = "Continue",
+            text = stringResource(R.string.common_continue),
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold
         )

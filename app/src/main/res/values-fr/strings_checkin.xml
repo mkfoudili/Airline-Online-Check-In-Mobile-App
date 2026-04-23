@@ -1,4 +1,19 @@
 <resources>
+    <!-- Passport Scan Screen -->
+    <string name="checkin_step1_title">Étape 1 : Passeport</string>
+
+    <!-- Review Details Screen -->
+    <string name="checkin_step2_title">Étape 2 : Vérification</string>
+    <string name="review_verify_title">Vérifier les informations</string>
+    <string name="review_verify_subtitle">Nous avons extrait ces informations depuis votre scan de passeport. Veuillez vous assurer que tout est exact avant de passer à la sélection du siège.</string>
+    <string name="scan_passport_button">Scanner le passeport</string>
+    <string name="upload_library_button">Télécharger depuis la bibliothèque</string>
+    <string name="passport_preview_title">Aperçu du passeport</string>
+    <string name="no_image_captured">Aucune image capturée pour le moment</string>
+    <string name="image_captured">Image capturée</string>
+    <string name="status_pending">En attente</string>
+    <string name="status_ready">Prêt</string>
+
     <!-- Baggage Screen -->
     <string name="checkin_baggage_step_title">Étape 4 : Bagages</string>
     <string name="checkin_baggage_declaration">Déclaration de bagages</string>
@@ -8,4 +23,13 @@
     <string name="checkin_special_equipment">Équipement spécial</string>
     <string name="checkin_special_equipment_desc">Vélos, skis ou équipements de sport surdimensionnés.</string>
     <string name="checkin_continue_to_step_5">Continuer vers l\'étape 5</string>
+    <string name="review_confirm_text">Je confirme que toutes les informations scannées sont correctes et correspondent à mon passeport officiel.</string>
+    <string name="review_passport_scanned">PASSEPORT SCANNÉ</string>
+    <string name="review_document_details">DÉTAILS DU DOCUMENT</string>
+    <string name="review_passport_number_label">NUMÉRO DE PASSEPORT</string>
+    <string name="review_nationality_label">NATIONALITÉ</string>
+    <string name="review_dob_label">DATE DE NAISSANCE</string>
+    <string name="review_expiry_label">DATE D\'EXPIRATION</string>
+    <string name="review_warning_text">Toute divergence entre votre carte d\'embarquement et vos documents de voyage peut entraîner un refus d\'embarquement. Assurez-vous que votre nom correspond exactement.</string>
+    <string name="review_continue_to_seat">Continuer vers la sélection du siège</string>
 </resources>

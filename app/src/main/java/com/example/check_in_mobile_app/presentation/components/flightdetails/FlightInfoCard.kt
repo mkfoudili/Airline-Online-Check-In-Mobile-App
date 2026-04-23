@@ -19,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
 import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.ui.theme.BorderLight
 import com.example.check_in_mobile_app.ui.theme.NavyBlue
@@ -61,7 +62,7 @@ fun FlightInfoCard(booking: Booking, modifier: Modifier = Modifier) {
                     modifier = Modifier.size(16.dp)
                 )
                 Text(
-                    text = "FLIGHT ${booking.flight.flightNumber}",
+                    text = "${stringResource(R.string.flight_label)} ${booking.flight.flightNumber}",
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
@@ -206,7 +207,7 @@ fun FlightInfoCard(booking: Booking, modifier: Modifier = Modifier) {
                     Spacer(modifier = Modifier.width(12.dp))
                     Column {
                         Text(
-                            text = "DATE",
+                            text = stringResource(R.string.date_label),
                             fontSize = 10.sp,
                             color = SubtleText,
                             fontWeight = FontWeight.Bold,
@@ -240,7 +241,7 @@ fun FlightInfoCard(booking: Booking, modifier: Modifier = Modifier) {
                     Spacer(modifier = Modifier.width(12.dp))
                     Column {
                         Text(
-                            text = "BOARDING",
+                            text = stringResource(R.string.boarding_label),
                             fontSize = 10.sp,
                             color = SubtleText,
                             fontWeight = FontWeight.Bold,

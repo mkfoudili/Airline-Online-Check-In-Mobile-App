@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -62,7 +63,7 @@ fun CheckingDetailsReviewScreenContent(
             CheckInTopBar(
                 onBack = onBack,
                 currentStep = 2,
-                title = "Step 2: Review"
+                title = stringResource(R.string.checkin_step2_title)
             )
         }
     ) { innerPadding ->
@@ -80,14 +81,13 @@ fun CheckingDetailsReviewScreenContent(
 
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(
-                    text = "Verify Information",
+                    text = stringResource(R.string.review_verify_title),
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                     color = NavyBlue
                 )
                 Text(
-                    text = "We've extracted these details from your passport scan. " +
-                            "Please ensure everything is accurate before proceeding to seat selection.",
+                    text = stringResource(R.string.review_verify_subtitle),
                     fontSize = 14.sp,
                     color = Color(0xFF64748B),
                     lineHeight = 20.sp

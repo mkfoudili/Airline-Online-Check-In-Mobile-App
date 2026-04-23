@@ -34,4 +34,19 @@
     <string name="status_check_in_open">Check In Open</string>
     <string name="status_checked_in">Checked In</string>
     <string name="status_passed">Passed</string>
+
+    <!-- Flight Details Screen -->
+    <string name="flight_details_title">Flight Details</string>
+    <string name="checkin_status_label">Check-In Status:</string>
+    <string name="checkin_status_available">Available Now</string>
+    <string name="start_checkin">Start Check-In</string>
+    <string name="passenger_label">Passenger</string>
+    <string name="schedule_label">Schedule</string>
+    <string name="pnr_label">PNR:</string>
+    <string name="departure_label">Departure</string>
+    <string name="checkin_opens_label">Check-In Opens</string>
+    <string name="boarding_starts_label">Boarding Starts</string>
+    <string name="gate_label">Gate</string>
+    <string name="unit_hours">H</string>
+    <string name="unit_minutes">M</string>
 </resources>

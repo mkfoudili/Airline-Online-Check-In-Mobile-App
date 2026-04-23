@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
@@ -124,14 +125,14 @@ fun PassportPreviewCard(
         // Text
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = "Passport Preview",
+                text = stringResource(R.string.passport_preview_title),
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
                 color = if (isPending) DarkText else CheckedInText
             )
             Spacer(modifier = Modifier.height(3.dp))
             Text(
-                text = if (isPending) "No image captured yet" else "Image captured",
+                text = if (isPending) stringResource(R.string.no_image_captured) else stringResource(R.string.image_captured),
                 fontSize = 12.sp,
                 fontStyle = FontStyle.Italic,
                 color = if (isPending) Color(0xFF94A3B8) else ActiveGreen
@@ -150,7 +151,7 @@ fun PassportPreviewCard(
                     .padding(horizontal = 12.dp, vertical = 5.dp)
             ) {
                 Text(
-                    text = if (isPending) "Pending" else "Ready",
+                    text = if (isPending) stringResource(R.string.status_pending) else stringResource(R.string.status_ready),
                     fontSize = 12.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = if (isPending) Slate500 else CheckedInText

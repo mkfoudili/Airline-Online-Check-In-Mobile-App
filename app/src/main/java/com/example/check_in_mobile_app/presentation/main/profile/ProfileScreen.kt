@@ -44,6 +44,7 @@ import com.example.check_in_mobile_app.presentation.components.TabItem
 import com.example.check_in_mobile_app.presentation.components.profile.ProfileAvatar
 import com.example.check_in_mobile_app.presentation.components.profile.ProfileInfoCard
 import com.example.check_in_mobile_app.presentation.components.profile.SecurityStatusBanner
+import com.example.check_in_mobile_app.presentation.main.MainActivity
 import com.example.check_in_mobile_app.ui.theme.BorderLight
 import com.example.check_in_mobile_app.ui.theme.DarkText
 import com.example.check_in_mobile_app.ui.theme.NavyBlue
@@ -65,39 +66,43 @@ fun ProfileScreen(
     LaunchedEffect(Unit) {
         viewModel.uiAction.collectLatest { action ->
             when (action) {
-                is ProfileUiAction.ShowToast -> {
-                    Toast.makeText(context, action.message, Toast.LENGTH_SHORT).show()
+                is ProfileUiAction.ChangeLanguage -> {
+                    // Trigger the activity recreation through the companion callback
+                    MainActivity.onLanguageChangeRequest?.invoke(action.languageCode)
                 }
                 ProfileUiAction.NavigateBack -> {
-                    // Handled by navigation
-                }
-                ProfileUiAction.NavigateToEditPassword -> {
-                    // Handled by screen mode
+                    // Back logic handled by viewmodel internal state flags first
                 }
             }
         }
     }
 
-    when (uiState.screenMode) {
-        ProfileScreenMode.CHANGE_PASSWORD -> {
-            ChangePasswordScreen(
-                uiState = uiState,
-                onEvent = viewModel::onEvent
-            )
+    if (uiState.isLoading) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator()
         }
-        ProfileScreenMode.EDIT -> {
-            EditProfileScreen(
-                uiState = uiState,
-                onEvent = viewModel::onEvent
-            )
-        }
-        ProfileScreenMode.VIEW -> {
-            ProfileScreenContent(
-                uiState = uiState,
-                onEvent = viewModel::onEvent,
-                onTabSelected = onTabSelected,
-                onLogout = onLogout
-            )
+    } else {
+        when {
+            uiState.isChangingPassword -> {
+                ChangePasswordScreen(
+                    uiState = uiState,
+                    onEvent = viewModel::onEvent
+                )
+            }
+            uiState.isEditing -> {
+                EditProfileScreen(
+                    uiState = uiState,
+                    onEvent = viewModel::onEvent
+                )
+            }
+            else -> {
+                ProfileScreenContent(
+                    uiState = uiState,
+                    onEvent = viewModel::onEvent,
+                    onTabSelected = onTabSelected,
+                    onLogout = onLogout
+                )
+            }
         }
     }
 }
@@ -113,7 +118,7 @@ private fun ProfileBaseScreen(
     content: @Composable ColumnScope.() -> Unit
 ) {
     Scaffold(
-        containerColor = MaterialTheme.colorScheme.background,
+        containerColor = Color.White,
         topBar = {
             Column {
                 TopAppBar(
@@ -139,7 +144,7 @@ private fun ProfileBaseScreen(
                     },
                     actions = actions,
                     colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.background
+                        containerColor = Color.White
                     )
                 )
                 HorizontalDivider(color = DividerColor, thickness = 1.dp)
@@ -171,7 +176,7 @@ private fun ProfileBottomActions(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.background)
+            .background(Color.White)
             .padding(horizontal = 24.dp, vertical = 20.dp)
     ) {
         HorizontalDivider(color = DividerColor, thickness = 1.dp)
@@ -219,7 +224,7 @@ fun ProfileScreenContent(
 
         // Avatar Section
         ProfileAvatar(
-            isOnline = uiState.profileData.isOnline
+            isOnline = uiState.isOnline
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -230,7 +235,7 @@ fun ProfileScreenContent(
             modifier = Modifier.clickable { onEvent(ProfileEvent.OnEditProfileClicked) }
         ) {
             Text(
-                text = uiState.profileData.name,
+                text = uiState.name,
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
                 color = NavyBlue,
@@ -257,9 +262,9 @@ fun ProfileScreenContent(
         Spacer(modifier = Modifier.height(12.dp))
 
         ProfileInfoCard(
-            email = uiState.profileData.email,
-            phoneNumber = uiState.profileData.phoneNumber,
-            language = uiState.profileData.language,
+            email = uiState.email,
+            phoneNumber = uiState.phoneNumber,
+            language = uiState.language,
             onEditEmailClick = {
                 onEvent(ProfileEvent.OnEditEmailClicked)
             },
@@ -370,7 +375,7 @@ fun EditProfileScreen(
 
         BookingInputField(
             label = stringResource(R.string.common_full_name),
-            value = uiState.editData.name,
+            value = uiState.editedName,
             placeholder = stringResource(R.string.profile_full_name_placeholder),
             onValueChange = { onEvent(ProfileEvent.OnNameChanged(it)) },
             leadingIcon = {
@@ -387,7 +392,7 @@ fun EditProfileScreen(
 
         BookingInputField(
             label = stringResource(R.string.common_email_address),
-            value = uiState.editData.email,
+            value = uiState.editedEmail,
             placeholder = stringResource(R.string.profile_email_placeholder),
             onValueChange = { onEvent(ProfileEvent.OnEmailChanged(it)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
@@ -405,7 +410,7 @@ fun EditProfileScreen(
 
         BookingInputField(
             label = stringResource(R.string.common_phone_number),
-            value = uiState.editData.phoneNumber,
+            value = uiState.editedPhoneNumber,
             placeholder = stringResource(R.string.profile_phone_placeholder),
             onValueChange = { onEvent(ProfileEvent.OnPhoneNumberChanged(it)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
@@ -422,8 +427,8 @@ fun EditProfileScreen(
         Spacer(modifier = Modifier.height(20.dp))
 
         LanguageDropdownField(
-            selectedLanguage = uiState.editData.language,
-            isExpanded = uiState.editData.isLanguageDropdownExpanded,
+            selectedLanguage = uiState.editedLanguage,
+            isExpanded = uiState.isLanguageDropdownExpanded,
             onToggle = { onEvent(ProfileEvent.OnToggleLanguageDropdown) },
             onLanguageSelected = { onEvent(ProfileEvent.OnLanguageChanged(it)) }
         )
@@ -502,11 +507,7 @@ fun LanguageDropdownField(
     onToggle: () -> Unit,
     onLanguageSelected: (String) -> Unit
 ) {
-    val languages = listOf(
-        stringResource(R.string.language_english),
-        stringResource(R.string.language_french),
-        stringResource(R.string.language_arabic)
-    )
+    val languages = listOf("English", "French", "Arabic")
 
     Column {
         Text(
@@ -609,7 +610,7 @@ fun ChangePasswordScreen(
                     modifier = Modifier
                         .size(48.dp)
                         .clip(RoundedCornerShape(12.dp))
-                        .background(MaterialTheme.colorScheme.background),
+                        .background(Color.White),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
@@ -643,10 +644,10 @@ fun ChangePasswordScreen(
 
         PasswordInputField(
             label = stringResource(R.string.profile_current_password_label),
-            value = uiState.changePasswordData.currentPassword,
+            value = uiState.currentPassword,
             placeholder = stringResource(R.string.profile_current_password_placeholder),
             onValueChange = { onEvent(ProfileEvent.OnCurrentPasswordChanged(it)) },
-            isVisible = uiState.changePasswordData.isCurrentPasswordVisible,
+            isVisible = uiState.isCurrentPasswordVisible,
             onToggleVisibility = { onEvent(ProfileEvent.OnToggleCurrentPasswordVisibility) }
         )
 
@@ -654,10 +655,10 @@ fun ChangePasswordScreen(
 
         PasswordInputField(
             label = stringResource(R.string.profile_new_password_label),
-            value = uiState.changePasswordData.newPassword,
+            value = uiState.newPassword,
             placeholder = stringResource(R.string.profile_new_password_placeholder),
             onValueChange = { onEvent(ProfileEvent.OnNewPasswordChanged(it)) },
-            isVisible = uiState.changePasswordData.isNewPasswordVisible,
+            isVisible = uiState.isNewPasswordVisible,
             onToggleVisibility = { onEvent(ProfileEvent.OnToggleNewPasswordVisibility) }
         )
 
@@ -665,10 +666,10 @@ fun ChangePasswordScreen(
 
         PasswordInputField(
             label = stringResource(R.string.profile_confirm_password_label),
-            value = uiState.changePasswordData.confirmPassword,
+            value = uiState.confirmPassword,
             placeholder = stringResource(R.string.profile_confirm_password_placeholder),
             onValueChange = { onEvent(ProfileEvent.OnConfirmPasswordChanged(it)) },
-            isVisible = uiState.changePasswordData.isConfirmPasswordVisible,
+            isVisible = uiState.isConfirmPasswordVisible,
             onToggleVisibility = { onEvent(ProfileEvent.OnToggleConfirmPasswordVisibility) }
         )
 
@@ -702,56 +703,12 @@ fun PasswordInputField(
         trailingIcon = {
             IconButton(onClick = onToggleVisibility) {
                 Icon(
-                    painter = if (isVisible) painterResource(id = R.drawable.user) else painterResource(id = R.drawable.user),
+                    imageVector = if (isVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
                     contentDescription = if (isVisible) stringResource(R.string.common_hide_password) else stringResource(R.string.common_show_password),
                     tint = DarkText.copy(alpha = 0.6f),
                     modifier = Modifier.size(20.dp)
                 )
             }
         }
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ProfileScreenPreview() {
-    ProfileScreenContent(
-        uiState = ProfileUiState(
-            profileData = ProfileData(
-                name = "Djerfi Fatima",
-                email = "mr_mikircha@esi.dz",
-                phoneNumber = "+1 (555) 012-3456",
-                language = "English",
-                isOnline = true
-            )
-        )
-    )
-}
-
-@Preview(showBackground = true, device = "spec:width=411dp,height=891dp")
-@Composable
-fun EditProfileScreenPreview() {
-    EditProfileScreen(
-        uiState = ProfileUiState(
-            screenMode = ProfileScreenMode.EDIT,
-            editData = EditProfileData(
-                name = "Djerfi Fatima",
-                email = "mr_mikircha@esi.dz",
-                phoneNumber = "+1 (555) 012-4567",
-                language = "English"
-            )
-        ),
-        onEvent = {}
-    )
-}
-
-@Preview(showBackground = true, device = "spec:width=411dp,height=891dp")
-@Composable
-fun ChangePasswordScreenPreview() {
-    ChangePasswordScreen(
-        uiState = ProfileUiState(
-            screenMode = ProfileScreenMode.CHANGE_PASSWORD
-        ),
-        onEvent = {}
     )
 }

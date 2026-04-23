@@ -15,6 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
 import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.ui.theme.BorderLight
 import com.example.check_in_mobile_app.ui.theme.DarkText
@@ -27,14 +28,14 @@ fun ScheduleTimeline(booking: Booking, modifier: Modifier = Modifier) {
     Column(modifier = modifier) {
         TimelineItem(
             time = booking.flight.checkInOpensTime,
-            title = "Check-In Opens",
+            title = stringResource(R.string.checkin_opens_label),
             iconRes = R.drawable.suitcase
         )
         TimelineSpacing()
         TimelineItem(
             time = booking.flight.boardingTime,
-            title = "Boarding Starts",
-            subtitle = "Gate ${booking.gate}",
+            title = stringResource(R.string.boarding_starts_label),
+            subtitle = "${stringResource(R.string.gate_label)} ${booking.gate}",
             iconRes = R.drawable.clock
         )
         TimelineSpacing()
@@ -44,7 +45,7 @@ fun ScheduleTimeline(booking: Booking, modifier: Modifier = Modifier) {
         
         TimelineItem(
             time = depTimeStr,
-            title = "Departure",
+            title = stringResource(R.string.departure_label),
             subtitle = "${booking.flight.originCity} (${booking.flight.origin})",
             iconRes = R.drawable.plane_up
         )

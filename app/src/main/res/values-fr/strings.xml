@@ -1,3 +1,50 @@
 <resources>
     <string name="app_name">Check-In-Mobile-App</string>
+
+    <!-- Bookings -->
+    <string name="my_bookings">Mes Réservations</string>
+    <string name="all_bookings">Toutes les Réservations</string>
+    <string name="all_flights">Tous les Vols</string>
+    <string name="upcoming_flights">Vols à Venir</string>
+    <string name="view_all">Voir Tout</string>
+    <string name="search_hint">Rechercher un vol</string>
+    <string name="back">Retour</string>
+
+    <!-- Date Picker -->
+    <string name="select_date">Sélectionner une date</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Annuler</string>
+
+    <!-- Cities -->
+    <string name="city_dubai">Dubaï</string>
+    <string name="city_london">Londres</string>
+    <string name="city_paris">Paris</string>
+    <string name="city_casablanca">Casablanca</string>
+    <string name="city_algiers">Alger</string>
+
+    <!-- Actions & Statuses -->
+    <string name="boarding_pass">Carte d\'embarquement</string>
+    <string name="check_in">Enregistrement</string>
+    <string name="check_in_opens_in">L\'enregistrement ouvre dans %1$s</string>
+    <string name="manage">Gérer</string>
+    <string name="status_all">Tous</string>
+    <string name="status_confirmed">Confirmé</string>
+    <string name="status_check_in_open">Enregistrement Ouvert</string>
+    <string name="status_checked_in">Enregistré</string>
+    <string name="status_passed">Terminé</string>
+
+    <!-- Flight Details Screen -->
+    <string name="flight_details_title">Détails du Vol</string>
+    <string name="checkin_status_label">Statut d\'enregistrement :</string>
+    <string name="checkin_status_available">Disponible maintenant</string>
+    <string name="start_checkin">Commencer l\'enregistrement</string>
+    <string name="passenger_label">Passager</string>
+    <string name="schedule_label">Horaire</string>
+    <string name="pnr_label">PNR :</string>
+    <string name="departure_label">Départ</string>
+    <string name="checkin_opens_label">Enregistrement ouvert</string>
+    <string name="boarding_starts_label">Début de l\'embarquement</string>
+    <string name="gate_label">Porte</string>
+    <string name="unit_hours">H</string>
+    <string name="unit_minutes">M</string>
 </resources>

@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -38,7 +39,7 @@ fun FlightDetailsScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Flight Details",
+                        text = stringResource(R.string.flight_details_title),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         color = DarkText,
@@ -49,7 +50,7 @@ fun FlightDetailsScreen(
                     IconButton(onClick = onBack) {
                         Icon(
                             painter = painterResource(id = R.drawable.chevron_left),
-                            contentDescription = "Back",
+                            contentDescription = stringResource(R.string.back),
                             tint = DarkText
                         )
                     }
@@ -77,13 +78,13 @@ fun FlightDetailsScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Check-In Status:",
+                        text = stringResource(R.string.checkin_status_label),
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium,
                         color = MediumGray
                     )
                     Text(
-                        text = if (booking.status == CheckInStatus.CHECK_IN_OPEN) "Available Now" else booking.status.name,
+                        text = if (booking.status == CheckInStatus.CHECK_IN_OPEN) stringResource(R.string.checkin_status_available) else booking.status.name,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
                         color = if (booking.status == CheckInStatus.CHECK_IN_OPEN) ActiveGreen else DarkText
@@ -102,7 +103,7 @@ fun FlightDetailsScreen(
                     )
                 ) {
                     Text(
-                        text = "Start Check-In",
+                        text = stringResource(R.string.start_checkin),
                         fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold,
                         letterSpacing = (-0.2).sp
@@ -128,20 +129,20 @@ fun FlightDetailsScreen(
 
             // -- PASSENGER SECTION --
             Text(
-                text = "Passenger",
+                text = stringResource(R.string.passenger_label),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = DarkText,
                 fontFamily = Poppins
             )
             Spacer(modifier = Modifier.height(12.dp))
-            PassengerCard(booking, infoText = "PNR: ${booking.pnr}")
+            PassengerCard(booking, infoText = "${stringResource(R.string.pnr_label)} ${booking.pnr}")
 
             Spacer(modifier = Modifier.height(24.dp))
 
             // -- SCHEDULE SECTION --
             Text(
-                text = "Schedule",
+                text = stringResource(R.string.schedule_label),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = DarkText,

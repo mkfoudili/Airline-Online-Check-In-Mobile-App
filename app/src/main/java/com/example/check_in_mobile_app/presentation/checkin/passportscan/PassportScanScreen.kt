@@ -23,6 +23,8 @@ import com.example.check_in_mobile_app.presentation.components.checkin.checkingp
 import com.example.check_in_mobile_app.presentation.components.checkin.checkingpassportscan.PassportPreviewCard
 import com.example.check_in_mobile_app.presentation.components.checkin.checkingpassportscan.ScanContinueButton
 import com.example.check_in_mobile_app.presentation.components.checkin.checkingpassportscan.ScanPassportButton
+import androidx.compose.ui.res.stringResource
+import com.example.check_in_mobile_app.R
 
 @Composable
 fun PassportScanScreen(
@@ -141,7 +143,7 @@ fun PassportScanScreenContent(
 
     Scaffold(
         containerColor = Color.White,
-        topBar = { CheckInTopBar(onBack = onBack, currentStep = 1, title = "Step 1: Passport") }
+        topBar = { CheckInTopBar(onBack = onBack, currentStep = 1, title = stringResource(R.string.checkin_step1_title)) }
     ) { innerPadding ->
 
         Column(

@@ -1,31 +1,44 @@
 package com.example.check_in_mobile_app.presentation.main.profile
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import com.example.check_in_mobile_app.utils.LanguagePreferences
+import com.example.domain.usecase.profile.GetProfileUseCase
+import com.example.domain.usecase.profile.UpdateProfileUseCase
+import com.example.domain.usecase.profile.UpdatePasswordUseCase
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.domain.usecase.profile.GetProfileUseCase
-import com.example.domain.usecase.profile.UpdatePasswordUseCase
-import com.example.domain.usecase.profile.UpdateProfileUseCase
-import com.example.domain.usecase.language.ChangeLanguageUseCase
-import com.example.domain.usecase.language.GetSavedLanguageUseCase
-import com.example.check_in_mobile_app.AppContainer
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(
-    private val changeLanguageUseCase: ChangeLanguageUseCase,
-    private val getSavedLanguageUseCase: GetSavedLanguageUseCase,
+    private val application: Application,
     private val getProfileUseCase: GetProfileUseCase,
     private val updateProfileUseCase: UpdateProfileUseCase,
     private val updatePasswordUseCase: UpdatePasswordUseCase
-) : ViewModel() {
+): ViewModel() {
+
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as Application)
+                ProfileViewModel(
+                    application = application,
+                    getProfileUseCase = GetProfileUseCase(),
+                    updateProfileUseCase = UpdateProfileUseCase(),
+                    updatePasswordUseCase = UpdatePasswordUseCase()
+                )
+            }
+        }
+    }
     private val _uiState = MutableStateFlow(ProfileUiState())
     val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
 
@@ -33,19 +46,12 @@ class ProfileViewModel(
     val uiAction: SharedFlow<ProfileUiAction> = _uiAction.asSharedFlow()
 
     init {
+        // Load current language from prefs
+        val currentCode = LanguagePreferences.getSavedLanguage(application)
+        val currentName = LanguagePreferences.codeToDisplayName(currentCode)
+        _uiState.value = _uiState.value.copy(language = currentName, editedLanguage = currentName)
+        
         fetchProfile()
-        observeLanguage()
-    }
-
-    private fun observeLanguage() {
-        viewModelScope.launch {
-            getSavedLanguageUseCase().collectLatest { langTag ->
-                val languageName = mapTagToLanguage(langTag ?: "en")
-                _uiState.value = _uiState.value.copy(
-                    profileData = _uiState.value.profileData.copy(language = languageName)
-                )
-            }
-        }
     }
 
     private fun fetchProfile() {
@@ -55,18 +61,16 @@ class ProfileViewModel(
             try {
                 val profile = getProfileUseCase()
 
-                _uiState.value = _uiState.value.copy(
-                    profileData = _uiState.value.profileData.copy(
-                        name = profile.fullName,
-                        email = profile.email,
-                        phoneNumber = profile.phoneNumber,
-                        passwordMasked = "************",
-                        profileImageUrl = profile.avatarUrl,
-                        isVerified = profile.isVerified,
-                        securityLevel = profile.securityLevel,
-                        isOnline = profile.isOnline,
-                    ),
-                    isLoading = false
+                _uiState.value = ProfileUiState(
+                    name = profile.fullName,
+                    email = profile.email,
+                    phoneNumber = profile.phoneNumber,
+                    passwordMasked = "************",
+                    profileImageUrl = profile.avatarUrl,
+                    isVerified = profile.isVerified,
+                    securityLevel = profile.securityLevel,
+                    isLoading = false,
+                    isOnline = profile.isOnline,
                 )
 
             } catch (e: Exception) {
@@ -80,249 +84,165 @@ class ProfileViewModel(
 
     private fun enterEditMode() {
         _uiState.value = _uiState.value.copy(
-            screenMode = ProfileScreenMode.EDIT,
-            editData = EditProfileData(
-                name = _uiState.value.profileData.name,
-                email = _uiState.value.profileData.email,
-                phoneNumber = _uiState.value.profileData.phoneNumber,
-                language = _uiState.value.profileData.language
-            )
+            isEditing = true,
+            isChangingPassword = false,
+            editedName = _uiState.value.name,
+            editedEmail = _uiState.value.email,
+            editedPhoneNumber = _uiState.value.phoneNumber,
+            editedLanguage = _uiState.value.language
         )
     }
 
     private fun enterChangePasswordMode() {
         _uiState.value = _uiState.value.copy(
-            screenMode = ProfileScreenMode.CHANGE_PASSWORD,
-            changePasswordData = ChangePasswordData()
+            isChangingPassword = true,
+            isEditing = false,
+            currentPassword = "",
+            newPassword = "",
+            confirmPassword = "",
+            isCurrentPasswordVisible = false,
+            isNewPasswordVisible = false,
+            isConfirmPasswordVisible = false
         )
     }
 
     fun onEvent(event: ProfileEvent) {
-        when (event) {
-            ProfileEvent.OnEditEmailClicked,
-            ProfileEvent.OnEditPhoneClicked,
-            ProfileEvent.OnEditProfileClicked -> enterEditMode()
-            ProfileEvent.OnEditPasswordClicked -> enterChangePasswordMode()
-            is ProfileEvent.OnNameChanged -> onNameChanged(event.name)
-            is ProfileEvent.OnEmailChanged -> onEmailChanged(event.email)
-            is ProfileEvent.OnPhoneNumberChanged -> onPhoneNumberChanged(event.phoneNumber)
-            is ProfileEvent.OnLanguageChanged -> onLanguageChanged(event.language)
-            ProfileEvent.OnToggleLanguageDropdown -> toggleLanguageDropdown()
-            ProfileEvent.OnSaveClicked -> onSaveClicked()
-            ProfileEvent.OnCancelClicked -> onCancelClicked()
-            ProfileEvent.OnBackClicked -> onBackClicked()
-            ProfileEvent.OnChangePhotoClicked -> onChangePhotoClicked()
-            is ProfileEvent.OnCurrentPasswordChanged -> onCurrentPasswordChanged(event.value)
-            is ProfileEvent.OnNewPasswordChanged -> onNewPasswordChanged(event.value)
-            is ProfileEvent.OnConfirmPasswordChanged -> onConfirmPasswordChanged(event.value)
-            ProfileEvent.OnToggleCurrentPasswordVisibility -> toggleCurrentPasswordVisibility()
-            ProfileEvent.OnToggleNewPasswordVisibility -> toggleNewPasswordVisibility()
-            ProfileEvent.OnToggleConfirmPasswordVisibility -> toggleConfirmPasswordVisibility()
-            ProfileEvent.OnSavePasswordClicked -> onSavePasswordClicked()
-        }
-    }
-
-    private fun onNameChanged(name: String) {
-        _uiState.value = _uiState.value.copy(
-            editData = _uiState.value.editData.copy(name = name)
-        )
-    }
-
-    private fun onEmailChanged(email: String) {
-        _uiState.value = _uiState.value.copy(
-            editData = _uiState.value.editData.copy(email = email)
-        )
-    }
-
-    private fun onPhoneNumberChanged(phoneNumber: String) {
-        _uiState.value = _uiState.value.copy(
-            editData = _uiState.value.editData.copy(phoneNumber = phoneNumber)
-        )
-    }
-
-    private fun onLanguageChanged(language: String) {
-        _uiState.value = _uiState.value.copy(
-            editData = _uiState.value.editData.copy(
-                language = language,
-                isLanguageDropdownExpanded = false
-            )
-        )
-    }
-
-    private fun toggleLanguageDropdown() {
-        _uiState.value = _uiState.value.copy(
-            editData = _uiState.value.editData.copy(
-                isLanguageDropdownExpanded = !_uiState.value.editData.isLanguageDropdownExpanded
-            )
-        )
-    }
-
-    private fun onSaveClicked() {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true)
-            try {
-                // Update basic profile info
-                val updatedProfile = updateProfileUseCase(
-                    fullName = _uiState.value.editData.name,
-                    email = _uiState.value.editData.email,
-                    phoneNumber = _uiState.value.editData.phoneNumber
-                )
-
-                // Update language if changed
-                val selectedLanguage = _uiState.value.editData.language
-                if (selectedLanguage != _uiState.value.profileData.language) {
-                    val langTag = mapLanguageToTag(selectedLanguage)
-                    changeLanguageUseCase(langTag)
-                    _uiAction.emit(ProfileUiAction.ShowToast("Language updated to $selectedLanguage"))
-                } else {
-                    _uiAction.emit(ProfileUiAction.ShowToast("Profile updated successfully"))
+            when (event) {
+                ProfileEvent.OnEditEmailClicked -> {
+                    enterEditMode()
                 }
-
-                _uiState.value = _uiState.value.copy(
-                    screenMode = ProfileScreenMode.VIEW,
-                    isLoading = false,
-                    profileData = _uiState.value.profileData.copy(
-                        name = updatedProfile.fullName,
-                        email = updatedProfile.email,
-                        phoneNumber = updatedProfile.phoneNumber,
-                        language = selectedLanguage
+                ProfileEvent.OnEditPhoneClicked -> {
+                    enterEditMode()
+                }
+                ProfileEvent.OnEditPasswordClicked -> {
+                    enterChangePasswordMode()
+                }
+                ProfileEvent.OnEditProfileClicked -> {
+                    enterEditMode()
+                }
+                is ProfileEvent.OnNameChanged -> {
+                    _uiState.value = _uiState.value.copy(editedName = event.name)
+                }
+                is ProfileEvent.OnEmailChanged -> {
+                    _uiState.value = _uiState.value.copy(editedEmail = event.email)
+                }
+                is ProfileEvent.OnPhoneNumberChanged -> {
+                    _uiState.value = _uiState.value.copy(editedPhoneNumber = event.phoneNumber)
+                }
+                ProfileEvent.OnToggleLanguageDropdown -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLanguageDropdownExpanded = !_uiState.value.isLanguageDropdownExpanded
                     )
-                )
-            } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(
-                    isLoading = false,
-                    error = e.message ?: "Update failed"
-                )
-            }
-        }
-    }
+                }
+                is ProfileEvent.OnLanguageChanged -> {
+                    _uiState.value = _uiState.value.copy(
+                        editedLanguage = event.language,
+                        isLanguageDropdownExpanded = false
+                    )
+                }
+                ProfileEvent.OnSaveClicked -> {
+                    _uiState.value = _uiState.value.copy(isLoading = true)
+                    try {
+                        val updatedProfile = updateProfileUseCase(
+                            fullName = _uiState.value.editedName,
+                            email = _uiState.value.editedEmail,
+                            phoneNumber = _uiState.value.editedPhoneNumber
+                        )
 
-    private fun mapLanguageToTag(language: String): String {
-        return when (language) {
-            "French" -> "fr"
-            "Arabic" -> "ar"
-            else -> "en"
-        }
-    }
+                        val oldLanguage = _uiState.value.language
+                        val newLanguage = _uiState.value.editedLanguage
 
-    private fun mapTagToLanguage(tag: String): String {
-        return when (tag) {
-            "fr" -> "French"
-            "ar" -> "Arabic"
-            else -> "English"
-        }
-    }
+                        _uiState.value = _uiState.value.copy(
+                            isEditing = false,
+                            isLoading = false,
+                            name = updatedProfile.fullName,
+                            email = updatedProfile.email,
+                            phoneNumber = updatedProfile.phoneNumber,
+                            language = newLanguage
+                        )
 
-    private fun onCancelClicked() {
-        _uiState.value = _uiState.value.copy(
-            screenMode = ProfileScreenMode.VIEW
-        )
-    }
+                        // Only emit ChangeLanguage if the language actually changed
+                        if (oldLanguage != newLanguage) {
+                            val code = LanguagePreferences.displayNameToCode(newLanguage)
+                            _uiAction.emit(ProfileUiAction.ChangeLanguage(code))
+                        }
 
-    private fun onBackClicked() {
-        viewModelScope.launch {
-            if (_uiState.value.screenMode != ProfileScreenMode.VIEW) {
-                _uiState.value = _uiState.value.copy(
-                    screenMode = ProfileScreenMode.VIEW
-                )
-            } else {
-                _uiAction.emit(ProfileUiAction.NavigateBack)
-            }
-        }
-    }
+                    } catch (e: Exception) {
+                        _uiState.value = _uiState.value.copy(
+                            isLoading = false,
+                            error = e.message ?: "Update failed"
+                        )
+                    }
+                }
+                ProfileEvent.OnCancelClicked -> {
+                    _uiState.value = _uiState.value.copy(
+                        isEditing = false,
+                        isChangingPassword = false
+                    )
+                }
+                ProfileEvent.OnBackClicked -> {
+                    if (_uiState.value.isEditing || _uiState.value.isChangingPassword) {
+                        _uiState.value = _uiState.value.copy(
+                            isEditing = false,
+                            isChangingPassword = false
+                        )
+                    } else {
+                        _uiAction.emit(ProfileUiAction.NavigateBack)
+                    }
+                }
+                ProfileEvent.OnChangePhotoClicked -> {
+                    // Handle photo change
+                }
+                is ProfileEvent.OnCurrentPasswordChanged -> {
+                    _uiState.value = _uiState.value.copy(currentPassword = event.value)
+                }
+                is ProfileEvent.OnNewPasswordChanged -> {
+                    _uiState.value = _uiState.value.copy(newPassword = event.value)
+                }
+                is ProfileEvent.OnConfirmPasswordChanged -> {
+                    _uiState.value = _uiState.value.copy(confirmPassword = event.value)
+                }
+                ProfileEvent.OnToggleCurrentPasswordVisibility -> {
+                    _uiState.value = _uiState.value.copy(
+                        isCurrentPasswordVisible = !_uiState.value.isCurrentPasswordVisible
+                    )
+                }
+                ProfileEvent.OnToggleNewPasswordVisibility -> {
+                    _uiState.value = _uiState.value.copy(
+                        isNewPasswordVisible = !_uiState.value.isNewPasswordVisible
+                    )
+                }
+                ProfileEvent.OnToggleConfirmPasswordVisibility -> {
+                    _uiState.value = _uiState.value.copy(
+                        isConfirmPasswordVisible = !_uiState.value.isConfirmPasswordVisible
+                    )
+                }
+                ProfileEvent.OnSavePasswordClicked -> {
+                    if (_uiState.value.newPassword != _uiState.value.confirmPassword) {
+                        _uiState.value = _uiState.value.copy(error = "Passwords do not match")
+                        return@launch
+                    }
 
-    private fun onChangePhotoClicked() {
-        // Handle photo change
-    }
+                    _uiState.value = _uiState.value.copy(isLoading = true)
+                    val result = updatePasswordUseCase(
+                        currentPassword = _uiState.value.currentPassword,
+                        newPassword = _uiState.value.newPassword
+                    )
 
-    private fun onCurrentPasswordChanged(value: String) {
-        _uiState.value = _uiState.value.copy(
-            changePasswordData = _uiState.value.changePasswordData.copy(currentPassword = value)
-        )
-    }
-
-    private fun onNewPasswordChanged(value: String) {
-        _uiState.value = _uiState.value.copy(
-            changePasswordData = _uiState.value.changePasswordData.copy(newPassword = value)
-        )
-    }
-
-    private fun onConfirmPasswordChanged(value: String) {
-        _uiState.value = _uiState.value.copy(
-            changePasswordData = _uiState.value.changePasswordData.copy(confirmPassword = value)
-        )
-    }
-
-    private fun toggleCurrentPasswordVisibility() {
-        _uiState.value = _uiState.value.copy(
-            changePasswordData = _uiState.value.changePasswordData.copy(
-                isCurrentPasswordVisible = !_uiState.value.changePasswordData.isCurrentPasswordVisible
-            )
-        )
-    }
-
-    private fun toggleNewPasswordVisibility() {
-        _uiState.value = _uiState.value.copy(
-            changePasswordData = _uiState.value.changePasswordData.copy(
-                isNewPasswordVisible = !_uiState.value.changePasswordData.isNewPasswordVisible
-            )
-        )
-    }
-
-    private fun toggleConfirmPasswordVisibility() {
-        _uiState.value = _uiState.value.copy(
-            changePasswordData = _uiState.value.changePasswordData.copy(
-                isConfirmPasswordVisible = !_uiState.value.changePasswordData.isConfirmPasswordVisible
-            )
-        )
-    }
-
-    private fun onSavePasswordClicked() {
-        viewModelScope.launch {
-            val passwordData = _uiState.value.changePasswordData
-            if (passwordData.newPassword != passwordData.confirmPassword) {
-                _uiState.value = _uiState.value.copy(error = "Passwords do not match")
-                return@launch
-            }
-
-            _uiState.value = _uiState.value.copy(isLoading = true)
-            val result = updatePasswordUseCase(
-                currentPassword = passwordData.currentPassword,
-                newPassword = passwordData.newPassword
-            )
-
-            if (result.isSuccess) {
-                _uiAction.emit(ProfileUiAction.ShowToast("Password changed successfully"))
-                _uiState.value = _uiState.value.copy(
-                    isLoading = false,
-                    screenMode = ProfileScreenMode.VIEW,
-                    error = null
-                )
-            } else {
-                _uiState.value = _uiState.value.copy(
-                    isLoading = false,
-                    error = result.exceptionOrNull()?.message ?: "Update failed"
-                )
-            }
-        }
-    }
-
-    companion object {
-        val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(
-                modelClass: Class<T>,
-                extras: CreationExtras
-            ): T {
-                val application = checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY])
-                
-                return ProfileViewModel(
-                    changeLanguageUseCase = AppContainer.provideChangeLanguageUseCase(application),
-                    getSavedLanguageUseCase = AppContainer.provideGetSavedLanguageUseCase(application),
-                    getProfileUseCase = GetProfileUseCase(),
-                    updateProfileUseCase = UpdateProfileUseCase(),
-                    updatePasswordUseCase = UpdatePasswordUseCase()
-                ) as T
+                    if (result.isSuccess) {
+                        _uiState.value = _uiState.value.copy(
+                            isLoading = false,
+                            isChangingPassword = false,
+                            error = null
+                        )
+                    } else {
+                        _uiState.value = _uiState.value.copy(
+                            isLoading = false,
+                            error = result.exceptionOrNull()?.message ?: "Update failed"
+                        )
+                    }
+                }
             }
         }
     }

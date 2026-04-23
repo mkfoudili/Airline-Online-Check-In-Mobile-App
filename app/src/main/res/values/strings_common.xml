@@ -1,6 +1,9 @@
 <resources>
     <!-- Common UI Actions -->
     <string name="common_back">Back</string>
+    <string name="flight_label">FLIGHT</string>
+    <string name="date_label">DATE</string>
+    <string name="boarding_label">BOARDING</string>
     <string name="common_cancel">Cancel</string>
     <string name="common_edit">Edit</string>
     <string name="common_save_changes">Save Changes</string>
@@ -15,4 +18,5 @@
     <string name="common_change_password">Change Password</string>
     <string name="common_hide_password">Hide Password</string>
     <string name="common_show_password">Show Password</string>
+    <string name="common_continue">Continue</string>
 </resources>

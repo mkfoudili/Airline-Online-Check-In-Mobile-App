@@ -94,7 +94,7 @@ fun BookingCard(
         val durationFormatted = if (durationDiff > 0) {
             val hours = durationDiff / (1000 * 60 * 60)
             val mins = (durationDiff / (1000 * 60)) % 60
-            "${hours}H ${mins}M"
+            "${hours}${stringResource(R.string.unit_hours)} ${mins}${stringResource(R.string.unit_minutes)}"
         } else ""
 
         FlightRouteRow(

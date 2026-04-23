@@ -1,3 +1,50 @@
 <resources>
     <string name="app_name">تطبيق تسجيل الوصول</string>
+
+    <!-- Bookings -->
+    <string name="my_bookings">حجوزاتي</string>
+    <string name="all_bookings">كل الحجوزات</string>
+    <string name="all_flights">كل الرحلات</string>
+    <string name="upcoming_flights">الرحلات القادمة</string>
+    <string name="view_all">عرض الكل</string>
+    <string name="search_hint">ابحث عن رحلة</string>
+    <string name="back">رجوع</string>
+
+    <!-- Date Picker -->
+    <string name="select_date">اختر تاريخاً</string>
+    <string name="ok">موافق</string>
+    <string name="cancel">إلغاء</string>
+
+    <!-- Cities -->
+    <string name="city_dubai">دبي</string>
+    <string name="city_london">لندن</string>
+    <string name="city_paris">باريس</string>
+    <string name="city_casablanca">الدار البيضاء</string>
+    <string name="city_algiers">الجزائر</string>
+
+    <!-- Actions & Statuses -->
+    <string name="boarding_pass">بطاقة الصعود</string>
+    <string name="check_in">تسجيل الوصول</string>
+    <string name="check_in_opens_in">يفتح تسجيل الوصول في %1$s</string>
+    <string name="manage">إدارة</string>
+    <string name="status_all">الكل</string>
+    <string name="status_confirmed">مؤكد</string>
+    <string name="status_check_in_open">تسجيل الوصول مفتوح</string>
+    <string name="status_checked_in">تم تسجيل الوصول</string>
+    <string name="status_passed">انتهى</string>
+
+    <!-- Flight Details Screen -->
+    <string name="flight_details_title">تفاصيل الرحلة</string>
+    <string name="checkin_status_label">حالة تسجيل الوصول:</string>
+    <string name="checkin_status_available">متاح الآن</string>
+    <string name="start_checkin">بدء تسجيل الوصول</string>
+    <string name="passenger_label">المسافر</string>
+    <string name="schedule_label">الجدول الزمني</string>
+    <string name="pnr_label">رقم الحجز:</string>
+    <string name="departure_label">المغادرة</string>
+    <string name="checkin_opens_label">فتح تسجيل الوصول</string>
+    <string name="boarding_starts_label">بدء الصعود</string>
+    <string name="gate_label">البوابة</string>
+    <string name="unit_hours">س</string>
+    <string name="unit_minutes">د</string>
 </resources>

@@ -12,6 +12,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.check_in_mobile_app.R
+import androidx.compose.ui.res.stringResource
 import com.example.check_in_mobile_app.ui.theme.NavyBlue
 
 @Composable
@@ -34,7 +36,7 @@ fun ReviewContinueButton(
         )
     ) {
         Text(
-            text = "Continue to Seat Selection",
+            text = stringResource(R.string.review_continue_to_seat),
             fontSize = 16.sp,
             fontWeight = FontWeight.SemiBold
         )

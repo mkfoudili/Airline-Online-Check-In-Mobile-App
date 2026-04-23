@@ -1,4 +1,19 @@
 <resources>
+    <!-- Passport Scan Screen -->
+    <string name="checkin_step1_title">Step 1: Passport</string>
+
+    <!-- Review Details Screen -->
+    <string name="checkin_step2_title">Step 2: Review</string>
+    <string name="review_verify_title">Verify Information</string>
+    <string name="scan_passport_button">Scan Passport</string>
+    <string name="upload_library_button">Upload from Photo Library</string>
+    <string name="passport_preview_title">Passport Preview</string>
+    <string name="no_image_captured">No image captured yet</string>
+    <string name="image_captured">Image captured</string>
+    <string name="status_pending">Pending</string>
+    <string name="status_ready">Ready</string>
+    <string name="review_verify_subtitle">We\'ve extracted these details from your passport scan. Please ensure everything is accurate before proceeding to seat selection.</string>
+
     <!-- Baggage Screen -->
     <string name="checkin_baggage_step_title">Step 4: Baggage</string>
     <string name="checkin_baggage_declaration">Baggage Declaration</string>
@@ -8,4 +23,13 @@
     <string name="checkin_special_equipment">Special Equipment</string>
     <string name="checkin_special_equipment_desc">Bicycles, skis, or oversized sports gear.</string>
     <string name="checkin_continue_to_step_5">Continue to Step 5</string>
+    <string name="review_confirm_text">I confirm that all scanned information is correct and matches my official passport.</string>
+    <string name="review_passport_scanned">PASSPORT SCANNED</string>
+    <string name="review_document_details">DOCUMENT DETAILS</string>
+    <string name="review_passport_number_label">PASSPORT NUMBER</string>
+    <string name="review_nationality_label">NATIONALITY</string>
+    <string name="review_dob_label">DATE OF BIRTH</string>
+    <string name="review_expiry_label">EXPIRY DATE</string>
+    <string name="review_warning_text">Any discrepancies between your boarding pass and travel documents may result in denied boarding. Ensure your name matches exactly.</string>
+    <string name="review_continue_to_seat">Continue to Seat Selection</string>
 </resources>

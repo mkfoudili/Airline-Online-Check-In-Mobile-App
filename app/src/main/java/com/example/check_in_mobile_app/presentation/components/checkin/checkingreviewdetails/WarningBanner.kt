@@ -15,6 +15,8 @@ import androidx.compose.ui.unit.sp
 import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.ui.theme.ErrorRed
 
+import androidx.compose.ui.res.stringResource
+
 @Composable
 fun WarningBanner() {
     Row(
@@ -37,9 +39,7 @@ fun WarningBanner() {
                 .padding(top = 2.dp)
         )
         Text(
-            text = "Any discrepancies between your boarding pass and travel " +
-                    "documents may result in denied boarding. Ensure your name " +
-                    "matches exactly.",
+            text = stringResource(R.string.review_warning_text),
             fontSize = 13.sp,
             color = Color(0xFFEF4444),
             lineHeight = 18.sp

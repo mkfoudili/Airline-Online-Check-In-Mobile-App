@@ -1,4 +1,12 @@
 <resources>
+    <!-- Passport Scan Screen -->
+    <string name="checkin_step1_title">الخطوة 1: جواز السفر</string>
+
+    <!-- Review Details Screen -->
+    <string name="checkin_step2_title">الخطوة 2: المراجعة</string>
+    <string name="review_verify_title">التحقق من المعلومات</string>
+    <string name="review_verify_subtitle">لقد استخرجنا هذه التفاصيل من مسح جواز سفرك. يرجى التأكد من دقة كل شيء قبل المتابعة لاختيار المقعد.</string>
+
     <!-- Baggage Screen -->
     <string name="checkin_baggage_step_title">الخطوة 4: الأمتعة</string>
     <string name="checkin_baggage_declaration">إقرار الأمتعة</string>
@@ -8,4 +16,20 @@
     <string name="checkin_special_equipment">معدات خاصة</string>
     <string name="checkin_special_equipment_desc">دراجات، زلاجات، أو معدات رياضية ضخمة.</string>
     <string name="checkin_continue_to_step_5">متابعة للخطوة 5</string>
+    <string name="scan_passport_button">مسح جواز السفر</string>
+    <string name="upload_library_button">تحميل من مكتبة الصور</string>
+    <string name="passport_preview_title">معاينة جواز السفر</string>
+    <string name="no_image_captured">لم يتم التقاط صورة بعد</string>
+    <string name="image_captured">تم التقاط الصورة</string>
+    <string name="status_pending">قيد الانتظار</string>
+    <string name="status_ready">جاهز</string>
+    <string name="review_confirm_text">أؤكد أن جميع المعلومات الممسوحة ضوئياً صحيحة وتطابق جواز سفري الرسمي.</string>
+    <string name="review_passport_scanned">تم مسح جواز السفر</string>
+    <string name="review_document_details">تفاصيل المستند</string>
+    <string name="review_passport_number_label">رقم جواز السفر</string>
+    <string name="review_nationality_label">الجنسية</string>
+    <string name="review_dob_label">تاريخ الميلاد</string>
+    <string name="review_expiry_label">تاريخ الانتهاء</string>
+    <string name="review_warning_text">أي تعارض بين بطاقة الصعود ووثائق السفر قد يؤدي إلى منع الصعود. تأكد من تطابق اسمك تماماً.</string>
+    <string name="review_continue_to_seat">المتابعة لاختيار المقعد</string>
 </resources>

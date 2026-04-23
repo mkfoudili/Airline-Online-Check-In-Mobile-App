@@ -19,6 +19,8 @@ import com.example.check_in_mobile_app.ui.theme.BorderLight
 import com.example.check_in_mobile_app.ui.theme.DarkText
 import com.example.check_in_mobile_app.ui.theme.NavyBlue
 
+import androidx.compose.ui.res.stringResource
+
 @Composable
 fun UploadFromLibraryButton(
     onClick: () -> Unit,
@@ -44,7 +46,7 @@ fun UploadFromLibraryButton(
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
-            text = "Upload from Photo Library",
+            text = stringResource(R.string.upload_library_button),
             color = DarkText,
             fontSize = 15.sp,
             fontWeight = FontWeight.SemiBold
