@@ -17,14 +17,14 @@ object LanguagePreferences {
             .commit()
     }
 
+    /** Read the saved language tag from SharedPreferences. */
     fun getSavedLanguage(context: Context): String {
-        val appLocales = AppCompatDelegate.getApplicationLocales()
-        if (!appLocales.isEmpty) {
-            val tag = appLocales.toLanguageTags() 
-            return if (tag.contains("-")) tag.split("-")[0] else tag
+        return try {
+            context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                .getString(KEY_LANGUAGE, DEFAULT_LANGUAGE) ?: DEFAULT_LANGUAGE
+        } catch (e: Exception) {
+            DEFAULT_LANGUAGE
         }
-        return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            .getString(KEY_LANGUAGE, DEFAULT_LANGUAGE) ?: DEFAULT_LANGUAGE
     }
 
     /** Convert a display name ("English", "French", "Arabic") to a BCP-47 tag. */

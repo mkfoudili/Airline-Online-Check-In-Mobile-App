@@ -1,6 +1,7 @@
 package com.example.check_in_mobile_app.presentation.main.profile
 
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -52,6 +53,8 @@ import com.example.check_in_mobile_app.ui.theme.Poppins
 import com.example.check_in_mobile_app.ui.theme.SubtleText
 import com.example.check_in_mobile_app.ui.theme.DividerColor
 import com.example.check_in_mobile_app.ui.theme.SurfaceGray
+import androidx.core.os.LocaleListCompat
+import com.example.check_in_mobile_app.utils.LanguagePreferences
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -67,11 +70,15 @@ fun ProfileScreen(
         viewModel.uiAction.collectLatest { action ->
             when (action) {
                 is ProfileUiAction.ChangeLanguage -> {
-                    // Trigger the activity recreation through the companion callback
-                    MainActivity.onLanguageChangeRequest?.invoke(action.languageCode)
+                    // Save to preferences for legacy/backup support
+                    LanguagePreferences.saveLanguage(context, action.languageCode)
+                    
+                    // Trigger global language change
+                    val appLocale: LocaleListCompat = LocaleListCompat.forLanguageTags(action.languageCode)
+                    AppCompatDelegate.setApplicationLocales(appLocale)
                 }
                 ProfileUiAction.NavigateBack -> {
-                    // Back logic handled by viewmodel internal state flags first
+                    // Back logic
                 }
             }
         }

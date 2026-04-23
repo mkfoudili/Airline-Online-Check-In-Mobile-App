@@ -9,17 +9,20 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.example.check_in_mobile_app.presentation.main.MainActivity
 import com.example.check_in_mobile_app.ui.theme.CheckInMobileAppTheme
-import com.example.check_in_mobile_app.utils.LangUtil
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
 import com.example.check_in_mobile_app.utils.LanguagePreferences
 
 class LoginActivity : AppCompatActivity() {
 
-    override fun attachBaseContext(newBase: Context) {
-        val lang = LanguagePreferences.getSavedLanguage(newBase)
-        super.attachBaseContext(LangUtil.setLocale(newBase, lang))
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Force sync the language from SharedPreferences to AppCompatDelegate on the first screen
+        val savedLang = LanguagePreferences.getSavedLanguage(this)
+        val currentLocales = AppCompatDelegate.getApplicationLocales()
+        if (currentLocales.isEmpty || currentLocales.toLanguageTags() != savedLang) {
+            AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(savedLang))
+        }
+
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {

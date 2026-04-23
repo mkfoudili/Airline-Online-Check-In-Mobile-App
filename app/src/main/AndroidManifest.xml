@@ -53,6 +53,18 @@
             android:label="@string/title_activity_chekin"
             android:theme="@style/Theme.CheckInMobileApp" />
 
+        <service
+            android:name="androidx.appcompat.app.AppLocalesMetadataService"
+            android:enabled="false"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="androidx.appcompat.app.AppLocalesMetadataService" />
+            </intent-filter>
+            <meta-data
+                android:name="autoStoreLocales"
+                android:value="true" />
+        </service>
+
     </application>
 
 </manifest>
