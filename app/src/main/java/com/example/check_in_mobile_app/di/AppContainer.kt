@@ -4,9 +4,7 @@ import com.example.data.repository.BookingRepositoryImpl
 import com.example.domain.usecase.booking.GetUpcomingBookingsUseCase
 import com.example.domain.usecase.booking.SearchBookingsUseCase
 
-
 object AppContainer {
-
 
     private val bookingRepository by lazy { 
         BookingRepositoryImpl() 
@@ -24,6 +22,8 @@ object AppContainer {
     val searchBookingsUseCase: SearchBookingsUseCase by lazy {
         SearchBookingsUseCase(bookingRepository)
     }
-    
 }
+
+
+
 

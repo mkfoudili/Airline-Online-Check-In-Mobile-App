@@ -1,6 +1,7 @@
 package com.example.check_in_mobile_app.presentation.components.booking
 
 import androidx.compose.foundation.background
+import androidx.compose.ui.res.stringResource
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -170,7 +171,7 @@ fun BookingCard(
                     )
                 ) {
                     Text(
-                        text = "Boarding pass",
+                        text = stringResource(R.string.boarding_pass),
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold
                     )
@@ -189,7 +190,7 @@ fun BookingCard(
                     )
                 ) {
                     Text(
-                        text = "Check In",
+                        text = stringResource(R.string.check_in),
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold
                     )
@@ -207,13 +208,14 @@ fun BookingCard(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "Check In opens in 4hours",
+                        text = stringResource(R.string.check_in_opens_in, "4h"),
                         fontSize = 13.sp,
                         color = MediumGray,
                         fontWeight = FontWeight.Medium
                     )
                 }
             }
+
             CheckInStatus.PASSED -> { /* flight passed, no action needed */ }
         }
         }

@@ -10,6 +10,7 @@ import com.example.check_in_mobile_app.presentation.navigation.MainNavGraph
 import com.example.check_in_mobile_app.ui.theme.CheckInMobileAppTheme
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

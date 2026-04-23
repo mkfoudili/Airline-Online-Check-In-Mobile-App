@@ -23,8 +23,8 @@ import com.example.check_in_mobile_app.ui.theme.NavyBlue
 
 @Composable
 fun FilterChipsRow(
-    statuses: List<String>,
-    selectedStatus: String,
+    options: List<Pair<String, String>>,
+    selectedStatusValue: String,
     onStatusSelect: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -33,18 +33,18 @@ fun FilterChipsRow(
         contentPadding = PaddingValues(horizontal = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(statuses) { status ->
-            val isSelected = status == selectedStatus
+        items(options) { (value, label) ->
+            val isSelected = value == selectedStatusValue
             Box(
                 modifier = Modifier
                     .clip(RoundedCornerShape(20.dp))
                     .background(if (isSelected) NavyBlue else Color(0xFFF1F5F9))
-                    .clickable { onStatusSelect(status) }
+                    .clickable { onStatusSelect(value) }
                     .padding(horizontal = 16.dp, vertical = 8.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = status,
+                    text = label,
                     color = if (isSelected) Color.White else MediumGray,
                     fontSize = 9.5.sp,
                     fontWeight = if (isSelected) FontWeight.Medium else FontWeight.Normal
@@ -53,3 +53,4 @@ fun FilterChipsRow(
         }
     }
 }
+

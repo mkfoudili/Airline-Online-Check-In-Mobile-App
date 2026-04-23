@@ -39,6 +39,13 @@ import com.example.check_in_mobile_app.ui.theme.NavyBlue
 import com.example.check_in_mobile_app.ui.theme.Poppins
 import com.example.domain.model.Flight
 
+import androidx.compose.ui.res.stringResource
+import com.example.check_in_mobile_app.R
+
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import com.example.check_in_mobile_app.presentation.main.MainActivity
+
 @Composable
 fun BookingScreen(
     viewModel: BookingViewModel = viewModel(),
@@ -72,7 +79,7 @@ fun BookingScreenContent(
             TopAppBar(
                 title = {
                     Text(
-                        text = "My Bookings",
+                        text = stringResource(R.string.my_bookings),
                         fontFamily = Poppins,
                         fontSize = 25.sp,
                         color = DarkText,
@@ -85,6 +92,7 @@ fun BookingScreenContent(
                 )
             )
         },
+
         bottomBar = {
             TabBarMenu(
                 selectedTab = TabItem.TICKETS,
@@ -126,8 +134,8 @@ fun BookingScreenContent(
 
                 is BookingUiState.Success -> {
                     ViewAllButton(
-                        title = "Upcoming Flights",
-                        actionLabel = "View all",
+                        title = stringResource(R.string.upcoming_flights),
+                        actionLabel = stringResource(R.string.view_all),
                         onActionClick = onViewAllClick
                     )
                     Spacer(modifier = Modifier.height(4.dp))
@@ -149,6 +157,7 @@ fun BookingScreenContent(
         }
     }
 }
+
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable

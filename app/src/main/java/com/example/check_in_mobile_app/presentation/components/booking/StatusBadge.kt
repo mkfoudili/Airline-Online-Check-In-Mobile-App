@@ -20,13 +20,16 @@ import com.example.check_in_mobile_app.ui.theme.MediumGray
 import com.example.check_in_mobile_app.ui.theme.NavyBlue
 import com.example.domain.model.CheckInStatus
 
+import androidx.compose.ui.res.stringResource
+import com.example.check_in_mobile_app.R
+
 @Composable
 fun StatusBadge(status: CheckInStatus) {
-    val (bgColor, textColor, label) = when (status) {
-        CheckInStatus.CHECKED_IN    -> Triple(CheckedInBg,          CheckedInText, "Checked In")
-        CheckInStatus.CHECK_IN_OPEN -> Triple(Color(0xFFE8EAF2),      NavyBlue,      "Check In open")
-        CheckInStatus.CONFIRMED     -> Triple(LightGray,              NavyBlue,      "Confirmed")
-        CheckInStatus.PASSED        -> Triple(Color(0xFFF1F5F9),      MediumGray,    "Passed")
+    val (bgColor, textColor, labelRes) = when (status) {
+        CheckInStatus.CHECKED_IN    -> Triple(CheckedInBg,          CheckedInText, R.string.status_checked_in)
+        CheckInStatus.CHECK_IN_OPEN -> Triple(Color(0xFFE8EAF2),      NavyBlue,      R.string.status_check_in_open)
+        CheckInStatus.CONFIRMED     -> Triple(LightGray,              NavyBlue,      R.string.status_confirmed)
+        CheckInStatus.PASSED        -> Triple(Color(0xFFF1F5F9),      MediumGray,    R.string.status_passed)
     }
 
     Box(
@@ -37,10 +40,11 @@ fun StatusBadge(status: CheckInStatus) {
             .padding(horizontal = 12.dp, vertical = 4.dp)
     ) {
         Text(
-            text = label,
+            text = stringResource(labelRes),
             color = textColor,
             fontSize = 12.sp,
             fontWeight = FontWeight.SemiBold
         )
     }
 }
+

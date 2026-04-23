@@ -32,6 +32,8 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+import androidx.compose.ui.res.stringResource
+
 @Composable
 fun AllBookingsScreen(
     onNavigateBack: () -> Unit = {},
@@ -77,7 +79,7 @@ fun AllBookingsScreenContent(
             TopAppBar(
                 title = {
                     Text(
-                        text = "All Bookings",
+                        text = stringResource(R.string.all_bookings),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         color = NavyBlue
@@ -85,7 +87,7 @@ fun AllBookingsScreenContent(
                 },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(painter = painterResource(id = R.drawable.chevron_left), contentDescription = "Back", tint = NavyBlue)
+                        Icon(painter = painterResource(id = R.drawable.chevron_left), contentDescription = stringResource(R.string.back), tint = NavyBlue)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
@@ -105,7 +107,8 @@ fun AllBookingsScreenContent(
             SearchField(
                 query = searchQuery,
                 onQueryChange = onSearchQueryChange,
-                modifier = Modifier.padding(horizontal = 20.dp)
+                modifier = Modifier.padding(horizontal = 20.dp),
+                placeholderText = stringResource(R.string.search_hint)
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -121,10 +124,17 @@ fun AllBookingsScreenContent(
             Spacer(modifier = Modifier.height(16.dp))
 
             // Filters
-            val statuses = listOf("All", "Confirmed", "Check In open", "Checked In", "Passed")
+            val statusOptions = listOf(
+                "All" to stringResource(R.string.status_all),
+                "Confirmed" to stringResource(R.string.status_confirmed),
+                "Check In open" to stringResource(R.string.status_check_in_open),
+                "Checked In" to stringResource(R.string.status_checked_in),
+                "Passed" to stringResource(R.string.status_passed)
+            )
+
             FilterChipsRow(
-                statuses = statuses,
-                selectedStatus = selectedStatus,
+                options = statusOptions,
+                selectedStatusValue = selectedStatus,
                 onStatusSelect = onStatusSelect,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -132,12 +142,13 @@ fun AllBookingsScreenContent(
             Spacer(modifier = Modifier.height(20.dp))
 
             Text(
-                text = "All flights",
+                text = stringResource(R.string.all_flights),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = NavyBlue,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
+
 
             Spacer(modifier = Modifier.height(12.dp))
 

@@ -10,6 +10,7 @@ import com.example.check_in_mobile_app.presentation.main.MainActivity
 import com.example.check_in_mobile_app.ui.theme.CheckInMobileAppTheme
 
 class LoginActivity : ComponentActivity() {
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

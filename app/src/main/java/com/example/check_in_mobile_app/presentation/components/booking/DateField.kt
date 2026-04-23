@@ -19,6 +19,8 @@ import com.example.check_in_mobile_app.ui.theme.NavyBlue
 import java.text.SimpleDateFormat
 import java.util.*
 
+import androidx.compose.ui.res.stringResource
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DateField(
@@ -44,14 +46,19 @@ fun DateField(
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.calendar),
-                contentDescription = "Date",
+                contentDescription = stringResource(R.string.select_date),
                 tint = NavyBlue,
                 modifier = Modifier.size(20.dp)
             )
             Spacer(modifier = Modifier.width(8.dp))
             Box(Modifier.weight(1f)) {
                 if (!hasDate) {
-                    Text("Select Date", fontSize = 14.sp, color = NavyBlue, fontWeight = FontWeight.Medium)
+                    Text(
+                        text = stringResource(R.string.select_date),
+                        fontSize = 14.sp,
+                        color = NavyBlue,
+                        fontWeight = FontWeight.Medium
+                    )
                 } else {
                     Text(selectedDate!!, fontSize = 14.sp, color = Color.Black)
                 }
@@ -92,18 +99,19 @@ fun DateField(
             confirmButton = {
                 TextButton(onClick = {
                     datePickerState.selectedDateMillis?.let { millis ->
-                        val sdf = SimpleDateFormat("MMM dd, yyyy", Locale.US)
+                        // Use system locale for correct month/day naming
+                        val sdf = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
                         sdf.timeZone = TimeZone.getTimeZone("UTC")
                         onDateSelected(sdf.format(Date(millis)))
                     }
                     showDatePicker = false
                 }) {
-                    Text("OK", color = NavyBlue)
+                    Text(stringResource(R.string.ok), color = NavyBlue)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDatePicker = false }) {
-                    Text("Cancel", color = NavyBlue)
+                    Text(stringResource(R.string.cancel), color = NavyBlue)
                 }
             }
         ) {
@@ -118,4 +126,5 @@ fun DateField(
         }
     }
 }
+
 

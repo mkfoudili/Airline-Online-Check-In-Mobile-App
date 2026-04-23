@@ -2,4 +2,36 @@
     <string name="app_name">Check-In-Mobile-App</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_chekin">ChekinActivity</string>
+    
+    <!-- Bookings -->
+    <string name="my_bookings">My Bookings</string>
+    <string name="all_bookings">All Bookings</string>
+    <string name="all_flights">All Flights</string>
+    <string name="upcoming_flights">Upcoming Flights</string>
+    <string name="view_all">View All</string>
+    <string name="search_hint">Search for a flight</string>
+    <string name="back">Back</string>
+    
+    <!-- Date Picker -->
+    <string name="select_date">Select Date</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    
+    <!-- Cities (Dynamic Data Localization) -->
+    <string name="city_dubai">Dubai</string>
+    <string name="city_london">London</string>
+    <string name="city_paris">Paris</string>
+    <string name="city_casablanca">Casablanca</string>
+    <string name="city_algiers">Algiers</string>
+    
+    <!-- Actions & Statuses -->
+    <string name="boarding_pass">Boarding Pass</string>
+    <string name="check_in">Check In</string>
+    <string name="check_in_opens_in">Check In opens in %1$s</string>
+    <string name="manage">Manage</string>
+    <string name="status_all">All</string>
+    <string name="status_confirmed">Confirmed</string>
+    <string name="status_check_in_open">Check In Open</string>
+    <string name="status_checked_in">Checked In</string>
+    <string name="status_passed">Passed</string>
 </resources>
