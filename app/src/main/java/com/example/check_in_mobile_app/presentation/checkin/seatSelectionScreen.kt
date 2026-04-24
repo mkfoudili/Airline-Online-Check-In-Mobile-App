@@ -30,6 +30,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
 import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.ui.theme.NavyBlue
 import com.example.check_in_mobile_app.presentation.components.checkin.ProgressBar
@@ -60,7 +61,7 @@ fun SeatSelection(
             CheckInTopBar(
                 onBack = onNavigateBack,
                 currentStep = 3,
-                title = "Step 3: Choose Seat"
+                title = stringResource(R.string.checkin_step3_title)
             )
         },
     ) { paddingValues ->
@@ -108,7 +109,7 @@ fun SelectedSeatBottomBar(
     ) {
 
         Text(
-            text = "Seat ${seat.seatNumber}",
+            text = stringResource(R.string.checkin_seat_label, seat.seatNumber),
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             color = NavyBlue
@@ -131,7 +132,10 @@ fun SelectedSeatBottomBar(
                 modifier = Modifier.size(16.dp)
             )
             Text(
-                text = if (seat.isPremium) "Premium Seat" else "Standard Passenger Seat",
+                text = if (seat.isPremium) 
+                    stringResource(R.string.checkin_premium_seat) 
+                else 
+                    stringResource(R.string.checkin_standard_seat),
                 fontSize = 13.sp,
                 color = Color.Gray
             )
@@ -149,7 +153,7 @@ fun SelectedSeatBottomBar(
             border = BorderStroke(1.dp, NavyBlue)
         ) {
             Text(
-                text = "Confirm Seat",
+                text = stringResource(R.string.checkin_confirm_seat),
                 fontSize = 15.sp,
                 color = NavyBlue,
                 fontWeight = FontWeight.Medium

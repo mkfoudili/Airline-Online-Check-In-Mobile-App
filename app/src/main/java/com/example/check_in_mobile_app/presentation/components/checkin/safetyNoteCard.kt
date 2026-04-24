@@ -23,6 +23,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+import androidx.compose.ui.res.stringResource
+import com.example.check_in_mobile_app.R
+
 @Composable
 fun SafetyNoteCard() {
     Card(
@@ -45,13 +48,13 @@ fun SafetyNoteCard() {
             Spacer(modifier = Modifier.width(10.dp))
             Column {
                 Text(
-                    text = "Important Safety Note",
+                    text = stringResource(R.string.checkin_safety_note_title),
                     fontSize = 13.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = Color(0xFFE53935)
                 )
                 Text(
-                    text = "By finishing check-in, you confirm that you are not carrying prohibited dangerous goods in your luggage.",
+                    text = stringResource(R.string.checkin_safety_note_desc),
                     fontSize = 12.sp,
                     color = Color(0xFFB71C1C),
                     lineHeight = 17.sp

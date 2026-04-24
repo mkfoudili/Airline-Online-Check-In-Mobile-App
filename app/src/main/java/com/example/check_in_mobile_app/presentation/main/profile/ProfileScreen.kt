@@ -514,7 +514,13 @@ fun LanguageDropdownField(
     onToggle: () -> Unit,
     onLanguageSelected: (String) -> Unit
 ) {
-    val languages = listOf("English", "French", "Arabic")
+    val languages = listOf(
+        stringResource(R.string.lang_english) to "English",
+        stringResource(R.string.lang_french) to "French",
+        stringResource(R.string.lang_arabic) to "Arabic"
+    )
+
+    val selectedDisplayName = languages.find { it.second == selectedLanguage }?.first ?: selectedLanguage
 
     Column {
         Text(
@@ -531,7 +537,7 @@ fun LanguageDropdownField(
             modifier = Modifier.fillMaxWidth()
         ) {
             OutlinedTextField(
-                value = selectedLanguage,
+                value = selectedDisplayName,
                 onValueChange = {},
                 readOnly = true,
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded) },
@@ -563,17 +569,17 @@ fun LanguageDropdownField(
                 onDismissRequest = onToggle,
                 modifier = Modifier.background(Color.White)
             ) {
-                languages.forEach { language ->
+                languages.forEach { (displayName, languageValue) ->
                     DropdownMenuItem(
                         text = {
                             Text(
-                                text = language,
+                                text = displayName,
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = DarkText
                             )
                         },
                         onClick = {
-                            onLanguageSelected(language)
+                            onLanguageSelected(languageValue)
                         },
                         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp)
                     )

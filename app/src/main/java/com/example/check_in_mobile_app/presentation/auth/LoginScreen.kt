@@ -46,7 +46,7 @@ fun LoginScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Sign In",
+                        text = androidx.compose.ui.res.stringResource(R.string.auth_sign_in),
                         fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = NavyBlue
@@ -99,7 +99,7 @@ fun LoginScreen(
 
             // ── Title ──────────────────────────────────────────────────
             Text(
-                text = "Welcome Back",
+                text = androidx.compose.ui.res.stringResource(R.string.auth_welcome_back),
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 color = DarkText111
@@ -109,7 +109,7 @@ fun LoginScreen(
 
             // ── Subtitle ───────────────────────────────────────────────
             Text(
-                text = "Enter your credentials to manage your flights",
+                text = androidx.compose.ui.res.stringResource(R.string.auth_login_subtitle),
                 fontSize = 14.sp,
                 color = MediumGray,
                 textAlign = TextAlign.Center,

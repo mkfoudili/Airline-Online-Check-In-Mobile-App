@@ -47,4 +47,37 @@
     <string name="gate_label">البوابة</string>
     <string name="unit_hours">س</string>
     <string name="unit_minutes">د</string>
+
+    <!-- Common -->
+
+    <!-- Auth -->
+    <string name="auth_welcome_title">هل أنت مستعد لرحلتك؟</string>
+    <string name="auth_welcome_subtitle">تجنب طوابير الانتظار في المطار وقم بإدارة رحلتك بالكامل من هاتفك المحمول. خدمة سريعة وآمنة ورقمية بالكامل.</string>
+    <string name="auth_feature_express_title">تسجيل الوصول السريع</string>
+    <string name="auth_feature_express_subtitle"> امسح جواز سفرك ضوئيًا في ثوانٍ.</string>
+    <string name="auth_feature_safety_title"> السلامة الرقمية</string>
+    <string name="auth_feature_safety_subtitle"> وثائق سفر مشفرة.</string>
+    <string name="auth_get_started"> ابدأ  →</string>
+    <string name="auth_create_account">إنشاء حساب</string>
+    <string name="auth_sign_in">تسجيل الدخول</string>
+    <string name="auth_welcome_back">مرحباً بك مجدداً</string>
+    <string name="auth_login_subtitle">أدخل بيانات اعتمادك لإدارة رحلاتك</string>
+    <string name="auth_invalid_credentials">البريد الإلكتروني أو كلمة المرور غير صحيحة</string>
+    <string name="auth_sign_up">إنشاء حساب</string>
+    <string name="auth_dont_have_account">ليس لديك حساب؟</string>
+    <string name="auth_already_have_account">لديك حساب بالفعل؟</string>
+    <string name="auth_terms_prefix">بالمتابعة، فإنك توافق على </string>
+    <string name="auth_terms_link">شروط الخدمة</string>
+    <string name="auth_continue_with_google">المتابعة باستخدام جوجل</string>
+    <string name="common_or">أو</string>
+    <string name="common_password">كلمة المرور</string>
+    <string name="auth_password_hint">يجب أن تتكون من 8 أحرف على الأقل.</string>
+    <string name="auth_password_mismatch">كلمات المرور غير متطابقة.</string>
+
+    <!-- Profile -->
+
+    <!-- Languages -->
+    <string name="lang_english">الإنجليزية</string>
+    <string name="lang_french">الفرنسية</string>
+    <string name="lang_arabic">العربية</string>
 </resources>

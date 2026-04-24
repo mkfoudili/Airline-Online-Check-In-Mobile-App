@@ -32,4 +32,40 @@
     <string name="review_expiry_label">EXPIRY DATE</string>
     <string name="review_warning_text">Any discrepancies between your boarding pass and travel documents may result in denied boarding. Ensure your name matches exactly.</string>
     <string name="review_continue_to_seat">Continue to Seat Selection</string>
+
+    <!-- Seat Selection Screen -->
+    <string name="checkin_step3_title">Step 3: Choose Seat</string>
+    <string name="checkin_seat_label">Seat %1$s</string>
+    <string name="checkin_premium_seat">Premium Seat</string>
+    <string name="checkin_standard_seat">Standard Passenger Seat</string>
+    <string name="checkin_confirm_seat">Confirm Seat</string>
+
+    <!-- Special Requests Screen -->
+    <string name="checkin_step5_title">Step 5: Requests</string>
+    <string name="checkin_finish_checkin">Finish Check-In</string>
+    <string name="checkin_final_preferences">Final Preferences</string>
+    <string name="checkin_preferences_subtitle">Customize your journey with additional services and assistance.</string>
+    <string name="checkin_dietary_requirements">Dietary Requirements</string>
+    <string name="checkin_special_meal">Special Meal</string>
+    <string name="checkin_special_meal_desc">Request vegetarian, vegan, or allergy-friendly meals.</string>
+    <string name="checkin_special_assistance">Special Assistance</string>
+    <string name="checkin_wheelchair_support">Wheelchair Support</string>
+    <string name="checkin_wheelchair_support_desc">Assistance from check-in to your seat on the plane.</string>
+    <string name="checkin_visual_hearing">Visual &amp; Hearing</string>
+    <string name="checkin_visual_hearing_desc">Support for passengers with visual or hearing impairments.</string>
+    <string name="checkin_travel_companions">Travel Companions</string>
+    <string name="checkin_infant_on_lap">Infant on Lap</string>
+    <string name="checkin_infant_on_lap_desc">Traveling with a child under 2 years of age.</string>
+    <string name="checkin_service_animal">Service Animal</string>
+    <string name="checkin_service_animal_desc">Certified assistance animals allowed in cabin.</string>
+
+    <!-- Safety Note -->
+    <string name="checkin_safety_note_title">Important Safety Note</string>
+    <string name="checkin_safety_note_desc">By finishing check-in, you confirm that you are not carrying prohibited dangerous goods in your luggage.</string>
+
+    <!-- Seat Selection Extra -->
+    <string name="checkin_available">Available</string>
+    <string name="checkin_booked">Booked</string>
+    <string name="checkin_selected">Selected</string>
+    <string name="checkin_front_of_aircraft">FRONT OF AIRCRAFT</string>
 </resources>

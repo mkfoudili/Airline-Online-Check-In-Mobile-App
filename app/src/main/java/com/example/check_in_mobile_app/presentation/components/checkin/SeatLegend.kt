@@ -22,6 +22,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.check_in_mobile_app.R
 
+import androidx.compose.ui.res.stringResource
+
 @Composable
 fun SeatLegend(
     modifier: Modifier = Modifier
@@ -40,22 +42,22 @@ fun SeatLegend(
             LegendItem(
                 seatState = SeatState.AVAILABLE,
                 seatType = SeatType.REGULAR,
-                label = "Available"
+                label = stringResource(R.string.checkin_available)
             )
             LegendItem(
                 seatState = SeatState.BLOCKED,
                 seatType = SeatType.REGULAR,
-                label = "Booked"
+                label = stringResource(R.string.checkin_booked)
             )
             LegendItem(
                 seatState = SeatState.AVAILABLE,
                 seatType = SeatType.PREMIUM,
-                label = "Premium"
+                label = stringResource(R.string.checkin_premium_seat)
             )
             LegendItem(
                 seatState = SeatState.SELECTED,
                 seatType = SeatType.REGULAR,
-                label = "Selected"
+                label = stringResource(R.string.checkin_selected)
             )
         }
 
@@ -75,7 +77,7 @@ fun SeatLegend(
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "FRONT OF AIRCRAFT",
+                text = stringResource(R.string.checkin_front_of_aircraft),
                 fontSize = 12.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = Color.Gray,

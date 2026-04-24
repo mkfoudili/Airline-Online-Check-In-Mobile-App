@@ -47,4 +47,36 @@
     <string name="gate_label">Porte</string>
     <string name="unit_hours">H</string>
     <string name="unit_minutes">M</string>
+    <!-- Common -->
+
+    <!-- Auth -->
+    <string name="auth_welcome_title">Prêt pour votre vol ?</string>
+    <string name="auth_welcome_subtitle">Évitez les files d\'attente à l\'aéroport et gérez tout votre voyage depuis votre poche. Rapide, sécurisé et entièrement numérique.</string>
+    <string name="auth_feature_express_title">Enregistrement express</string>
+    <string name="auth_feature_express_subtitle">Scannez votre passeport en quelques secondes.</string>
+    <string name="auth_feature_safety_title">Sécurité numérique</string>
+    <string name="auth_feature_safety_subtitle">Documents de voyage cryptés.</string>
+    <string name="auth_get_started">Commencer  →</string>
+    <string name="auth_create_account">Créer un compte</string>
+    <string name="auth_sign_in">Se connecter</string>
+    <string name="auth_welcome_back">Bon retour</string>
+    <string name="auth_login_subtitle">Entrez vos identifiants pour gérer vos vols</string>
+    <string name="auth_invalid_credentials">E-mail ou mot de passe invalide</string>
+    <string name="auth_sign_up">S\'inscrire</string>
+    <string name="auth_dont_have_account">Vous n\'avez pas de compte ?</string>
+    <string name="auth_already_have_account">Vous avez déjà un compte ?</string>
+    <string name="auth_terms_prefix">En continuant, vous acceptez nos </string>
+    <string name="auth_terms_link">Conditions d\'utilisation</string>
+    <string name="auth_continue_with_google">Continuer avec Google</string>
+    <string name="common_or">OU</string>
+    <string name="common_password">Mot de passe</string>
+    <string name="auth_password_hint">Doit comporter au moins 8 caractères.</string>
+    <string name="auth_password_mismatch">Les mots de passe ne correspondent pas.</string>
+
+    <!-- Profile -->
+
+    <!-- Languages -->
+    <string name="lang_english">Anglais</string>
+    <string name="lang_french">Français</string>
+    <string name="lang_arabic">Arabe</string>
 </resources>

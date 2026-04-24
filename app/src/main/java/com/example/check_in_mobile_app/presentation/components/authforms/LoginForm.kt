@@ -11,6 +11,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -24,6 +28,8 @@ import com.example.check_in_mobile_app.ui.theme.DarkText
 import com.example.check_in_mobile_app.ui.theme.BorderColor
 import com.example.check_in_mobile_app.ui.theme.MediumGray
 import com.example.check_in_mobile_app.ui.theme.SubtleText
+import com.example.check_in_mobile_app.presentation.components.LanguageSwitcherLinks
+
 
 @Composable
 fun LoginForm(
@@ -53,7 +59,7 @@ fun LoginForm(
 
         // ── Email Address ──────────────────────────────────────────────
         Text(
-            text = "Email Address",
+            text = androidx.compose.ui.res.stringResource(R.string.common_email_address),
             fontSize = 14.sp,
             fontWeight = FontWeight.Medium,
             color = labelColor,
@@ -98,7 +104,7 @@ fun LoginForm(
 
         // ── Password ───────────────────────────────────────────────────
         Text(
-            text = "Password",
+            text = androidx.compose.ui.res.stringResource(R.string.common_password),
             fontSize = 14.sp,
             fontWeight = FontWeight.Medium,
             color = labelColor,
@@ -129,7 +135,11 @@ fun LoginForm(
                         painter = painterResource(
                             id = if (passwordVisible) R.drawable.unseen else R.drawable.seen
                         ),
-                        contentDescription = if (passwordVisible) "Hide password" else "Show password",
+                        contentDescription = if (passwordVisible) {
+                            androidx.compose.ui.res.stringResource(R.string.common_hide_password)
+                        } else {
+                            androidx.compose.ui.res.stringResource(R.string.common_show_password)
+                        },
                         tint = hintColor,
                         modifier = Modifier.size(20.dp)
                     )
@@ -158,7 +168,7 @@ fun LoginForm(
 
         // ── Sign In Button ─────────────────────────────────────────────
         PrimaryButton(
-            text = "Sign In",
+            text = androidx.compose.ui.res.stringResource(R.string.auth_sign_in),
             onClick = { onSignInClick(email, password) }
         )
 
@@ -173,7 +183,7 @@ fun LoginForm(
                 color = borderColor
             )
             Text(
-                text = "  OR  ",
+                text = "  " + androidx.compose.ui.res.stringResource(R.string.common_or) + "  ",
                 color = dividerTextColor,
                 fontSize = 13.sp
             )
@@ -202,7 +212,7 @@ fun LoginForm(
             )
             Spacer(modifier = Modifier.width(10.dp))
             Text(
-                text = "Continue with Google",
+                text = androidx.compose.ui.res.stringResource(R.string.auth_continue_with_google),
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Medium,
                 color = labelColor
@@ -217,7 +227,7 @@ fun LoginForm(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                text = "Don't have an account? ",
+                text = androidx.compose.ui.res.stringResource(R.string.auth_dont_have_account) + " ",
                 fontSize = 14.sp,
                 color = dividerTextColor,
                 textAlign = TextAlign.Center
@@ -228,12 +238,19 @@ fun LoginForm(
                 modifier = Modifier.defaultMinSize(minHeight = 1.dp)
             ) {
                 Text(
-                    text = "Sign Up",
+                    text = androidx.compose.ui.res.stringResource(R.string.auth_sign_up),
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
                     color = NavyBlue
                 )
             }
         }
+
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        LanguageSwitcherLinks()
+
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }
