@@ -32,4 +32,40 @@
     <string name="review_expiry_label">تاريخ الانتهاء</string>
     <string name="review_warning_text">أي تعارض بين بطاقة الصعود ووثائق السفر قد يؤدي إلى منع الصعود. تأكد من تطابق اسمك تماماً.</string>
     <string name="review_continue_to_seat">المتابعة لاختيار المقعد</string>
+
+    <!-- Seat Selection Screen -->
+    <string name="checkin_step3_title">الخطوة 3: اختر المقعد</string>
+    <string name="checkin_seat_label">المقعد %1$s</string>
+    <string name="checkin_premium_seat">مقعد بريميوم</string>
+    <string name="checkin_standard_seat">مقعد مسافر عادي</string>
+    <string name="checkin_confirm_seat">تأكيد المقعد</string>
+
+    <!-- Special Requests Screen -->
+    <string name="checkin_step5_title">الخطوة 5: الطلبات</string>
+    <string name="checkin_finish_checkin">إنهاء تسجيل الوصول</string>
+    <string name="checkin_final_preferences">التفضيلات النهائية</string>
+    <string name="checkin_preferences_subtitle">قم بتخصيص رحلتك بخدمات ومساعدة إضافية.</string>
+    <string name="checkin_dietary_requirements">المتطلبات الغذائية</string>
+    <string name="checkin_special_meal">وجبة خاصة</string>
+    <string name="checkin_special_meal_desc">اطلب وجبات نباتية أو خالية من مسببات الحساسية.</string>
+    <string name="checkin_special_assistance">مساعدة خاصة</string>
+    <string name="checkin_wheelchair_support">دعم الكراسي المتحركة</string>
+    <string name="checkin_wheelchair_support_desc">المساعدة من تسجيل الوصول إلى مقعدك في الطائرة.</string>
+    <string name="checkin_visual_hearing">البصرية والسمعية</string>
+    <string name="checkin_visual_hearing_desc">دعم الركاب الذين يعانون من ضعف بصري أو سمعي.</string>
+    <string name="checkin_travel_companions">المرافقون</string>
+    <string name="checkin_infant_on_lap">رضيع على الحجر</string>
+    <string name="checkin_infant_on_lap_desc">السفر مع طفل يقل عمره عن سنتين.</string>
+    <string name="checkin_service_animal">حيوان خدمة</string>
+    <string name="checkin_service_animal_desc">يُسمح بحيوانات الخدمة المعتمدة في الكبينة.</string>
+
+    <!-- Safety Note -->
+    <string name="checkin_safety_note_title">ملاحظة أمان هامة</string>
+    <string name="checkin_safety_note_desc">من خلال إنهاء تسجيل الوصول، فإنك تؤكد أنك لا تحمل سلعاً خطرة محظورة في أمتعتك.</string>
+
+    <!-- Seat Selection Extra -->
+    <string name="checkin_available">متاح</string>
+    <string name="checkin_booked">محجوز</string>
+    <string name="checkin_selected">مختار</string>
+    <string name="checkin_front_of_aircraft">مقدمة الطائرة</string>
 </resources>

@@ -32,7 +32,7 @@ fun RegisterScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Create Account",
+                        text = androidx.compose.ui.res.stringResource(R.string.auth_create_account),
                         fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = DarkText

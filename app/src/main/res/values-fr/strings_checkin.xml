@@ -32,4 +32,40 @@
     <string name="review_expiry_label">DATE D\'EXPIRATION</string>
     <string name="review_warning_text">Toute divergence entre votre carte d\'embarquement et vos documents de voyage peut entraîner un refus d\'embarquement. Assurez-vous que votre nom correspond exactement.</string>
     <string name="review_continue_to_seat">Continuer vers la sélection du siège</string>
+
+    <!-- Seat Selection Screen -->
+    <string name="checkin_step3_title">Étape 3 : Choisir le siège</string>
+    <string name="checkin_seat_label">Siège %1$s</string>
+    <string name="checkin_premium_seat">Siège Premium</string>
+    <string name="checkin_standard_seat">Siège passager standard</string>
+    <string name="checkin_confirm_seat">Confirmer le siège</string>
+
+    <!-- Special Requests Screen -->
+    <string name="checkin_step5_title">Étape 5 : Demandes</string>
+    <string name="checkin_finish_checkin">Terminer l\'enregistrement</string>
+    <string name="checkin_final_preferences">Préférences finales</string>
+    <string name="checkin_preferences_subtitle">Personnalisez votre voyage avec des services et une assistance supplémentaires.</string>
+    <string name="checkin_dietary_requirements">Exigences alimentaires</string>
+    <string name="checkin_special_meal">Repas spécial</string>
+    <string name="checkin_special_meal_desc">Demandez des repas végétariens, végétaliens ou adaptés aux allergies.</string>
+    <string name="checkin_special_assistance">Assistance spéciale</string>
+    <string name="checkin_wheelchair_support">Soutien en fauteuil roulant</string>
+    <string name="checkin_wheelchair_support_desc">Assistance de l\'enregistrement à votre siège dans l\'avion.</string>
+    <string name="checkin_visual_hearing">Visuel et auditif</string>
+    <string name="checkin_visual_hearing_desc">Soutien aux passagers ayant des déficiences visuelles ou auditives.</string>
+    <string name="checkin_travel_companions">Compagnons de voyage</string>
+    <string name="checkin_infant_on_lap">Nourrisson sur les genoux</string>
+    <string name="checkin_infant_on_lap_desc">Voyager avec un enfant de moins de 2 ans.</string>
+    <string name="checkin_service_animal">Animal d\'assistance</string>
+    <string name="checkin_service_animal_desc">Animaux d\'assistance certifiés autorisés en cabine.</string>
+
+    <!-- Safety Note -->
+    <string name="checkin_safety_note_title">Note de sécurité importante</string>
+    <string name="checkin_safety_note_desc">En terminant l\'enregistrement, vous confirmez que vous ne transportez pas de marchandises dangereuses interdites dans vos bagages.</string>
+
+    <!-- Seat Selection Extra -->
+    <string name="checkin_available">Disponible</string>
+    <string name="checkin_booked">Réservé</string>
+    <string name="checkin_selected">Sélectionné</string>
+    <string name="checkin_front_of_aircraft">AVANT DE L\'APPAREIL</string>
 </resources>

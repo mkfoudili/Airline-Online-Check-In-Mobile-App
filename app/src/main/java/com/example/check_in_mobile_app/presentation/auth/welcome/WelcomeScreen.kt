@@ -20,7 +20,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
 import com.example.check_in_mobile_app.R
+import com.example.check_in_mobile_app.presentation.components.LanguageSwitcherLinks
 import com.example.check_in_mobile_app.presentation.components.PrimaryButton
 import com.example.check_in_mobile_app.presentation.components.SecondaryButton
 import com.example.check_in_mobile_app.ui.theme.*
@@ -64,7 +66,7 @@ fun WelcomeScreen(
             horizontalAlignment = Alignment.Start
         ) {
             Text(
-                text = "Ready for your flight?",
+                text = stringResource(R.string.auth_welcome_title),
                 fontSize = 26.sp,
                 fontWeight = FontWeight.Bold,
                 color = DarkText111
@@ -73,7 +75,7 @@ fun WelcomeScreen(
             Spacer(modifier = Modifier.height(10.dp))
 
             Text(
-                text = "Skip the airport queues and manage your entire journey from your pocket. Fast, secure, and entirely digital.",
+                text = stringResource(R.string.auth_welcome_subtitle),
                 fontSize = 14.sp,
                 color = MediumGray,
                 lineHeight = 22.sp
@@ -92,14 +94,14 @@ fun WelcomeScreen(
             FeatureCard(
                 modifier = Modifier.weight(1f),
                 iconRes = R.drawable.express,
-                title = "Express Check-In",
-                subtitle = "Scan your passport in seconds."
+                title = stringResource(R.string.auth_feature_express_title),
+                subtitle = stringResource(R.string.auth_feature_express_subtitle)
             )
             FeatureCard(
                 modifier = Modifier.weight(1f),
                 iconRes = R.drawable.check,
-                title = "Digital Safety",
-                subtitle = "Encrypted travel documents."
+                title = stringResource(R.string.auth_feature_safety_title),
+                subtitle = stringResource(R.string.auth_feature_safety_subtitle)
             )
         }
 
@@ -108,14 +110,14 @@ fun WelcomeScreen(
         // ── Buttons ────────────────────────────────────────────────────
         Column(modifier = Modifier.padding(horizontal = 24.dp)) {
             PrimaryButton(
-                text = "Get Started  →",
+                text = stringResource(R.string.auth_get_started),
                 onClick = onGetStarted
             )
 
             Spacer(modifier = Modifier.height(12.dp))
 
             SecondaryButton(
-                text = "Sign In",
+                text = stringResource(R.string.auth_sign_in),
                 onClick = onSignIn
             )
         }
@@ -123,11 +125,13 @@ fun WelcomeScreen(
         Spacer(modifier = Modifier.height(20.dp))
 
         // ── Terms of Service ───────────────────────────────────────────
+        val termsPrefix = stringResource(R.string.auth_terms_prefix)
+        val termsLink = stringResource(R.string.auth_terms_link)
         Text(
             text = buildAnnotatedString {
-                append("By continuing, you agree to our ")
+                append(termsPrefix)
                 withStyle(SpanStyle(fontWeight = FontWeight.Bold, color = NavyBlue)) {
-                    append("Terms of Service")
+                    append(termsLink)
                 }
             },
             fontSize = 12.sp,
@@ -135,6 +139,10 @@ fun WelcomeScreen(
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 24.dp)
         )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        LanguageSwitcherLinks()
 
         Spacer(modifier = Modifier.height(24.dp))
     }

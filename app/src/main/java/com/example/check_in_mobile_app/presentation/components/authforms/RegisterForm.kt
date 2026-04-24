@@ -12,6 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -21,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.shape.RoundedCornerShape
 import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.presentation.components.PrimaryButton
+import com.example.check_in_mobile_app.presentation.components.LanguageSwitcherLinks
 import com.example.check_in_mobile_app.ui.theme.*
 
 @Composable
@@ -55,11 +60,11 @@ fun RegisterForm(
     ) {
 
         // ── Full Name ──────────────────────────────────────────────────
-        FieldLabel("Full Name")
+        FieldLabel(androidx.compose.ui.res.stringResource(R.string.common_full_name))
         AuthTextField(
             value = fullName,
             onValueChange = { fullName = it },
-            placeholder = "Enter your full name",
+            placeholder = androidx.compose.ui.res.stringResource(R.string.profile_full_name_placeholder),
             leadingIconRes = R.drawable.profile,
             keyboardType = KeyboardType.Text
         )
@@ -67,11 +72,11 @@ fun RegisterForm(
         Spacer(modifier = Modifier.height(16.dp))
 
         // ── Email Address ──────────────────────────────────────────────
-        FieldLabel("Email Address")
+        FieldLabel(androidx.compose.ui.res.stringResource(R.string.common_email_address))
         AuthTextField(
             value = email,
             onValueChange = { email = it },
-            placeholder = "e.g. alex@example.com",
+            placeholder = androidx.compose.ui.res.stringResource(R.string.profile_email_placeholder),
             leadingIconRes = R.drawable.mail,
             keyboardType = KeyboardType.Email
         )
@@ -79,11 +84,11 @@ fun RegisterForm(
         Spacer(modifier = Modifier.height(16.dp))
 
         // ── Phone Number ───────────────────────────────────────────────
-        FieldLabel("Phone Number")
+        FieldLabel(androidx.compose.ui.res.stringResource(R.string.common_phone_number))
         AuthTextField(
             value = phone,
             onValueChange = { phone = it },
-            placeholder = "+1 (555) 000-0000",
+            placeholder = androidx.compose.ui.res.stringResource(R.string.profile_phone_placeholder),
             leadingIconRes = R.drawable.phone,
             keyboardType = KeyboardType.Phone
         )
@@ -91,11 +96,11 @@ fun RegisterForm(
         Spacer(modifier = Modifier.height(16.dp))
 
         // ── Password ───────────────────────────────────────────────────
-        FieldLabel("Password")
+        FieldLabel(androidx.compose.ui.res.stringResource(R.string.common_password))
         AuthTextField(
             value = password,
             onValueChange = { password = it },
-            placeholder = "Enter password",
+            placeholder = androidx.compose.ui.res.stringResource(R.string.profile_new_password_placeholder),
             leadingIconRes = R.drawable.lock,
             keyboardType = KeyboardType.Password,
             isPassword = true,
@@ -105,14 +110,14 @@ fun RegisterForm(
         )
         if (passwordTooShort) {
             Text(
-                text = "Must be at least 8 characters long.",
+                text = androidx.compose.ui.res.stringResource(R.string.auth_password_hint),
                 color = ErrorRed,
                 fontSize = 12.sp,
                 modifier = Modifier.padding(top = 4.dp, start = 4.dp)
             )
         } else {
             Text(
-                text = "Must be at least 8 characters long.",
+                text = androidx.compose.ui.res.stringResource(R.string.auth_password_hint),
                 color = MediumGray,
                 fontSize = 12.sp,
                 modifier = Modifier.padding(top = 4.dp, start = 4.dp)
@@ -122,11 +127,11 @@ fun RegisterForm(
         Spacer(modifier = Modifier.height(16.dp))
 
         // ── Confirm Password ───────────────────────────────────────────
-        FieldLabel("Confirm Password")
+        FieldLabel(androidx.compose.ui.res.stringResource(R.string.profile_confirm_password_label))
         AuthTextField(
             value = confirmPassword,
             onValueChange = { confirmPassword = it },
-            placeholder = "Confirm password",
+            placeholder = androidx.compose.ui.res.stringResource(R.string.profile_confirm_password_placeholder),
             leadingIconRes = R.drawable.lock,
             keyboardType = KeyboardType.Password,
             isPassword = true,
@@ -136,7 +141,7 @@ fun RegisterForm(
         )
         if (passwordMismatch) {
             Text(
-                text = "Passwords do not match.",
+                text = androidx.compose.ui.res.stringResource(R.string.auth_password_mismatch),
                 color = ErrorRed,
                 fontSize = 12.sp,
                 modifier = Modifier.padding(top = 4.dp, start = 4.dp)
@@ -147,7 +152,7 @@ fun RegisterForm(
 
         // ── Create Account Button ──────────────────────────────────────
         PrimaryButton(
-            text = "Create Account",
+            text = androidx.compose.ui.res.stringResource(R.string.auth_create_account),
             onClick = {
                 if (!passwordTooShort && !passwordMismatch) {
                     onCreateAccountClick(fullName, email, phone, password)
@@ -171,7 +176,7 @@ fun RegisterForm(
         ) {
             HorizontalDivider(modifier = Modifier.weight(1f), color = BorderColor)
             Text(
-                text = "  OR  ",
+                text = "  " + androidx.compose.ui.res.stringResource(R.string.common_or) + "  ",
                 color = MediumGray,
                 fontSize = 13.sp
             )
@@ -198,7 +203,7 @@ fun RegisterForm(
             )
             Spacer(modifier = Modifier.width(10.dp))
             Text(
-                text = "Continue with Google",
+                text = androidx.compose.ui.res.stringResource(R.string.auth_continue_with_google),
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Medium,
                 color = DarkText
@@ -214,7 +219,7 @@ fun RegisterForm(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                text = "Already have an account? ",
+                text = androidx.compose.ui.res.stringResource(R.string.auth_already_have_account) + " ",
                 fontSize = 14.sp,
                 color = MediumGray,
                 textAlign = TextAlign.Center
@@ -225,13 +230,19 @@ fun RegisterForm(
                 modifier = Modifier.defaultMinSize(minHeight = 1.dp)
             ) {
                 Text(
-                    text = "Sign In",
+                    text = androidx.compose.ui.res.stringResource(R.string.auth_sign_in),
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
                     color = NavyBlue
                 )
             }
         }
+
+
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        LanguageSwitcherLinks()
 
         Spacer(modifier = Modifier.height(16.dp))
     }
@@ -283,7 +294,11 @@ private fun AuthTextField(
                         painter = painterResource(
                             id = if (passwordVisible) R.drawable.seen else R.drawable.unseen
                         ),
-                        contentDescription = if (passwordVisible) "Hide password" else "Show password",
+                        contentDescription = if (passwordVisible) {
+                            androidx.compose.ui.res.stringResource(R.string.common_hide_password)
+                        } else {
+                            androidx.compose.ui.res.stringResource(R.string.common_show_password)
+                        },
                         tint = MediumGray,
                         modifier = Modifier.size(20.dp)
                     )

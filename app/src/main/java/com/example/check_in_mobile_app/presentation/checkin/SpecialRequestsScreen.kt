@@ -39,6 +39,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
 import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.presentation.components.checkin.CheckInTopBar
 import com.example.check_in_mobile_app.presentation.components.checkin.PreferenceCard
@@ -63,7 +64,7 @@ fun specialRequest(
             CheckInTopBar(
                 onBack = onNavigateBack,
                 currentStep = 5,
-                title = "Step 5: Requests"
+                title = stringResource(R.string.checkin_step5_title)
             )
         },
 
@@ -84,7 +85,7 @@ fun specialRequest(
                     )
                 ) {
                     Text(
-                        text = "Finish Check-In",
+                        text = stringResource(R.string.checkin_finish_checkin),
                         fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = Color.White
@@ -104,14 +105,14 @@ fun specialRequest(
         ) {
             item {
                 Text(
-                    text = "Final Preferences",
+                    text = stringResource(R.string.checkin_final_preferences),
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                     color = NavyBlue,
                     modifier = Modifier.padding(top = 16.dp)
                 )
                 Text(
-                    text = "Customize your journey with additional services and assistance.",
+                    text = stringResource(R.string.checkin_preferences_subtitle),
                     fontSize = 14.sp,
                     color = Color.Gray,
                     modifier = Modifier.padding(top = 4.dp, bottom = 16.dp)
@@ -119,13 +120,13 @@ fun specialRequest(
             }
 
             item {
-                PreferenceSectionLabel(text = "Dietary Requirements")
+                PreferenceSectionLabel(text = stringResource(R.string.checkin_dietary_requirements))
                 PreferenceCard(
                     icon = Icons.Default.Restaurant,
                     iconTint = Color(0xFF9C6B2E),
                     iconBackground = Color(0xFFFFF3E0),
-                    title = "Special Meal",
-                    description = "Request vegetarian, vegan, or allergy-friendly meals.",
+                    title = stringResource(R.string.checkin_special_meal),
+                    description = stringResource(R.string.checkin_special_meal_desc),
                     checked = specialMeal,
                     onCheckedChange = { specialMeal = it }
                 )
@@ -133,13 +134,13 @@ fun specialRequest(
 
             item {
                 Spacer(modifier = Modifier.height(8.dp))
-                PreferenceSectionLabel(text = "Special Assistance")
+                PreferenceSectionLabel(text = stringResource(R.string.checkin_special_assistance))
                 PreferenceCard(
                     icon = Icons.Default.Accessible,
                     iconTint = Color(0xFF3B6B9E),
                     iconBackground = Color(0xFFE3F0FB),
-                    title = "Wheelchair Support",
-                    description = "Assistance from check-in to your seat on the plane.",
+                    title = stringResource(R.string.checkin_wheelchair_support),
+                    description = stringResource(R.string.checkin_wheelchair_support_desc),
                     checked = wheelchairSupport,
                     onCheckedChange = { wheelchairSupport = it }
                 )
@@ -148,8 +149,8 @@ fun specialRequest(
                     icon = Icons.Default.HearingDisabled,
                     iconTint = Color(0xFF7B5EA7),
                     iconBackground = Color(0xFFF3EEFB),
-                    title = "Visual & Hearing",
-                    description = "Support for passengers with visual or hearing impairments.",
+                    title = stringResource(R.string.checkin_visual_hearing),
+                    description = stringResource(R.string.checkin_visual_hearing_desc),
                     checked = visualHearing,
                     onCheckedChange = { visualHearing = it }
                 )
@@ -157,13 +158,13 @@ fun specialRequest(
 
             item {
                 Spacer(modifier = Modifier.height(8.dp))
-                PreferenceSectionLabel(text = "Travel Companions")
+                PreferenceSectionLabel(text = stringResource(R.string.checkin_travel_companions))
                 PreferenceCard(
                     icon = Icons.Default.ChildCare,
                     iconTint = Color(0xFF9C6B2E),
                     iconBackground = Color(0xFFFFF3E0),
-                    title = "Infant on Lap",
-                    description = "Traveling with a child under 2 years of age.",
+                    title = stringResource(R.string.checkin_infant_on_lap),
+                    description = stringResource(R.string.checkin_infant_on_lap_desc),
                     checked = infantOnLap,
                     onCheckedChange = { infantOnLap = it }
                 )
@@ -172,8 +173,8 @@ fun specialRequest(
                     icon = Icons.Default.Pets,
                     iconTint = Color(0xFF3B7A57),
                     iconBackground = Color(0xFFE6F4EC),
-                    title = "Service Animal",
-                    description = "Certified assistance animals allowed in cabin.",
+                    title = stringResource(R.string.checkin_service_animal),
+                    description = stringResource(R.string.checkin_service_animal_desc),
                     checked = serviceAnimal,
                     onCheckedChange = { serviceAnimal = it }
                 )
