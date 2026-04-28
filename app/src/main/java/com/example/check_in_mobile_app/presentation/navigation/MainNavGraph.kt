@@ -2,26 +2,43 @@ package com.example.check_in_mobile_app.presentation.navigation
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.check_in_mobile_app.presentation.checkin.boarding.BoardingScreen
+import com.example.check_in_mobile_app.presentation.components.TabItem
 import com.example.check_in_mobile_app.presentation.main.booking.AllBookingsScreen
 import com.example.check_in_mobile_app.presentation.main.booking.BookingScreen
 import com.example.check_in_mobile_app.presentation.main.booking.FlightDetailsScreen
-import com.example.check_in_mobile_app.presentation.components.TabItem
 import com.example.check_in_mobile_app.presentation.main.home.HomeScreen
-import com.example.check_in_mobile_app.presentation.main.profile.ProfileScreen
 import com.example.check_in_mobile_app.presentation.main.notifications.NotificationsScreen
+import com.example.check_in_mobile_app.presentation.main.profile.ProfileScreen
 import com.example.data.repository.BookingRepositoryImpl
 
 @Composable
-fun MainNavGraph(onCheckInClick: (String) -> Unit) {
+fun MainNavGraph(
+    onCheckInClick: (String) -> Unit,
+    navigateToHome: State<Boolean> = mutableStateOf(false),
+    onNavigateToHomeHandled: () -> Unit = {}
+) {
     val navController = rememberNavController()
+
+    LaunchedEffect(navigateToHome.value) {
+        if (navigateToHome.value) {
+            navController.navigate(Destination.Home.route) {
+                popUpTo(Destination.Home.route) { inclusive = true }
+                launchSingleTop = true
+            }
+            onNavigateToHomeHandled()
+        }
+    }
 
     val navigateToTab: (TabItem) -> Unit = { tab ->
         val route = when (tab) {
@@ -54,9 +71,7 @@ fun MainNavGraph(onCheckInClick: (String) -> Unit) {
                 onNavigateToBoardingScreen = {
                     navController.navigate(Destination.Boarding.route)
                 },
-                onProfileClick = {
-                    navigateToTab(TabItem.PROFILE)
-                }
+                onProfileClick = { navigateToTab(TabItem.PROFILE) }
             )
         }
         composable(Destination.Booking.route) {
@@ -102,7 +117,7 @@ fun MainNavGraph(onCheckInClick: (String) -> Unit) {
         composable(Destination.Profile.route) {
             ProfileScreen(
                 onTabSelected = navigateToTab,
-                onLogout = { /* Logout logic */ }
+                onLogout = {  }
             )
         }
         composable(Destination.Notifications.route) {

@@ -16,6 +16,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -24,21 +25,40 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.check_in_mobile_app.BaseApplication
 import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.ui.theme.*
 import com.example.check_in_mobile_app.presentation.components.OfflineBanner
 
 @Composable
 fun BoardingScreen(
-    viewModel: BoardingViewModel = viewModel(),
+    viewModel: BoardingViewModel = run {
+        val context = LocalContext.current
+        val app = context.applicationContext as BaseApplication
+        viewModel(
+            factory = BoardingViewModelFactory(
+                boardingPassRepository = app.boardingPassRepository,
+                generateQRCodeUseCase = app.generateQRCodeUseCase,
+                generatePdfUseCase = app.generatePdfUseCase
+            )
+        )
+    },
     onBack: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
+    val context = LocalContext.current
+
     LaunchedEffect(uiState.showDownloadSuccess) {
         if (uiState.showDownloadSuccess) {
             snackbarHostState.showSnackbar("Boarding pass saved to Downloads")
             viewModel.onDismissDownloadSuccess()
+        }
+    }
+
+    LaunchedEffect(uiState.errorMessage) {
+        uiState.errorMessage?.let {
+            snackbarHostState.showSnackbar("Error: $it")
         }
     }
 
@@ -68,7 +88,7 @@ fun BoardingScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             Button(
-                onClick = viewModel::onDownloadPdf,
+                onClick = { viewModel.onDownloadPdf(context) },
                 enabled = !uiState.isLoading,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -164,7 +184,7 @@ private fun BoardingPassCard(uiState: BoardingUiState, modifier: Modifier = Modi
                     )
                 }
                 Text(
-                    text = "FLIGHT SW402",
+                    text = "FLIGHT ${uiState.flightNumber}",
                     fontSize = 11.sp,
                     color = Color.White.copy(alpha = 0.8f),
                     letterSpacing = 0.3.sp
@@ -184,7 +204,7 @@ private fun BoardingPassCard(uiState: BoardingUiState, modifier: Modifier = Modi
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "LHR",
+                        text = uiState.departureCode,
                         fontSize = 40.sp,
                         fontWeight = FontWeight.Bold,
                         color = NavyBlue,
@@ -192,7 +212,7 @@ private fun BoardingPassCard(uiState: BoardingUiState, modifier: Modifier = Modi
                         lineHeight = 42.sp
                     )
                     Text(
-                        text = "ISTANBUL",
+                        text = uiState.departureCity.uppercase(),
                         fontSize = 11.sp,
                         color = SubtleText,
                         letterSpacing = 0.5.sp
@@ -244,7 +264,7 @@ private fun BoardingPassCard(uiState: BoardingUiState, modifier: Modifier = Modi
                     horizontalAlignment = Alignment.End
                 ) {
                     Text(
-                        text = "CDG",
+                        text = uiState.arrivalCode,
                         fontSize = 40.sp,
                         fontWeight = FontWeight.Bold,
                         color = NavyBlue,
@@ -253,7 +273,7 @@ private fun BoardingPassCard(uiState: BoardingUiState, modifier: Modifier = Modi
                         textAlign = TextAlign.End
                     )
                     Text(
-                        text = "LONDON",
+                        text = uiState.arrivalCity.uppercase(),
                         fontSize = 11.sp,
                         color = SubtleText,
                         letterSpacing = 0.5.sp,
@@ -267,7 +287,7 @@ private fun BoardingPassCard(uiState: BoardingUiState, modifier: Modifier = Modi
             modifier = Modifier
                 .fillMaxWidth()
                 .height(8.dp)
-                .padding(20.dp,0.dp)
+                .padding(20.dp, 0.dp)
         ) {
             drawLine(
                 color = Color(0xFFCBD5E1),
@@ -316,10 +336,10 @@ private fun BoardingPassCard(uiState: BoardingUiState, modifier: Modifier = Modi
                         .background(Color.White),
                     contentAlignment = Alignment.Center
                 ) {
-                    // Qr Code Placeholder
+                    // QR Code Placeholder (drawable resource)
                     Image(
                         painter = painterResource(id = R.drawable.barcode_qr),
-                        contentDescription = "Qr Code Placeholder"
+                        contentDescription = "QR Code - ${uiState.qrCodeData}"
                     )
                 }
             }
