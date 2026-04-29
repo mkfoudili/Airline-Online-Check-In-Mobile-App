@@ -18,4 +18,35 @@ class UserPreferencesRepository(private val dataStore: DataStore<Preferences>) :
             preferences[PreferencesKeys.APP_LANGUAGE] = lang
         }
     }
+
+    val isLoggedInFlow: Flow<Boolean> =
+        dataStore.data.map { preferences ->
+            preferences[PreferencesKeys.IS_LOGGED_IN] ?: false
+        }
+
+    val userNameFlow: Flow<String?> =
+        dataStore.data.map { preferences ->
+            preferences[PreferencesKeys.USER_NAME]
+        }
+
+    val userEmailFlow: Flow<String?> =
+        dataStore.data.map { preferences ->
+            preferences[PreferencesKeys.USER_EMAIL]
+        }
+
+    suspend fun saveUser(name: String, email: String) {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKeys.USER_NAME]    = name
+            preferences[PreferencesKeys.USER_EMAIL]   = email
+            preferences[PreferencesKeys.IS_LOGGED_IN] = true
+        }
+    }
+
+    suspend fun clearUser() {
+        dataStore.edit { preferences ->
+            preferences.remove(PreferencesKeys.USER_NAME)
+            preferences.remove(PreferencesKeys.USER_EMAIL)
+            preferences[PreferencesKeys.IS_LOGGED_IN] = false
+        }
+    }
 }

@@ -4,11 +4,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.data.preferences.UserPreferencesRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class AuthViewModel : ViewModel() {
+class AuthViewModel (private val userPrefs: UserPreferencesRepository) : ViewModel() {
+
+    val isLoggedIn = userPrefs.isLoggedInFlow
 
     var uiState by mutableStateOf(AuthUiState())
         private set
@@ -27,16 +31,20 @@ class AuthViewModel : ViewModel() {
         uiState = uiState.copy(isLoading = true, errorMessage = null)
 
         viewModelScope.launch {
+
             delay(1000)
-            if (email == "test@gmail.com" && password == "test123") {
-                uiState = uiState.copy(isLoading = false, isSuccess = true)
-            } else {
-                uiState = uiState.copy(
-                    isLoading = false,
-                    isSuccess = false,
-                    errorMessage = "Invalid email or password"
-                )
-            }
+                if (email == "test@gmail.com" && password == "test123") {
+                  uiState = uiState.copy(isLoading = false, isSuccess = true)
+                  onLoginSuccess("Test User", email)
+                } else {
+                    uiState = uiState.copy(
+                        isLoading = false,
+                        isSuccess = false,
+                        errorMessage = "Invalid email or password"
+                    )
+                }
+
+
         }
     }
 
@@ -48,5 +56,35 @@ class AuthViewModel : ViewModel() {
             // TODO: replace with real repository call
             uiState = uiState.copy(isLoading = false, isSuccess = true)
         }
+    }
+
+    fun onLoginSuccess(name: String, email: String) {
+        viewModelScope.launch {
+            userPrefs.saveUser(name, email)
+        }
+    }
+
+    fun onLoginError() {
+        uiState = uiState.copy(errorMessage = null)
+    }
+
+
+    fun onLogout() {
+        viewModelScope.launch {
+            userPrefs.clearUser()
+        }
+    }
+}
+
+
+class AuthViewModelFactory(
+    private val userPrefs: UserPreferencesRepository
+) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(AuthViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return AuthViewModel(userPrefs) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
     }
 }
