@@ -1,103 +1,92 @@
 package com.example.check_in_mobile_app.presentation.checkin.boarding
 
 import android.content.Context
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.data.mapper.toBitmap
 import com.example.data.pdf.PdfGenerator
+import com.example.domain.model.BoardingPass
 import com.example.domain.repository.BoardingPassRepository
 import com.example.domain.usecase.boarding.GeneratePdfUseCase
+import com.example.domain.usecase.boarding.GenerateQRCodeBitmapUseCase
 import com.example.domain.usecase.boarding.GenerateQRCodeUseCase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class BoardingViewModel(
     private val boardingPassRepository: BoardingPassRepository,
     private val generateQRCodeUseCase: GenerateQRCodeUseCase,
+    private val generateQRCodeBitmapUseCase: GenerateQRCodeBitmapUseCase,
     private val generatePdfUseCase: GeneratePdfUseCase,
-    // Default passengerId targets the first mock passenger
     private val passengerId: String = "p1"
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(BoardingUiState())
+    private val _uiState = MutableStateFlow(BoardingUiState(isLoading = true))
     val uiState: StateFlow<BoardingUiState> = _uiState.asStateFlow()
 
-    init {
-        loadBoardingPass()
-    }
+    private var currentPass: BoardingPass? = null
+    private var cachedQrPayload: String? = null
+
+    init { loadBoardingPass() }
 
     private fun loadBoardingPass() {
         viewModelScope.launch {
-            // Collect the Flow emitted by the DAO (Room emits on every DB change)
             boardingPassRepository.getBoardingPass(passengerId).collect { boardingPass ->
-                if (boardingPass != null) {
-                    val qrData = generateQRCodeUseCase(boardingPass)
-                    _uiState.update { current ->
-                        current.copy(
-                            passengerName = boardingPass.passengerName,
-                            flightNumber = boardingPass.flightNumber,
-                            departureCode = boardingPass.origin,
-                            departureCity = boardingPass.originCity,
-                            arrivalCode = boardingPass.destination,
-                            arrivalCity = boardingPass.destinationCity,
-                            gate = boardingPass.gate ?: "TBD",
-                            seat = boardingPass.seatNumber ?: "N/A",
-                            boardingTime = boardingPass.boardingTime ?: "N/A",
-                            terminal = boardingPass.terminal ?: "N/A",
-                            bookingReference = boardingPass.bookingReference,
-                            qrCodeData = qrData,
-                            isOffline = !boardingPass.isSyncedWithServer,
-                            isLoading = false
-                        )
-                    }
-                } else {
-                    // No local data; show loading indicator until mock seeds
+                if (boardingPass == null) {
                     _uiState.update { it.copy(isLoading = true) }
+                    return@collect
+                }
+                currentPass = boardingPass
+                val qrPayload = generateQRCodeUseCase(boardingPass)
+                val qrBitmap = if (qrPayload == cachedQrPayload && _uiState.value.qrBitmap != null) {
+                    _uiState.value.qrBitmap
+                } else {
+                    cachedQrPayload = qrPayload
+                    withContext(Dispatchers.Default) {
+                        generateQRCodeBitmapUseCase(qrPayload)?.toBitmap()?.asImageBitmap()
+                    }
+                }
+                _uiState.update { current ->
+                    current.copy(
+                        passengerName = boardingPass.passengerName,
+                        flightNumber = boardingPass.flightNumber,
+                        departureCode = boardingPass.origin,
+                        departureCity = boardingPass.originCity,
+                        arrivalCode = boardingPass.destination,
+                        arrivalCity = boardingPass.destinationCity,
+                        gate = boardingPass.gate ?: current.gate,
+                        seat = boardingPass.seatNumber ?: current.seat,
+                        boardingTime = boardingPass.boardingTime ?: current.boardingTime,
+                        terminal = boardingPass.terminal ?: current.terminal,
+                        bookingReference = boardingPass.bookingReference,
+                        qrCodeData = boardingPass.qrCodeData ?: current.qrCodeData,
+                        qrBitmap = qrBitmap,
+                        isOffline = !boardingPass.isSyncedWithServer,
+                        isLoading = false
+                    )
                 }
             }
         }
     }
 
     fun onDownloadPdf(context: Context) {
+        val pass = currentPass ?: return
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true) }
-
-            // Reload pass to build the PDF data
-            val pass = boardingPassRepository
-                .getBoardingPass(passengerId)
-                .let { flow ->
-                    var result = com.example.domain.model.BoardingPass(
-                        passId = "BP-001",
-                        passengerId = passengerId,
-                        flightId = "f1",
-                        flightNumber = _uiState.value.flightNumber,
-                        origin = _uiState.value.departureCode,
-                        originCity = _uiState.value.departureCity,
-                        destination = _uiState.value.arrivalCode,
-                        destinationCity = _uiState.value.arrivalCity,
-                        passengerName = _uiState.value.passengerName,
-                        seatNumber = _uiState.value.seat,
-                        gate = _uiState.value.gate,
-                        boardingTime = _uiState.value.boardingTime,
-                        departureTime = System.currentTimeMillis() + 86_400_000L,
-                        arrivalTime = System.currentTimeMillis() + 90_000_000L,
-                        bookingReference = _uiState.value.bookingReference,
-                        terminal = _uiState.value.terminal,
-                        qrCodeData = _uiState.value.qrCodeData,
-                        issuedAt = System.currentTimeMillis()
-                    )
-                    result
-                }
-
+            _uiState.update { it.copy(isDownloadingPdf = true) }
             val pdfData = generatePdfUseCase(pass)
-            val result = PdfGenerator.generate(context, pdfData)
-
+            val result = withContext(Dispatchers.IO) {
+                PdfGenerator.generate(context, pdfData)
+            }
             _uiState.update {
                 it.copy(
-                    isLoading = false,
+                    isDownloadingPdf = false,
                     isPdfGenerated = result.isSuccess,
                     showDownloadSuccess = result.isSuccess,
                     errorMessage = result.exceptionOrNull()?.message
@@ -118,18 +107,16 @@ class BoardingViewModel(
 class BoardingViewModelFactory(
     private val boardingPassRepository: BoardingPassRepository,
     private val generateQRCodeUseCase: GenerateQRCodeUseCase,
+    private val generateQRCodeBitmapUseCase: GenerateQRCodeBitmapUseCase,
     private val generatePdfUseCase: GeneratePdfUseCase,
     private val passengerId: String = "p1"
 ) : ViewModelProvider.Factory {
-
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(BoardingViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return BoardingViewModel(
-                boardingPassRepository,
-                generateQRCodeUseCase,
-                generatePdfUseCase,
-                passengerId
+                boardingPassRepository, generateQRCodeUseCase,
+                generateQRCodeBitmapUseCase, generatePdfUseCase, passengerId
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")

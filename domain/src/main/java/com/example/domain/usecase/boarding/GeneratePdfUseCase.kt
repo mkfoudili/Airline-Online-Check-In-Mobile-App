@@ -5,17 +5,8 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-/**
- * Prepares the structured data for PDF generation.
- * The actual PDF file creation (iText) happens in the data/app layer
- * since it requires an Android Context for writing to storage.
- */
 class GeneratePdfUseCase {
 
-    /**
-     * Returns a [PdfBoardingPassData] DTO containing all formatted strings
-     * ready to be rendered into a PDF.
-     */
     operator fun invoke(boardingPass: BoardingPass): PdfBoardingPassData {
         val dateFormatter = SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH)
         val timeFormatter = SimpleDateFormat("HH:mm", Locale.ENGLISH)

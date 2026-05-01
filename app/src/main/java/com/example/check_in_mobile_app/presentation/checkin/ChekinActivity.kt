@@ -13,13 +13,13 @@ class CheckInActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
         val bookingRef = intent.getStringExtra("booking_ref") ?: ""
 
         setContent {
             CheckInMobileAppTheme {
                 CheckInNavGraph(
                     bookingRef = bookingRef,
+                    onBackFromFirstStep = { finish() },
                     onCheckInComplete = {
                         setResult(Activity.RESULT_OK)
                         finish()

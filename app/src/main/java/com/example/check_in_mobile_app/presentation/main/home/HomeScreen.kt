@@ -4,6 +4,7 @@ import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -11,14 +12,13 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.check_in_mobile_app.presentation.components.TabBarMenu
 import com.example.check_in_mobile_app.presentation.components.TabItem
-import com.example.domain.model.Booking
-import com.example.domain.model.CheckInStatus
-import com.example.domain.model.Flight
-import com.example.domain.model.Passenger
+import com.example.domain.model.*
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = viewModel(),
@@ -28,12 +28,17 @@ fun HomeScreen(
     onProfileClick: () -> Unit = {},
     onTabSelected: (TabItem) -> Unit = {}
 ) {
-    val isOnline by viewModel.isOnline.collectAsState()
-    val uiState by viewModel.uiState.collectAsState()
+    // collectAsStateWithLifecycle, unsubscribes when screen is in the background,
+    // resubscribes when it comes back to the foreground, triggering re-emission.
+    val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    // Reset scroll position when connectivity changes so the user sees the
+    // top of whichever screen (online / offline) just appeared.
     val scrollState = remember(isOnline) { ScrollState(initial = 0) }
     val screenWidth: Dp = LocalConfiguration.current.screenWidthDp.dp
 
-    //Simple mock for now
+    // Simple mock booking for now
     val booking = Booking(
         bookingId = "b1",
         bookingRef = "BB9XC2",
@@ -80,41 +85,53 @@ fun HomeScreen(
             )
         }
     ) { innerPadding ->
-        Column(
+        // PullToRefreshBox wraps the scrollable content.
+        // Pulling down triggers onRefresh in the ViewModel which re-checks
+        // connectivity and gives the user visual feedback.
+        PullToRefreshBox(
+            isRefreshing = uiState.isRefreshing,
+            onRefresh = viewModel::onRefresh,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .verticalScroll(scrollState)
-                .padding(horizontal = 24.dp)
         ) {
-            key(isOnline) {
-                if (isOnline) {
-                    OnlineHomeScreen(
-                        uiState = uiState,
-                        onBookingReferenceChange = viewModel::onBookingReferenceChange,
-                        onLastNameChange = viewModel::onLastNameChange,
-                        onCheckInClick = {
-                            viewModel.onCheckInNow()
-                            onCheckInClick()
-                        },
-                        onFindFlightClick = {
-                            viewModel.onFindFlight()
-                            onFindFlightClick()
-                        },
-                        onProfileClick = onProfileClick,
-                        screenWidth = screenWidth
-                    )
-                } else {
-                    OfflineHomeScreen(
-                        onNavigateToBoardingScreen = onNavigateToBoardingScreen,
-                        onProfileClick = onProfileClick,
-                        screenWidth = screenWidth,
-                        booking = booking
-                    )
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(scrollState)
+                    .padding(horizontal = 24.dp)
+            ) {
+                // key(isOnline) forces Compose to tear down and rebuild the
+                // child subtree when connectivity changes, so the correct
+                // screen is shown without any stale state leaking through.
+                key(isOnline) {
+                    if (isOnline) {
+                        OnlineHomeScreen(
+                            uiState = uiState,
+                            onBookingReferenceChange = viewModel::onBookingReferenceChange,
+                            onLastNameChange = viewModel::onLastNameChange,
+                            onCheckInClick = {
+                                viewModel.onCheckInNow()
+                                onCheckInClick()
+                            },
+                            onFindFlightClick = {
+                                viewModel.onFindFlight()
+                                onFindFlightClick()
+                            },
+                            onProfileClick = onProfileClick,
+                            screenWidth = screenWidth
+                        )
+                    } else {
+                        OfflineHomeScreen(
+                            onNavigateToBoardingScreen = onNavigateToBoardingScreen,
+                            screenWidth = screenWidth,
+                            booking = booking
+                        )
+                    }
                 }
-            }
 
-            Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(24.dp))
+            }
         }
     }
 }

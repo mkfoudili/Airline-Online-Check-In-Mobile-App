@@ -7,5 +7,6 @@ data class HomeUiState(
     val bookingReference: String = "",
     val lastName: String = "",
     val isLoading: Boolean = false,
+    val isRefreshing: Boolean = false,
     val errorMessage: String? = null
 )

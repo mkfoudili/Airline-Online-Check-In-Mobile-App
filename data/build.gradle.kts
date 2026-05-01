@@ -58,7 +58,7 @@ dependencies {
     implementation("androidx.room:room-ktx:$room_version")
     testImplementation("androidx.room:room-testing:$room_version")
 
-    // ZXing - QR Code generation
+    // ZXing : QR Code generation
     implementation("com.google.zxing:core:3.5.3")
 
     // MySQL Connector

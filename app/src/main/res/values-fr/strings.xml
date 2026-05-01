@@ -1,6 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Check-In-Mobile-App</string>
-
     <!-- Bookings -->
     <string name="my_bookings">Mes Réservations</string>
     <string name="all_bookings">Toutes les Réservations</string>
@@ -9,19 +9,16 @@
     <string name="view_all">Voir Tout</string>
     <string name="search_hint">Rechercher un vol</string>
     <string name="back">Retour</string>
-
     <!-- Date Picker -->
     <string name="select_date">Sélectionner une date</string>
     <string name="ok">OK</string>
     <string name="cancel">Annuler</string>
-
     <!-- Cities -->
     <string name="city_dubai">Dubaï</string>
     <string name="city_london">Londres</string>
     <string name="city_paris">Paris</string>
     <string name="city_casablanca">Casablanca</string>
     <string name="city_algiers">Alger</string>
-
     <!-- Actions & Statuses -->
     <string name="boarding_pass">Carte d\'embarquement</string>
     <string name="check_in">Enregistrement</string>
@@ -32,7 +29,6 @@
     <string name="status_check_in_open">Enregistrement Ouvert</string>
     <string name="status_checked_in">Enregistré</string>
     <string name="status_passed">Terminé</string>
-
     <!-- Flight Details Screen -->
     <string name="flight_details_title">Détails du Vol</string>
     <string name="checkin_status_label">Statut d\'enregistrement :</string>
@@ -48,7 +44,6 @@
     <string name="unit_hours">H</string>
     <string name="unit_minutes">M</string>
     <!-- Common -->
-
     <!-- Auth -->
     <string name="auth_welcome_title">Prêt pour votre vol ?</string>
     <string name="auth_welcome_subtitle">Évitez les files d\'attente à l\'aéroport et gérez tout votre voyage depuis votre poche. Rapide, sécurisé et entièrement numérique.</string>
@@ -72,11 +67,67 @@
     <string name="common_password">Mot de passe</string>
     <string name="auth_password_hint">Doit comporter au moins 8 caractères.</string>
     <string name="auth_password_mismatch">Les mots de passe ne correspondent pas.</string>
-
     <!-- Profile -->
-
     <!-- Languages -->
     <string name="lang_english">Anglais</string>
     <string name="lang_french">Français</string>
     <string name="lang_arabic">Arabe</string>
+    <!-- Boarding Pass Screen -->
+    <string name="boarding_available_offline">Disponible hors ligne</string>
+    <string name="boarding_offline_desc">Ce pass est enregistré localement sur votre appareil.</string>
+    <string name="boarding_airline">SKYWIRE AIRLINES</string>
+    <string name="boarding_duration">3H 55M</string>
+    <string name="boarding_gate_label">PORTE</string>
+    <string name="boarding_seat_label">SIÈGE</string>
+    <string name="boarding_boarding_label">EMBARQUEMENT</string>
+    <string name="boarding_zone_label">ZONE</string>
+    <string name="boarding_zone_value">2</string>
+    <string name="boarding_economy_plus">ÉCONOMIE PLUS</string>
+    <string name="boarding_passenger_label">PASSAGER</string>
+    <string name="boarding_download_pdf">Télécharger le PDF</string>
+    <string name="boarding_generating_pdf">Génération du PDF…</string>
+    <string name="boarding_saved_downloads">Carte d\'embarquement enregistrée dans Téléchargements</string>
+    <string name="boarding_error_prefix">Erreur : %1$s</string>
+    <string name="boarding_starts_in">Embarquement dans 45 min</string>
+    <string name="boarding_gate_info">Rendez-vous à la porte A12. Le temps d\'attente en sécurité est actuellement d\'environ 15 minutes.</string>
+    <!-- Confirmation Screen -->
+    <string name="confirmation_title">Enregistrement terminé</string>
+    <string name="confirmation_success_title">Tout est prêt !</string>
+    <string name="confirmation_success_desc">Votre enregistrement a réussi. Vous pouvez maintenant consulter votre carte d\'embarquement ou télécharger une copie PDF.</string>
+    <string name="confirmation_passenger_details">DÉTAILS DU PASSAGER</string>
+    <string name="confirmation_seat_label">SIÈGE</string>
+    <string name="confirmation_baggage_label">BAGAGE</string>
+    <string name="confirmation_frequent_flyer">Grand voyageur : %1$s</string>
+    <string name="confirmation_download_pdf">Télécharger le PDF</string>
+    <string name="confirmation_back_dashboard">Retour au tableau de bord</string>
+    <string name="confirmation_download_toast">Téléchargement PDF demandé</string>
+    <!-- Home Screen -->
+    <string name="home_greeting">Bonjour, %1$s</string>
+    <string name="home_retrieve_booking">Récupérer une réservation</string>
+    <string name="home_booking_reference">RÉFÉRENCE DE RÉSERVATION</string>
+    <string name="home_last_name">NOM DE FAMILLE</string>
+    <string name="home_last_name_hint">Tel qu\'écrit sur le passeport</string>
+    <string name="home_find_flight">Trouver mon vol</string>
+    <!-- Offline Home Screen -->
+    <string name="offline_dashboard_title">Tableau de bord hors ligne</string>
+    <string name="offline_badge">HORS LIGNE</string>
+    <string name="offline_viewing_cached">Données en cache</string>
+    <string name="offline_features_require_internet">Certaines fonctionnalités nécessitent une connexion internet.</string>
+    <string name="offline_upcoming_flight">Vol à venir</string>
+    <string name="offline_synced_ago">Synchronisé il y a %1$s</string>
+    <string name="offline_available_actions">ACTIONS DISPONIBLES</string>
+    <string name="offline_data_saved_note">Vos données de vol ont été enregistrées automatiquement pour un accès hors ligne. Pour mettre à jour, reconnectez-vous au Wi-Fi ou aux données mobiles.</string>
+    <string name="offline_view_boarding_pass">Voir la carte d\'embarquement</string>
+    <string name="offline_accessible_without_connection">Accessible sans connexion</string>
+    <!-- Active Flight Card (Online Home) -->
+    <string name="active_now_badge">EN COURS</string>
+    <string name="active_ready_to_fly">Prêt à décoller ?</string>
+    <string name="active_checkin_open">L\'enregistrement est ouvert pour votre vol vers %1$s.</string>
+    <string name="active_book_flight">Réservez un vol et enregistrez-vous en ligne avec Flight !</string>
+    <string name="active_check_in_now">S\'enregistrer maintenant</string>
+    <!-- Flight status labels -->
+    <string name="status_open">Enregistrement ouvert</string>
+    <string name="status_boarding">Embarquement</string>
+    <string name="status_closed">Fermé</string>
+    <string name="status_departed">Parti</string>
 </resources>
