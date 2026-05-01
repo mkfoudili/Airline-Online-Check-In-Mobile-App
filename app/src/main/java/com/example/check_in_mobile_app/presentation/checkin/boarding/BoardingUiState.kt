@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.checkin.boarding
 
+import androidx.compose.ui.graphics.ImageBitmap
+
 data class BoardingUiState(
     val passengerName: String = "Djerfi Fatma",
     val passportNumber: String = "AB123456",
@@ -20,13 +22,13 @@ data class BoardingUiState(
     val bookingReference: String = "SK7Y29",
     val flightStatus: FlightStatus = FlightStatus.BOARDING,
     val qrCodeData: String = "BOARDING:AH1042:SK7Y29:14A:ALG-CDG",
-    val isLoading: Boolean = false,
+    val qrBitmap: ImageBitmap? = null,
+    val isLoading: Boolean = true,
+    val isDownloadingPdf: Boolean = false,
     val isOffline: Boolean = false,
     val isPdfGenerated: Boolean = false,
     val errorMessage: String? = null,
     val showDownloadSuccess: Boolean = false
 )
 
-enum class FlightStatus {
-    OPEN, BOARDING, CLOSED, DEPARTED
-}
+enum class FlightStatus { OPEN, BOARDING, CLOSED, DEPARTED }

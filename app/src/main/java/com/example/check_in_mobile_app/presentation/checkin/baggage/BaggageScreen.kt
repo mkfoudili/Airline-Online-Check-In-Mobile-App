@@ -1,20 +1,12 @@
 package com.example.check_in_mobile_app.presentation.checkin.baggage
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,7 +17,11 @@ import com.example.check_in_mobile_app.presentation.components.PrimaryButton
 import com.example.check_in_mobile_app.presentation.components.baggage.BaggageCard
 import com.example.check_in_mobile_app.presentation.components.baggage.BaggageNoteCard
 import com.example.check_in_mobile_app.presentation.components.baggage.BaggageRulesCard
-import com.example.check_in_mobile_app.ui.theme.*
+import com.example.check_in_mobile_app.presentation.components.checkin.CheckInTopBar
+import com.example.check_in_mobile_app.ui.theme.CheckInMobileAppTheme
+import com.example.check_in_mobile_app.ui.theme.NavyBlue
+import com.example.check_in_mobile_app.ui.theme.Slate500
+import com.example.check_in_mobile_app.ui.theme.Typography
 
 @Composable
 fun BaggageScreen(
@@ -53,52 +49,21 @@ fun BaggageContent(
     onContinueClick: () -> Unit
 ) {
     Scaffold(
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
+        containerColor = Color.White,
         topBar = {
-            Column {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 12.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    IconButton(onClick = onBackClick) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.chevron_left),
-                            contentDescription = stringResource(R.string.common_back),
-                            tint = NavyBlue
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = stringResource(R.string.checkin_baggage_step_title),
-                        style = Typography.bodyLarge.copy(
-                            fontWeight = FontWeight.Bold,
-                            color = NavyBlue,
-                            fontSize = 18.sp
-                        )
-                    )
-                }
-                // Progress Line
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(3.dp)
-                        .background(LightGray)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth(0.8f) // Assuming Step 4 of 5 or similar
-                            .fillMaxHeight()
-                            .background(NavyBlue)
-                    )
-                }
-            }
+            CheckInTopBar(
+                onBack = onBackClick,
+                currentStep = 4,
+                title = stringResource(R.string.checkin_baggage_step_title)
+            )
         }
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
+                .navigationBarsPadding()
                 .verticalScroll(rememberScrollState())
                 .padding(24.dp)
         ) {
@@ -134,7 +99,7 @@ fun BaggageContent(
             Spacer(modifier = Modifier.height(16.dp))
 
             BaggageCard(
-                iconResId = R.drawable.suitcase, // Using suitcase as placeholder for special equipment
+                iconResId = R.drawable.suitcase,
                 title = stringResource(R.string.checkin_special_equipment),
                 description = stringResource(R.string.checkin_special_equipment_desc),
                 quantity = uiState.specialEquipmentCount,
@@ -158,6 +123,8 @@ fun BaggageContent(
                 containerColor = NavyBlue,
                 contentColor = Color.White
             )
+
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }

@@ -1,11 +1,10 @@
 package com.example.check_in_mobile_app.presentation.navigation
 
-
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
@@ -14,14 +13,15 @@ import androidx.navigation.compose.rememberNavController
 import com.example.check_in_mobile_app.presentation.checkin.SeatSelection
 import com.example.check_in_mobile_app.presentation.checkin.baggage.BaggageScreen
 import com.example.check_in_mobile_app.presentation.checkin.baggage.BaggageViewModel
-import com.example.check_in_mobile_app.presentation.checkin.confirmation.ConfirmationScreen
 import com.example.check_in_mobile_app.presentation.checkin.checkingdetailsreview.CheckingDetailsReviewScreen
+import com.example.check_in_mobile_app.presentation.checkin.confirmation.ConfirmationScreen
 import com.example.check_in_mobile_app.presentation.checkin.passportscan.PassportScanScreen
 import com.example.check_in_mobile_app.presentation.checkin.specialRequest
 
 @Composable
 fun CheckInNavGraph(
     bookingRef: String,
+    onBackFromFirstStep: () -> Unit,
     onCheckInComplete: () -> Unit
 ) {
     val navController = rememberNavController()
@@ -42,7 +42,7 @@ fun CheckInNavGraph(
             popExitTransition = { slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(300)) }
         ) {
             PassportScanScreen(
-                onBack = { navController.popBackStack() },
+                onBack = onBackFromFirstStep,
                 onContinue = { navController.navigate(Destination.CheckingDetailsReview.route) }
             )
         }

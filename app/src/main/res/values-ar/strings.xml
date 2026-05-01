@@ -1,6 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">تطبيق تسجيل الوصول</string>
-
     <!-- Bookings -->
     <string name="my_bookings">حجوزاتي</string>
     <string name="all_bookings">كل الحجوزات</string>
@@ -9,19 +9,16 @@
     <string name="view_all">عرض الكل</string>
     <string name="search_hint">ابحث عن رحلة</string>
     <string name="back">رجوع</string>
-
     <!-- Date Picker -->
     <string name="select_date">اختر تاريخاً</string>
     <string name="ok">موافق</string>
     <string name="cancel">إلغاء</string>
-
     <!-- Cities -->
     <string name="city_dubai">دبي</string>
     <string name="city_london">لندن</string>
     <string name="city_paris">باريس</string>
     <string name="city_casablanca">الدار البيضاء</string>
     <string name="city_algiers">الجزائر</string>
-
     <!-- Actions & Statuses -->
     <string name="boarding_pass">بطاقة الصعود</string>
     <string name="check_in">تسجيل الوصول</string>
@@ -32,7 +29,6 @@
     <string name="status_check_in_open">تسجيل الوصول مفتوح</string>
     <string name="status_checked_in">تم تسجيل الوصول</string>
     <string name="status_passed">انتهى</string>
-
     <!-- Flight Details Screen -->
     <string name="flight_details_title">تفاصيل الرحلة</string>
     <string name="checkin_status_label">حالة تسجيل الوصول:</string>
@@ -47,9 +43,7 @@
     <string name="gate_label">البوابة</string>
     <string name="unit_hours">س</string>
     <string name="unit_minutes">د</string>
-
     <!-- Common -->
-
     <!-- Auth -->
     <string name="auth_welcome_title">هل أنت مستعد لرحلتك؟</string>
     <string name="auth_welcome_subtitle">تجنب طوابير الانتظار في المطار وقم بإدارة رحلتك بالكامل من هاتفك المحمول. خدمة سريعة وآمنة ورقمية بالكامل.</string>
@@ -73,11 +67,67 @@
     <string name="common_password">كلمة المرور</string>
     <string name="auth_password_hint">يجب أن تتكون من 8 أحرف على الأقل.</string>
     <string name="auth_password_mismatch">كلمات المرور غير متطابقة.</string>
-
     <!-- Profile -->
-
     <!-- Languages -->
     <string name="lang_english">الإنجليزية</string>
     <string name="lang_french">الفرنسية</string>
     <string name="lang_arabic">العربية</string>
+    <!-- Boarding Pass Screen -->
+    <string name="boarding_available_offline">متاح بدون إنترنت</string>
+    <string name="boarding_offline_desc">تم حفظ هذا التصريح محلياً على جهازك.</string>
+    <string name="boarding_airline">سكاي واير للطيران</string>
+    <string name="boarding_duration">3س 55د</string>
+    <string name="boarding_gate_label">البوابة</string>
+    <string name="boarding_seat_label">المقعد</string>
+    <string name="boarding_boarding_label">الصعود</string>
+    <string name="boarding_zone_label">المنطقة</string>
+    <string name="boarding_zone_value">2</string>
+    <string name="boarding_economy_plus">اقتصادي بلس</string>
+    <string name="boarding_passenger_label">المسافر</string>
+    <string name="boarding_download_pdf">تنزيل PDF</string>
+    <string name="boarding_generating_pdf">جارٍ إنشاء الـ PDF…</string>
+    <string name="boarding_saved_downloads">تم حفظ بطاقة الصعود في التنزيلات</string>
+    <string name="boarding_error_prefix">خطأ: %1$s</string>
+    <string name="boarding_starts_in">الصعود بعد 45 دقيقة</string>
+    <string name="boarding_gate_info">توجه إلى البوابة A12. وقت الانتظار في الأمن حوالي 15 دقيقة.</string>
+    <!-- Confirmation Screen -->
+    <string name="confirmation_title">اكتمل تسجيل الوصول</string>
+    <string name="confirmation_success_title">أنت جاهز تماماً!</string>
+    <string name="confirmation_success_desc">تم تسجيل وصولك بنجاح. يمكنك الآن عرض بطاقة الصعود أو تنزيل نسخة PDF.</string>
+    <string name="confirmation_passenger_details">تفاصيل المسافر</string>
+    <string name="confirmation_seat_label">المقعد</string>
+    <string name="confirmation_baggage_label">الأمتعة</string>
+    <string name="confirmation_frequent_flyer">مسافر متكرر: %1$s</string>
+    <string name="confirmation_download_pdf">تنزيل PDF</string>
+    <string name="confirmation_back_dashboard">العودة إلى لوحة التحكم</string>
+    <string name="confirmation_download_toast">طلب تنزيل PDF</string>
+    <!-- Home Screen -->
+    <string name="home_greeting">مرحباً، %1$s</string>
+    <string name="home_retrieve_booking">استرجاع حجز</string>
+    <string name="home_booking_reference">رقم الحجز</string>
+    <string name="home_last_name">اسم العائلة</string>
+    <string name="home_last_name_hint">كما هو مكتوب في جواز السفر</string>
+    <string name="home_find_flight">البحث عن رحلتي</string>
+    <!-- Offline Home Screen -->
+    <string name="offline_dashboard_title">لوحة التحكم بدون إنترنت</string>
+    <string name="offline_badge">غير متصل</string>
+    <string name="offline_viewing_cached">عرض البيانات المحلية</string>
+    <string name="offline_features_require_internet">بعض الميزات تتطلب اتصالاً بالإنترنت.</string>
+    <string name="offline_upcoming_flight">الرحلة القادمة</string>
+    <string name="offline_synced_ago">آخر مزامنة منذ %1$s</string>
+    <string name="offline_available_actions">الإجراءات المتاحة</string>
+    <string name="offline_data_saved_note">تم حفظ بيانات رحلتك تلقائياً للوصول دون إنترنت. للتحديث، أعد الاتصال بشبكة Wi-Fi أو البيانات الخلوية.</string>
+    <string name="offline_view_boarding_pass">عرض بطاقة الصعود</string>
+    <string name="offline_accessible_without_connection">متاح بدون اتصال</string>
+    <!-- Active Flight Card (Online Home) -->
+    <string name="active_now_badge">نشط الآن</string>
+    <string name="active_ready_to_fly">هل أنت مستعد للسفر؟</string>
+    <string name="active_checkin_open">تسجيل الوصول مفتوح لرحلتك إلى %1$s.</string>
+    <string name="active_book_flight">احجز رحلة وسجل وصولك إلكترونياً مع Flight!</string>
+    <string name="active_check_in_now">تسجيل الوصول الآن</string>
+    <!-- Flight status labels -->
+    <string name="status_open">تسجيل الوصول مفتوح</string>
+    <string name="status_boarding">الصعود إلى الطائرة</string>
+    <string name="status_closed">مغلق</string>
+    <string name="status_departed">غادر</string>
 </resources>

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name" translatable="false">Check-In-Mobile-App</string>
     <string name="title_activity_login" translatable="false">LoginActivity</string>
@@ -10,19 +11,16 @@
     <string name="view_all">View All</string>
     <string name="search_hint">Search for a flight</string>
     <string name="back">Back</string>
-    
     <!-- Date Picker -->
     <string name="select_date">Select Date</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
-    
     <!-- Cities (Dynamic Data Localization) -->
     <string name="city_dubai">Dubai</string>
     <string name="city_london">London</string>
     <string name="city_paris">Paris</string>
     <string name="city_casablanca">Casablanca</string>
     <string name="city_algiers">Algiers</string>
-    
     <!-- Actions & Statuses -->
     <string name="boarding_pass">Boarding Pass</string>
     <string name="check_in">Check In</string>
@@ -33,7 +31,6 @@
     <string name="status_check_in_open">Check In Open</string>
     <string name="status_checked_in">Checked In</string>
     <string name="status_passed">Passed</string>
-
     <!-- Flight Details Screen -->
     <string name="flight_details_title">Flight Details</string>
     <string name="checkin_status_label">Check-In Status:</string>
@@ -49,7 +46,6 @@
     <string name="unit_hours">H</string>
     <string name="unit_minutes">M</string>
     <!-- Common -->
-
     <!-- Auth -->
     <string name="auth_welcome_title">Ready for your flight?</string>
     <string name="auth_welcome_subtitle">Skip the airport queues and manage your entire journey from your pocket. Fast, secure, and entirely digital.</string>
@@ -73,11 +69,67 @@
     <string name="common_password">Password</string>
     <string name="auth_password_hint">Must be at least 8 characters long.</string>
     <string name="auth_password_mismatch">Passwords do not match.</string>
-
     <!-- Profile -->
-
     <!-- Languages -->
     <string name="lang_english">English</string>
     <string name="lang_french">French</string>
     <string name="lang_arabic">Arabic</string>
+    <!-- Boarding Pass Screen -->
+    <string name="boarding_available_offline">Available Offline</string>
+    <string name="boarding_offline_desc">This pass is saved to your local storage.</string>
+    <string name="boarding_airline">SKYWIRE AIRLINES</string>
+    <string name="boarding_duration">3H 55M</string>
+    <string name="boarding_gate_label">GATE</string>
+    <string name="boarding_seat_label">SEAT</string>
+    <string name="boarding_boarding_label">BOARDING</string>
+    <string name="boarding_zone_label">ZONE</string>
+    <string name="boarding_zone_value">2</string>
+    <string name="boarding_economy_plus">ECONOMY PLUS</string>
+    <string name="boarding_passenger_label">PASSENGER</string>
+    <string name="boarding_download_pdf">Download PDF</string>
+    <string name="boarding_generating_pdf">Generating PDF…</string>
+    <string name="boarding_saved_downloads">Boarding pass saved to Downloads</string>
+    <string name="boarding_error_prefix">Error: %1$s</string>
+    <string name="boarding_starts_in">Boarding starts in 45m</string>
+    <string name="boarding_gate_info">Head to Gate A12. Security wait time is currently approximately 15 minutes.</string>
+    <!-- Confirmation Screen -->
+    <string name="confirmation_title">Check-In Completed</string>
+    <string name="confirmation_success_title">You\'re All Set!</string>
+    <string name="confirmation_success_desc">Your check-in was successful. You can now view your boarding pass or download a PDF copy.</string>
+    <string name="confirmation_passenger_details">PASSENGER DETAILS</string>
+    <string name="confirmation_seat_label">SEAT</string>
+    <string name="confirmation_baggage_label">BAGGAGE</string>
+    <string name="confirmation_frequent_flyer">Frequent Flyer: %1$s</string>
+    <string name="confirmation_download_pdf">Download PDF</string>
+    <string name="confirmation_back_dashboard">Back to Dashboard</string>
+    <string name="confirmation_download_toast">Download PDF clicked</string>
+    <!-- Home Screen -->
+    <string name="home_greeting">Hello, %1$s</string>
+    <string name="home_retrieve_booking">Retrieve Booking</string>
+    <string name="home_booking_reference">BOOKING REFERENCE</string>
+    <string name="home_last_name">LAST NAME</string>
+    <string name="home_last_name_hint">As written in passport</string>
+    <string name="home_find_flight">Find My Flight</string>
+    <!-- Offline Home Screen -->
+    <string name="offline_dashboard_title">Offline Dashboard</string>
+    <string name="offline_badge">OFFLINE</string>
+    <string name="offline_viewing_cached">Viewing Cached Data</string>
+    <string name="offline_features_require_internet">Some features require an internet connection.</string>
+    <string name="offline_upcoming_flight">Upcoming Flight</string>
+    <string name="offline_synced_ago">Synced %1$s ago</string>
+    <string name="offline_available_actions">AVAILABLE ACTIONS</string>
+    <string name="offline_data_saved_note">Your flight data was saved automatically for offline access. To update information, reconnect to Wi-Fi or Cellular data.</string>
+    <string name="offline_view_boarding_pass">View Boarding Pass</string>
+    <string name="offline_accessible_without_connection">Accessible without connection</string>
+    <!-- Active Flight Card (Online Home) -->
+    <string name="active_now_badge">ACTIVE NOW</string>
+    <string name="active_ready_to_fly">Ready to fly?</string>
+    <string name="active_checkin_open">Check-in is open for your flight to %1$s.</string>
+    <string name="active_book_flight">Book a flight and check In online with Flight!</string>
+    <string name="active_check_in_now">Check-In Now</string>
+    <!-- Flight status labels -->
+    <string name="status_open">Check-in Open</string>
+    <string name="status_boarding">Boarding</string>
+    <string name="status_closed">Closed</string>
+    <string name="status_departed">Departed</string>
 </resources>

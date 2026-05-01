@@ -1,20 +1,98 @@
 package com.example.check_in_mobile_app.presentation.checkin.boarding
 
+import android.content.Context
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
+import com.example.data.mapper.toBitmap
+import com.example.data.pdf.PdfGenerator
+import com.example.domain.model.BoardingPass
+import com.example.domain.repository.BoardingPassRepository
+import com.example.domain.usecase.boarding.GeneratePdfUseCase
+import com.example.domain.usecase.boarding.GenerateQRCodeBitmapUseCase
+import com.example.domain.usecase.boarding.GenerateQRCodeUseCase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class BoardingViewModel : ViewModel() {
+class BoardingViewModel(
+    private val boardingPassRepository: BoardingPassRepository,
+    private val generateQRCodeUseCase: GenerateQRCodeUseCase,
+    private val generateQRCodeBitmapUseCase: GenerateQRCodeBitmapUseCase,
+    private val generatePdfUseCase: GeneratePdfUseCase,
+    private val passengerId: String = "p1"
+) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(BoardingUiState())
+    private val _uiState = MutableStateFlow(BoardingUiState(isLoading = true))
     val uiState: StateFlow<BoardingUiState> = _uiState.asStateFlow()
 
-    fun onDownloadPdf() {
-        _uiState.update { it.copy(isLoading = true) }
-        // TODO: call GeneratePdfUseCase and handle result
-        _uiState.update { it.copy(isLoading = false, isPdfGenerated = true, showDownloadSuccess = true) }
+    private var currentPass: BoardingPass? = null
+    private var cachedQrPayload: String? = null
+
+    init { loadBoardingPass() }
+
+    private fun loadBoardingPass() {
+        viewModelScope.launch {
+            boardingPassRepository.getBoardingPass(passengerId).collect { boardingPass ->
+                if (boardingPass == null) {
+                    _uiState.update { it.copy(isLoading = true) }
+                    return@collect
+                }
+                currentPass = boardingPass
+                val qrPayload = generateQRCodeUseCase(boardingPass)
+                val qrBitmap = if (qrPayload == cachedQrPayload && _uiState.value.qrBitmap != null) {
+                    _uiState.value.qrBitmap
+                } else {
+                    cachedQrPayload = qrPayload
+                    withContext(Dispatchers.Default) {
+                        generateQRCodeBitmapUseCase(qrPayload)?.toBitmap()?.asImageBitmap()
+                    }
+                }
+                _uiState.update { current ->
+                    current.copy(
+                        passengerName = boardingPass.passengerName,
+                        flightNumber = boardingPass.flightNumber,
+                        departureCode = boardingPass.origin,
+                        departureCity = boardingPass.originCity,
+                        arrivalCode = boardingPass.destination,
+                        arrivalCity = boardingPass.destinationCity,
+                        gate = boardingPass.gate ?: current.gate,
+                        seat = boardingPass.seatNumber ?: current.seat,
+                        boardingTime = boardingPass.boardingTime ?: current.boardingTime,
+                        terminal = boardingPass.terminal ?: current.terminal,
+                        bookingReference = boardingPass.bookingReference,
+                        qrCodeData = boardingPass.qrCodeData ?: current.qrCodeData,
+                        qrBitmap = qrBitmap,
+                        isOffline = !boardingPass.isSyncedWithServer,
+                        isLoading = false
+                    )
+                }
+            }
+        }
+    }
+
+    fun onDownloadPdf(context: Context) {
+        val pass = currentPass ?: return
+        viewModelScope.launch {
+            _uiState.update { it.copy(isDownloadingPdf = true) }
+            val pdfData = generatePdfUseCase(pass)
+            val result = withContext(Dispatchers.IO) {
+                PdfGenerator.generate(context, pdfData)
+            }
+            _uiState.update {
+                it.copy(
+                    isDownloadingPdf = false,
+                    isPdfGenerated = result.isSuccess,
+                    showDownloadSuccess = result.isSuccess,
+                    errorMessage = result.exceptionOrNull()?.message
+                )
+            }
+        }
     }
 
     fun onDismissDownloadSuccess() {
@@ -23,5 +101,24 @@ class BoardingViewModel : ViewModel() {
 
     fun onConnectivityChanged(isConnected: Boolean) {
         _uiState.update { it.copy(isOffline = !isConnected) }
+    }
+}
+
+class BoardingViewModelFactory(
+    private val boardingPassRepository: BoardingPassRepository,
+    private val generateQRCodeUseCase: GenerateQRCodeUseCase,
+    private val generateQRCodeBitmapUseCase: GenerateQRCodeBitmapUseCase,
+    private val generatePdfUseCase: GeneratePdfUseCase,
+    private val passengerId: String = "p1"
+) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(BoardingViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return BoardingViewModel(
+                boardingPassRepository, generateQRCodeUseCase,
+                generateQRCodeBitmapUseCase, generatePdfUseCase, passengerId
+            ) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
     }
 }

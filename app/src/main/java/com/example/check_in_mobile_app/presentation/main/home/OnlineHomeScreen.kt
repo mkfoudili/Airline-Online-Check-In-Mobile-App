@@ -3,48 +3,37 @@ package com.example.check_in_mobile_app.presentation.main.home
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredWidth
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Search
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.presentation.components.BookingInputField
 import com.example.check_in_mobile_app.presentation.components.PrimaryButton
-import com.example.check_in_mobile_app.ui.theme.DarkText
-import com.example.check_in_mobile_app.ui.theme.DividerColor
-import com.example.check_in_mobile_app.ui.theme.LightGray
-import com.example.check_in_mobile_app.ui.theme.MediumGray
-import com.example.check_in_mobile_app.ui.theme.NavyBlue
 import com.example.check_in_mobile_app.presentation.components.home.ActiveFlightCard
+import com.example.check_in_mobile_app.ui.theme.*
 
 @Composable
 fun OnlineHomeScreen(
-    uiState : HomeUiState,
+    uiState: HomeUiState,
     onBookingReferenceChange: (String) -> Unit = {},
     onLastNameChange: (String) -> Unit = {},
     onCheckInClick: () -> Unit = {},
@@ -60,13 +49,15 @@ fun OnlineHomeScreen(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = "Hello, ${uiState.userName}",
+            text = stringResource(R.string.home_greeting, uiState.userName),
             fontSize = 25.sp,
             color = DarkText,
             fontWeight = FontWeight.Bold,
-            letterSpacing = (-0.5).sp
+            letterSpacing = (-0.5).sp,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.weight(1f)
         )
-
         Box(
             modifier = Modifier
                 .size(42.dp)
@@ -77,7 +68,7 @@ fun OnlineHomeScreen(
         ) {
             Icon(
                 imageVector = Icons.Outlined.Person,
-                contentDescription = "Profile",
+                contentDescription = null,
                 tint = MediumGray,
                 modifier = Modifier.size(22.dp)
             )
@@ -102,11 +93,13 @@ fun OnlineHomeScreen(
     Spacer(modifier = Modifier.height(28.dp))
 
     Text(
-        text = "Retrieve Booking",
+        text = stringResource(R.string.home_retrieve_booking),
         fontSize = 25.sp,
         fontWeight = FontWeight.Bold,
         color = NavyBlue,
-        letterSpacing = (-0.2).sp
+        letterSpacing = (-0.2).sp,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis
     )
 
     Spacer(modifier = Modifier.height(18.dp))
@@ -120,7 +113,7 @@ fun OnlineHomeScreen(
             .padding(16.dp)
     ) {
         BookingInputField(
-            label = "BOOKING REFERENCE",
+            label = stringResource(R.string.home_booking_reference),
             value = uiState.bookingReference,
             placeholder = "e.g. AB1234",
             onValueChange = onBookingReferenceChange,
@@ -141,9 +134,9 @@ fun OnlineHomeScreen(
         Spacer(modifier = Modifier.height(14.dp))
 
         BookingInputField(
-            label = "LAST NAME",
+            label = stringResource(R.string.home_last_name),
             value = uiState.lastName,
-            placeholder = "As written in passport",
+            placeholder = stringResource(R.string.home_last_name_hint),
             onValueChange = onLastNameChange,
             keyboardOptions = KeyboardOptions(
                 capitalization = KeyboardCapitalization.Words,
@@ -154,8 +147,8 @@ fun OnlineHomeScreen(
         Spacer(modifier = Modifier.height(22.dp))
 
         PrimaryButton(
-            text = "Find My Flight",
-            onClick = onFindFlightClick,
+            text = stringResource(R.string.home_find_flight),
+            onClick = onFindFlightClick
         )
     }
 }
