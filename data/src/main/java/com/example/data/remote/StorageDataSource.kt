@@ -14,7 +14,7 @@ class StorageDataSource {
                     val sql = "SELECT passId FROM BOARDING_PASSES WHERE passId = ?"
                     val preparedStatement = connection.prepareStatement(sql)
                     preparedStatement.setString(1, passId)
-                    
+
                     val resultSet = preparedStatement.executeQuery()
                     if (resultSet.next()) {
                         // Pdf endpoint example

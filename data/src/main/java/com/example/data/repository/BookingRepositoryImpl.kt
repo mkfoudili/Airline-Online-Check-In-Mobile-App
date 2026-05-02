@@ -5,8 +5,8 @@ import com.example.data.local.dao.FlightDao
 import com.example.data.mapper.toDomain
 import com.example.data.mapper.toEntity
 import com.example.data.remote.BookingDataSource
-import com.example.data.remote.dto.BookingDto
 import com.example.data.remote.FlightDataSource
+import com.example.data.remote.dto.BookingDto
 import com.example.domain.model.Booking
 import com.example.domain.model.CheckInStatus
 import com.example.domain.repository.BookingRepository

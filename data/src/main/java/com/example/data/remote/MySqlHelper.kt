@@ -2,7 +2,6 @@ package com.example.data.remote
 
 import java.sql.Connection
 import java.sql.DriverManager
-import java.sql.SQLException
 import java.util.concurrent.Executors
 
 object MySqlHelper {

@@ -60,7 +60,7 @@ class NotificationDataSource {
             }
         }
     }
-    
+
     fun getNotifications(uid: String, callback: (Result<List<NotificationDto>>) -> Unit) {
         MySqlHelper.getConnection { connection ->
             if (connection != null) {

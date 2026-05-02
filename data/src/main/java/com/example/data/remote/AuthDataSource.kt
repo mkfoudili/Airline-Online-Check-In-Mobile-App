@@ -21,10 +21,10 @@ class AuthDataSource {
                         INSERT INTO USERS (uid, email, displayName, phoneNumber, createdAt, lastLogin) 
                         VALUES (?, ?, ?, ?, ?, ?)
                     """.trimIndent()
-                    
+
                     val preparedStatement: PreparedStatement = connection.prepareStatement(sql)
                     val currentTime = Timestamp(System.currentTimeMillis())
-                    
+
                     preparedStatement.setString(1, request.uid)
                     preparedStatement.setString(2, request.email)
                     preparedStatement.setString(3, request.displayName)
@@ -79,7 +79,7 @@ class AuthDataSource {
                             createdAt = resultSet.getTimestamp("createdAt"),
                             lastLogin = resultSet.getTimestamp("lastLogin")
                         )
-                        
+
                         // Update last login
                         val updateSql = "UPDATE USERS SET lastLogin = ? WHERE uid = ?"
                         val updateStmt = connection.prepareStatement(updateSql)
