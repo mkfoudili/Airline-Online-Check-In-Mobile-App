@@ -130,4 +130,10 @@
     <string name="status_boarding">الصعود إلى الطائرة</string>
     <string name="status_closed">مغلق</string>
     <string name="status_departed">غادر</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">الرئيسية</string>
+    <string name="nav_bookings">حجوزاتي</string>
+    <string name="nav_notifications">التنبيهات</string>
+    <string name="nav_profile">الملف الشخصي</string>
 </resources>

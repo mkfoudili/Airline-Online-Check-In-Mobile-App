@@ -89,6 +89,9 @@ fun LoginForm(
             shape = RoundedCornerShape(10.dp),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedTextColor = Color.Black,
+                unfocusedTextColor = Color.Black,
+                disabledTextColor = Color.Black,
+                errorTextColor = Color.Black,
                 unfocusedBorderColor = borderColor,
                 focusedBorderColor = primaryColor,
                 unfocusedContainerColor = Color.White,
@@ -153,6 +156,10 @@ fun LoginForm(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             shape = RoundedCornerShape(10.dp),
             colors = OutlinedTextFieldDefaults.colors(
+                focusedTextColor = Color.Black,
+                unfocusedTextColor = Color.Black,
+                disabledTextColor = Color.Black,
+                errorTextColor = Color.Black,
                 unfocusedBorderColor = borderColor,
                 focusedBorderColor = primaryColor,
                 unfocusedContainerColor = Color.White,

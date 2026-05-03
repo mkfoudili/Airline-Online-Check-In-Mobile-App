@@ -19,17 +19,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.check_in_mobile_app.R
 
 
-enum class TabItem(@DrawableRes val icon: Int, val label: String) {
-    HOME(R.drawable.house, "Home"),
-    TICKETS(R.drawable.tickets_plane, "Bookings"),
-    NOTIFICATIONS(R.drawable.bell, "Notifications"),
-    PROFILE(R.drawable.user, "Profile")
+enum class TabItem(@DrawableRes val icon: Int, val labelRes: Int) {
+    HOME(R.drawable.house, R.string.nav_home),
+    TICKETS(R.drawable.tickets_plane, R.string.nav_bookings),
+    NOTIFICATIONS(R.drawable.bell, R.string.nav_notifications),
+    PROFILE(R.drawable.user, R.string.nav_profile)
 }
 
 @Composable
@@ -44,6 +45,7 @@ fun TabBarMenu(
     ) {
         TabItem.entries.forEach { tab ->
             val isSelected = tab == selectedTab
+            val label = stringResource(id = tab.labelRes)
 
             NavigationBarItem(
                 selected = isSelected,
@@ -51,13 +53,13 @@ fun TabBarMenu(
                 icon = {
                     Icon(
                         painter = painterResource(id = tab.icon),
-                        contentDescription = tab.label,
+                        contentDescription = label,
                         modifier = Modifier.size(24.dp)
                     )
                 },
                 label = {
                     Text(
-                        text = tab.label,
+                        text = label,
                         fontSize = 10.sp,
                         fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal
                     )

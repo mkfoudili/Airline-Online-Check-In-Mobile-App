@@ -312,6 +312,10 @@ private fun AuthTextField(
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
         shape = RoundedCornerShape(10.dp),
         colors = OutlinedTextFieldDefaults.colors(
+            focusedTextColor = Color.Black,
+            unfocusedTextColor = Color.Black,
+            disabledTextColor = Color.Black,
+            errorTextColor = Color.Black,
             unfocusedBorderColor = BorderColor,
             focusedBorderColor = NavyBlue,
             errorBorderColor = ErrorRed,
