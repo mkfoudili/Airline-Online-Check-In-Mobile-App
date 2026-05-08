@@ -42,7 +42,8 @@ class AuthDataSource {
                             photoUrl = null,
                             provider = null,
                             createdAt = currentTime,
-                            lastLogin = currentTime
+                            lastLogin = currentTime,
+                            token = "fake-jwt-token-for-${request.uid}"
                         )
                     }
                     connection.close()
@@ -77,7 +78,8 @@ class AuthDataSource {
                             photoUrl = resultSet.getString("photoUrl"),
                             provider = resultSet.getString("provider"),
                             createdAt = resultSet.getTimestamp("createdAt"),
-                            lastLogin = resultSet.getTimestamp("lastLogin")
+                            lastLogin = resultSet.getTimestamp("lastLogin"),
+                            token = "fake-jwt-token-for-${resultSet.getString("uid")}"
                         )
 
                         // Update last login

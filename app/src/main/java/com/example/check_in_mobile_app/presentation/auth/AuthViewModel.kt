@@ -4,13 +4,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.data.preferences.UserPreferencesRepository
-import kotlinx.coroutines.delay
+import com.example.domain.repository.AuthRepository
+import com.example.domain.validation.RegistrationRequest
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class AuthViewModel (private val userPrefs: UserPreferencesRepository) : ViewModel() {
+@HiltViewModel
+class AuthViewModel @Inject constructor(
+    private val authRepository: AuthRepository,
+    private val userPrefs: UserPreferencesRepository
+) : ViewModel() {
 
     val isLoggedIn = userPrefs.isLoggedInFlow
 
@@ -18,73 +24,58 @@ class AuthViewModel (private val userPrefs: UserPreferencesRepository) : ViewMod
         private set
 
     fun register(name: String, email: String, phone: String, password: String) {
-        // TODO: wire to AuthRepository once backend is ready
-        uiState = uiState.copy(isLoading = true)
+        uiState = uiState.copy(isLoading = true, errorMessage = null)
 
-        viewModelScope.launch {
-            delay(1000)
-            uiState = uiState.copy(isLoading = false, isSuccess = true)
+        val request = RegistrationRequest(
+            uid = java.util.UUID.randomUUID().toString(),
+            email = email,
+            displayName = name,
+            phoneNumber = phone,
+            password = password
+        )
+
+        authRepository.register(request) { result ->
+            viewModelScope.launch {
+                result.onSuccess {
+                    uiState = uiState.copy(isLoading = false, isSuccess = true)
+                }.onFailure {
+                    uiState = uiState.copy(
+                        isLoading = false,
+                        errorMessage = it.message ?: "Registration failed"
+                    )
+                }
+            }
         }
     }
 
     fun login(email: String, password: String) {
         uiState = uiState.copy(isLoading = true, errorMessage = null)
 
-        viewModelScope.launch {
-
-            delay(1000)
-                if (email == "test@gmail.com" && password == "test123") {
-                  uiState = uiState.copy(isLoading = false, isSuccess = true)
-                  onLoginSuccess("Test User", email)
-                } else {
+        authRepository.login(email, password) { result ->
+            viewModelScope.launch {
+                result.onSuccess {
+                    uiState = uiState.copy(isLoading = false, isSuccess = true)
+                }.onFailure {
                     uiState = uiState.copy(
                         isLoading = false,
-                        isSuccess = false,
-                        errorMessage = "Invalid email or password"
+                        errorMessage = it.message ?: "Login failed"
                     )
                 }
-
-
+            }
         }
     }
 
     fun signInWithGoogle(idToken: String) {
-        uiState = uiState.copy(isLoading = true, errorMessage = null)
-
-        viewModelScope.launch {
-            delay(1000)
-            // TODO: replace with real repository call
-            uiState = uiState.copy(isLoading = false, isSuccess = true)
-        }
-    }
-
-    fun onLoginSuccess(name: String, email: String) {
-        viewModelScope.launch {
-            userPrefs.saveUser(name, email)
-        }
+        // Implementation for Google Sign-In would go here
     }
 
     fun onLoginError() {
         uiState = uiState.copy(errorMessage = null)
     }
 
-
     fun onLogout() {
-        viewModelScope.launch {
-            userPrefs.clearUser()
+        authRepository.logout {
+            // Logout completed
         }
-    }
-}
-
-
-class AuthViewModelFactory(
-    private val userPrefs: UserPreferencesRepository
-) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(AuthViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return AuthViewModel(userPrefs) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
     }
 }

@@ -9,6 +9,9 @@ import com.example.domain.usecase.language.GetSavedLanguageUseCase
 
 private val Context.dataStore by preferencesDataStore("user_prefs")
 
+/**
+ * @deprecated Use Hilt for dependency injection.
+ */
 object AppContainer {
 
     fun provideLanguageRepository(context: Context): LanguageRepository {

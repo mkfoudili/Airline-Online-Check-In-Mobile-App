@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.google.ksp)
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -50,11 +51,16 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.security.crypto)
+
+    // Hilt
+    implementation("com.google.dagger:hilt-android:2.48")
+    ksp("com.google.dagger:hilt-android-compiler:2.48")
 
     // Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.6.0")
-    implementation ("com.squareup.retrofit2:converter-gson:2.6.0")
-    implementation ("com.google.code.gson:gson:2.8.5")
+    implementation("com.squareup.retrofit2:converter-gson:2.6.0")
+    implementation("com.google.code.gson:gson:2.8.5")
     implementation("io.coil-kt:coil-compose:2.4.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
 

@@ -13,6 +13,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.check_in_mobile_app.presentation.auth.AuthViewModel
 import com.example.check_in_mobile_app.presentation.auth.LoginScreen
 import com.example.check_in_mobile_app.presentation.auth.RegisterScreen
 import com.example.check_in_mobile_app.presentation.checkin.boarding.BoardingScreen
@@ -229,9 +231,11 @@ fun AppNavGraph(
             )
         }
         composable(route = Destination.Profile.route) {
+            val authViewModel: AuthViewModel = hiltViewModel()
             ProfileScreen(
                 onTabSelected = navigateToTab,
                 onLogout = {
+                    authViewModel.onLogout()
                     navController.navigate(Destination.Welcome.route) {
                         popUpTo(0) { inclusive = true }
                     }

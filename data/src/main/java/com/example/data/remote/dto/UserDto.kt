@@ -10,5 +10,6 @@ data class UserDto(
     val photoUrl: String?,
     val provider: String?,
     val createdAt: Timestamp?,
-    val lastLogin: Timestamp?
+    val lastLogin: Timestamp?,
+    val token: String? = null
 )

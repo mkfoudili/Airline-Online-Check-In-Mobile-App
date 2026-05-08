@@ -8,20 +8,16 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
-import com.example.check_in_mobile_app.AppContainer
 import com.example.check_in_mobile_app.presentation.main.MainActivity
 import com.example.check_in_mobile_app.presentation.navigation.LoginNavGraph
 import com.example.check_in_mobile_app.ui.theme.CheckInMobileAppTheme
 import com.example.check_in_mobile_app.utils.LanguagePreferences
-import com.example.data.preferences.UserPreferencesRepository
+import androidx.activity.viewModels
 
+@dagger.hilt.android.AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
 
-    private val viewModel: AuthViewModel by viewModels {
-        AuthViewModelFactory(
-            AppContainer.provideLanguageRepository(applicationContext) as UserPreferencesRepository
-        )
-    }
+    private val viewModel: AuthViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val savedLang = LanguagePreferences.getSavedLanguage(this)
