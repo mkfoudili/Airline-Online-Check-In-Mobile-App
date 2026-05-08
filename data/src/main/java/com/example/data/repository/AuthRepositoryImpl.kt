@@ -24,9 +24,16 @@ class AuthRepositoryImpl @Inject constructor(
     override fun register(request: RegistrationRequest, callback: (Result<User>) -> Unit) {
         scope.launch {
             try {
-                val userDto = api.register(request)
-                handleAuthSuccess(userDto, userDto.token)
-                callback(Result.success(userDto.toDomain()))
+                val dataRequest = RegisterRequest(
+                    uid = request.uid,
+                    email = request.email,
+                    password = request.password,
+                    displayName = request.displayName,
+                    phoneNumber = request.phoneNumber
+                )
+                val response = api.register(dataRequest)
+                handleAuthSuccess(response.user, response.token)
+                callback(Result.success(response.user.toDomain()))
             } catch (e: Exception) {
                 callback(Result.failure(e))
             }
