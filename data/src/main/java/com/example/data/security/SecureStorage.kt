@@ -18,7 +18,7 @@ class SecureStorage @Inject constructor(
         private const val KEY_USER_ID = "user_id"
     }
 
-    private val sharedPreferences by lazy {
+    private val sharedPreferences: android.content.SharedPreferences by lazy {
         val masterKey = MasterKey.Builder(context)
             .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
             .build()

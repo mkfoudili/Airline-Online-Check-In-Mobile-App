@@ -4,16 +4,13 @@ import com.example.data.remote.dto.*
 import com.example.data.remote.URL
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-
 import com.example.data.remote.dto.BookingDto
-import retrofit2.http.GET
-import retrofit2.http.Query
-
 import com.example.domain.validation.RegistrationRequest
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
+import retrofit2.http.Path
 
 /**
  * Retrofit API definitions for authentication and user management.
@@ -26,19 +23,9 @@ interface Endpoint {
     @GET("bookings/upcoming")
     suspend fun getUpcomingBookings(@Query("uid") uid: String): List<BookingDto>
 
-    @retrofit2.http.GET("flights/{id}")
-    suspend fun getFlight(@retrofit2.http.Path("id") id: String): com.example.data.remote.dto.FlightDto
-}
+    @GET("flights/{id}")
+    suspend fun getFlight(@Path("id") id: String): FlightDto
 
-object ApiService {
-    val api: Endpoint by lazy {
-        Retrofit.Builder()
-            .baseUrl(URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(Endpoint::class.java)
-    }
-}
     @POST("auth/register")
     suspend fun register(@Body request: RegistrationRequest): UserDto
 
@@ -53,4 +40,14 @@ object ApiService {
 
     @POST("auth/logout")
     suspend fun logout()
+}
+
+object ApiService {
+    val api: Endpoint by lazy {
+        Retrofit.Builder()
+            .baseUrl(URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(Endpoint::class.java)
+    }
 }

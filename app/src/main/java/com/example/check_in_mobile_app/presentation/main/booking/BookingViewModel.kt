@@ -24,7 +24,7 @@ class BookingViewModel @Inject constructor(
     private fun fetchBookings() {
         viewModelScope.launch {
             _uiState.value = BookingUiState.Loading
-            val result = getUpcomingBookingsUseCase("user-fatma-001")
+            val result = getUpcomingBookingsUseCase()
             
             result.onSuccess { bookings ->
                 _uiState.value = BookingUiState.Success(bookings)

@@ -1,6 +1,7 @@
 package com.example.domain.usecase.booking
 
 import com.example.domain.model.Booking
+import com.example.domain.repository.AuthRepository
 import com.example.domain.repository.BookingRepository
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -8,16 +9,17 @@ import java.util.Locale
 import javax.inject.Inject
 
 class SearchBookingsUseCase @Inject constructor(
-    private val repository: BookingRepository
+    private val repository: BookingRepository,
+    private val authRepository: AuthRepository
 ) {
     suspend operator fun invoke(
-        uid: String,
+        uid: String? = null,
         query: String = "",
         date: String? = null,
         status: String = "All"
     ): Result<List<Booking>> {
-        // Fetch all bookings for the passenger, not just upcoming ones
-        val result = repository.getBookingsByUid(uid)
+        val finalUid = uid ?: authRepository.getCurrentUserId() ?: return Result.failure(Exception("Not logged in"))
+        val result = repository.getBookingsByUid(finalUid)
         
         return result.map { allBookings ->
             allBookings.filter { booking ->

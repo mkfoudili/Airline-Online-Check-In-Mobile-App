@@ -11,4 +11,9 @@ interface AuthRepository {
     fun login(email: String, password: String, callback: (Result<User>) -> Unit)
     fun emailExists(email: String, callback: (Result<Boolean>) -> Unit)
     fun logout(callback: () -> Unit)
+    
+    /**
+     * Retrieves the stored ID of the currently logged-in user from secure storage.
+     */
+    fun getCurrentUserId(): String?
 }

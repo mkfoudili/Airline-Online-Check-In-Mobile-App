@@ -1,11 +1,7 @@
 package com.example.data.di
 
-import com.example.data.repository.AuthRepositoryImpl
-import com.example.data.repository.BoardingPassRepositoryImpl
-import com.example.data.repository.BookingRepositoryImpl
-import com.example.domain.repository.AuthRepository
-import com.example.domain.repository.BoardingPassRepository
-import com.example.domain.repository.BookingRepository
+import com.example.data.repository.*
+import com.example.domain.repository.*
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -19,7 +15,7 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindAuthRepository(
-        authRepositoryImpl: AuthRepositoryImpl
+        authRepositoryImpl: MockAuthRepositoryImpl
     ): AuthRepository
 
     @Binds
@@ -33,4 +29,28 @@ abstract class RepositoryModule {
     abstract fun bindBookingRepository(
         bookingRepositoryImpl: BookingRepositoryImpl
     ): BookingRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindFlightRepository(
+        flightRepositoryImpl: FlightRepositoryImpl
+    ): FlightRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindCheckInRepository(
+        checkInRepositoryImpl: CheckInRepositoryImpl
+    ): CheckInRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindNotificationRepository(
+        notificationRepositoryImpl: NotificationRepositoryImpl
+    ): NotificationRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindSeatRepository(
+        seatRepositoryImpl: SeatRepositoryImpl
+    ): SeatRepository
 }

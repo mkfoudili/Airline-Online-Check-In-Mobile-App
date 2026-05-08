@@ -40,7 +40,7 @@ class AllBookingsViewModel @Inject constructor(
 
     private fun loadBookings() {
         viewModelScope.launch {
-            val result = searchBookingsUseCase("user-fatma-001")
+            val result = searchBookingsUseCase()
             allBookingsAmount.value = result.getOrDefault(emptyList())
         }
     }
@@ -53,7 +53,7 @@ class AllBookingsViewModel @Inject constructor(
         Triple(query, date, status)
     }.flatMapLatest { (query, date, status) ->
         flow {
-            val result = searchBookingsUseCase("user-fatma-001", query, date, status)
+            val result = searchBookingsUseCase(query = query, date = date, status = status)
             emit(result.getOrDefault(emptyList()))
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())

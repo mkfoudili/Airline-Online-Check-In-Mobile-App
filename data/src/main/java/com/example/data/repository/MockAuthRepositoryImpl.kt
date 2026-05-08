@@ -16,6 +16,10 @@ class MockAuthRepositoryImpl @Inject constructor(
     private val secureStorage: com.example.data.security.SecureStorage
 ) : AuthRepository {
 
+    override fun getCurrentUserId(): String? {
+        return secureStorage.getUserId()
+    }
+
     private val scope = CoroutineScope(Dispatchers.IO)
 
     override fun register(request: RegistrationRequest, callback: (Result<User>) -> Unit) {
@@ -38,7 +42,7 @@ class MockAuthRepositoryImpl @Inject constructor(
             delay(1000)
             if (email == "test@example.com" && password == "password") {
                 val mockUser = User(
-                    uid = "mock_uid_123",
+                    uid = "user-fatma-001",
                     email = email,
                     displayName = "Mock User",
                     phoneNumber = "123456789",

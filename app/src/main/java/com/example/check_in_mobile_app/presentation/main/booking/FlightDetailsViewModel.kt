@@ -29,7 +29,7 @@ class FlightDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = FlightDetailsUiState.Loading
             
-            val result = getFlightDetailsUseCase("user-fatma-001", bookingRef)
+            val result = getFlightDetailsUseCase(bookingRef = bookingRef)
             
             result.onSuccess { detailedBooking ->
                 _uiState.value = FlightDetailsUiState.Success(detailedBooking)

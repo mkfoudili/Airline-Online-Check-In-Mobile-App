@@ -5,7 +5,9 @@ import com.example.domain.usecase.boarding.GeneratePdfUseCase
 import com.example.domain.usecase.boarding.GenerateQRCodeUseCase
 import com.example.domain.usecase.booking.GetUpcomingBookingsUseCase
 import com.example.domain.usecase.booking.SearchBookingsUseCase
-
+import com.example.domain.repository.AuthRepository
+import com.example.domain.model.User
+import com.example.domain.validation.RegistrationRequest
 import com.example.data.remote.BookingDataSource
 
 /**
@@ -15,6 +17,14 @@ import com.example.data.remote.BookingDataSource
  */
 object AppContainer {
 
+    private val authRepository = object : AuthRepository {
+        override fun register(request: RegistrationRequest, callback: (Result<User>) -> Unit) {}
+        override fun login(email: String, password: String, callback: (Result<User>) -> Unit) {}
+        override fun emailExists(email: String, callback: (Result<Boolean>) -> Unit) {}
+        override fun logout(callback: () -> Unit) {}
+        override fun getCurrentUserId(): String? = "user-fatma-001"
+    }
+
     private val bookingRepository by lazy {
         BookingRepositoryImpl(BookingDataSource(), null, null, null)
     }
@@ -22,11 +32,11 @@ object AppContainer {
 
     // Booking use cases
     val getUpcomingBookingsUseCase: GetUpcomingBookingsUseCase by lazy {
-        GetUpcomingBookingsUseCase(bookingRepository)
+        GetUpcomingBookingsUseCase(bookingRepository, authRepository)
     }
 
     val searchBookingsUseCase: SearchBookingsUseCase by lazy {
-        SearchBookingsUseCase(bookingRepository)
+        SearchBookingsUseCase(bookingRepository, authRepository)
     }
 
     // Boarding use cases (stateless - no DB needed)

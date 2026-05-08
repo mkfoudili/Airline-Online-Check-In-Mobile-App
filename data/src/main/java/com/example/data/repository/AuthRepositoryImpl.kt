@@ -70,6 +70,10 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun getCurrentUserId(): String? {
+        return secureStorage.getUserId()
+    }
+
     private suspend fun handleAuthSuccess(userDto: UserDto, token: String?) {
         userPrefs.saveUser(
             uid = userDto.uid,
