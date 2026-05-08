@@ -3,12 +3,17 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.google.ksp)
-    id("com.google.dagger.hilt.android")
+    alias(libs.plugins.dagger.hilt.android)
 }
 
 android {
     namespace = "com.example.check_in_mobile_app"
     compileSdk = 35
+
+    kotlin {
+        jvmToolchain(11)
+    }
+
 
     defaultConfig {
         applicationId = "com.example.check_in_mobile_app"
@@ -59,11 +64,11 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
-
+    
     // Hilt
-    implementation("com.google.dagger:hilt-android:2.48")
-    ksp("com.google.dagger:hilt-android-compiler:2.48")
-    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
 
     // Room
     val room_version = "2.6.1"

@@ -18,7 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.domain.model.Booking
 import com.example.check_in_mobile_app.presentation.components.booking.BookingCard
 import com.example.check_in_mobile_app.presentation.components.booking.DateField
@@ -38,7 +38,8 @@ import androidx.compose.ui.res.stringResource
 fun AllBookingsScreen(
     onNavigateBack: () -> Unit = {},
     onBoarding: () -> Unit = {},
-    viewModel: AllBookingsViewModel = viewModel()
+    onCheckInClick: (String) -> Unit = {},
+    viewModel: AllBookingsViewModel = hiltViewModel()
 ) {
     val searchQuery by viewModel.searchQuery.collectAsState()
     val selectedDate by viewModel.selectedDate.collectAsState()
@@ -55,7 +56,8 @@ fun AllBookingsScreen(
         onClearDate = { viewModel.updateSelectedDate(null) },
         selectedStatus = selectedStatus,
         onStatusSelect = viewModel::updateSelectedStatus,
-        filteredBookings = filteredBookings
+        filteredBookings = filteredBookings,
+        onCheckInClick = onCheckInClick
     )
 }
 
@@ -71,7 +73,8 @@ fun AllBookingsScreenContent(
     onClearDate: () -> Unit = {},
     selectedStatus: String,
     onStatusSelect: (String) -> Unit,
-    filteredBookings: List<Booking>
+    filteredBookings: List<Booking>,
+    onCheckInClick: (String) -> Unit = {}
 ) {
     Scaffold(
         containerColor = Color.White,
@@ -160,6 +163,7 @@ fun AllBookingsScreenContent(
                 items(filteredBookings) { booking ->
                     BookingCard(
                         booking = booking,
+                        onCheckInClick = onCheckInClick,
                         onBoarding = onBoarding
                     )
                 }
@@ -175,9 +179,8 @@ fun AllBookingsScreenPreview() {
     val selectedDate = remember { mutableStateOf<String?>(null) }
     val selectedStatus = remember { mutableStateOf("All") }
     
-    val allBookings = GetUpcomingBookingsUseCase(
-        BookingRepositoryImpl()
-    ).invoke()
+    val allBookings = emptyList<Booking>()
+
 
     val filteredBookings = allBookings.filter { booking ->
         val matchesQuery = searchQuery.value.isBlank() || 

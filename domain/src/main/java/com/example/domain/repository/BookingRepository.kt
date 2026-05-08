@@ -3,7 +3,7 @@ package com.example.domain.repository
 import com.example.domain.model.Booking
 
 interface BookingRepository {
-    fun getBooking(pnr: String, lastName: String, callback: (Result<Booking>) -> Unit)
-    fun getBookingsByUid(uid: String, callback: (Result<List<Booking>>) -> Unit)
-    fun getUpcomingBookings(): List<Booking>
+    suspend fun getBooking(pnr: String, lastName: String): Result<Booking>
+    suspend fun getBookingsByUid(uid: String): Result<List<Booking>>
+    suspend fun getUpcomingBookings(uid: String): Result<List<Booking>>
 }

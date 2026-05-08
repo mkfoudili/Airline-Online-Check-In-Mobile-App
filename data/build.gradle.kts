@@ -3,12 +3,17 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.google.ksp)
-    id("com.google.dagger.hilt.android")
+    alias(libs.plugins.dagger.hilt.android)
 }
 
 android {
     namespace = "com.example.data"
     compileSdk = 35
+
+    kotlin {
+        jvmToolchain(11)
+    }
+
 
     defaultConfig {
         minSdk = 24
@@ -51,11 +56,10 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.datastore.preferences)
-    implementation(libs.androidx.security.crypto)
 
     // Hilt
-    implementation("com.google.dagger:hilt-android:2.48")
-    ksp("com.google.dagger:hilt-android-compiler:2.48")
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
 
     // Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.6.0")

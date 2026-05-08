@@ -26,7 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.domain.model.Booking
 import com.example.domain.model.CheckInStatus
@@ -48,7 +48,7 @@ import com.example.check_in_mobile_app.presentation.main.MainActivity
 
 @Composable
 fun BookingScreen(
-    viewModel: BookingViewModel = viewModel(),
+    viewModel: BookingViewModel = hiltViewModel(),
     onViewAllClick: () -> Unit = {},
     onBoarding: () -> Unit = {},
     onTabSelected: (TabItem) -> Unit = {},

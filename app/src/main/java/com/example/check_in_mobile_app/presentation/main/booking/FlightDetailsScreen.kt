@@ -7,6 +7,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,13 +26,45 @@ import com.example.domain.model.Booking
 import com.example.domain.model.CheckInStatus
 import com.example.domain.model.Flight
 import com.example.domain.model.Passenger
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FlightDetailsScreen(
-    booking: Booking,
     onBack: () -> Unit = {},
-    onStartCheckIn: () -> Unit = {}
+    onStartCheckIn: () -> Unit = {},
+    viewModel: FlightDetailsViewModel = hiltViewModel()
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    when (val state = uiState) {
+        is FlightDetailsUiState.Loading -> {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator(color = NavyBlue)
+            }
+        }
+        is FlightDetailsUiState.Error -> {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text(text = state.message, color = Color.Red, modifier = Modifier.padding(20.dp))
+            }
+        }
+        is FlightDetailsUiState.Success -> {
+            FlightDetailsScreenContent(
+                booking = state.booking,
+                onBack = onBack,
+                onStartCheckIn = onStartCheckIn
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun FlightDetailsScreenContent(
+    booking: Booking,
+    onBack: () -> Unit,
+    onStartCheckIn: () -> Unit
 ) {
     Scaffold(
         containerColor = Color.White,
@@ -115,19 +148,14 @@ fun FlightDetailsScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFFF8FAFC)) // very light gray background like in the image
+                .background(Color(0xFFF8FAFC))
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 24.dp)
         ) {
             Spacer(modifier = Modifier.height(20.dp))
-
-            // -- TOP CARD: Flight Info --
             FlightInfoCard(booking)
-
             Spacer(modifier = Modifier.height(24.dp))
-
-            // -- PASSENGER SECTION --
             Text(
                 text = stringResource(R.string.passenger_label),
                 fontSize = 18.sp,
@@ -137,10 +165,7 @@ fun FlightDetailsScreen(
             )
             Spacer(modifier = Modifier.height(12.dp))
             PassengerCard(booking, infoText = "${stringResource(R.string.pnr_label)} ${booking.pnr}")
-
             Spacer(modifier = Modifier.height(24.dp))
-
-            // -- SCHEDULE SECTION --
             Text(
                 text = stringResource(R.string.schedule_label),
                 fontSize = 18.sp,
@@ -150,18 +175,15 @@ fun FlightDetailsScreen(
             )
             Spacer(modifier = Modifier.height(16.dp))
             ScheduleTimeline(booking)
-
             Spacer(modifier = Modifier.height(32.dp))
         }
     }
 }
 
-
-
 @Preview(showBackground = true)
 @Composable
 fun FlightDetailsScreenPreview() {
-    FlightDetailsScreen(
+    FlightDetailsScreenContent(
         booking = Booking(
             bookingId = "b1",
             bookingRef = "BB9XC2",
@@ -197,6 +219,8 @@ fun FlightDetailsScreenPreview() {
                 aircraftType = "Boeing 737",
                 status = "Scheduled"
             )
-        )
+        ),
+        onBack = {},
+        onStartCheckIn = {}
     )
 }

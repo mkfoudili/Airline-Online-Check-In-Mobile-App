@@ -6,6 +6,8 @@ import com.example.domain.usecase.boarding.GenerateQRCodeUseCase
 import com.example.domain.usecase.booking.GetUpcomingBookingsUseCase
 import com.example.domain.usecase.booking.SearchBookingsUseCase
 
+import com.example.data.remote.BookingDataSource
+
 /**
  * Manual DI container for use cases that don't need the database
  * (they use mock data directly). For database-backed repositories,
@@ -14,8 +16,9 @@ import com.example.domain.usecase.booking.SearchBookingsUseCase
 object AppContainer {
 
     private val bookingRepository by lazy {
-        BookingRepositoryImpl()
+        BookingRepositoryImpl(BookingDataSource(), null, null, null)
     }
+
 
     // Booking use cases
     val getUpcomingBookingsUseCase: GetUpcomingBookingsUseCase by lazy {

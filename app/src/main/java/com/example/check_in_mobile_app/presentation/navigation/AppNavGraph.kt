@@ -131,16 +131,8 @@ fun AppNavGraph(
             )
         }
 
-        composable(route = Destination.FlightDetails.route) { backStackEntry ->
-            val bookingRef = backStackEntry.arguments?.getString("bookingRef") ?: ""
-            // Simple mock extraction for UI logic
-            val booking = BookingRepositoryImpl()
-                .getUpcomingBookings()
-                .find { it.bookingRef == bookingRef }
-                ?: BookingRepositoryImpl().getUpcomingBookings().first()
-
+        composable(route = Destination.FlightDetails.route) {
             FlightDetailsScreen(
-                booking = booking,
                 onBack = { navController.popBackStack() },
                 onStartCheckIn = {
                     navController.navigate(Destination.PassportScan.route)

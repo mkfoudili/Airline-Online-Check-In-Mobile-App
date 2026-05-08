@@ -10,7 +10,10 @@ import com.example.domain.repository.BoardingPassRepository
 import com.example.domain.repository.BookingRepository
 import com.example.domain.usecase.boarding.GeneratePdfUseCase
 import com.example.domain.usecase.boarding.GenerateQRCodeUseCase
+import com.example.data.remote.BookingDataSource
+import com.example.data.remote.FlightDataSource
 import dagger.hilt.android.HiltAndroidApp
+
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -50,9 +53,12 @@ class BaseApplication : Application() {
             boardingPassDao = database.boardingPassDao()
         )
         bookingRepository = BookingRepositoryImpl(
+            bookingDataSource = BookingDataSource(),
+            flightDataSource = FlightDataSource(),
             bookingDao = database.bookingDao(),
             flightDao = database.flightDao()
         )
+
 
         generateQRCodeUseCase = GenerateQRCodeUseCase()
         generateQRCodeBitmapUseCase = GenerateQRCodeBitmapUseCase()

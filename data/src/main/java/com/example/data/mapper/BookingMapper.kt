@@ -9,6 +9,19 @@ import com.example.domain.model.CheckInStatus
 import com.example.domain.model.Flight
 import com.example.domain.model.FlightItinerary
 import com.example.domain.model.Passenger
+import com.example.data.remote.dto.BookingDto
+
+fun BookingDto.toDomain(): Booking {
+    return Booking(
+        bookingId = this.bookingId,
+        pnr = this.pnr,
+        lastName = this.lastName,
+        status = this.status,
+        flight = this.flight.toDomain(),
+        passengers = this.passengers.map { it.toDomain() },
+        bookingRef = this.bookingRef
+    )
+}
 
 fun PassengerDto.toDomain(): Passenger {
     return Passenger(

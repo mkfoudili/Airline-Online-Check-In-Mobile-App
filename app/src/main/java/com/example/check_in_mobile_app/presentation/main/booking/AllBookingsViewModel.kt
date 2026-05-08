@@ -2,18 +2,24 @@ package com.example.check_in_mobile_app.presentation.main.booking
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.check_in_mobile_app.di.AppContainer
 import com.example.domain.model.Booking
+import com.example.domain.usecase.booking.SearchBookingsUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import javax.inject.Inject
 
-class AllBookingsViewModel : ViewModel() {
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 
-    // Dependencies from DI container
-    private val searchBookingsUseCase = AppContainer.searchBookingsUseCase
+@HiltViewModel
+class AllBookingsViewModel @Inject constructor(
+    private val searchBookingsUseCase: SearchBookingsUseCase
+) : ViewModel() {
 
     // Base data
     private val allBookingsAmount = MutableStateFlow<List<Booking>>(emptyList())
@@ -33,8 +39,10 @@ class AllBookingsViewModel : ViewModel() {
     }
 
     private fun loadBookings() {
-        // We use the use case even for the initial load
-        allBookingsAmount.value = searchBookingsUseCase()
+        viewModelScope.launch {
+            val result = searchBookingsUseCase("user-fatma-001")
+            allBookingsAmount.value = result.getOrDefault(emptyList())
+        }
     }
 
     val filteredBookings: StateFlow<List<Booking>> = combine(
@@ -42,8 +50,12 @@ class AllBookingsViewModel : ViewModel() {
         _selectedDate,
         _selectedStatus
     ) { query, date, status ->
-        // The business logic of "matching" is now in the Use Case
-        searchBookingsUseCase(query, date, status)
+        Triple(query, date, status)
+    }.flatMapLatest { (query, date, status) ->
+        flow {
+            val result = searchBookingsUseCase("user-fatma-001", query, date, status)
+            emit(result.getOrDefault(emptyList()))
+        }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     fun updateSearchQuery(query: String) {
@@ -58,5 +70,3 @@ class AllBookingsViewModel : ViewModel() {
         _selectedStatus.value = status
     }
 }
-
-
