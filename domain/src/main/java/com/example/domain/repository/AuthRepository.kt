@@ -10,4 +10,5 @@ interface AuthRepository {
     fun register(request: RegistrationRequest, callback: (Result<User>) -> Unit)
     fun login(email: String, password: String, callback: (Result<User>) -> Unit)
     fun emailExists(email: String, callback: (Result<Boolean>) -> Unit)
+    fun logout(callback: () -> Unit)
 }

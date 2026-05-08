@@ -9,12 +9,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.check_in_mobile_app.AppContainer
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.presentation.components.authforms.RegisterForm
 import com.example.check_in_mobile_app.ui.theme.DarkText
-import com.example.data.preferences.UserPreferencesRepository
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -22,11 +20,7 @@ fun RegisterScreen(
     onNavigateBack: () -> Unit = {},
     onNavigateToLogin: () -> Unit = {},
     onRegisterSuccess: () -> Unit = {},
-    viewModel: AuthViewModel = viewModel(
-        factory = AuthViewModelFactory(
-            AppContainer.provideLanguageRepository(LocalContext.current) as UserPreferencesRepository
-        )
-    )
+    viewModel: AuthViewModel = hiltViewModel()
 ) {
     val state = viewModel.uiState
 

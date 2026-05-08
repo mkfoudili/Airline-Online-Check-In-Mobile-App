@@ -34,8 +34,14 @@ class UserPreferencesRepository(private val dataStore: DataStore<Preferences>) :
             preferences[PreferencesKeys.USER_EMAIL]
         }
 
-    suspend fun saveUser(name: String, email: String) {
+    val userIdFlow: Flow<String?> =
+        dataStore.data.map { preferences ->
+            preferences[PreferencesKeys.USER_ID]
+        }
+
+    suspend fun saveUser(uid: String, name: String, email: String) {
         dataStore.edit { preferences ->
+            preferences[PreferencesKeys.USER_ID]      = uid
             preferences[PreferencesKeys.USER_NAME]    = name
             preferences[PreferencesKeys.USER_EMAIL]   = email
             preferences[PreferencesKeys.IS_LOGGED_IN] = true
@@ -44,6 +50,7 @@ class UserPreferencesRepository(private val dataStore: DataStore<Preferences>) :
 
     suspend fun clearUser() {
         dataStore.edit { preferences ->
+            preferences.remove(PreferencesKeys.USER_ID)
             preferences.remove(PreferencesKeys.USER_NAME)
             preferences.remove(PreferencesKeys.USER_EMAIL)
             preferences[PreferencesKeys.IS_LOGGED_IN] = false

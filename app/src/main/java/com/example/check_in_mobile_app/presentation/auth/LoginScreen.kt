@@ -19,13 +19,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.check_in_mobile_app.AppContainer
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.presentation.components.authforms.LoginForm
 import com.example.check_in_mobile_app.ui.theme.*
-import com.example.data.preferences.UserPreferencesRepository
-import kotlin.jvm.java
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,11 +30,7 @@ fun LoginScreen(
     onNavigateBack: () -> Unit = {},
     onLoginSuccess: () -> Unit = {},
     onNavigateToRegister: () -> Unit = {},
-    viewModel: AuthViewModel = viewModel(
-        factory = AuthViewModelFactory(
-            AppContainer.provideLanguageRepository(LocalContext.current) as UserPreferencesRepository
-        )
-    )
+    viewModel: AuthViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.uiState
 
