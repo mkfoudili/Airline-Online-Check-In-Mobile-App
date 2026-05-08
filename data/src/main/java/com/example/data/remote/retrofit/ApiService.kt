@@ -5,7 +5,6 @@ import com.example.data.remote.URL
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import com.example.data.remote.dto.BookingDto
-import com.example.domain.validation.RegistrationRequest
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -27,10 +26,10 @@ interface Endpoint {
     suspend fun getFlight(@Path("id") id: String): FlightDto
 
     @POST("auth/register")
-    suspend fun register(@Body request: RegistrationRequest): UserDto
+    suspend fun register(@Body request: RegisterRequest): AuthResponse
 
     @POST("auth/login")
-    suspend fun login(@Body request: LoginRequest): LoginResponse
+    suspend fun login(@Body request: LoginRequest): AuthResponse
 
     @POST("auth/refresh")
     suspend fun refreshToken(@Body request: RefreshRequest): TokenResponse
