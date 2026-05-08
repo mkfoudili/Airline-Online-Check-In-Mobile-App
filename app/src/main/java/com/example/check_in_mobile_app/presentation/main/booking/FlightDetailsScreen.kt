@@ -36,20 +36,27 @@ fun FlightDetailsScreen(
     onStartCheckIn: () -> Unit = {},
     viewModel: FlightDetailsViewModel = hiltViewModel()
 ) {
-    val booking by viewModel.booking.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    if (booking == null) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            CircularProgressIndicator()
+    when (val state = uiState) {
+        is FlightDetailsUiState.Loading -> {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator(color = NavyBlue)
+            }
         }
-        return
+        is FlightDetailsUiState.Error -> {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text(text = state.message, color = Color.Red, modifier = Modifier.padding(20.dp))
+            }
+        }
+        is FlightDetailsUiState.Success -> {
+            FlightDetailsScreenContent(
+                booking = state.booking,
+                onBack = onBack,
+                onStartCheckIn = onStartCheckIn
+            )
+        }
     }
-
-    FlightDetailsScreenContent(
-        booking = booking!!,
-        onBack = onBack,
-        onStartCheckIn = onStartCheckIn
-    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
