@@ -13,7 +13,9 @@ import androidx.core.os.LocaleListCompat
 import com.example.check_in_mobile_app.presentation.checkin.CheckInActivity
 import com.example.check_in_mobile_app.presentation.navigation.MainNavGraph
 import com.example.check_in_mobile_app.ui.theme.CheckInMobileAppTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private val navigateToHomeAfterCheckIn = mutableStateOf(false)

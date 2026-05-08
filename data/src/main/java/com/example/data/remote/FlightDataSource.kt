@@ -1,83 +1,44 @@
 package com.example.data.remote
 
 import com.example.data.remote.dto.FlightDto
-import java.sql.ResultSet
-import java.sql.SQLException
+import java.util.*
+import javax.inject.Inject
 
-class FlightDataSource {
+class FlightDataSource @Inject constructor() {
 
     /**
      * Fetches the itinerary for a given flight number.
-     * Returns a Result<FlightDto> indicating success or failure.
+     * Simulated to return a static flight.
      */
     fun getItinerary(flightNumber: String, callback: (Result<FlightDto>) -> Unit) {
-        MySqlHelper.getConnection { connection ->
-            if (connection != null) {
-                try {
-                    val sql = "SELECT * FROM FLIGHTS WHERE flightNumber = ?"
-                    val preparedStatement = connection.prepareStatement(sql)
-                    preparedStatement.setString(1, flightNumber)
-
-                    val resultSet: ResultSet = preparedStatement.executeQuery()
-                    if (resultSet.next()) {
-                        val flight = FlightDto(
-                            flightId = resultSet.getString("flightId"),
-                            flightNumber = resultSet.getString("flightNumber"),
-                            origin = resultSet.getString("origin"),
-                            destination = resultSet.getString("destination"),
-                            departureTime = resultSet.getTimestamp("departureTime"),
-                            arrivalTime = resultSet.getTimestamp("arrivalTime"),
-                            aircraftType = resultSet.getString("aircraftType"),
-                            status = resultSet.getString("status")
-                        )
-                        callback(Result.success(flight))
-                    } else {
-                        callback(Result.failure(Exception("Flight not found")))
-                    }
-                    connection.close()
-                } catch (e: SQLException) {
-                    callback(Result.failure(e))
-                }
-            } else {
-                callback(Result.failure(Exception("Could not connect to database")))
-            }
-        }
+        val flight = FlightDto(
+            flightId = "F101",
+            flightNumber = flightNumber,
+            origin = "LHR",
+            destination = "CDG",
+            departureTime = Date(System.currentTimeMillis() + 7200000), // 2 hours from now
+            arrivalTime = Date(System.currentTimeMillis() + 10800000), // 3 hours from now
+            aircraftType = "Boeing 737",
+            status = "Scheduled"
+        )
+        callback(Result.success(flight))
     }
 
     /**
      * Fetches a flight by its ID.
+     * Simulated to return a static flight.
      */
     fun getFlightById(flightId: String, callback: (Result<FlightDto>) -> Unit) {
-        MySqlHelper.getConnection { connection ->
-            if (connection != null) {
-                try {
-                    val sql = "SELECT * FROM FLIGHTS WHERE flightId = ?"
-                    val preparedStatement = connection.prepareStatement(sql)
-                    preparedStatement.setString(1, flightId)
-
-                    val resultSet: ResultSet = preparedStatement.executeQuery()
-                    if (resultSet.next()) {
-                        val flight = FlightDto(
-                            flightId = resultSet.getString("flightId"),
-                            flightNumber = resultSet.getString("flightNumber"),
-                            origin = resultSet.getString("origin"),
-                            destination = resultSet.getString("destination"),
-                            departureTime = resultSet.getTimestamp("departureTime"),
-                            arrivalTime = resultSet.getTimestamp("arrivalTime"),
-                            aircraftType = resultSet.getString("aircraftType"),
-                            status = resultSet.getString("status")
-                        )
-                        callback(Result.success(flight))
-                    } else {
-                        callback(Result.failure(Exception("Flight with ID $flightId not found")))
-                    }
-                    connection.close()
-                } catch (e: SQLException) {
-                    callback(Result.failure(e))
-                }
-            } else {
-                callback(Result.failure(Exception("Could not connect to database")))
-            }
-        }
+        val flight = FlightDto(
+            flightId = flightId,
+            flightNumber = "SW402",
+            origin = "LHR",
+            destination = "CDG",
+            departureTime = Date(System.currentTimeMillis() + 7200000),
+            arrivalTime = Date(System.currentTimeMillis() + 10800000),
+            aircraftType = "Airbus A320",
+            status = "On Time"
+        )
+        callback(Result.success(flight))
     }
-}
+}

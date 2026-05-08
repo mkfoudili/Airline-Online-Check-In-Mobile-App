@@ -14,8 +14,9 @@ import com.example.domain.usecase.booking.SearchBookingsUseCase
 object AppContainer {
 
     private val bookingRepository by lazy {
-        BookingRepositoryImpl()
+        BookingRepositoryImpl(null, null, null, null)
     }
+
 
     // Booking use cases
     val getUpcomingBookingsUseCase: GetUpcomingBookingsUseCase by lazy {

@@ -13,13 +13,15 @@ import com.example.domain.repository.BookingRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class BookingRepositoryImpl(
-    private val bookingDataSource: BookingDataSource? = null,
-    private val flightDataSource: FlightDataSource? = null,
-    private val bookingDao: BookingDao? = null,
-    private val flightDao: FlightDao? = null
+class BookingRepositoryImpl @Inject constructor(
+    private val bookingDataSource: BookingDataSource?,
+    private val flightDataSource: FlightDataSource?,
+    private val bookingDao: BookingDao?,
+    private val flightDao: FlightDao?
 ) : BookingRepository {
+
 
     override fun getUpcomingBookings(): List<Booking> {
         val mockFlight = com.example.domain.model.Flight(

@@ -11,8 +11,9 @@ import com.example.domain.repository.FlightRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class FlightRepositoryImpl(
+class FlightRepositoryImpl @Inject constructor(
     private val flightDataSource: FlightDataSource,
     private val flightDao: FlightDao
 ) : FlightRepository {

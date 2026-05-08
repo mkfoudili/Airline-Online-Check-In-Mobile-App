@@ -5,8 +5,9 @@ import com.example.domain.repository.BookingRepository
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import javax.inject.Inject
 
-class SearchBookingsUseCase(
+class SearchBookingsUseCase @Inject constructor(
     private val repository: BookingRepository
 ) {
     operator fun invoke(

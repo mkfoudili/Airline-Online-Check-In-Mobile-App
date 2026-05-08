@@ -132,10 +132,11 @@ fun AppNavGraph(
         composable(route = Destination.FlightDetails.route) { backStackEntry ->
             val bookingRef = backStackEntry.arguments?.getString("bookingRef") ?: ""
             // Simple mock extraction for UI logic
-            val booking = BookingRepositoryImpl()
+            val booking = BookingRepositoryImpl(null, null, null, null)
                 .getUpcomingBookings()
                 .find { it.bookingRef == bookingRef }
-                ?: BookingRepositoryImpl().getUpcomingBookings().first()
+                ?: BookingRepositoryImpl(null, null, null, null).getUpcomingBookings().first()
+
 
             FlightDetailsScreen(
                 booking = booking,

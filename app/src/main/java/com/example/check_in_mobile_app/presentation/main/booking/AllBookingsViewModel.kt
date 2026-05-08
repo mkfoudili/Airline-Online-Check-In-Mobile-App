@@ -2,18 +2,20 @@ package com.example.check_in_mobile_app.presentation.main.booking
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.check_in_mobile_app.di.AppContainer
 import com.example.domain.model.Booking
+import com.example.domain.usecase.booking.SearchBookingsUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import javax.inject.Inject
 
-class AllBookingsViewModel : ViewModel() {
-
-    // Dependencies from DI container
-    private val searchBookingsUseCase = AppContainer.searchBookingsUseCase
+@HiltViewModel
+class AllBookingsViewModel @Inject constructor(
+    private val searchBookingsUseCase: SearchBookingsUseCase
+) : ViewModel() {
 
     // Base data
     private val allBookingsAmount = MutableStateFlow<List<Booking>>(emptyList())

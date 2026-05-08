@@ -8,6 +8,11 @@ android {
     namespace = "com.example.domain"
     compileSdk = 35
 
+    kotlin {
+        jvmToolchain(11)
+    }
+
+
     defaultConfig {
         minSdk = 24
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -40,6 +45,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 dependencies {
     // ZXing : QR Code generation
     implementation("com.google.zxing:core:3.5.3")
+    implementation("javax.inject:javax.inject:1")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

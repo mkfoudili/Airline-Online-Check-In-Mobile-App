@@ -20,7 +20,9 @@ import com.example.check_in_mobile_app.presentation.main.booking.FlightDetailsSc
 import com.example.check_in_mobile_app.presentation.main.home.HomeScreen
 import com.example.check_in_mobile_app.presentation.main.notifications.NotificationsScreen
 import com.example.check_in_mobile_app.presentation.main.profile.ProfileScreen
-import com.example.data.repository.BookingRepositoryImpl
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.check_in_mobile_app.presentation.main.booking.FlightDetailsViewModel
+
 
 @Composable
 fun MainNavGraph(
@@ -98,10 +100,8 @@ fun MainNavGraph(
         }
         composable(Destination.FlightDetails.route) { backStackEntry ->
             val bookingRef = backStackEntry.arguments?.getString("bookingRef") ?: ""
-            val booking = BookingRepositoryImpl()
-                .getUpcomingBookings()
-                .find { it.bookingRef == bookingRef }
-                ?: BookingRepositoryImpl().getUpcomingBookings().first()
+            val viewModel: FlightDetailsViewModel = hiltViewModel()
+            val booking = viewModel.booking ?: return@composable
 
             FlightDetailsScreen(
                 booking = booking,

@@ -1,7 +1,7 @@
 package com.example.data.remote.dto
 
 import com.example.domain.model.CheckInStatus
-import java.sql.Timestamp
+import java.util.Date
 
 data class BookingDto(
     val bookingId: String,
@@ -9,6 +9,7 @@ data class BookingDto(
     val pnr: String,
     val lastName: String,
     val status: CheckInStatus,
-    val checkinDeadline: Timestamp?,
-    val createdAt: Timestamp?
+    val checkinDeadline: Date?,
+    val createdAt: Date?
 )
+
