@@ -7,7 +7,7 @@
     <string name="all_flights">كل الرحلات</string>
     <string name="upcoming_flights">الرحلات القادمة</string>
     <string name="view_all">عرض الكل</string>
-    <string name="search_hint">ابحث عن رحلة</string>
+    <string name="search_hint">ابحث عن وجهة</string>
     <string name="back">رجوع</string>
     <!-- Date Picker -->
     <string name="select_date">اختر تاريخاً</string>

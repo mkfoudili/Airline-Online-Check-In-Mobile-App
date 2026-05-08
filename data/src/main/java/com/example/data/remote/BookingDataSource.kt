@@ -3,7 +3,6 @@ package com.example.data.remote
 import com.example.data.remote.dto.BookingDto
 import com.example.data.remote.dto.PassengerDto
 import com.example.data.remote.retrofit.ApiService
-import com.example.data.remote.USER_ID
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -15,11 +14,11 @@ class BookingDataSource @Inject constructor() {
 
     suspend fun getBookingsByUid(uid: String): List<BookingDto> {
         // Ignore the passed uid and use the hardcoded one as requested
-        return api.getBookings(USER_ID)
+        return api.getBookings(uid)
     }
 
     suspend fun getUpcomingBookingsByUid(uid: String): List<BookingDto> {
-        return api.getUpcomingBookings(USER_ID)
+        return api.getUpcomingBookings(uid)
     }
 
     suspend fun getBooking(pnr: String, lastName: String): BookingDto? {

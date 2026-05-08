@@ -7,8 +7,7 @@ import javax.inject.Inject
 class GetUpcomingBookingsUseCase @Inject constructor(
     private val repository: BookingRepository
 ) {
-    suspend operator fun invoke(uid: String): List<Booking> {
-        val result = repository.getUpcomingBookings(uid)
-        return result.getOrDefault(emptyList())
+    suspend operator fun invoke(uid: String): Result<List<Booking>> {
+        return repository.getUpcomingBookings(uid)
     }
 }

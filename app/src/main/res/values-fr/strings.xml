@@ -7,7 +7,7 @@
     <string name="all_flights">Tous les Vols</string>
     <string name="upcoming_flights">Vols à Venir</string>
     <string name="view_all">Voir Tout</string>
-    <string name="search_hint">Rechercher un vol</string>
+    <string name="search_hint">Rechercher une destination</string>
     <string name="back">Retour</string>
     <!-- Date Picker -->
     <string name="select_date">Sélectionner une date</string>
