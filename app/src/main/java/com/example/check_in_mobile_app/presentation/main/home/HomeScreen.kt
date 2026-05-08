@@ -18,10 +18,12 @@ import com.example.check_in_mobile_app.presentation.components.TabBarMenu
 import com.example.check_in_mobile_app.presentation.components.TabItem
 import com.example.domain.model.*
 
+import androidx.hilt.navigation.compose.hiltViewModel
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel = viewModel(),
+    viewModel: HomeViewModel = hiltViewModel(),
     onCheckInClick: () -> Unit = {},
     onFindFlightClick: () -> Unit = {},
     onNavigateToBoardingScreen: () -> Unit = {},

@@ -27,7 +27,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import com.example.check_in_mobile_app.R
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.check_in_mobile_app.ui.theme.MediumGray
@@ -181,7 +180,7 @@ fun BookingCard(
             CheckInStatus.CHECK_IN_OPEN -> {
                 Spacer(modifier = Modifier.height(12.dp))
                 Button(
-                    onClick = { onCheckInClick(booking.bookingId) },
+                    onClick = { onCheckInClick(booking.bookingRef) },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(
@@ -218,5 +217,5 @@ fun BookingCard(
 
             CheckInStatus.PASSED -> { /* flight passed, no action needed */ }
         }
-        }
     }
+}

@@ -10,12 +10,14 @@ import javax.inject.Inject
 class SearchBookingsUseCase @Inject constructor(
     private val repository: BookingRepository
 ) {
-    operator fun invoke(
+    suspend operator fun invoke(
+        uid: String,
         query: String = "",
         date: String? = null,
         status: String = "All"
     ): List<Booking> {
-        val allBookings = repository.getUpcomingBookings()
+        val result = repository.getUpcomingBookings(uid)
+        val allBookings = result.getOrDefault(emptyList())
         
         return allBookings.filter { booking ->
             val matchesQuery = query.isBlank() || 

@@ -9,11 +9,17 @@ fun FlightDto.toDomain(): Flight {
         flightId = this.flightId,
         flightNumber = this.flightNumber,
         origin = this.origin,
+        originCity = this.originCity,
         destination = this.destination,
+        destinationCity = this.destinationCity,
         departureTime = this.departureTime?.time ?: 0L,
         arrivalTime = this.arrivalTime?.time ?: 0L,
         aircraftType = this.aircraftType,
-        status = this.status
+        status = this.status,
+        boardingTime = this.boardingTime ?: "",
+        checkInOpensTime = this.checkInOpensTime ?: "",
+        gate = this.gate ?: "",
+        terminal = this.terminal ?: ""
     )
 }
 

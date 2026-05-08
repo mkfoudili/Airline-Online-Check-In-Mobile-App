@@ -38,6 +38,7 @@ import androidx.compose.ui.res.stringResource
 fun AllBookingsScreen(
     onNavigateBack: () -> Unit = {},
     onBoarding: () -> Unit = {},
+    onCheckInClick: (String) -> Unit = {},
     viewModel: AllBookingsViewModel = hiltViewModel()
 ) {
     val searchQuery by viewModel.searchQuery.collectAsState()
@@ -55,7 +56,8 @@ fun AllBookingsScreen(
         onClearDate = { viewModel.updateSelectedDate(null) },
         selectedStatus = selectedStatus,
         onStatusSelect = viewModel::updateSelectedStatus,
-        filteredBookings = filteredBookings
+        filteredBookings = filteredBookings,
+        onCheckInClick = onCheckInClick
     )
 }
 
@@ -71,7 +73,8 @@ fun AllBookingsScreenContent(
     onClearDate: () -> Unit = {},
     selectedStatus: String,
     onStatusSelect: (String) -> Unit,
-    filteredBookings: List<Booking>
+    filteredBookings: List<Booking>,
+    onCheckInClick: (String) -> Unit = {}
 ) {
     Scaffold(
         containerColor = Color.White,
@@ -160,6 +163,7 @@ fun AllBookingsScreenContent(
                 items(filteredBookings) { booking ->
                     BookingCard(
                         booking = booking,
+                        onCheckInClick = onCheckInClick,
                         onBoarding = onBoarding
                     )
                 }
@@ -175,9 +179,7 @@ fun AllBookingsScreenPreview() {
     val selectedDate = remember { mutableStateOf<String?>(null) }
     val selectedStatus = remember { mutableStateOf("All") }
     
-    val allBookings = GetUpcomingBookingsUseCase(
-        BookingRepositoryImpl(null, null, null, null)
-    ).invoke()
+    val allBookings = emptyList<Booking>()
 
 
     val filteredBookings = allBookings.filter { booking ->

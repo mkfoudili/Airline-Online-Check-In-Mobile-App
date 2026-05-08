@@ -35,7 +35,7 @@ fun ScheduleTimeline(booking: Booking, modifier: Modifier = Modifier) {
         TimelineItem(
             time = booking.flight.boardingTime,
             title = stringResource(R.string.boarding_starts_label),
-            subtitle = "${stringResource(R.string.gate_label)} ${booking.gate}",
+            subtitle = "${stringResource(R.string.gate_label)} ${booking.flight.gate} • ${booking.flight.terminal}",
             iconRes = R.drawable.clock
         )
         TimelineSpacing()

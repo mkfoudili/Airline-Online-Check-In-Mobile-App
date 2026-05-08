@@ -12,6 +12,10 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
+
 @HiltViewModel
 class AllBookingsViewModel @Inject constructor(
     private val searchBookingsUseCase: SearchBookingsUseCase
@@ -35,8 +39,9 @@ class AllBookingsViewModel @Inject constructor(
     }
 
     private fun loadBookings() {
-        // We use the use case even for the initial load
-        allBookingsAmount.value = searchBookingsUseCase()
+        viewModelScope.launch {
+            allBookingsAmount.value = searchBookingsUseCase("user-fatma-001")
+        }
     }
 
     val filteredBookings: StateFlow<List<Booking>> = combine(
@@ -44,8 +49,11 @@ class AllBookingsViewModel @Inject constructor(
         _selectedDate,
         _selectedStatus
     ) { query, date, status ->
-        // The business logic of "matching" is now in the Use Case
-        searchBookingsUseCase(query, date, status)
+        Triple(query, date, status)
+    }.flatMapLatest { (query, date, status) ->
+        flow {
+            emit(searchBookingsUseCase("user-fatma-001", query, date, status))
+        }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     fun updateSearchQuery(query: String) {

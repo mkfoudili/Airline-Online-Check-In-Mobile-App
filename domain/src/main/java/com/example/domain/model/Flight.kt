@@ -12,5 +12,7 @@ data class Flight(
     val originCity: String = "",
     val destinationCity: String = "",
     val checkInOpensTime: String = "",
-    val boardingTime: String = ""
+    val boardingTime: String = "",
+    val gate: String = "",
+    val terminal: String = ""
 )

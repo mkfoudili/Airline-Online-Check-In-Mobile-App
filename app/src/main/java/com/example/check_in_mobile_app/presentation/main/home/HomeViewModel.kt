@@ -12,24 +12,51 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import com.example.domain.repository.BookingRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class HomeViewModel(application: Application) : AndroidViewModel(application) {
+@HiltViewModel
+class HomeViewModel @Inject constructor(
+    application: Application,
+    private val bookingRepository: BookingRepository
+) : AndroidViewModel(application) {
 
-    // Use the singleton monitor from BaseApplication so there is only
-    // one NetworkCallback registered for the whole app lifetime.
     private val networkMonitor = (application as BaseApplication).networkMonitor
 
-    // WhileSubscribed(5_000) keeps the network callback alive for 5 s after
-    // the last subscriber leaves (e.g. screen rotation) to avoid flicker.
     val isOnline: StateFlow<Boolean> = networkMonitor.isOnline
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = networkMonitor.currentlyOnline()   // <-- read initial value synchronously
+            initialValue = networkMonitor.currentlyOnline()
         )
 
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
+
+    init {
+        loadUpcomingFlight()
+    }
+
+    private fun loadUpcomingFlight() {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true) }
+            val result = bookingRepository.getUpcomingBookings("user-fatma-001")
+            result.onSuccess { bookings ->
+                if (bookings.isNotEmpty()) {
+                    val nextFlight = bookings.first().flight
+                    _uiState.update { it.copy(
+                        flightDestination = "${nextFlight.destinationCity} (${nextFlight.destination})",
+                        isLoading = false
+                    ) }
+                } else {
+                    _uiState.update { it.copy(isLoading = false, flightDestination = "No upcoming flights") }
+                }
+            }.onFailure { error ->
+                _uiState.update { it.copy(isLoading = false, errorMessage = error.message) }
+            }
+        }
+    }
 
     fun onBookingReferenceChange(value: String) {
         _uiState.update { it.copy(bookingReference = value) }
@@ -43,17 +70,10 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     fun onCheckInNow() { /* TODO */ }
 
-    /**
-     * Pull-to-refresh: re-check connectivity and simulate a data reload.
-     * The NetworkMonitor Flow already re-emits automatically on state change;
-     * this gives the user visual feedback and a manual re-trigger.
-     */
     fun onRefresh() {
         viewModelScope.launch {
             _uiState.update { it.copy(isRefreshing = true) }
-            // Re-check connectivity immediately by reading the current state.
-            // The NetworkMonitor callback handles the automatic detection;
-            // this is just a minimum delay for the spinner to be visible.
+            loadUpcomingFlight()
             delay(800)
             _uiState.update { it.copy(isRefreshing = false) }
         }

@@ -8,8 +8,10 @@ data class BookingDto(
     val uid: String,
     val pnr: String,
     val lastName: String,
+    val bookingRef: String,
     val status: CheckInStatus,
     val checkinDeadline: Date?,
-    val createdAt: Date?
+    val createdAt: Date?,
+    val flight: FlightDto,
+    val passengers: List<PassengerDto> = emptyList()
 )
-
