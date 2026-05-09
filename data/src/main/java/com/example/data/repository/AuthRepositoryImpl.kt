@@ -32,7 +32,7 @@ class AuthRepositoryImpl @Inject constructor(
                     phoneNumber = request.phoneNumber
                 )
                 val response = api.register(dataRequest)
-                handleAuthSuccess(response.user, response.token)
+                handleAuthSuccess(response.user, response.token, response.refreshToken)  // ← refreshToken passé
                 callback(Result.success(response.user.toDomain()))
             } catch (e: Exception) {
                 callback(Result.failure(e))
@@ -44,11 +44,26 @@ class AuthRepositoryImpl @Inject constructor(
         scope.launch {
             try {
                 val response = api.login(LoginRequest(email, password))
-                handleAuthSuccess(response.user, response.token)
+                handleAuthSuccess(response.user, response.token, response.refreshToken)  // ← refreshToken passé
                 callback(Result.success(response.user.toDomain()))
             } catch (e: Exception) {
                 callback(Result.failure(Exception("Login failed: ${e.message}")))
             }
+        }
+    }
+
+    // signature mise à jour + saveTokens
+    private suspend fun handleAuthSuccess(userDto: UserDto, token: String?, refreshToken: String?) {
+        userPrefs.saveUser(
+            uid = userDto.uid,
+            name = userDto.displayName ?: "",
+            email = userDto.email ?: ""
+        )
+        secureStorage.saveUserId(userDto.uid)
+        if (token != null && refreshToken != null) {
+            secureStorage.saveTokens(token, refreshToken)
+        } else {
+            token?.let { secureStorage.saveAuthToken(it) }  // fallback si pas encore de refresh
         }
     }
 
@@ -83,15 +98,5 @@ class AuthRepositoryImpl @Inject constructor(
 
     override fun getCurrentUserId(): String? {
         return secureStorage.getUserId()
-    }
-
-    private suspend fun handleAuthSuccess(userDto: UserDto, token: String?) {
-        userPrefs.saveUser(
-            uid = userDto.uid,
-            name = userDto.displayName ?: "",
-            email = userDto.email ?: ""
-        )
-        secureStorage.saveUserId(userDto.uid)
-        token?.let { secureStorage.saveAuthToken(it) }
     }
 }
