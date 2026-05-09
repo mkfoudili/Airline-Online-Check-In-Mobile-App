@@ -12,9 +12,9 @@ import com.example.check_in_mobile_app.presentation.main.MainActivity
 import com.example.check_in_mobile_app.presentation.navigation.LoginNavGraph
 import com.example.check_in_mobile_app.ui.theme.CheckInMobileAppTheme
 import com.example.check_in_mobile_app.utils.LanguagePreferences
-import androidx.activity.viewModels
+import dagger.hilt.android.AndroidEntryPoint
 
-@dagger.hilt.android.AndroidEntryPoint
+@AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
 
     private val viewModel: AuthViewModel by viewModels()

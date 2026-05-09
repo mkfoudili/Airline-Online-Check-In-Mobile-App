@@ -27,11 +27,9 @@ import com.example.check_in_mobile_app.ui.theme.*
 
 @Composable
 fun ActiveFlightCard(
-    destination: String,
-    onCheckInClick: () -> Unit,
-    uiState: HomeUiState
+    uiState: HomeUiState,
+    onCheckInClick: () -> Unit
 ) {
-    // Mirror the plane horizontally when layout is RTL (Arabic)
     val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
     val planeScaleX = if (isRtl) -1f else 1f
 
@@ -42,6 +40,7 @@ fun ActiveFlightCard(
             .background(NavyBlue)
             .padding(22.dp)
     ) {
+        // Avion décoratif
         Image(
             painter = painterResource(id = R.drawable.plane),
             contentScale = ContentScale.Crop,
@@ -52,7 +51,9 @@ fun ActiveFlightCard(
                 .offset(137.dp, 25.dp)
                 .scale(scaleX = planeScaleX, scaleY = 1f)
         )
+
         Column {
+            // Badge
             Row(
                 modifier = Modifier
                     .clip(RoundedCornerShape(20.dp))
@@ -65,7 +66,7 @@ fun ActiveFlightCard(
                     modifier = Modifier
                         .size(6.dp)
                         .clip(CircleShape)
-                        .background(ActiveGreen)
+                        .background(if (uiState.activeFlight != null) ActiveGreen else CoolGray)
                 )
                 Text(
                     text = stringResource(R.string.active_now_badge),
@@ -91,18 +92,40 @@ fun ActiveFlightCard(
 
             Spacer(modifier = Modifier.height(6.dp))
 
-            Text(
-                text = if (uiState.isCheckInActive)
-                    stringResource(R.string.active_checkin_open, destination)
-                else
-                    stringResource(R.string.active_book_flight),
-                fontSize = 13.sp,
-                color = SubtitleWhite,
-                lineHeight = 19.sp,
-                modifier = Modifier.widthIn(max = 200.dp),
-                maxLines = 3,
-                overflow = TextOverflow.Ellipsis
-            )
+            when {
+                uiState.isActiveFlightLoading -> {
+                    CircularProgressIndicator(
+                        color = SubtitleWhite,
+                        modifier = Modifier.size(16.dp),
+                        strokeWidth = 2.dp
+                    )
+                }
+                uiState.activeFlight != null -> {
+                    Text(
+                        text = if (uiState.isCheckInActive)
+                            stringResource(R.string.active_checkin_open, uiState.activeFlightDestination)
+                        else
+                            stringResource(R.string.active_flight_upcoming, uiState.activeFlightDestination),
+                        fontSize = 13.sp,
+                        color = SubtitleWhite,
+                        lineHeight = 19.sp,
+                        modifier = Modifier.widthIn(max = 200.dp),
+                        maxLines = 3,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+                else -> {
+                    Text(
+                        text = stringResource(R.string.active_book_flight),
+                        fontSize = 13.sp,
+                        color = SubtitleWhite,
+                        lineHeight = 19.sp,
+                        modifier = Modifier.widthIn(max = 200.dp),
+                        maxLines = 3,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            }
 
             if (uiState.isCheckInActive) {
                 Spacer(modifier = Modifier.height(18.dp))

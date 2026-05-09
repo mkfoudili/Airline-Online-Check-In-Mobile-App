@@ -1,8 +1,10 @@
 package com.example.domain.usecase.boarding
 
+import javax.inject.Inject
+
 import com.example.domain.model.BoardingPass
 
-class GenerateQRCodeUseCase {
+class GenerateQRCodeUseCase @Inject constructor() {
 
     operator fun invoke(boardingPass: BoardingPass): String {
         // If the pass already has a QR code data string, use it

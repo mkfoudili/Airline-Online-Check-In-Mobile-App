@@ -9,8 +9,11 @@ data class BookingEntity(
     val flightId: String,
     val uid: String,
     val pnr: String,
+    val bookingRef: String = "",
     val lastName: String,
     val status: String,
     val checkinDeadline: Long?,
-    val createdAt: Long?
+    val createdAt: Long?,
+    // Timestamp de la dernière synchronisation avec le backend
+    val lastSyncedAt: Long = System.currentTimeMillis()
 )

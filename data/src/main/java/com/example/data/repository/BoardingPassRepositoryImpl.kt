@@ -8,8 +8,9 @@ import com.example.domain.repository.BoardingPassRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class BoardingPassRepositoryImpl(
+class BoardingPassRepositoryImpl @Inject constructor (
     private val boardingPassDao: BoardingPassDao
 ) : BoardingPassRepository {
 

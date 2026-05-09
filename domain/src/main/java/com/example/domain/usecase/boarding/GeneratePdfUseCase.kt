@@ -1,11 +1,13 @@
 package com.example.domain.usecase.boarding
 
+import javax.inject.Inject
+
 import com.example.domain.model.BoardingPass
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class GeneratePdfUseCase {
+class GeneratePdfUseCase @Inject constructor() {
 
     operator fun invoke(boardingPass: BoardingPass): PdfBoardingPassData {
         val dateFormatter = SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH)

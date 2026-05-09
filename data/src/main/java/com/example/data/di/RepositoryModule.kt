@@ -12,45 +12,24 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
 
-    @Binds
-    @Singleton
-    abstract fun bindAuthRepository(
-        authRepositoryImpl: AuthRepositoryImpl
-    ): AuthRepository
+    @Binds @Singleton
+    abstract fun bindAuthRepository(impl: AuthRepositoryImpl): AuthRepository
 
-    @Binds
-    @Singleton
-    abstract fun bindBoardingPassRepository(
-        boardingPassRepositoryImpl: BoardingPassRepositoryImpl
-    ): BoardingPassRepository
+    @Binds @Singleton
+    abstract fun bindBoardingPassRepository(impl: BoardingPassRepositoryImpl): BoardingPassRepository
 
-    @Binds
-    @Singleton
-    abstract fun bindBookingRepository(
-        bookingRepositoryImpl: BookingRepositoryImpl
-    ): BookingRepository
+    @Binds @Singleton
+    abstract fun bindBookingRepository(impl: BookingRepositoryImpl): BookingRepository
 
-    @Binds
-    @Singleton
-    abstract fun bindFlightRepository(
-        flightRepositoryImpl: FlightRepositoryImpl
-    ): FlightRepository
+    @Binds @Singleton
+    abstract fun bindFlightRepository(impl: FlightRepositoryImpl): FlightRepository
 
-    @Binds
-    @Singleton
-    abstract fun bindCheckInRepository(
-        checkInRepositoryImpl: CheckInRepositoryImpl
-    ): CheckInRepository
+    @Binds @Singleton
+    abstract fun bindCheckInRepository(impl: CheckInRepositoryImpl): CheckInRepository
 
-    @Binds
-    @Singleton
-    abstract fun bindNotificationRepository(
-        notificationRepositoryImpl: NotificationRepositoryImpl
-    ): NotificationRepository
+    @Binds @Singleton
+    abstract fun bindNotificationRepository(impl: NotificationRepositoryImpl): NotificationRepository
 
-    @Binds
-    @Singleton
-    abstract fun bindSeatRepository(
-        seatRepositoryImpl: SeatRepositoryImpl
-    ): SeatRepository
+    @Binds @Singleton
+    abstract fun bindSeatRepository(impl: SeatRepositoryImpl): SeatRepository
 }

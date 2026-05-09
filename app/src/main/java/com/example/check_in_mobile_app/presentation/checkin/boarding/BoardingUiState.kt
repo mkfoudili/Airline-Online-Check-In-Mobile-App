@@ -24,6 +24,7 @@ data class BoardingUiState(
     val qrCodeData: String = "BOARDING:AH1042:SK7Y29:14A:ALG-CDG",
     val qrBitmap: ImageBitmap? = null,
     val isLoading: Boolean = true,
+    val isEmpty: Boolean = false,
     val isDownloadingPdf: Boolean = false,
     val isOffline: Boolean = false,
     val isPdfGenerated: Boolean = false,

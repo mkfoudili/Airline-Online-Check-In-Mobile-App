@@ -21,51 +21,7 @@ import kotlinx.coroutines.launch
 @HiltAndroidApp
 class BaseApplication : Application() {
 
-    lateinit var database: AppDatabase
-        private set
-
-    lateinit var networkMonitor: NetworkMonitor
-        private set
-
-    lateinit var boardingPassRepository: BoardingPassRepository
-        private set
-
-    lateinit var bookingRepository: BookingRepository
-        private set
-
-    lateinit var generateQRCodeUseCase: GenerateQRCodeUseCase
-        private set
-
-    // Now imported from data.usecase (ZXing lives in :data, not :domain)
-    lateinit var generateQRCodeBitmapUseCase: GenerateQRCodeBitmapUseCase
-        private set
-
-    lateinit var generatePdfUseCase: GeneratePdfUseCase
-        private set
-
     override fun onCreate() {
         super.onCreate()
-
-        database = AppDatabase.getDatabase(this)
-        networkMonitor = NetworkMonitor(this)
-
-        boardingPassRepository = BoardingPassRepositoryImpl(
-            boardingPassDao = database.boardingPassDao()
-        )
-        bookingRepository = BookingRepositoryImpl(
-            bookingDataSource = BookingDataSource(),
-            flightDataSource = FlightDataSource(),
-            bookingDao = database.bookingDao(),
-            flightDao = database.flightDao()
-        )
-
-
-        generateQRCodeUseCase = GenerateQRCodeUseCase()
-        generateQRCodeBitmapUseCase = GenerateQRCodeBitmapUseCase()
-        generatePdfUseCase = GeneratePdfUseCase()
-
-        CoroutineScope(Dispatchers.IO).launch {
-            boardingPassRepository.seedMockDataIfEmpty()
-        }
     }
 }
