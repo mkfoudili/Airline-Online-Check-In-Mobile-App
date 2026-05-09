@@ -30,7 +30,6 @@ object NetworkModule {
         authInterceptor: AuthInterceptor,
         tokenAuthenticator: TokenAuthenticator
     ): Endpoint {
-        // Create OkHttpClient with our security interceptors
         val okHttpClient = OkHttpClient.Builder()
             .addInterceptor(authInterceptor)
             .authenticator(tokenAuthenticator)
@@ -38,14 +37,12 @@ object NetworkModule {
             .connectTimeout(15, TimeUnit.SECONDS)
             .build()
 
-        // Create Retrofit instance
         val retrofit = Retrofit.Builder()
             .baseUrl(URL)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        // Create and return the API Endpoint
         return retrofit.create(Endpoint::class.java)
     }
 }

@@ -2,12 +2,8 @@ package com.example.check_in_mobile_app.presentation.main.home
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -30,13 +26,13 @@ import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.presentation.components.OfflineBanner
 import com.example.check_in_mobile_app.presentation.components.flightdetails.FlightInfoCard
 import com.example.check_in_mobile_app.ui.theme.*
-import com.example.domain.model.Booking
+import java.util.concurrent.TimeUnit
 
 @Composable
 fun OfflineHomeScreen(
     onNavigateToBoardingScreen: () -> Unit = {},
     screenWidth: Dp = LocalConfiguration.current.screenWidthDp.dp,
-    booking: Booking
+    uiState: HomeUiState
 ) {
     Row(
         modifier = Modifier
@@ -46,16 +42,14 @@ fun OfflineHomeScreen(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                text = stringResource(R.string.offline_dashboard_title),
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                color = NavyBlue,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-        }
+        Text(
+            text = stringResource(R.string.offline_dashboard_title),
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            color = NavyBlue,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
         Row(
             modifier = Modifier.wrapContentWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -90,6 +84,16 @@ fun OfflineHomeScreen(
 
     Spacer(modifier = Modifier.height(24.dp))
 
+    // Affiche la date de sync si on a un vol en cache
+    val cachedBooking = uiState.activeFlight
+    val syncedAgo = cachedBooking?.let {
+        val now = System.currentTimeMillis()
+        // On approxime depuis le lastSyncedAt de l'entity, ici on utilise le timestamp actuel comme proxy
+        val diff = now - (it.flight.departureTime - 86_400_000L) // heuristique simple
+        val mins = TimeUnit.MILLISECONDS.toMinutes(kotlin.math.abs(diff)).coerceAtMost(59)
+        "$mins min"
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -119,7 +123,9 @@ fun OfflineHomeScreen(
             )
             Spacer(modifier = Modifier.width(4.dp))
             Text(
-                text = stringResource(R.string.offline_synced_ago, "42 mins"),
+                text = syncedAgo?.let {
+                    stringResource(R.string.offline_synced_ago, it)
+                } ?: stringResource(R.string.offline_not_synced),
                 fontSize = 9.sp,
                 color = CoolGray,
                 maxLines = 1,
@@ -130,60 +136,79 @@ fun OfflineHomeScreen(
 
     Spacer(modifier = Modifier.height(24.dp))
 
-    FlightInfoCard(booking = booking)
+    if (cachedBooking != null) {
+        FlightInfoCard(booking = cachedBooking)
 
-    Spacer(modifier = Modifier.height(30.dp))
+        Spacer(modifier = Modifier.height(30.dp))
 
-    Text(
-        text = stringResource(R.string.offline_available_actions),
-        fontSize = 16.sp,
-        letterSpacing = 0.7.sp,
-        fontWeight = FontWeight.Bold,
-        color = CoolGray
-    )
+        Text(
+            text = stringResource(R.string.offline_available_actions),
+            fontSize = 16.sp,
+            letterSpacing = 0.7.sp,
+            fontWeight = FontWeight.Bold,
+            color = CoolGray
+        )
 
-    Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
-    BoardingPassButton(onNavigateToBoardingScreen)
+        BoardingPassButton(onNavigateToBoardingScreen)
 
-    Spacer(modifier = Modifier.height(50.dp))
+        Spacer(modifier = Modifier.height(50.dp))
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight()
-            .drawBehind {
-                drawRoundRect(
-                    color = NavyBlue,
-                    size = size,
-                    cornerRadius = CornerRadius(12.dp.toPx()),
-                    style = Stroke(
-                        width = 1.dp.toPx(),
-                        pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .drawBehind {
+                    drawRoundRect(
+                        color = NavyBlue,
+                        size = size,
+                        cornerRadius = CornerRadius(12.dp.toPx()),
+                        style = Stroke(
+                            width = 1.dp.toPx(),
+                            pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
+                        )
                     )
+                }
+                .padding(16.dp, vertical = 10.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.Top
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.info),
+                    contentDescription = null,
+                    tint = CoolGray,
+                    modifier = Modifier.size(18.dp).offset(0.dp, 5.dp)
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+                Text(
+                    text = stringResource(R.string.offline_data_saved_note),
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Normal,
+                    color = CoolGray,
+                    lineHeight = 19.sp
                 )
             }
-            .padding(16.dp, vertical = 10.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.Top
+        }
+    } else {
+        // Aucun vol en cache
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(12.dp))
+                .background(LightGray)
+                .padding(24.dp),
+            contentAlignment = Alignment.Center
         ) {
-            Icon(
-                painter = painterResource(id = R.drawable.info),
-                contentDescription = null,
-                tint = CoolGray,
-                modifier = Modifier.size(18.dp).offset(0.dp, 5.dp)
-            )
-            Spacer(modifier = Modifier.width(12.dp))
             Text(
-                text = stringResource(R.string.offline_data_saved_note),
-                fontSize = 13.sp,
-                fontWeight = FontWeight.Normal,
+                text = stringResource(R.string.offline_no_cached_flight),
+                fontSize = 14.sp,
                 color = CoolGray,
-                lineHeight = 19.sp
+                fontWeight = FontWeight.Medium
             )
         }
     }

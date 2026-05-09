@@ -90,6 +90,7 @@
     <string name="boarding_generating_pdf">Generating PDF…</string>
     <string name="boarding_saved_downloads">Boarding pass saved to Downloads</string>
     <string name="boarding_error_prefix">Error: %1$s</string>
+    <string name="boarding_no_pass_found">No boarding pass found.\nComplete a check-in first to get your boarding pass.</string>
     <string name="boarding_starts_in">Boarding starts in 45m</string>
     <string name="boarding_gate_info">Head to Gate A12. Security wait time is currently approximately 15 minutes.</string>
     <!-- Confirmation Screen -->
@@ -138,4 +139,16 @@
     <string name="nav_bookings">Bookings</string>
     <string name="nav_notifications">Notifications</string>
     <string name="nav_profile">Profile</string>
+
+    <string name="home_greeting_default">Hello!</string>
+    <string name="home_search_loading">Searching…</string>
+    <string name="home_search_result_title">BOOKING FOUND</string>
+    <string name="home_search_view_details">View Flight Details</string>
+    <string name="home_search_error_not_found">No booking found for this reference and last name. Please check and try again.</string>
+    <string name="home_search_error_network">No internet connection. Please check your network and retry.</string>
+    <string name="home_search_error_empty_fields">Please fill in both the booking reference and last name.</string>
+    <string name="home_search_error_generic">An error occurred. Please try again.</string>
+    <string name="active_flight_upcoming">Your upcoming flight to %1$s.</string>
+    <string name="offline_no_cached_flight">No flight data available offline.</string>
+    <string name="offline_not_synced">Not synced yet</string>
 </resources>

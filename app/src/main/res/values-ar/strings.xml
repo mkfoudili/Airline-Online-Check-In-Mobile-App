@@ -88,6 +88,7 @@
     <string name="boarding_generating_pdf">جارٍ إنشاء الـ PDF…</string>
     <string name="boarding_saved_downloads">تم حفظ بطاقة الصعود في التنزيلات</string>
     <string name="boarding_error_prefix">خطأ: %1$s</string>
+    <string name="boarding_no_pass_found">لم يتم العثور على بطاقة الصعود.\nأتمّ تسجيل الوصول أولاً للحصول على بطاقة الصعود الخاصة بك.</string>
     <string name="boarding_starts_in">الصعود بعد 45 دقيقة</string>
     <string name="boarding_gate_info">توجه إلى البوابة A12. وقت الانتظار في الأمن حوالي 15 دقيقة.</string>
     <!-- Confirmation Screen -->
@@ -136,4 +137,16 @@
     <string name="nav_bookings">حجوزاتي</string>
     <string name="nav_notifications">التنبيهات</string>
     <string name="nav_profile">الملف الشخصي</string>
+
+    <string name="home_greeting_default">مرحباً!</string>
+    <string name="home_search_loading">جارٍ البحث…</string>
+    <string name="home_search_result_title">تم العثور على الحجز</string>
+    <string name="home_search_view_details">عرض تفاصيل الرحلة</string>
+    <string name="home_search_error_not_found">لم يتم العثور على حجز بهذه المرجع والاسم. يرجى التحقق والمحاولة مرة أخرى.</string>
+    <string name="home_search_error_network">لا يوجد اتصال بالإنترنت. تحقق من شبكتك وحاول مجدداً.</string>
+    <string name="home_search_error_empty_fields">يرجى تعبئة رقم الحجز واسم العائلة.</string>
+    <string name="home_search_error_generic">حدث خطأ. يرجى المحاولة مرة أخرى.</string>
+    <string name="active_flight_upcoming">رحلتك القادمة إلى %1$s.</string>
+    <string name="offline_no_cached_flight">لا توجد بيانات رحلة متاحة بدون إنترنت.</string>
+    <string name="offline_not_synced">لم تتم المزامنة بعد</string>
 </resources>

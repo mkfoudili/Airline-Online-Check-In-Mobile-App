@@ -20,6 +20,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.check_in_mobile_app.BaseApplication
@@ -36,18 +37,7 @@ import com.example.check_in_mobile_app.ui.theme.*
 
 @Composable
 fun BoardingScreen(
-    viewModel: BoardingViewModel = run {
-        val context = LocalContext.current
-        val app = context.applicationContext as BaseApplication
-        viewModel(
-            factory = BoardingViewModelFactory(
-                boardingPassRepository = app.boardingPassRepository,
-                generateQRCodeUseCase = app.generateQRCodeUseCase,
-                generateQRCodeBitmapUseCase = app.generateQRCodeBitmapUseCase,
-                generatePdfUseCase = app.generatePdfUseCase
-            )
-        )
-    },
+    viewModel: BoardingViewModel = hiltViewModel(),
     onBack: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -102,7 +92,28 @@ fun BoardingScreen(
             }
 
             AnimatedVisibility(
-                visible = !uiState.isLoading,
+                visible = !uiState.isLoading && uiState.isEmpty,
+                enter = fadeIn(),
+                exit = fadeOut()
+            ) {
+                Box(
+                    modifier = androidx.compose.ui.Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 24.dp),
+                    contentAlignment = androidx.compose.ui.Alignment.Center
+                ) {
+                    androidx.compose.material3.Text(
+                        text = androidx.compose.ui.res.stringResource(R.string.boarding_no_pass_found),
+                        fontSize = 15.sp,
+                        color = com.example.check_in_mobile_app.ui.theme.CoolGray,
+                        fontWeight = FontWeight.Medium,
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                    )
+                }
+            }
+
+            AnimatedVisibility(
+                visible = !uiState.isLoading && !uiState.isEmpty,
                 enter = fadeIn(),
                 exit = fadeOut()
             ) {

@@ -5,6 +5,9 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.data.preferences.UserPreferencesRepository
+import com.example.data.remote.BookingDataSource
+import com.example.data.remote.FlightDataSource
+import com.example.data.remote.retrofit.Endpoint
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,5 +31,17 @@ object DataModule {
     @Singleton
     fun provideUserPreferencesRepository(dataStore: DataStore<Preferences>): UserPreferencesRepository {
         return UserPreferencesRepository(dataStore)
+    }
+
+    @Provides
+    @Singleton
+    fun provideBookingDataSource(endpoint: Endpoint): BookingDataSource {
+        return BookingDataSource(endpoint)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFlightDataSource(endpoint: Endpoint): FlightDataSource {
+        return FlightDataSource(endpoint)
     }
 }

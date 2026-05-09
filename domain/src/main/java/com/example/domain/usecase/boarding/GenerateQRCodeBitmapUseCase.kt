@@ -1,10 +1,12 @@
 package com.example.domain.usecase.boarding
 
+import javax.inject.Inject
+
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
 import com.google.zxing.qrcode.QRCodeWriter
 
-class GenerateQRCodeBitmapUseCase {
+class GenerateQRCodeBitmapUseCase @Inject constructor() {
 
     data class QrMatrix(
         val pixels: BooleanArray,

@@ -1,9 +1,6 @@
 package com.example.data.remote.retrofit
 
 import com.example.data.remote.dto.*
-import com.example.data.remote.URL
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import com.example.data.remote.dto.BookingDto
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -22,6 +19,12 @@ interface Endpoint {
     @GET("bookings/upcoming")
     suspend fun getUpcomingBookings(@Query("uid") uid: String): List<BookingDto>
 
+    @GET("bookings/search")
+    suspend fun searchBooking(
+        @Query("pnr") pnr: String,
+        @Query("lastName") lastName: String
+    ): BookingDto
+
     @GET("flights/{id}")
     suspend fun getFlight(@Path("id") id: String): FlightDto
 
@@ -39,14 +42,4 @@ interface Endpoint {
 
     @POST("auth/logout")
     suspend fun logout()
-}
-
-object ApiService {
-    val api: Endpoint by lazy {
-        Retrofit.Builder()
-            .baseUrl(URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(Endpoint::class.java)
-    }
 }

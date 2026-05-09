@@ -28,11 +28,17 @@ fun FlightEntity.toDomain(): Flight {
         flightId = this.flightId,
         flightNumber = this.flightNumber,
         origin = this.origin,
+        originCity = this.originCity,
         destination = this.destination,
+        destinationCity = this.destinationCity,
         departureTime = this.departureTime ?: 0L,
         arrivalTime = this.arrivalTime ?: 0L,
         aircraftType = this.aircraftType,
-        status = this.status
+        status = this.status,
+        gate = this.gate ?: "",
+        terminal = this.terminal ?: "",
+        boardingTime = this.boardingTime ?: "",
+        checkInOpensTime = this.checkInOpensTime ?: ""
     )
 }
 
@@ -41,10 +47,17 @@ fun Flight.toEntity(): FlightEntity {
         flightId = this.flightId,
         flightNumber = this.flightNumber,
         origin = this.origin,
+        originCity = this.originCity,
         destination = this.destination,
+        destinationCity = this.destinationCity,
         departureTime = this.departureTime,
         arrivalTime = this.arrivalTime,
         aircraftType = this.aircraftType,
-        status = this.status
+        status = this.status,
+        gate = this.gate.ifBlank { null },
+        terminal = this.terminal.ifBlank { null },
+        boardingTime = this.boardingTime.ifBlank { null },
+        checkInOpensTime = this.checkInOpensTime.ifBlank { null },
+        lastSyncedAt = System.currentTimeMillis()
     )
 }

@@ -4,11 +4,14 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.data.local.dao.BoardingPassDao
 import com.example.data.local.dao.BookingDao
 import com.example.data.local.dao.CheckInSessionDao
 import com.example.data.local.dao.FlightDao
 import com.example.data.local.dao.NotificationDao
+import com.example.data.local.dao.PassengerDao
 import com.example.data.local.dao.SeatMapDao
 import com.example.data.local.dao.UserDao
 import com.example.data.local.entity.BoardingPassEntity
@@ -31,7 +34,7 @@ import com.example.data.local.entity.UserEntity
         SeatMapEntity::class,
         UserEntity::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -41,6 +44,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun checkInSessionDao(): CheckInSessionDao
     abstract fun flightDao(): FlightDao
     abstract fun notificationDao(): NotificationDao
+    abstract fun passengerDao(): PassengerDao
     abstract fun seatMapDao(): SeatMapDao
     abstract fun userDao(): UserDao
 

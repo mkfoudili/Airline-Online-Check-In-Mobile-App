@@ -73,9 +73,14 @@ fun BookingEntity.toDomain(flight: Flight, passengers: List<Passenger>): Booking
         bookingId = this.bookingId,
         pnr = this.pnr,
         lastName = this.lastName,
-        status = try { CheckInStatus.valueOf(this.status.uppercase()) } catch (e: Exception) { CheckInStatus.CONFIRMED },
+        status = try {
+            CheckInStatus.valueOf(this.status.uppercase())
+        } catch (e: Exception) {
+            CheckInStatus.CONFIRMED
+        },
         flight = flight,
-        passengers = passengers
+        passengers = passengers,
+        bookingRef = this.bookingRef
     )
 }
 
@@ -85,10 +90,12 @@ fun Booking.toEntity(uid: String = ""): BookingEntity {
         flightId = this.flight.flightId,
         uid = uid,
         pnr = this.pnr,
+        bookingRef = this.bookingRef,
         lastName = this.lastName,
         status = this.status.name,
-        checkinDeadline = this.flight.departureTime - 3600000, // Default 1h before
-        createdAt = System.currentTimeMillis()
+        checkinDeadline = this.flight.departureTime - 3_600_000L, // 1h avant le départ
+        createdAt = System.currentTimeMillis(),
+        lastSyncedAt = System.currentTimeMillis()
     )
 }
 

@@ -88,6 +88,7 @@
     <string name="boarding_generating_pdf">Génération du PDF…</string>
     <string name="boarding_saved_downloads">Carte d\'embarquement enregistrée dans Téléchargements</string>
     <string name="boarding_error_prefix">Erreur : %1$s</string>
+    <string name="boarding_no_pass_found">Aucune carte d\'embarquement trouvée.\nEffectuez d\'abord un enregistrement pour obtenir votre carte d\'embarquement.</string>
     <string name="boarding_starts_in">Embarquement dans 45 min</string>
     <string name="boarding_gate_info">Rendez-vous à la porte A12. Le temps d\'attente en sécurité est actuellement d\'environ 15 minutes.</string>
     <!-- Confirmation Screen -->
@@ -109,7 +110,7 @@
     <string name="home_last_name_hint">Tel qu\'écrit sur le passeport</string>
     <string name="home_find_flight">Trouver mon vol</string>
     <!-- Offline Home Screen -->
-    <string name="offline_dashboard_title">Tableau de bord hors ligne</string>
+    <string name="offline_dashboard_title">Mode hors ligne</string>
     <string name="offline_badge">HORS LIGNE</string>
     <string name="offline_viewing_cached">Données en cache</string>
     <string name="offline_features_require_internet">Certaines fonctionnalités nécessitent une connexion internet.</string>
@@ -117,7 +118,7 @@
     <string name="offline_synced_ago">Synchronisé il y a %1$s</string>
     <string name="offline_available_actions">ACTIONS DISPONIBLES</string>
     <string name="offline_data_saved_note">Vos données de vol ont été enregistrées automatiquement pour un accès hors ligne. Pour mettre à jour, reconnectez-vous au Wi-Fi ou aux données mobiles.</string>
-    <string name="offline_view_boarding_pass">Voir la carte d\'embarquement</string>
+    <string name="offline_view_boarding_pass">Carte d\'embarquement</string>
     <string name="offline_accessible_without_connection">Accessible sans connexion</string>
     <!-- Active Flight Card (Online Home) -->
     <string name="active_now_badge">EN COURS</string>
@@ -136,4 +137,16 @@
     <string name="nav_bookings">Réservations</string>
     <string name="nav_notifications">Notifications</string>
     <string name="nav_profile">Profil</string>
+
+    <string name="home_greeting_default">Bonjour !</string>
+    <string name="home_search_loading">Recherche en cours…</string>
+    <string name="home_search_result_title">RÉSERVATION TROUVÉE</string>
+    <string name="home_search_view_details">Voir les détails du vol</string>
+    <string name="home_search_error_not_found">Aucune réservation trouvée pour cette référence et ce nom. Veuillez vérifier et réessayer.</string>
+    <string name="home_search_error_network">Pas de connexion internet. Vérifiez votre réseau et réessayez.</string>
+    <string name="home_search_error_empty_fields">Veuillez renseigner la référence de réservation et le nom de famille.</string>
+    <string name="home_search_error_generic">Une erreur est survenue. Veuillez réessayer.</string>
+    <string name="active_flight_upcoming">Votre prochain vol vers %1$s.</string>
+    <string name="offline_no_cached_flight">Aucune donnée de vol disponible hors ligne.</string>
+    <string name="offline_not_synced">Pas encore synchronisé</string>
 </resources>

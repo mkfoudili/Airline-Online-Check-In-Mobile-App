@@ -3,7 +3,6 @@ package com.example.check_in_mobile_app.presentation.checkin.boarding
 import android.content.Context
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.data.mapper.toBitmap
 import com.example.data.pdf.PdfGenerator
@@ -12,6 +11,8 @@ import com.example.domain.repository.BoardingPassRepository
 import com.example.domain.usecase.boarding.GeneratePdfUseCase
 import com.example.domain.usecase.boarding.GenerateQRCodeBitmapUseCase
 import com.example.domain.usecase.boarding.GenerateQRCodeUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,13 +21,15 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class BoardingViewModel(
+@HiltViewModel
+class BoardingViewModel @Inject constructor(
     private val boardingPassRepository: BoardingPassRepository,
     private val generateQRCodeUseCase: GenerateQRCodeUseCase,
     private val generateQRCodeBitmapUseCase: GenerateQRCodeBitmapUseCase,
     private val generatePdfUseCase: GeneratePdfUseCase,
-    private val passengerId: String = "p1"
 ) : ViewModel() {
+
+    private val passengerId: String = "p1"
 
     private val _uiState = MutableStateFlow(BoardingUiState(isLoading = true))
     val uiState: StateFlow<BoardingUiState> = _uiState.asStateFlow()
@@ -34,13 +37,16 @@ class BoardingViewModel(
     private var currentPass: BoardingPass? = null
     private var cachedQrPayload: String? = null
 
-    init { loadBoardingPass() }
+    init {
+        viewModelScope.launch { boardingPassRepository.seedMockDataIfEmpty() }
+        loadBoardingPass()
+    }
 
     private fun loadBoardingPass() {
         viewModelScope.launch {
             boardingPassRepository.getBoardingPass(passengerId).collect { boardingPass ->
                 if (boardingPass == null) {
-                    _uiState.update { it.copy(isLoading = true) }
+                    _uiState.update { it.copy(isLoading = false, isEmpty = true) }
                     return@collect
                 }
                 currentPass = boardingPass
@@ -101,24 +107,5 @@ class BoardingViewModel(
 
     fun onConnectivityChanged(isConnected: Boolean) {
         _uiState.update { it.copy(isOffline = !isConnected) }
-    }
-}
-
-class BoardingViewModelFactory(
-    private val boardingPassRepository: BoardingPassRepository,
-    private val generateQRCodeUseCase: GenerateQRCodeUseCase,
-    private val generateQRCodeBitmapUseCase: GenerateQRCodeBitmapUseCase,
-    private val generatePdfUseCase: GeneratePdfUseCase,
-    private val passengerId: String = "p1"
-) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(BoardingViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return BoardingViewModel(
-                boardingPassRepository, generateQRCodeUseCase,
-                generateQRCodeBitmapUseCase, generatePdfUseCase, passengerId
-            ) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
     }
 }

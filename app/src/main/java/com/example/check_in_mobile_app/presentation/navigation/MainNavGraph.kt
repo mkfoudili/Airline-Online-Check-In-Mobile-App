@@ -9,9 +9,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.check_in_mobile_app.presentation.checkin.boarding.BoardingScreen
 import com.example.check_in_mobile_app.presentation.components.TabItem
 import com.example.check_in_mobile_app.presentation.main.booking.AllBookingsScreen
@@ -20,9 +22,6 @@ import com.example.check_in_mobile_app.presentation.main.booking.FlightDetailsSc
 import com.example.check_in_mobile_app.presentation.main.home.HomeScreen
 import com.example.check_in_mobile_app.presentation.main.notifications.NotificationsScreen
 import com.example.check_in_mobile_app.presentation.main.profile.ProfileScreen
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.check_in_mobile_app.presentation.main.booking.FlightDetailsViewModel
-
 
 @Composable
 fun MainNavGraph(
@@ -59,6 +58,10 @@ fun MainNavGraph(
         }
     }
 
+    val navigateToFlightDetails: (String) -> Unit = { bookingRef ->
+        navController.navigate(Destination.FlightDetails.createRoute(bookingRef))
+    }
+
     NavHost(
         navController = navController,
         startDestination = Destination.Home.route,
@@ -73,7 +76,12 @@ fun MainNavGraph(
                 onNavigateToBoardingScreen = {
                     navController.navigate(Destination.Boarding.route)
                 },
-                onProfileClick = { navigateToTab(TabItem.PROFILE) }
+                onProfileClick = { navigateToTab(TabItem.PROFILE) },
+                onCheckInClick = {
+                    // Check-in depuis la active flight card, navigue vers le check-in flow
+                    // bookingRef est résolu par le ViewModel (activeFlight)
+                },
+                onNavigateToFlightDetails = navigateToFlightDetails
             )
         }
         composable(Destination.Booking.route) {
@@ -101,7 +109,14 @@ fun MainNavGraph(
                 }
             )
         }
-        composable(Destination.FlightDetails.route) { backStackEntry ->
+        composable(
+            route = Destination.FlightDetails.route,
+            arguments = listOf(navArgument("bookingRef") { type = NavType.StringType }),
+            enterTransition = { slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(300)) },
+            exitTransition = { ExitTransition.None },
+            popEnterTransition = { EnterTransition.None },
+            popExitTransition = { slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(300)) }
+        ) { backStackEntry ->
             val bookingRef = backStackEntry.arguments?.getString("bookingRef") ?: ""
             FlightDetailsScreen(
                 onBack = { navController.popBackStack() },
@@ -116,7 +131,7 @@ fun MainNavGraph(
         composable(Destination.Profile.route) {
             ProfileScreen(
                 onTabSelected = navigateToTab,
-                onLogout = {  }
+                onLogout = { }
             )
         }
         composable(Destination.Notifications.route) {
