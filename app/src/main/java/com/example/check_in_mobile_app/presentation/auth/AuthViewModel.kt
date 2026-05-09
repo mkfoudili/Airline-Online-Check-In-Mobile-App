@@ -1,5 +1,5 @@
 package com.example.check_in_mobile_app.presentation.auth
-
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -21,6 +21,9 @@ class AuthViewModel @Inject constructor(
     val isLoggedIn = userPrefs.isLoggedInFlow
 
     var uiState by mutableStateOf(AuthUiState())
+        private set
+
+    var isLoggedOut by mutableStateOf(false)
         private set
 
     fun register(name: String, email: String, phone: String, password: String) {
@@ -75,7 +78,9 @@ class AuthViewModel @Inject constructor(
 
     fun onLogout() {
         authRepository.logout {
-            // Logout completed
+            viewModelScope.launch {
+                isLoggedOut = true
+            }
         }
     }
 }

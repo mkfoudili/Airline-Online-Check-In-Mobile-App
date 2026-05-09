@@ -7,6 +7,8 @@ import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -41,6 +43,18 @@ import kotlinx.coroutines.delay
 fun AppNavGraph(
     navController: NavHostController = rememberNavController()
 ) {
+    val authViewModel: AuthViewModel = hiltViewModel()
+    val isLoggedIn by authViewModel.isLoggedIn.collectAsState(initial = null)
+
+    // Global Session Observer: If user logs out, jump to Welcome screen immediately
+    LaunchedEffect(isLoggedIn) {
+        if (isLoggedIn == false) {
+            navController.navigate(Destination.Welcome.route) {
+                popUpTo(0) { inclusive = true }
+            }
+        }
+    }
+
     val navigateToTab: (TabItem) -> Unit = { tab ->
         val route = when (tab) {
             TabItem.HOME -> Destination.Home.route
@@ -71,10 +85,13 @@ fun AppNavGraph(
         composable(route = Destination.Splash.route) {
             SplashScreen()
 
-            LaunchedEffect(Unit) {
-                delay(5_000L)
-                navController.navigate(Destination.Welcome.route) {
-                    popUpTo(Destination.Splash.route) { inclusive = true }
+            LaunchedEffect(isLoggedIn) {
+                if (isLoggedIn != null) {
+                    delay(3_000L) // Shorter delay for better UX
+                    val destination = if (isLoggedIn == true) Destination.Home.route else Destination.Welcome.route
+                    navController.navigate(destination) {
+                        popUpTo(Destination.Splash.route) { inclusive = true }
+                    }
                 }
             }
         }
@@ -223,14 +240,12 @@ fun AppNavGraph(
             )
         }
         composable(route = Destination.Profile.route) {
-            val authViewModel: AuthViewModel = hiltViewModel()
+            // No need for a local LaunchedEffect here anymore, 
+            // the global session observer above handles it.
             ProfileScreen(
                 onTabSelected = navigateToTab,
                 onLogout = {
                     authViewModel.onLogout()
-                    navController.navigate(Destination.Welcome.route) {
-                        popUpTo(0) { inclusive = true }
-                    }
                 }
             )
         }

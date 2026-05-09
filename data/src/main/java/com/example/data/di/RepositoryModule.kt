@@ -15,7 +15,7 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindAuthRepository(
-        authRepositoryImpl: MockAuthRepositoryImpl
+        authRepositoryImpl: AuthRepositoryImpl
     ): AuthRepository
 
     @Binds

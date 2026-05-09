@@ -65,14 +65,18 @@ class AuthRepositoryImpl @Inject constructor(
 
     override fun logout(callback: () -> Unit) {
         scope.launch {
+            // 1. Clear local data first so the UI updates immediately
+            userPrefs.clearUser()
+            secureStorage.clearTokens()
+            
+            // 2. Notify the UI that logout is done
+            callback()
+
+            // 3. Try to notify the server in the background (optional/silent)
             try {
                 api.logout()
             } catch (e: Exception) {
-                // Silence errors during logout
-            } finally {
-                userPrefs.clearUser()
-                secureStorage.clearTokens()
-                callback()
+                // Ignore server errors during logout
             }
         }
     }
