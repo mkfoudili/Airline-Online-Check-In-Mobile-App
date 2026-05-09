@@ -13,7 +13,7 @@ import javax.inject.Singleton
 abstract class RepositoryModule {
 
     @Binds @Singleton
-    abstract fun bindAuthRepository(impl: MockAuthRepositoryImpl): AuthRepository
+    abstract fun bindAuthRepository(impl: AuthRepositoryImpl): AuthRepository
 
     @Binds @Singleton
     abstract fun bindBoardingPassRepository(impl: BoardingPassRepositoryImpl): BoardingPassRepository
