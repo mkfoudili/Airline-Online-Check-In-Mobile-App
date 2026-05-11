@@ -5,6 +5,7 @@ import com.example.data.mapper.toDomain
 import com.example.data.mapper.toDto
 import com.example.data.mapper.toEntity
 import com.example.data.remote.CheckInDataSource
+import com.example.domain.model.BaggageDeclaration
 import com.example.domain.model.CheckInSession
 import com.example.domain.model.Passenger
 import com.example.domain.repository.CheckInRepository
@@ -16,6 +17,16 @@ class CheckInRepositoryImpl(
     private val checkInDataSource: CheckInDataSource? = null,
     private val checkInSessionDao: CheckInSessionDao? = null
 ) : CheckInRepository {
+
+    override fun declareBaggage(declaration: BaggageDeclaration) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getBaggageDeclaration(): BaggageDeclaration {
+        TODO("Not yet implemented")
+    }
+
+
 
     override fun getPassengerForReview(): Passenger {
         return Passenger(
