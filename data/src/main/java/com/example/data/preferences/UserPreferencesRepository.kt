@@ -6,8 +6,9 @@ import androidx.datastore.preferences.core.edit
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import com.example.domain.preferences.LanguageRepository
+import com.example.domain.preferences.ThemeRepository
 
-class UserPreferencesRepository(private val dataStore: DataStore<Preferences>) : LanguageRepository{
+class UserPreferencesRepository(private val dataStore: DataStore<Preferences>) : LanguageRepository, ThemeRepository {
     override val appLanguageFlow: Flow<String?> =
         dataStore.data.map { preferences ->
             preferences[PreferencesKeys.APP_LANGUAGE]
@@ -16,6 +17,17 @@ class UserPreferencesRepository(private val dataStore: DataStore<Preferences>) :
     override suspend fun setAppLanguage(lang: String) {
         dataStore.edit { preferences ->
             preferences[PreferencesKeys.APP_LANGUAGE] = lang
+        }
+    }
+
+    override val isDarkModeFlow: Flow<Boolean> =
+        dataStore.data.map { preferences ->
+            preferences[PreferencesKeys.IS_DARK_MODE] ?: false
+        }
+
+    override suspend fun setDarkMode(isDarkMode: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKeys.IS_DARK_MODE] = isDarkMode
         }
     }
 
