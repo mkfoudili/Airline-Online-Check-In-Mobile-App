@@ -1,19 +1,16 @@
 package com.example.check_in_mobile_app.presentation.main.profile
 
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -21,20 +18,17 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.presentation.components.BookingInputField
 import com.example.check_in_mobile_app.presentation.components.ProfileActionButton
@@ -45,21 +39,16 @@ import com.example.check_in_mobile_app.presentation.components.TabItem
 import com.example.check_in_mobile_app.presentation.components.profile.ProfileAvatar
 import com.example.check_in_mobile_app.presentation.components.profile.ProfileInfoCard
 import com.example.check_in_mobile_app.presentation.components.profile.SecurityStatusBanner
-import com.example.check_in_mobile_app.presentation.main.MainActivity
-import com.example.check_in_mobile_app.ui.theme.BorderLight
-import com.example.check_in_mobile_app.ui.theme.DarkText
 import com.example.check_in_mobile_app.ui.theme.NavyBlue
 import com.example.check_in_mobile_app.ui.theme.Poppins
-import com.example.check_in_mobile_app.ui.theme.SubtleText
 import com.example.check_in_mobile_app.ui.theme.DividerColor
-import com.example.check_in_mobile_app.ui.theme.SurfaceGray
 import androidx.core.os.LocaleListCompat
 import com.example.check_in_mobile_app.utils.LanguagePreferences
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun ProfileScreen(
-    viewModel: ProfileViewModel = viewModel(factory = ProfileViewModel.Factory),
+    viewModel: ProfileViewModel = hiltViewModel(),
     onTabSelected: (TabItem) -> Unit = {},
     onLogout: () -> Unit = {}
 ) {
@@ -70,19 +59,12 @@ fun ProfileScreen(
         viewModel.uiAction.collectLatest { action ->
             when (action) {
                 is ProfileUiAction.ChangeLanguage -> {
-                    // Save to preferences for legacy/backup support
                     LanguagePreferences.saveLanguage(context, action.languageCode)
-                    
-                    // Trigger global language change
                     val appLocale: LocaleListCompat = LocaleListCompat.forLanguageTags(action.languageCode)
                     AppCompatDelegate.setApplicationLocales(appLocale)
                 }
-                ProfileUiAction.NavigateBack -> {
-                    // Back logic
-                }
-                ProfileUiAction.Logout -> {
-                    onLogout()
-                }
+                ProfileUiAction.NavigateBack -> {}
+                ProfileUiAction.Logout -> onLogout()
             }
         }
     }
@@ -114,16 +96,10 @@ fun ProfileScreen(
     } else {
         when {
             uiState.isChangingPassword -> {
-                ChangePasswordScreen(
-                    uiState = uiState,
-                    onEvent = viewModel::onEvent
-                )
+                ChangePasswordScreen(uiState = uiState, onEvent = viewModel::onEvent)
             }
             uiState.isEditing -> {
-                EditProfileScreen(
-                    uiState = uiState,
-                    onEvent = viewModel::onEvent
-                )
+                EditProfileScreen(uiState = uiState, onEvent = viewModel::onEvent)
             }
             else -> {
                 ProfileScreenContent(
@@ -172,9 +148,7 @@ private fun ProfileBaseScreen(
                         }
                     },
                     actions = actions,
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = Color.White
-                    )
+                    colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
                 )
                 HorizontalDivider(color = DividerColor, thickness = 1.dp)
             }
@@ -250,14 +224,10 @@ fun ProfileScreenContent(
     ) {
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Avatar Section
-        ProfileAvatar(
-            isOnline = uiState.isOnline
-        )
+        ProfileAvatar(isOnline = uiState.isOnline)
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // User Name with Edit Icon
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.clickable { onEvent(ProfileEvent.OnEditProfileClicked) }
@@ -281,7 +251,6 @@ fun ProfileScreenContent(
 
         Spacer(modifier = Modifier.height(40.dp))
 
-        // Personal Information Section
         SectionLabel(
             text = stringResource(R.string.profile_personal_info_label),
             modifier = Modifier.align(Alignment.Start)
@@ -293,18 +262,12 @@ fun ProfileScreenContent(
             email = uiState.email,
             phoneNumber = uiState.phoneNumber,
             language = uiState.language,
-            onEditEmailClick = {
-                onEvent(ProfileEvent.OnEditEmailClicked)
-            },
-            onEditPhoneClick = {
-                onEvent(ProfileEvent.OnEditPhoneClicked)
-            },
-            onEditPasswordClick = {
-                onEvent(ProfileEvent.OnEditPasswordClicked)
-            },
-            onEditLanguageClick = {
-                onEvent(ProfileEvent.OnEditProfileClicked)
-            }
+            isDarkMode = uiState.isDarkMode,
+            onThemeToggle = { onEvent(ProfileEvent.OnThemeToggled(it)) },
+            onEditEmailClick = { onEvent(ProfileEvent.OnEditEmailClicked) },
+            onEditPhoneClick = { onEvent(ProfileEvent.OnEditPhoneClicked) },
+            onEditPasswordClick = { onEvent(ProfileEvent.OnEditPasswordClicked) },
+            onEditLanguageClick = { onEvent(ProfileEvent.OnEditProfileClicked) }
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -344,24 +307,13 @@ fun EditProfileScreen(
                 onPrimaryClick = { onEvent(ProfileEvent.OnSaveClicked) },
                 secondaryText = stringResource(R.string.common_cancel),
                 onSecondaryClick = { onEvent(ProfileEvent.OnCancelClicked) },
-                primaryIcon = {
-                    Icon(
-                        imageVector = Icons.Default.CheckCircle,
-                        contentDescription = null
-                    )
-                },
-                secondaryIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Cancel,
-                        contentDescription = null
-                    )
-                }
+                primaryIcon = { Icon(imageVector = Icons.Default.CheckCircle, contentDescription = null) },
+                secondaryIcon = { Icon(imageVector = Icons.Default.Cancel, contentDescription = null) }
             )
         }
     ) {
         Spacer(modifier = Modifier.height(32.dp))
         
-        // Form fields for editing profile
         BookingInputField(
             label = stringResource(R.string.profile_name_label),
             value = uiState.editedName,
@@ -391,7 +343,6 @@ fun EditProfileScreen(
         
         Spacer(modifier = Modifier.height(16.dp))
         
-        // Language Dropdown
         Box(modifier = Modifier.fillMaxWidth()) {
             BookingInputField(
                 label = stringResource(R.string.profile_language_label),
@@ -443,18 +394,8 @@ fun ChangePasswordScreen(
                 onPrimaryClick = { onEvent(ProfileEvent.OnSavePasswordClicked) },
                 secondaryText = stringResource(R.string.common_cancel),
                 onSecondaryClick = { onEvent(ProfileEvent.OnCancelClicked) },
-                primaryIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Lock,
-                        contentDescription = null
-                    )
-                },
-                secondaryIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Cancel,
-                        contentDescription = null
-                    )
-                }
+                primaryIcon = { Icon(imageVector = Icons.Default.Lock, contentDescription = null) },
+                secondaryIcon = { Icon(imageVector = Icons.Default.Cancel, contentDescription = null) }
             )
         }
     ) {
