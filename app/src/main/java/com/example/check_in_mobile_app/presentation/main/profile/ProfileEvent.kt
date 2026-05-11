@@ -10,6 +10,7 @@ sealed class ProfileEvent {
     data class OnPhoneNumberChanged(val phoneNumber: String) : ProfileEvent()
     data class OnLanguageChanged(val language: String) : ProfileEvent()
     object OnToggleLanguageDropdown : ProfileEvent()
+    data class OnThemeToggled(val isDarkMode: Boolean) : ProfileEvent()
     object OnSaveClicked : ProfileEvent()
     object OnCancelClicked : ProfileEvent()
     object OnBackClicked : ProfileEvent()

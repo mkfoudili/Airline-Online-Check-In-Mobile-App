@@ -6,8 +6,11 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import com.example.check_in_mobile_app.presentation.checkin.CheckInActivity
 import com.example.check_in_mobile_app.presentation.navigation.MainNavGraph
@@ -16,6 +19,7 @@ import com.example.check_in_mobile_app.ui.theme.CheckInMobileAppTheme
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
+    private val mainViewModel: MainViewModel by viewModels()
     private val navigateToHomeAfterCheckIn = mutableStateOf(false)
 
     private val checkInLauncher = registerForActivityResult(
@@ -31,7 +35,9 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
 
         setContent {
-            CheckInMobileAppTheme {
+            val isDarkMode by mainViewModel.isDarkMode.collectAsStateWithLifecycle()
+            
+            CheckInMobileAppTheme(darkTheme = isDarkMode) {
                 MainNavGraph(
                     onCheckInClick = { bookingRef ->
                         Intent(this, CheckInActivity::class.java).also {

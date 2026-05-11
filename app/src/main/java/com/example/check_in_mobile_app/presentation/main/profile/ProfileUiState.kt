@@ -8,6 +8,7 @@ data class ProfileUiState(
     val email: String = "",
     val phoneNumber: String = "",
     val language: String = "English",
+    val isDarkMode: Boolean = false,
     val passwordMasked: String = "************",
     val profileImageUrl: String? = null,
     val isVerified: Boolean = false,
