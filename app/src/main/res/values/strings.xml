@@ -46,6 +46,15 @@
     <string name="unit_hours">H</string>
     <string name="unit_minutes">M</string>
     <!-- Common -->
+    <string name="common_edit">Edit</string>
+    <string name="common_back">Back</string>
+    <string name="common_save_changes">Save Changes</string>
+    <string name="common_cancel">Cancel</string>
+    <string name="common_logout">Logout</string>
+    <string name="common_update_password">Update Password</string>
+    <string name="common_or">OR</string>
+    <string name="common_password">Password</string>
+
     <!-- Auth -->
     <string name="auth_welcome_title">Ready for your flight?</string>
     <string name="auth_welcome_subtitle">Skip the airport queues and manage your entire journey from your pocket. Fast, secure, and entirely digital.</string>
@@ -65,11 +74,31 @@
     <string name="auth_terms_prefix">By continuing, you agree to our </string>
     <string name="auth_terms_link">Terms of Service</string>
     <string name="auth_continue_with_google">Continue with Google</string>
-    <string name="common_or">OR</string>
-    <string name="common_password">Password</string>
     <string name="auth_password_hint">Must be at least 8 characters long.</string>
     <string name="auth_password_mismatch">Passwords do not match.</string>
     <!-- Profile -->
+    <string name="profile_title">Profile</string>
+    <string name="profile_edit_title">Edit Profile</string>
+    <string name="profile_personal_info_label">PERSONAL INFORMATION</string>
+    <string name="profile_name_label">Full Name</string>
+    <string name="profile_name_placeholder">Enter your full name</string>
+    <string name="profile_email_label">Email Address</string>
+    <string name="profile_email_placeholder">Enter your email</string>
+    <string name="profile_phone_label">Phone Number</string>
+    <string name="profile_phone_placeholder">Enter your phone number</string>
+    <string name="profile_language_label">Language</string>
+    <string name="profile_change_password_title">Change Password</string>
+    <string name="profile_current_password_label">Current Password</string>
+    <string name="profile_current_password_placeholder">Enter current password</string>
+    <string name="profile_new_password_label">New Password</string>
+    <string name="profile_new_password_placeholder">Enter new password</string>
+    <string name="profile_confirm_password_label">Confirm New Password</string>
+    <string name="profile_confirm_password_placeholder">Confirm your new password</string>
+    <string name="profile_logout">Log Out</string>
+    <string name="profile_logout_confirm_title">Logout</string>
+    <string name="profile_logout_confirm_message">Are you sure you want to log out?</string>
+    <string name="profile_edit_name_desc">Edit Name</string>
+
     <!-- Languages -->
     <string name="lang_english">English</string>
     <string name="lang_french">French</string>

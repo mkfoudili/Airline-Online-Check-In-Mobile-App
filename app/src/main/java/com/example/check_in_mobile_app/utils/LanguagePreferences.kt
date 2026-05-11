@@ -39,4 +39,6 @@ object LanguagePreferences {
         "ar" -> "Arabic"
         else -> "English"
     }
+
+    fun getAvailableLanguages(): List<String> = listOf("English", "French", "Arabic")
 }

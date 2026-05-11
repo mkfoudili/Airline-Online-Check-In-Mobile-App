@@ -243,6 +243,16 @@ class ProfileViewModel(
                         )
                     }
                 }
+                ProfileEvent.OnLogoutClicked -> {
+                    _uiState.value = _uiState.value.copy(showLogoutDialog = true)
+                }
+                ProfileEvent.OnLogoutConfirmClicked -> {
+                    _uiState.value = _uiState.value.copy(showLogoutDialog = false)
+                    _uiAction.emit(ProfileUiAction.Logout)
+                }
+                ProfileEvent.OnLogoutDismissClicked -> {
+                    _uiState.value = _uiState.value.copy(showLogoutDialog = false)
+                }
             }
         }
     }

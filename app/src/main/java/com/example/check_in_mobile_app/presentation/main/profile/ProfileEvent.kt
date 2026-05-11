@@ -21,4 +21,9 @@ sealed class ProfileEvent {
     object OnToggleNewPasswordVisibility : ProfileEvent()
     object OnToggleConfirmPasswordVisibility : ProfileEvent()
     object OnSavePasswordClicked : ProfileEvent()
+
+    // Logout Events
+    object OnLogoutClicked : ProfileEvent()
+    object OnLogoutConfirmClicked : ProfileEvent()
+    object OnLogoutDismissClicked : ProfileEvent()
 }

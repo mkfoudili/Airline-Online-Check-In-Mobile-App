@@ -31,6 +31,9 @@ data class ProfileUiState(
     val isNewPasswordVisible: Boolean = false,
     val isConfirmPasswordVisible: Boolean = false,
 
+    // --- Logout ---
+    val showLogoutDialog: Boolean = false,
+
     // --- Async state ---
     val isLoading: Boolean = false,
     val error: String? = null
