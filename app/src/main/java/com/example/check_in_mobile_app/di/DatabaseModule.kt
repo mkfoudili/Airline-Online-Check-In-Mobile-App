@@ -3,6 +3,7 @@ package com.example.check_in_mobile_app.di
 import android.content.Context
 import com.example.data.local.dao.BoardingPassDao
 import com.example.data.local.dao.BookingDao
+import com.example.data.local.dao.CheckInSessionDao
 import com.example.data.local.dao.FlightDao
 import com.example.data.local.dao.PassengerDao
 import com.example.data.local.room.AppDatabase
@@ -41,5 +42,10 @@ object DatabaseModule {
     @Provides @Singleton
     fun provideBoardingPassDao(db: AppDatabase): BoardingPassDao {
         return db.boardingPassDao()
+    }
+
+    @Provides
+    fun provideCheckInSessionDao(database: AppDatabase): CheckInSessionDao {
+        return database.checkInSessionDao()
     }
 }

@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.data.preferences.UserPreferencesRepository
 import com.example.data.remote.BookingDataSource
+import com.example.data.remote.CheckInDataSource
 import com.example.data.remote.FlightDataSource
 import com.example.data.remote.retrofit.Endpoint
 import dagger.Module
@@ -43,5 +44,11 @@ object DataModule {
     @Singleton
     fun provideFlightDataSource(endpoint: Endpoint): FlightDataSource {
         return FlightDataSource(endpoint)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCheckInDataSource(): CheckInDataSource {
+        return CheckInDataSource()
     }
 }

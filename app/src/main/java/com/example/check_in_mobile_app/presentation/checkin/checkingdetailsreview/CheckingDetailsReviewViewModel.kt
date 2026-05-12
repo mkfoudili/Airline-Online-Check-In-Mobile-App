@@ -1,7 +1,6 @@
 package com.example.check_in_mobile_app.presentation.checkin.checkingdetailsreview
 
 import androidx.lifecycle.ViewModel
-import com.example.data.repository.CheckInRepositoryImpl
 import com.example.domain.model.Passenger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,12 +12,16 @@ data class CheckingDetailsReviewUiState(
     val isConfirmed: Boolean = false
 )
 
-class CheckingDetailsReviewViewModel : ViewModel() {
-
-    private val repository = CheckInRepositoryImpl()
+/**
+ * Receives the already-verified [Passenger] from [CheckInSessionViewModel]
+ * (passed in via the nav graph). No more hardcoded data.
+ */
+class CheckingDetailsReviewViewModel(
+    verifiedPassenger: Passenger
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
-        CheckingDetailsReviewUiState(passenger = repository.getPassengerForReview())
+        CheckingDetailsReviewUiState(passenger = verifiedPassenger)
     )
     val uiState: StateFlow<CheckingDetailsReviewUiState> = _uiState.asStateFlow()
 
