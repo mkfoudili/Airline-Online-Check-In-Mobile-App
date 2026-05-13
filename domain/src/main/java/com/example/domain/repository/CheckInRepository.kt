@@ -10,5 +10,5 @@ interface CheckInRepository {
     fun createSession(session: CheckInSession, callback: (Result<CheckInSession>) -> Unit)
     fun getPassengerForReview(): Passenger
     fun getBaggageDeclaration(): BaggageDeclaration
-    fun declareBaggage(declaration: BaggageDeclaration)
+    suspend fun declareBaggage(baggageCount: Int, specialCount: Int): Result<Unit>
 }

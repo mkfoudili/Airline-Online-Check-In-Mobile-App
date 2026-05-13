@@ -55,4 +55,7 @@ interface Endpoint {
 
     @PUT("auth/profile/password")
     suspend fun updatePassword(@Header("Authorization") token: String, @Body request: UpdatePasswordRequest): Response<MessageResponse>
+
+    @POST("baggage")
+    suspend fun declareBaggage(@Header("Authorization") token: String, @Body request: BaggageRequest): Response<BaggageResponse>
 }

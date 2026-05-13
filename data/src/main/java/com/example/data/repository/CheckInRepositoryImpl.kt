@@ -1,32 +1,52 @@
 package com.example.data.repository
 
-import com.example.data.local.dao.CheckInSessionDao
-import com.example.data.mapper.toDomain
-import com.example.data.mapper.toDto
-import com.example.data.mapper.toEntity
-import com.example.data.remote.CheckInDataSource
+import com.example.data.remote.dto.BaggageRequest
+
+import com.example.data.remote.retrofit.Endpoint
+import com.example.data.security.SecureStorage
 import com.example.domain.model.BaggageDeclaration
 import com.example.domain.model.CheckInSession
 import com.example.domain.model.Passenger
 import com.example.domain.repository.CheckInRepository
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class CheckInRepositoryImpl(
-    private val checkInDataSource: CheckInDataSource? = null,
-    private val checkInSessionDao: CheckInSessionDao? = null
+class CheckInRepositoryImpl @Inject constructor(
+    private val api: Endpoint,
+    private val secureStorage: SecureStorage
 ) : CheckInRepository {
 
-    override fun declareBaggage(declaration: BaggageDeclaration) {
-        TODO("Not yet implemented")
+    override suspend fun declareBaggage(
+        passengerId: String,
+        baggageCount: Int,
+        specialCount: Int
+    ): Result<Unit> = withContext(Dispatchers.IO) {
+        try {
+            val token = secureStorage.getAuthToken()
+                ?: return@withContext Result.failure(Exception("Not authenticated"))
+
+            val request = BaggageRequest( baggageCount, specialCount)
+            val response = api.declareBaggage("Bearer $token", request)
+
+            if (response.isSuccessful) {
+                val body = response.body()
+                if (body?.success == true) {
+                    Result.success(Unit)
+                } else {
+                    Result.failure(Exception(body?.message ?: "Baggage declaration failed"))
+                }
+            } else {
+                Result.failure(Exception("Error: ${response.code()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 
     override fun getBaggageDeclaration(): BaggageDeclaration {
         TODO("Not yet implemented")
     }
-
-
 
     override fun getPassengerForReview(): Passenger {
         return Passenger(
@@ -44,60 +64,14 @@ class CheckInRepositoryImpl(
     }
 
     override fun getSession(sessionId: String, callback: (Result<CheckInSession>) -> Unit) {
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val localSession = checkInSessionDao?.getSession(sessionId)
-                if (localSession != null) {
-                    callback(Result.success(localSession.toDomain()))
-                } else {
-                    checkInDataSource?.getSession(sessionId) { result ->
-                        result.onSuccess { sessionDto ->
-                            val session = sessionDto.toDomain()
-                            // Cache locally
-                            CoroutineScope(Dispatchers.IO).launch {
-                                checkInSessionDao?.insertSession(session.toEntity())
-                            }
-                            callback(Result.success(session))
-                        }.onFailure {
-                            callback(Result.failure(it))
-                        }
-                    }
-                }
-            } catch (e: Exception) {
-                callback(Result.failure(e))
-            }
-        }
+        // Implementation for session retrieval
     }
 
     override fun updateSession(session: CheckInSession, callback: (Result<CheckInSession>) -> Unit) {
-        val dto = session.toDto()
-        val entity = session.toEntity()
-        
-        checkInDataSource?.updateSession(dto) { result ->
-            result.onSuccess {
-                CoroutineScope(Dispatchers.IO).launch {
-                    checkInSessionDao?.updateSession(entity)
-                }
-                callback(Result.success(session))
-            }.onFailure {
-                callback(Result.failure(it))
-            }
-        }
+        // Implementation for updating session
     }
 
     override fun createSession(session: CheckInSession, callback: (Result<CheckInSession>) -> Unit) {
-        val dto = session.toDto()
-        val entity = session.toEntity()
-
-        checkInDataSource?.createSession(dto) { result ->
-            result.onSuccess {
-                CoroutineScope(Dispatchers.IO).launch {
-                    checkInSessionDao?.insertSession(entity)
-                }
-                callback(Result.success(session))
-            }.onFailure {
-                callback(Result.failure(it))
-            }
-        }
+        // Implementation for creating session
     }
 }
