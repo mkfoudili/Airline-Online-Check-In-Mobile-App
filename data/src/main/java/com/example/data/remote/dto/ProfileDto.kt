@@ -14,3 +14,9 @@ data class ProfileDto(
     val avatarUrl: String?,
     val isVerified: Boolean
 )
+
+data class UpdateProfileRequest(
+    val fullName: String,
+    val email: String,
+    val phoneNumber: String
+)
