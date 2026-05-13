@@ -106,12 +106,12 @@ fun DateField(
                     }
                     showDatePicker = false
                 }) {
-                    Text(stringResource(R.string.ok), color = NavyBlue)
+                    Text(stringResource(R.string.common_ok), color = NavyBlue)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDatePicker = false }) {
-                    Text(stringResource(R.string.cancel), color = NavyBlue)
+                    Text(stringResource(R.string.common_cancel), color = NavyBlue)
                 }
             }
         ) {
@@ -126,5 +126,3 @@ fun DateField(
         }
     }
 }
-
-
