@@ -63,8 +63,6 @@
     <string name="auth_terms_prefix">En continuant, vous acceptez nos </string>
     <string name="auth_terms_link">Conditions d\'utilisation</string>
     <string name="auth_continue_with_google">Continuer avec Google</string>
-    <string name="common_or">OU</string>
-    <string name="common_password">Mot de passe</string>
     <string name="auth_password_hint">Doit comporter au moins 8 caractères.</string>
     <string name="auth_password_mismatch">Les mots de passe ne correspondent pas.</string>
     <!-- Profile -->

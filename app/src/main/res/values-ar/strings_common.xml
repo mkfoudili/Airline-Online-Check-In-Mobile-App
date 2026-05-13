@@ -1,22 +1,29 @@
 <resources>
     <!-- Common UI Actions -->
     <string name="common_back">رجوع</string>
-    <string name="flight_label">الرحلة</string>
-    <string name="date_label">التاريخ</string>
-    <string name="boarding_label">الصعود</string>
     <string name="common_cancel">إلغاء</string>
     <string name="common_edit">تعديل</string>
     <string name="common_save_changes">حفظ التغييرات</string>
+    <string name="common_logout">تسجيل الخروج</string>
+    <string name="common_ok">موافق</string>
+    <string name="common_continue">استمرار</string>
+    <string name="common_or">أو</string>
 
     <!-- Common Form Labels -->
     <string name="common_full_name">الاسم الكامل</string>
     <string name="common_email_address">البريد الإلكتروني</string>
     <string name="common_phone_number">رقم الهاتف</string>
+    <string name="common_password">كلمة المرور</string>
 
     <!-- Common Security -->
     <string name="common_security">الأمان</string>
     <string name="common_change_password">تغيير كلمة المرور</string>
     <string name="common_hide_password">إخفاء كلمة المرور</string>
     <string name="common_show_password">إظهار كلمة المرور</string>
-    <string name="common_continue">استمرار</string>
+    <string name="common_update_password">تحديث كلمة المرور</string>
+
+    <!-- Common Labels -->
+    <string name="flight_label">الرحلة</string>
+    <string name="date_label">التاريخ</string>
+    <string name="boarding_label">الصعود</string>
 </resources>

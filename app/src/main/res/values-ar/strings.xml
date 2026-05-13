@@ -63,8 +63,6 @@
     <string name="auth_terms_prefix">بالمتابعة، فإنك توافق على </string>
     <string name="auth_terms_link">شروط الخدمة</string>
     <string name="auth_continue_with_google">المتابعة باستخدام جوجل</string>
-    <string name="common_or">أو</string>
-    <string name="common_password">كلمة المرور</string>
     <string name="auth_password_hint">يجب أن تتكون من 8 أحرف على الأقل.</string>
     <string name="auth_password_mismatch">كلمات المرور غير متطابقة.</string>
     <!-- Profile -->

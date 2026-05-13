@@ -1,22 +1,29 @@
 <resources>
     <!-- Common UI Actions -->
     <string name="common_back">Retour</string>
-    <string name="flight_label">VOL</string>
-    <string name="date_label">DATE</string>
-    <string name="boarding_label">EMBARQUEMENT</string>
     <string name="common_cancel">Annuler</string>
     <string name="common_edit">Modifier</string>
     <string name="common_save_changes">Enregistrer les modifications</string>
+    <string name="common_logout">Déconnexion</string>
+    <string name="common_ok">OK</string>
+    <string name="common_continue">Continuer</string>
+    <string name="common_or">OU</string>
 
     <!-- Common Form Labels -->
     <string name="common_full_name">Nom complet</string>
     <string name="common_email_address">Adresse e-mail</string>
     <string name="common_phone_number">Numéro de téléphone</string>
+    <string name="common_password">Mot de passe</string>
 
     <!-- Common Security -->
     <string name="common_security">Sécurité</string>
     <string name="common_change_password">Changer le mot de passe</string>
     <string name="common_hide_password">Masquer le mot de passe</string>
     <string name="common_show_password">Afficher le mot de passe</string>
-    <string name="common_continue">Continuer</string>
+    <string name="common_update_password">Mettre à jour le mot de passe</string>
+
+    <!-- Common Labels -->
+    <string name="flight_label">VOL</string>
+    <string name="date_label">DATE</string>
+    <string name="boarding_label">EMBARQUEMENT</string>
 </resources>
