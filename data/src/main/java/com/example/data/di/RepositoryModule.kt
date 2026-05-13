@@ -32,4 +32,7 @@ abstract class RepositoryModule {
 
     @Binds @Singleton
     abstract fun bindSeatRepository(impl: SeatRepositoryImpl): SeatRepository
+
+    @Binds @Singleton
+    abstract fun bindProfileRepository(impl: ProfileRepositoryImpl): ProfileRepository
 }

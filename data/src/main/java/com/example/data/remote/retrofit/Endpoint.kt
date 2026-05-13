@@ -1,9 +1,12 @@
 package com.example.data.remote.retrofit
 
+import com.example.data.remote.dto.ProfileResponse
 import com.example.data.remote.dto.*
 import com.example.data.remote.dto.BookingDto
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Query
 import retrofit2.http.Path
@@ -42,4 +45,7 @@ interface Endpoint {
 
     @POST("auth/logout")
     suspend fun logout()
+
+    @GET("auth/profile")
+    suspend fun getProfile(@Header("Authorization") token: String): Response<ProfileResponse>
 }
