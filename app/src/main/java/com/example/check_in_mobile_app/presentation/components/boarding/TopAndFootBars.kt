@@ -52,7 +52,7 @@ fun BoardingTopBar(onBack: () -> Unit) {
             IconButton(onClick = onBack) {
                 Icon(
                     painter = painterResource(R.drawable.chevron_left),
-                    contentDescription = stringResource(R.string.back),
+                    contentDescription = stringResource(R.string.common_back),
                     tint = Color(0xFF2A3343)
                 )
             }

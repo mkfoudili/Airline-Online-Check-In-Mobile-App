@@ -277,12 +277,12 @@ fun ProfileScreenContent(
         Spacer(modifier = Modifier.height(32.dp))
 
         ProfileSecondaryActionButton(
-            text = stringResource(R.string.profile_logout),
+            text = stringResource(R.string.common_logout),
             onClick = { onEvent(ProfileEvent.OnLogoutClicked) },
             icon = {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ExitToApp,
-                    contentDescription = stringResource(R.string.profile_logout),
+                    contentDescription = stringResource(R.string.common_logout),
                     modifier = Modifier.size(18.dp),
                     tint = NavyBlue
                 )
@@ -315,16 +315,16 @@ fun EditProfileScreen(
         Spacer(modifier = Modifier.height(32.dp))
         
         BookingInputField(
-            label = stringResource(R.string.profile_name_label),
+            label = stringResource(R.string.common_full_name),
             value = uiState.editedName,
             onValueChange = { onEvent(ProfileEvent.OnNameChanged(it)) },
-            placeholder = stringResource(R.string.profile_name_placeholder)
+            placeholder = stringResource(R.string.profile_full_name_placeholder)
         )
         
         Spacer(modifier = Modifier.height(16.dp))
         
         BookingInputField(
-            label = stringResource(R.string.profile_email_label),
+            label = stringResource(R.string.common_email_address),
             value = uiState.editedEmail,
             onValueChange = { onEvent(ProfileEvent.OnEmailChanged(it)) },
             placeholder = stringResource(R.string.profile_email_placeholder),
@@ -334,7 +334,7 @@ fun EditProfileScreen(
         Spacer(modifier = Modifier.height(16.dp))
         
         BookingInputField(
-            label = stringResource(R.string.profile_phone_label),
+            label = stringResource(R.string.common_phone_number),
             value = uiState.editedPhoneNumber,
             onValueChange = { onEvent(ProfileEvent.OnPhoneNumberChanged(it)) },
             placeholder = stringResource(R.string.profile_phone_placeholder),

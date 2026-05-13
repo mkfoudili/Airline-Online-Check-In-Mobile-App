@@ -90,7 +90,7 @@ fun AllBookingsScreenContent(
                 },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(painter = painterResource(id = R.drawable.chevron_left), contentDescription = stringResource(R.string.back), tint = NavyBlue)
+                        Icon(painter = painterResource(id = R.drawable.chevron_left), contentDescription = stringResource(R.string.common_back), tint = NavyBlue)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)

@@ -41,7 +41,7 @@ fun CheckInTopBar(
                 IconButton(onClick = onBack) {
                     Icon(
                         painter = painterResource(id = R.drawable.chevron_left),
-                        contentDescription = stringResource(R.string.back),
+                        contentDescription = stringResource(R.string.common_back),
                         tint = NavyBlue
                     )
                 }

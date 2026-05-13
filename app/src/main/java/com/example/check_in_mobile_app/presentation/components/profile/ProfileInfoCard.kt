@@ -79,9 +79,9 @@ fun ProfileInfoCard(
             icon = Icons.Outlined.Language,
             label = stringResource(R.string.profile_label_language),
             value = when (language) {
-                "English" -> stringResource(R.string.lang_english)
-                "French" -> stringResource(R.string.lang_french)
-                "Arabic" -> stringResource(R.string.lang_arabic)
+                "English" -> stringResource(R.string.language_english)
+                "French" -> stringResource(R.string.language_french)
+                "Arabic" -> stringResource(R.string.language_arabic)
                 else -> language
             },
             onClick = onEditLanguageClick
