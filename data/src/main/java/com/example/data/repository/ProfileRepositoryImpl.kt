@@ -2,6 +2,7 @@ package com.example.data.repository
 
 import com.example.data.mapper.toDomain
 import com.example.data.preferences.UserPreferencesRepository
+import com.example.data.remote.dto.UpdatePasswordRequest
 import com.example.data.remote.dto.UpdateProfileRequest
 import com.example.data.remote.retrofit.Endpoint
 import com.example.data.security.SecureStorage
@@ -63,8 +64,34 @@ class ProfileRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun updatePassword(currentPassword: String, newPassword: String): Result<Unit> {
-        // Implementation for updatePassword if needed
-        return Result.success(Unit)
+    override suspend fun updatePassword(
+        currentPassword: String,
+        newPassword: String
+    ): Result<Unit> = withContext(Dispatchers.IO) {
+        return@withContext try {
+            val token = secureStorage.getAuthToken()
+                ?: return@withContext Result.failure(Exception("Not authenticated"))
+
+            val request = UpdatePasswordRequest(
+                currentPassword = currentPassword,
+                newPassword = newPassword
+            )
+
+            val response = api.updatePassword("Bearer $token", request)
+
+            if (response.isSuccessful) {
+                val body = response.body()
+                if (body?.success == true) {
+                    Result.success(Unit)
+                } else {
+                    Result.failure(Exception(body?.message ?: "Failed to update password"))
+                }
+            } else {
+                val errorMsg = response.errorBody()?.string() ?: "Error: ${response.code()}"
+                Result.failure(Exception(errorMsg))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 }

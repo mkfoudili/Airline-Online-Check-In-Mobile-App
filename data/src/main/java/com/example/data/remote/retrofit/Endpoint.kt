@@ -52,4 +52,7 @@ interface Endpoint {
 
     @PUT("auth/profile")
     suspend fun updateProfile(@Header("Authorization") token: String, @Body request: UpdateProfileRequest): Response<ProfileResponse>
+
+    @PUT("auth/profile/password")
+    suspend fun updatePassword(@Header("Authorization") token: String, @Body request: UpdatePasswordRequest): Response<MessageResponse>
 }

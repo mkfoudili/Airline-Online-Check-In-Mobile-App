@@ -20,3 +20,13 @@ data class UpdateProfileRequest(
     val email: String,
     val phoneNumber: String
 )
+
+data class UpdatePasswordRequest(
+    val currentPassword: String,
+    val newPassword: String
+)
+
+data class MessageResponse(
+    val success: Boolean,
+    val message: String
+)
