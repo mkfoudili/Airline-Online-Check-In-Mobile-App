@@ -9,6 +9,8 @@ import com.example.data.preferences.UserPreferencesRepository
 import com.example.domain.repository.AuthRepository
 import com.example.domain.validation.RegistrationRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -68,12 +70,30 @@ class AuthViewModel @Inject constructor(
         }
     }
 
+
     fun signInWithGoogle(idToken: String) {
-        // Implementation for Google Sign-In would go here
+        uiState = uiState.copy(isLoading = true, errorMessage = null)
+
+        authRepository.loginWithGoogle(idToken) { result ->
+            viewModelScope.launch {
+                result.onSuccess {
+                    uiState = uiState.copy(isLoading = false, isSuccess = true)
+                }.onFailure {
+                    uiState = uiState.copy(
+                        isLoading = false,
+                        errorMessage = it.message ?: "Google Sign-In failed"
+                    )
+                }
+            }
+        }
     }
 
     fun onLoginError() {
         uiState = uiState.copy(errorMessage = null)
+    }
+
+    fun setError(message: String) {
+        uiState = uiState.copy(errorMessage = message, isLoading = false)
     }
 
     fun onLogout() {

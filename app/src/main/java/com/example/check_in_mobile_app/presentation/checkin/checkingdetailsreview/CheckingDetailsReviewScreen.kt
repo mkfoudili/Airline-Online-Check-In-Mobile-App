@@ -120,14 +120,14 @@ fun CheckingDetailsReviewScreenContent(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun CheckingDetailsReviewScreenPreview() {
-    CheckingDetailsReviewScreenContent(
-        passenger = CheckInRepositoryImpl().getPassengerForReview(),
-        isConfirmed = false,
-        onBack = {},
-        onContinue = {},
-        onConfirmedChanged = {}
-    )
-}
+//@Preview(showBackground = true, showSystemUi = true)
+//@Composable
+//fun CheckingDetailsReviewScreenPreview() {
+//    CheckingDetailsReviewScreenContent(
+//        passenger = CheckInRepositoryImpl().getPassengerForReview(),
+//        isConfirmed = false,
+//        onBack = {},
+//        onContinue = {},
+//        onConfirmedChanged = {}
+//    )
+//}

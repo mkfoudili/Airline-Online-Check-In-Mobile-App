@@ -180,12 +180,12 @@ private fun InfoRow(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun PassengerInfoCardPreview() {
-    val previewPassenger = com.example.data.repository.CheckInRepositoryImpl()
-        .getPassengerForReview()
-    Box(modifier = Modifier.padding(16.dp)) {
-        PassengerInfoCard(passenger = previewPassenger)
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//private fun PassengerInfoCardPreview() {
+//    val previewPassenger = com.example.data.repository.CheckInRepositoryImpl()
+//        .getPassengerForReview()
+//    Box(modifier = Modifier.padding(16.dp)) {
+//        PassengerInfoCard(passenger = previewPassenger)
+//    }
+//}

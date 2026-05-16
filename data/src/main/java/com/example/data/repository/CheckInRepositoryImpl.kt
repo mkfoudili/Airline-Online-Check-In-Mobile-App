@@ -11,10 +11,11 @@ import com.example.domain.repository.CheckInRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class CheckInRepositoryImpl(
-    private val checkInDataSource: CheckInDataSource? = null,
-    private val checkInSessionDao: CheckInSessionDao? = null
+class CheckInRepositoryImpl @Inject constructor(
+    private val checkInDataSource: CheckInDataSource,
+    private val checkInSessionDao: CheckInSessionDao
 ) : CheckInRepository {
 
     override fun getPassengerForReview(): Passenger {
@@ -35,16 +36,16 @@ class CheckInRepositoryImpl(
     override fun getSession(sessionId: String, callback: (Result<CheckInSession>) -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val localSession = checkInSessionDao?.getSession(sessionId)
+                val localSession = checkInSessionDao.getSession(sessionId)
                 if (localSession != null) {
                     callback(Result.success(localSession.toDomain()))
                 } else {
-                    checkInDataSource?.getSession(sessionId) { result ->
+                    checkInDataSource.getSession(sessionId) { result ->
                         result.onSuccess { sessionDto ->
                             val session = sessionDto.toDomain()
                             // Cache locally
                             CoroutineScope(Dispatchers.IO).launch {
-                                checkInSessionDao?.insertSession(session.toEntity())
+                                checkInSessionDao.insertSession(session.toEntity())
                             }
                             callback(Result.success(session))
                         }.onFailure {
@@ -62,10 +63,10 @@ class CheckInRepositoryImpl(
         val dto = session.toDto()
         val entity = session.toEntity()
         
-        checkInDataSource?.updateSession(dto) { result ->
+        checkInDataSource.updateSession(dto) { result ->
             result.onSuccess {
                 CoroutineScope(Dispatchers.IO).launch {
-                    checkInSessionDao?.updateSession(entity)
+                    checkInSessionDao.updateSession(entity)
                 }
                 callback(Result.success(session))
             }.onFailure {
@@ -78,10 +79,10 @@ class CheckInRepositoryImpl(
         val dto = session.toDto()
         val entity = session.toEntity()
 
-        checkInDataSource?.createSession(dto) { result ->
+        checkInDataSource.createSession(dto) { result ->
             result.onSuccess {
                 CoroutineScope(Dispatchers.IO).launch {
-                    checkInSessionDao?.insertSession(entity)
+                    checkInSessionDao.insertSession(entity)
                 }
                 callback(Result.success(session))
             }.onFailure {

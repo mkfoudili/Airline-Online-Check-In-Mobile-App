@@ -36,6 +36,8 @@ class MainActivity : AppCompatActivity() {
                     onCheckInClick = { bookingRef ->
                         Intent(this, CheckInActivity::class.java).also {
                             it.putExtra("booking_ref", bookingRef)
+                            // We can also pass flightId and passengerId if we have them, 
+                            // but usually they are retrieved from the booking object.
                             checkInLauncher.launch(it)
                         }
                     },

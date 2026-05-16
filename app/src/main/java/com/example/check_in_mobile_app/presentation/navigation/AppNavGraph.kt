@@ -195,14 +195,14 @@ fun AppNavGraph(
                 }
             )
         }
-        composable(route = Destination.Selection.route) {
-            SeatSelection(
-                onNavigateBack = { navController.popBackStack() },
-                onContinue = {
-                    navController.navigate(Destination.Baggage.route)
-                }
-            )
-        }
+//        composable(route = Destination.Selection.route) {
+//            SeatSelection(
+//                onNavigateBack = { navController.popBackStack() },
+//                onContinue = {
+//                    navController.navigate(Destination.Baggage.route)
+//                }
+//            )
+//        }
         composable(route = Destination.preference.route) {
             specialRequest(
                 onNavigateBack = { navController.popBackStack() },
