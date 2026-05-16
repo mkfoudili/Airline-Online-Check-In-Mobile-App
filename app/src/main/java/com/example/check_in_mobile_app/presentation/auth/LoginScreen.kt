@@ -1,5 +1,6 @@
 package com.example.check_in_mobile_app.presentation.auth
 
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -19,10 +20,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.credentials.CredentialManager
+import androidx.credentials.GetCredentialRequest
+import androidx.credentials.exceptions.GetCredentialException
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.presentation.components.authforms.LoginForm
 import com.example.check_in_mobile_app.ui.theme.*
+import com.example.data.remote.GOOGLE_WEB_CLIENT_ID
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,6 +41,9 @@ fun LoginScreen(
     viewModel: AuthViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.uiState
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val credentialManager = CredentialManager.create(context)
 
     LaunchedEffect(uiState.isSuccess) {
         if (uiState.isSuccess) {
@@ -133,7 +144,36 @@ fun LoginScreen(
                 onSignInClick = { email, password ->
                     viewModel.login(email, password)
                 },
-                onGoogleSignInClick = {  },
+                onGoogleSignInClick = {
+                    val googleIdOption = GetGoogleIdOption.Builder()
+                        .setFilterByAuthorizedAccounts(false)
+                        .setServerClientId(GOOGLE_WEB_CLIENT_ID)
+                        .setAutoSelectEnabled(false)
+                        .build()
+
+                    val request = GetCredentialRequest.Builder()
+                        .addCredentialOption(googleIdOption)
+                        .build()
+
+                    scope.launch {
+                        try {
+                            val result = credentialManager.getCredential(
+                                context = context,
+                                request = request
+                            )
+                            val credential = result.credential
+                            if (credential is GoogleIdTokenCredential) {
+                                viewModel.signInWithGoogle(credential.idToken)
+                            }
+                        } catch (e: GetCredentialException) {
+                            Log.e("AuthDebug", "Credential Manager Error: ${e.type} - ${e.message}")
+                            viewModel.setError("Google Sign-In failed: ${e.message ?: "No accounts found"}")
+                        } catch (e: Exception) {
+                            Log.e("AuthDebug", "Unexpected Error", e)
+                            viewModel.setError("An unexpected error occurred")
+                        }
+                    }
+                },
                 onSignUpClick = onNavigateToRegister
             )
 

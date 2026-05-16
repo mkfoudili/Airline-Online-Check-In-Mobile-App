@@ -1,6 +1,8 @@
 package com.example.domain.usecase.checkin
 
-class SelectBaggageUseCase {
+import javax.inject.Inject
+
+class SelectBaggageUseCase @Inject constructor() {
     operator fun invoke(
         checkedBaggageCount: Int,
         specialEquipmentCount: Int,

@@ -79,12 +79,12 @@ fun PassengerAvatarRow(passenger: Passenger) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun PassengerAvatarRowPreview() {
-    val previewPassenger = com.example.data.repository.CheckInRepositoryImpl()
-        .getPassengerForReview()
-    Box(modifier = Modifier.padding(16.dp)) {
-        PassengerAvatarRow(passenger = previewPassenger)
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//private fun PassengerAvatarRowPreview() {
+//    val previewPassenger = com.example.data.repository.CheckInRepositoryImpl()
+//        .getPassengerForReview()
+//    Box(modifier = Modifier.padding(16.dp)) {
+//        PassengerAvatarRow(passenger = previewPassenger)
+//    }
+//}

@@ -3,13 +3,16 @@ package com.example.check_in_mobile_app.presentation.checkin.baggage
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.usecase.checkin.SelectBaggageUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import javax.inject.Inject
 
-class BaggageViewModel(
-    private val selectBaggageUseCase: SelectBaggageUseCase = SelectBaggageUseCase()
+@HiltViewModel
+class BaggageViewModel @Inject constructor(
+    private val selectBaggageUseCase: SelectBaggageUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(BaggageUiState())

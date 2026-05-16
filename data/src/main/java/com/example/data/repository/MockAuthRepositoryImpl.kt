@@ -81,4 +81,8 @@ class MockAuthRepositoryImpl @Inject constructor(
             callback()
         }
     }
+
+    override fun loginWithGoogle(idToken: String, callback: (Result<User>) -> Unit) {
+            TODO("Not yet implemented")
+    }
 }

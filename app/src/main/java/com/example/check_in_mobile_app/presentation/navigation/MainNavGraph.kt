@@ -1,5 +1,6 @@
 package com.example.check_in_mobile_app.presentation.navigation
 
+import android.content.Intent
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
@@ -8,14 +9,21 @@ import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.check_in_mobile_app.presentation.auth.AuthViewModel
+import com.example.check_in_mobile_app.presentation.auth.LoginActivity
 import com.example.check_in_mobile_app.presentation.checkin.boarding.BoardingScreen
 import com.example.check_in_mobile_app.presentation.components.TabItem
+import com.example.check_in_mobile_app.presentation.main.MainActivity
 import com.example.check_in_mobile_app.presentation.main.booking.AllBookingsScreen
 import com.example.check_in_mobile_app.presentation.main.booking.BookingScreen
 import com.example.check_in_mobile_app.presentation.main.booking.FlightDetailsScreen
@@ -30,6 +38,9 @@ fun MainNavGraph(
     onNavigateToHomeHandled: () -> Unit = {}
 ) {
     val navController = rememberNavController()
+    val context = LocalContext.current
+    val authViewModel: AuthViewModel = hiltViewModel()
+    val isLoggedIn by authViewModel.isLoggedIn.collectAsState(initial = true)
 
     LaunchedEffect(navigateToHome.value) {
         if (navigateToHome.value) {
@@ -38,6 +49,17 @@ fun MainNavGraph(
                 launchSingleTop = true
             }
             onNavigateToHomeHandled()
+        }
+    }
+
+    LaunchedEffect(isLoggedIn) {
+        if (isLoggedIn == false) {
+            val intent = Intent(context, LoginActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                putExtra("FROM_LOGOUT", true)
+            }
+            context.startActivity(intent)
+            (context as? MainActivity)?.finish()
         }
     }
 
@@ -131,7 +153,9 @@ fun MainNavGraph(
         composable(Destination.Profile.route) {
             ProfileScreen(
                 onTabSelected = navigateToTab,
-                onLogout = { }
+                onLogout = {
+                    authViewModel.onLogout()
+                }
             )
         }
         composable(Destination.Notifications.route) {
