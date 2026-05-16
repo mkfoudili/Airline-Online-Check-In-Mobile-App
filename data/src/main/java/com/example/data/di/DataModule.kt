@@ -48,7 +48,7 @@ object DataModule {
 
     @Provides
     @Singleton
-    fun provideCheckInDataSource(): CheckInDataSource {
-        return CheckInDataSource()
+    fun provideCheckInDataSource(endpoint: Endpoint): CheckInDataSource {
+        return CheckInDataSource(endpoint)
     }
 }

@@ -7,6 +7,7 @@ import com.example.data.mapper.toEntity
 import com.example.data.remote.CheckInDataSource
 import com.example.domain.model.CheckInSession
 import com.example.domain.model.Passenger
+import com.example.domain.model.SpecialRequests
 import com.example.domain.repository.CheckInRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -88,6 +89,49 @@ class CheckInRepositoryImpl @Inject constructor(
             }.onFailure {
                 callback(Result.failure(it))
             }
+        }
+    }
+
+    override suspend fun getUserPreferences(uid: String): Result<SpecialRequests> {
+        return try {
+            val dto = checkInDataSource.getUserPreferences(uid)
+            Result.success(
+                SpecialRequests(
+                    preferredSoutien = dto.preferredSoutien,
+                    preferredVisualsAudit = dto.preferredVisualsAudit,
+                    preferredChildCare = dto.preferredChildCare,
+                    preferredPetCare = dto.preferredPetCare,
+                    mealPreference = dto.mealPreference
+                )
+            )
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun concludeCheckin(
+        passengerId: String,
+        uid: String,
+        specialRequests: SpecialRequests
+    ): Result<Unit> {
+        return try {
+            val request = com.example.data.remote.dto.ConcludeCheckinRequest(
+                passengerId = passengerId,
+                uid = uid,
+                preferredSoutien = specialRequests.preferredSoutien,
+                preferredVisualsAudit = specialRequests.preferredVisualsAudit,
+                preferredChildCare = specialRequests.preferredChildCare,
+                preferredPetCare = specialRequests.preferredPetCare,
+                mealPreference = specialRequests.mealPreference
+            )
+            val response = checkInDataSource.concludeCheckin(request)
+            if (response.success) {
+                Result.success(Unit)
+            } else {
+                Result.failure(Exception(response.message))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
         }
     }
 }

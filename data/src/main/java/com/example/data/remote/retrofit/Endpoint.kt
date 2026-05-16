@@ -55,4 +55,11 @@ interface Endpoint {
         @Path("passengerId") passengerId: String,
         @Body request: SelectSeatRequest
     ): SeatMapDto
+
+    // --- Special Requests & Preferences ---
+    @GET("preferences/{uid}")
+    suspend fun getUserPreferences(@Path("uid") uid: String): PreferencesDto
+
+    @POST("preferences/conclude")
+    suspend fun concludeCheckin(@Body request: ConcludeCheckinRequest): ConcludeCheckinResponse
 }

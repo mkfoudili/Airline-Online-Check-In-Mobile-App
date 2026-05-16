@@ -1,10 +1,14 @@
 package com.example.data.remote
 
 import com.example.data.remote.dto.CheckinSessionDto
+import com.example.data.remote.dto.ConcludeCheckinRequest
+import com.example.data.remote.dto.ConcludeCheckinResponse
+import com.example.data.remote.dto.PreferencesDto
+import com.example.data.remote.retrofit.Endpoint
 import java.sql.ResultSet
 import java.sql.SQLException
 
-class CheckInDataSource {
+class CheckInDataSource(private val endpoint: Endpoint) {
 
     /**
      * Updates the seat availability and assigns it to a passenger.
@@ -175,5 +179,13 @@ class CheckInDataSource {
                 callback(Result.failure(Exception("Database connection failed")))
             }
         }
+    }
+
+    suspend fun getUserPreferences(uid: String): PreferencesDto {
+        return endpoint.getUserPreferences(uid)
+    }
+
+    suspend fun concludeCheckin(request: ConcludeCheckinRequest): ConcludeCheckinResponse {
+        return endpoint.concludeCheckin(request)
     }
 }

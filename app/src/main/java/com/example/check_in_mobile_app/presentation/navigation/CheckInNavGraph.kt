@@ -89,7 +89,9 @@ fun CheckInNavGraph(
             )
         }
         composable(Destination.preference.route) {
+            val passengerId = booking?.passengers?.firstOrNull()?.passengerId ?: ""
             specialRequest(
+                passengerId = passengerId,
                 onNavigateBack = { navController.popBackStack() },
                 onFinishCheckIn = { navController.navigate(Destination.Confirmation.route) }
             )
