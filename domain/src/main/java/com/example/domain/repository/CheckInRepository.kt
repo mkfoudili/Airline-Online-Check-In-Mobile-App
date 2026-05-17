@@ -8,4 +8,13 @@ interface CheckInRepository {
     fun updateSession(session: CheckInSession, callback: (Result<CheckInSession>) -> Unit)
     fun createSession(session: CheckInSession, callback: (Result<CheckInSession>) -> Unit)
     fun getPassengerForReview(): Passenger
+    
+    suspend fun verifyPassport(
+        passportNumber: String, 
+        lastName: String,
+        firstName: String? = null,
+        nationality: String? = null,
+        dateOfBirth: String? = null,
+        expiryDate: String? = null
+    ): Result<Passenger>
 }

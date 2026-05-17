@@ -42,6 +42,18 @@ interface Endpoint {
     @POST("auth/logout")
     suspend fun logout()
 
+    // ── Check-in / Passport Verification ─────────────────────────────────────
+    @GET("checkin/verify-passport")
+    suspend fun verifyPassport(
+        @Query("passportNumber") passportNumber: String,
+        @Query("lastName") lastName: String,
+        @Query("firstName") firstName: String? = null,
+        @Query("nationality") nationality: String? = null,
+        @Query("dateOfBirth") dateOfBirth: String? = null,
+        @Query("expiryDate") expiryDate: String? = null
+    ): VerifyPassportResponseDto
+}
+
     // Boarding Pass
     @POST("boarding/generate")
     suspend fun generateBoardingPass(

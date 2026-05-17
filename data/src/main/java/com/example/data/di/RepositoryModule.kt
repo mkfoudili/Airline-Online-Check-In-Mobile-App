@@ -36,5 +36,7 @@ abstract class RepositoryModule {
     abstract fun bindSeatRepository(impl: SeatRepositoryImpl): SeatRepository
 
     @Binds @Singleton
+    abstract fun bindPassportOcrRepository(impl: PassportOcrRepositoryImpl): PassportOcrRepository
+}
     abstract fun bindQrEncoder(impl: ZxingQrEncoder): QrEncoder
 }

@@ -11,10 +11,15 @@ import com.example.domain.repository.CheckInRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
+import com.example.data.remote.PassengerVerifyDataSource
+import com.example.data.mapper.toDomain
+import com.example.data.remote.PassportVerificationException
 
-class CheckInRepositoryImpl(
+class CheckInRepositoryImpl @Inject constructor(
     private val checkInDataSource: CheckInDataSource? = null,
-    private val checkInSessionDao: CheckInSessionDao? = null
+    private val checkInSessionDao: CheckInSessionDao? = null,
+    private val passengerVerifyDataSource: PassengerVerifyDataSource
 ) : CheckInRepository {
 
     override fun getPassengerForReview(): Passenger {
@@ -87,6 +92,31 @@ class CheckInRepositoryImpl(
             }.onFailure {
                 callback(Result.failure(it))
             }
+        }
+    }
+
+    override suspend fun verifyPassport(
+        passportNumber: String, 
+        lastName: String,
+        firstName: String?,
+        nationality: String?,
+        dateOfBirth: String?,
+        expiryDate: String?
+    ): Result<Passenger> {
+        return try {
+            val dto = passengerVerifyDataSource.verifyPassport(
+                passportNumber, 
+                lastName,
+                firstName,
+                nationality,
+                dateOfBirth,
+                expiryDate
+            )
+            Result.success(dto.toDomain())
+        } catch (e: PassportVerificationException) {
+            Result.failure(e)
+        } catch (e: Exception) {
+            Result.failure(Exception("Network error. Please check your connection and try again."))
         }
     }
 }

@@ -79,6 +79,9 @@ dependencies {
     // ZXing : QR Code generation
     implementation("com.google.zxing:core:3.5.3")
 
+    // ML Kit Text Recognition
+    implementation("com.google.mlkit:text-recognition:16.0.1")
+
     // MySQL Connector
     implementation(libs.mysql.connector)
 

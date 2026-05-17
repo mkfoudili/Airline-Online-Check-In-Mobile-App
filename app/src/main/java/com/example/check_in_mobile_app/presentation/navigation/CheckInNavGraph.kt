@@ -5,7 +5,7 @@ import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -20,6 +20,13 @@ import com.example.check_in_mobile_app.presentation.checkin.confirmation.Confirm
 import com.example.check_in_mobile_app.presentation.checkin.passportscan.PassportScanScreen
 import com.example.check_in_mobile_app.presentation.checkin.specialRequest
 
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.check_in_mobile_app.presentation.checkin.CheckInSessionViewModel
+import com.example.check_in_mobile_app.presentation.checkin.checkingdetailsreview.CheckingDetailsReviewViewModel
+
 @Composable
 fun CheckInNavGraph(
     bookingRef: String,
@@ -28,6 +35,8 @@ fun CheckInNavGraph(
     onCheckInComplete: () -> Unit
 ) {
     val navController = rememberNavController()
+    val sessionViewModel: CheckInSessionViewModel = hiltViewModel()
+    val sessionState by sessionViewModel.state.collectAsStateWithLifecycle()
 
     NavHost(
         navController = navController,
@@ -45,8 +54,9 @@ fun CheckInNavGraph(
             popExitTransition  = { slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(300)) }
         ) {
             PassportScanScreen(
-                onBack     = onBackFromFirstStep,
-                onContinue = { navController.navigate(Destination.CheckingDetailsReview.route) }
+                onBack = onBackFromFirstStep,
+                onContinue = { navController.navigate(Destination.CheckingDetailsReview.route) },
+                sessionViewModel = sessionViewModel
             )
         }
 
@@ -57,10 +67,23 @@ fun CheckInNavGraph(
             popEnterTransition = { EnterTransition.None },
             popExitTransition  = { slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(300)) }
         ) {
-            CheckingDetailsReviewScreen(
-                onBack     = { navController.popBackStack() },
-                onContinue = { navController.navigate(Destination.Selection.route) }
-            )
+            val verifiedPassenger = sessionState.verifiedPassenger
+            if (verifiedPassenger != null) {
+                val reviewViewModel: CheckingDetailsReviewViewModel = viewModel(
+                    factory = object : ViewModelProvider.Factory {
+                        @Suppress("UNCHECKED_CAST")
+                        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                            val p = verifiedPassenger!! // Explicitly cast to non-null inside closure
+                            return CheckingDetailsReviewViewModel(p) as T
+                        }
+                    }
+                )
+                CheckingDetailsReviewScreen(
+                    onBack = { navController.popBackStack() },
+                    onContinue = { navController.navigate(Destination.Selection.route) },
+                    viewModel = reviewViewModel
+                )
+            }
         }
 
         composable(Destination.Selection.route) {
