@@ -17,11 +17,7 @@ class CheckInRepositoryImpl @Inject constructor(
     private val secureStorage: SecureStorage
 ) : CheckInRepository {
 
-    override suspend fun declareBaggage(
-        passengerId: String,
-        baggageCount: Int,
-        specialCount: Int
-    ): Result<Unit> = withContext(Dispatchers.IO) {
+    override suspend fun declareBaggage(baggageCount: Int, specialCount: Int): Result<Unit> = withContext(Dispatchers.IO) {
         try {
             val token = secureStorage.getAuthToken()
                 ?: return@withContext Result.failure(Exception("Not authenticated"))

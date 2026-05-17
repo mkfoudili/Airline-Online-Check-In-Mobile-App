@@ -9,9 +9,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -29,7 +31,9 @@ import com.example.check_in_mobile_app.presentation.components.checkin.checkingr
 import com.example.check_in_mobile_app.presentation.components.checkin.checkingreviewdetails.ReviewContinueButton
 import com.example.check_in_mobile_app.ui.theme.ErrorRed
 import com.example.check_in_mobile_app.ui.theme.NavyBlue
+import com.example.data.remote.retrofit.Endpoint
 import com.example.data.repository.CheckInRepositoryImpl
+import com.example.data.security.SecureStorage
 import com.example.domain.model.Passenger
 
 @Composable
@@ -123,8 +127,21 @@ fun CheckingDetailsReviewScreenContent(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun CheckingDetailsReviewScreenPreview() {
+    val mockPassenger = Passenger(
+        firstName = "John",
+        lastName = "Doe",
+        nationality = "United States",
+        dateOfBirth = "1990-01-01",
+        passengerId = "",
+        uid = "",
+        passportNumber = "",
+        expiryDate = "",
+        seatNumber = "",
+        checkinStatus = ""
+    )
+
     CheckingDetailsReviewScreenContent(
-        passenger = CheckInRepositoryImpl().getPassengerForReview(),
+        passenger = mockPassenger,
         isConfirmed = false,
         onBack = {},
         onContinue = {},
