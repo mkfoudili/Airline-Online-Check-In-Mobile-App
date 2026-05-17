@@ -1,7 +1,9 @@
 package com.example.data.di
 
+import com.example.data.qr.ZxingQrEncoder
 import com.example.data.repository.*
 import com.example.domain.repository.*
+import com.example.domain.usecase.boarding.QrEncoder
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -35,4 +37,6 @@ abstract class RepositoryModule {
 
     @Binds @Singleton
     abstract fun bindPassportOcrRepository(impl: PassportOcrRepositoryImpl): PassportOcrRepository
+}
+    abstract fun bindQrEncoder(impl: ZxingQrEncoder): QrEncoder
 }

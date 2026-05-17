@@ -33,13 +33,14 @@ class MainActivity : AppCompatActivity() {
         setContent {
             CheckInMobileAppTheme {
                 MainNavGraph(
-                    onCheckInClick = { bookingRef ->
+                    onCheckInClick = { bookingRef, passengerId ->
                         Intent(this, CheckInActivity::class.java).also {
                             it.putExtra("booking_ref", bookingRef)
+                            it.putExtra("passenger_id", passengerId)
                             checkInLauncher.launch(it)
                         }
                     },
-                    navigateToHome = navigateToHomeAfterCheckIn,
+                    navigateToHome          = navigateToHomeAfterCheckIn,
                     onNavigateToHomeHandled = { navigateToHomeAfterCheckIn.value = false }
                 )
             }

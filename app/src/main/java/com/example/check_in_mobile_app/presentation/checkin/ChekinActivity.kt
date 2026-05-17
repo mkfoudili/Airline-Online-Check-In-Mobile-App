@@ -1,6 +1,5 @@
 package com.example.check_in_mobile_app.presentation.checkin
 
-import android.app.Activity
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -15,15 +14,17 @@ class CheckInActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val bookingRef = intent.getStringExtra("booking_ref") ?: ""
+        val bookingRef  = intent.getStringExtra("booking_ref")  ?: ""
+        val passengerId = intent.getStringExtra("passenger_id") ?: ""
 
         setContent {
             CheckInMobileAppTheme {
                 CheckInNavGraph(
-                    bookingRef = bookingRef,
+                    bookingRef  = bookingRef,
+                    passengerId = passengerId,
                     onBackFromFirstStep = { finish() },
                     onCheckInComplete = {
-                        setResult(Activity.RESULT_OK)
+                        setResult(RESULT_OK)
                         finish()
                     }
                 )

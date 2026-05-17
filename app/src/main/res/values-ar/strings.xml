@@ -102,6 +102,8 @@
     <string name="confirmation_download_pdf">تنزيل PDF</string>
     <string name="confirmation_back_dashboard">العودة إلى لوحة التحكم</string>
     <string name="confirmation_download_toast">طلب تنزيل PDF</string>
+    <string name="confirmation_error_generic">حدث خطأ. يرجى المحاولة مرة أخرى.</string>
+    <string name="confirmation_retry">إعادة المحاولة</string>
     <!-- Home Screen -->
     <string name="home_greeting">مرحباً، %1$s</string>
     <string name="home_retrieve_booking">استرجاع حجز</string>
