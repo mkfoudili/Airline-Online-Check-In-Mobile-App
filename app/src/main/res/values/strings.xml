@@ -104,6 +104,8 @@
     <string name="confirmation_download_pdf">Download PDF</string>
     <string name="confirmation_back_dashboard">Back to Dashboard</string>
     <string name="confirmation_download_toast">Download PDF clicked</string>
+    <string name="confirmation_error_generic">An error occurred. Please try again.</string>
+    <string name="confirmation_retry">Retry</string>
     <!-- Home Screen -->
     <string name="home_greeting">Hello, %1$s</string>
     <string name="home_retrieve_booking">Retrieve Booking</string>

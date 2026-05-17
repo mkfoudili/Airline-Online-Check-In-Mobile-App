@@ -102,6 +102,8 @@
     <string name="confirmation_download_pdf">Télécharger le PDF</string>
     <string name="confirmation_back_dashboard">Retour au tableau de bord</string>
     <string name="confirmation_download_toast">Téléchargement PDF demandé</string>
+    <string name="confirmation_error_generic">Une erreur est survenue. Veuillez réessayer.</string>
+    <string name="confirmation_retry">Réessayer</string>
     <!-- Home Screen -->
     <string name="home_greeting">Bonjour, %1$s</string>
     <string name="home_retrieve_booking">Récupérer une réservation</string>

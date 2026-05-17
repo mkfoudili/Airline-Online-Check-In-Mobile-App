@@ -10,17 +10,13 @@ class BookingDataSource @Inject constructor(
 ) {
 
     suspend fun getBookingsByUid(uid: String): List<BookingDto> {
-        return endpoint.getBookings(uid)
+        return endpoint.getBookings()
     }
 
     suspend fun getUpcomingBookingsByUid(uid: String): List<BookingDto> {
-        return endpoint.getUpcomingBookings(uid)
+        return endpoint.getUpcomingBookings()
     }
 
-    /**
-     * Recherche un booking par référence (PNR ou bookingRef) et nom de famille.
-     * Retourne null si non trouvé (404) ou en cas d'erreur réseau.
-     */
     suspend fun getBooking(pnr: String, lastName: String): BookingDto? {
         return try {
             endpoint.searchBooking(pnr.uppercase().trim(), lastName.trim())
