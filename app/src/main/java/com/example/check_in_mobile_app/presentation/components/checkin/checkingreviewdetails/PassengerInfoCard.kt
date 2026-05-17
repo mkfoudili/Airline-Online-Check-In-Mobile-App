@@ -183,8 +183,19 @@ private fun InfoRow(
 @Preview(showBackground = true)
 @Composable
 private fun PassengerInfoCardPreview() {
-    val previewPassenger = com.example.data.repository.CheckInRepositoryImpl()
-        .getPassengerForReview()
+    val previewPassenger = Passenger(
+        firstName = "John",
+        lastName = "Doe",
+        nationality = "United States",
+        dateOfBirth = "1990-01-01",
+        passengerId = "P123",
+        uid = "U456",
+        passportNumber = "A12345678",
+        expiryDate = "2030-12-31",
+        seatNumber = "12A",
+        checkinStatus = "Pending"
+    )
+
     Box(modifier = Modifier.padding(16.dp)) {
         PassengerInfoCard(passenger = previewPassenger)
     }
