@@ -19,7 +19,6 @@ import com.example.check_in_mobile_app.presentation.checkin.checkingdetailsrevie
 import com.example.check_in_mobile_app.presentation.checkin.confirmation.ConfirmationScreen
 import com.example.check_in_mobile_app.presentation.checkin.passportscan.PassportScanScreen
 import com.example.check_in_mobile_app.presentation.checkin.specialRequest
-
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -30,6 +29,7 @@ import com.example.check_in_mobile_app.presentation.checkin.checkingdetailsrevie
 @Composable
 fun CheckInNavGraph(
     bookingRef: String,
+    bookingId: String,
     passengerId: String,
     onBackFromFirstStep: () -> Unit,
     onCheckInComplete: () -> Unit
@@ -39,31 +39,32 @@ fun CheckInNavGraph(
     val sessionState by sessionViewModel.state.collectAsStateWithLifecycle()
 
     NavHost(
-        navController = navController,
-        startDestination = Destination.PassportScan.route,
-        enterTransition = { EnterTransition.None },
-        exitTransition  = { ExitTransition.None },
+        navController      = navController,
+        startDestination   = Destination.PassportScan.route,
+        enterTransition    = { EnterTransition.None },
+        exitTransition     = { ExitTransition.None },
         popEnterTransition = { EnterTransition.None },
         popExitTransition  = { ExitTransition.None }
     ) {
         composable(
-            route = Destination.PassportScan.route,
-            enterTransition = { slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(300)) },
-            exitTransition  = { ExitTransition.None },
+            route              = Destination.PassportScan.route,
+            enterTransition    = { slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(300)) },
+            exitTransition     = { ExitTransition.None },
             popEnterTransition = { EnterTransition.None },
             popExitTransition  = { slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(300)) }
         ) {
             PassportScanScreen(
-                onBack = onBackFromFirstStep,
-                onContinue = { navController.navigate(Destination.CheckingDetailsReview.route) },
+                onBack           = onBackFromFirstStep,
+                onContinue       = { navController.navigate(Destination.CheckingDetailsReview.route) },
+                bookingId        = bookingId,
                 sessionViewModel = sessionViewModel
             )
         }
 
         composable(
-            route = Destination.CheckingDetailsReview.route,
-            enterTransition = { slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(300)) },
-            exitTransition  = { ExitTransition.None },
+            route              = Destination.CheckingDetailsReview.route,
+            enterTransition    = { slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(300)) },
+            exitTransition     = { ExitTransition.None },
             popEnterTransition = { EnterTransition.None },
             popExitTransition  = { slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(300)) }
         ) {
@@ -73,15 +74,14 @@ fun CheckInNavGraph(
                     factory = object : ViewModelProvider.Factory {
                         @Suppress("UNCHECKED_CAST")
                         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                            val p = verifiedPassenger!! // Explicitly cast to non-null inside closure
-                            return CheckingDetailsReviewViewModel(p) as T
+                            return CheckingDetailsReviewViewModel(verifiedPassenger) as T
                         }
                     }
                 )
                 CheckingDetailsReviewScreen(
-                    onBack = { navController.popBackStack() },
+                    onBack     = { navController.popBackStack() },
                     onContinue = { navController.navigate(Destination.Selection.route) },
-                    viewModel = reviewViewModel
+                    viewModel  = reviewViewModel
                 )
             }
         }
@@ -98,15 +98,14 @@ fun CheckInNavGraph(
                 viewModel       = viewModel<BaggageViewModel>(),
                 onBackClick     = { navController.popBackStack() },
                 onContinueClick = {
-                    navController.navigate(Destination.preference.routeWithArg(passengerId))
+                    val pid = sessionState.verifiedPassenger?.passengerId ?: passengerId
+                    navController.navigate(Destination.preference.routeWithArg(pid))
                 }
             )
         }
 
-        // Step 5 — Special Requests.
-        // Receives passengerId from the nav argument so it can forward it to Confirmation.
         composable(
-            route = Destination.preference.route,
+            route     = Destination.preference.route,
             arguments = listOf(navArgument("passengerId") { type = NavType.StringType })
         ) { backStackEntry ->
             val pid = backStackEntry.arguments?.getString("passengerId") ?: passengerId
@@ -119,14 +118,13 @@ fun CheckInNavGraph(
             )
         }
 
-        // Confirmation : generates boarding pass and shows download option.
         composable(
-            route = Destination.Confirmation.route,
+            route     = Destination.Confirmation.route,
             arguments = listOf(navArgument("passengerId") { type = NavType.StringType })
         ) { backStackEntry ->
             val pid = backStackEntry.arguments?.getString("passengerId") ?: passengerId
             ConfirmationScreen(
-                passengerId           = pid,
+                passengerId            = pid,
                 onNavigateToHomeScreen = { onCheckInComplete() }
             )
         }

@@ -14,16 +14,19 @@ class CheckInActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         val bookingRef  = intent.getStringExtra("booking_ref")  ?: ""
+        val bookingId   = intent.getStringExtra("booking_id")   ?: ""
         val passengerId = intent.getStringExtra("passenger_id") ?: ""
 
         setContent {
             CheckInMobileAppTheme {
                 CheckInNavGraph(
-                    bookingRef  = bookingRef,
-                    passengerId = passengerId,
+                    bookingRef          = bookingRef,
+                    bookingId           = bookingId,
+                    passengerId         = passengerId,
                     onBackFromFirstStep = { finish() },
-                    onCheckInComplete = {
+                    onCheckInComplete   = {
                         setResult(RESULT_OK)
                         finish()
                     }

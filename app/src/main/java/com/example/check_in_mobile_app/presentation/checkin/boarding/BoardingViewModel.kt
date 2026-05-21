@@ -41,7 +41,6 @@ class BoardingViewModel @Inject constructor(
     private var cachedQrPayload: String? = null
 
     init {
-        viewModelScope.launch { boardingPassRepository.seedMockDataIfEmpty() }
         loadBoardingPass()
     }
 

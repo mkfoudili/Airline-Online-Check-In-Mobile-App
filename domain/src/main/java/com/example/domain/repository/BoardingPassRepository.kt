@@ -19,6 +19,9 @@ interface BoardingPassRepository {
 
     suspend fun generateAndSyncFromServer(passengerId: String): BoardingPass
 
-    /** Seeds mock data so the app has boarding passes available offline on first launch. */
-    suspend fun seedMockDataIfEmpty()
+    /**
+     * Synchronise les cartes d'embarquement depuis le serveur vers le cache local.
+     * Appelé par SyncWorker quand les contraintes réseau sont satisfaites.
+     */
+    suspend fun refreshBoardingPassesFromRemote(): Result<Unit>
 }

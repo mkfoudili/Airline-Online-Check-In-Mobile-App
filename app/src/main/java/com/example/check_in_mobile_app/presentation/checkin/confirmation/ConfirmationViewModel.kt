@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.data.pdf.PdfGenerator
 import com.example.domain.model.BoardingPass
 import com.example.domain.repository.BoardingPassRepository
+import com.example.domain.repository.CheckInRepository
 import com.example.domain.usecase.boarding.GeneratePdfUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -20,34 +21,35 @@ import javax.inject.Inject
 @HiltViewModel
 class ConfirmationViewModel @Inject constructor(
     private val boardingPassRepository: BoardingPassRepository,
-    private val generatePdfUseCase: GeneratePdfUseCase
+    private val generatePdfUseCase: GeneratePdfUseCase,
+    private val checkInRepository: CheckInRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ConfirmationUiState())
     val uiState: StateFlow<ConfirmationUiState> = _uiState.asStateFlow()
 
-    // Boarding pass kept in memory once generated — used for PDF generation
     private var currentBoardingPass: BoardingPass? = null
 
-    /**
-     * Called when the user confirms step 5 (Special Requests).
-     * Generates the boarding pass server-side and caches it locally.
-     *
-     * [passengerId] must be the real passenger ID coming from the check-in session.
-     */
     fun generateBoardingPass(passengerId: String) {
         viewModelScope.launch {
             _uiState.update { it.copy(isGenerating = true, errorMessage = null) }
             try {
-                val boardingPass = withContext(Dispatchers.IO) {
-                    boardingPassRepository.generateAndSyncFromServer(passengerId)
-                }
-                currentBoardingPass = boardingPass
-                _uiState.update {
-                    it.copy(
-                        isGenerating = false,
-                        boardingPass = boardingPass
+                withContext(Dispatchers.IO) {
+                    // Avancer la session au dernier step requis
+                    checkInRepository.advanceSessionStep(
+                        passengerId = passengerId,
+                        step        = "SPECIAL_REQUESTS"
                     )
+                    // Générer le boarding pass
+                    boardingPassRepository.generateAndSyncFromServer(passengerId)
+                }.let { boardingPass ->
+                    currentBoardingPass = boardingPass
+                    _uiState.update {
+                        it.copy(
+                            isGenerating = false,
+                            boardingPass = boardingPass
+                        )
+                    }
                 }
             } catch (e: Exception) {
                 _uiState.update {
@@ -60,10 +62,6 @@ class ConfirmationViewModel @Inject constructor(
         }
     }
 
-    /**
-     * Downloads the boarding pass as a PDF and triggers the "Open with" chooser
-     * so the user can open it with Drive, a PDF viewer, etc.
-     */
     fun onDownloadPdf(context: Context) {
         val pass = currentBoardingPass ?: return
         viewModelScope.launch {
@@ -76,7 +74,6 @@ class ConfirmationViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(isDownloadingPdf = false, showDownloadSuccess = true)
                 }
-                // Launch the "Open with" chooser (Drive, PDF viewer, etc.)
                 PdfGenerator.openWithChooser(context, pdfResult.uri)
             }.onFailure { error ->
                 _uiState.update {

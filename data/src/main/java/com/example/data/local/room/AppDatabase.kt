@@ -4,49 +4,27 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.data.local.dao.BoardingPassDao
-import com.example.data.local.dao.BookingDao
-import com.example.data.local.dao.CheckInSessionDao
 import com.example.data.local.dao.FlightDao
 import com.example.data.local.dao.NotificationDao
-import com.example.data.local.dao.PassengerDao
-import com.example.data.local.dao.SeatMapDao
-import com.example.data.local.dao.UserDao
 import com.example.data.local.entity.BoardingPassEntity
-import com.example.data.local.entity.BookingEntity
-import com.example.data.local.entity.CheckInSessionEntity
 import com.example.data.local.entity.FlightEntity
 import com.example.data.local.entity.NotificationEntity
-import com.example.data.local.entity.PassengerEntity
-import com.example.data.local.entity.SeatMapEntity
-import com.example.data.local.entity.UserEntity
 
 @Database(
     entities = [
         BoardingPassEntity::class,
-        BookingEntity::class,
-        CheckInSessionEntity::class,
         FlightEntity::class,
-        NotificationEntity::class,
-        PassengerEntity::class,
-        SeatMapEntity::class,
-        UserEntity::class
+        NotificationEntity::class
     ],
-    version = 3,
+    version = 6,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun boardingPassDao(): BoardingPassDao
-    abstract fun bookingDao(): BookingDao
-    abstract fun checkInSessionDao(): CheckInSessionDao
     abstract fun flightDao(): FlightDao
     abstract fun notificationDao(): NotificationDao
-    abstract fun passengerDao(): PassengerDao
-    abstract fun seatMapDao(): SeatMapDao
-    abstract fun userDao(): UserDao
 
     companion object {
         @Volatile
@@ -59,6 +37,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "checkin_db"
                 )
+                    .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance
                 instance

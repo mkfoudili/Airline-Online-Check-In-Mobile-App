@@ -19,5 +19,6 @@ data class BoardingPass(
     val terminal: String?,
     val qrCodeData: String?,
     val issuedAt: Long,
-    val isSyncedWithServer: Boolean = false
+    val isSyncedWithServer: Boolean = false,
+    val lastSyncedAt: Long = 0L
 )

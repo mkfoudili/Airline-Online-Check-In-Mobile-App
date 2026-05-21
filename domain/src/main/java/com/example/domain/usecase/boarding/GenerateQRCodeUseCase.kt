@@ -1,5 +1,6 @@
 package com.example.domain.usecase.boarding
 
+import com.example.domain.BuildConfig
 import com.example.domain.model.BoardingPass
 import javax.inject.Inject
 
@@ -24,6 +25,6 @@ class GenerateQRCodeUseCase @Inject constructor() {
             return boardingPass.qrCodeData
         }
         // Fallback: reconstruct from passId (offline / mock passes)
-        return "CHECKIN_PASS:${boardingPass.passId}"
+        return "${BuildConfig.URL}boarding/verify/${boardingPass.passId}"
     }
 }

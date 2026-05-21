@@ -25,7 +25,7 @@ import com.example.check_in_mobile_app.presentation.main.profile.ProfileScreen
 
 @Composable
 fun MainNavGraph(
-    onCheckInClick: (bookingRef: String, passengerId: String) -> Unit,
+    onCheckInClick: (bookingRef: String, passengerId: String, bookingId: String) -> Unit,
     navigateToHome: State<Boolean> = mutableStateOf(false),
     onNavigateToHomeHandled: () -> Unit = {}
 ) {
@@ -117,9 +117,10 @@ fun MainNavGraph(
         ) { backStackEntry ->
             val bookingRef = backStackEntry.arguments?.getString("bookingRef") ?: ""
             FlightDetailsScreen(
-                onBack           = { navController.popBackStack() },
-                onStartCheckIn   = { passengerId ->
-                    onCheckInClick(bookingRef, passengerId)
+                onBack         = { navController.popBackStack() },
+                // FIX: on reçoit maintenant passengerId ET bookingId, et on les transmet tous les deux
+                onStartCheckIn = { passengerId, bookingId ->
+                    onCheckInClick(bookingRef, passengerId, bookingId)
                 }
             )
         }

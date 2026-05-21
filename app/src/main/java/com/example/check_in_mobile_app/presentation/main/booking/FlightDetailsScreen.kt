@@ -30,7 +30,7 @@ import com.example.domain.model.*
 @Composable
 fun FlightDetailsScreen(
     onBack: () -> Unit = {},
-    onStartCheckIn: (passengerId: String) -> Unit = {},
+    onStartCheckIn: (passengerId: String, bookingId: String) -> Unit = { _, _ -> },
     viewModel: FlightDetailsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -61,7 +61,7 @@ fun FlightDetailsScreen(
 fun FlightDetailsScreenContent(
     booking: Booking,
     onBack: () -> Unit,
-    onStartCheckIn: (passengerId: String) -> Unit
+    onStartCheckIn: (passengerId: String, bookingId: String) -> Unit
 ) {
     Scaffold(
         containerColor = Color.White,
@@ -125,10 +125,11 @@ fun FlightDetailsScreenContent(
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
-                    // Pass the passengerId of the first passenger. Required by ConfirmationScreen
+                    // FIX: on transmet maintenant passengerId ET bookingId
                     onClick = {
                         val passengerId = booking.passengers.firstOrNull()?.passengerId ?: ""
-                        onStartCheckIn(passengerId)
+                        val bookingId   = booking.bookingId
+                        onStartCheckIn(passengerId, bookingId)
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -225,6 +226,6 @@ fun FlightDetailsScreenPreview() {
             )
         ),
         onBack         = {},
-        onStartCheckIn = {}
+        onStartCheckIn = { _, _ -> }
     )
 }

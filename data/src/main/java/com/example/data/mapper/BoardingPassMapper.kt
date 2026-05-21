@@ -47,6 +47,7 @@ fun BoardingPassEntity.toDomain(): BoardingPass = BoardingPass(
     terminal           = terminal,
     qrCodeData         = qrCodeData,
     issuedAt           = issuedAt,
+    lastSyncedAt       = lastSyncedAt,
     isSyncedWithServer = isSyncedWithServer
 )
 
@@ -69,6 +70,7 @@ fun BoardingPass.toEntity(): BoardingPassEntity = BoardingPassEntity(
     terminal           = terminal,
     qrCodeData         = qrCodeData,
     issuedAt           = issuedAt,
+    lastSyncedAt       = lastSyncedAt,
     isSyncedWithServer = isSyncedWithServer
 )
 
@@ -93,5 +95,6 @@ fun BoardingPassDto.toDomain(): BoardingPass = BoardingPass(
     terminal           = terminal,
     qrCodeData         = qrCode,
     issuedAt           = parseIso8601(issuedAt),
-    isSyncedWithServer = true
+    isSyncedWithServer = true,
+    lastSyncedAt       = System.currentTimeMillis()
 )

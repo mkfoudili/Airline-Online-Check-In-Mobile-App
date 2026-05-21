@@ -41,6 +41,7 @@ import com.example.check_in_mobile_app.ui.theme.NavyBlue
 fun PassportScanScreen(
     onBack: () -> Unit = {},
     onContinue: () -> Unit = {},
+    bookingId: String = "",
     viewModel: PassportScanViewModel = viewModel(),
     sessionViewModel: CheckInSessionViewModel = hiltViewModel()
 ) {
@@ -54,7 +55,7 @@ fun PassportScanScreen(
             sessionViewModel.resetOcrStatus()
             onContinue()
         } else if (sessionState.ocrStatus == OcrStatus.ERROR) {
-            sessionState.errorMessage?.let { 
+            sessionState.errorMessage?.let {
                 snackbarHostState.showSnackbar(it)
                 sessionViewModel.clearError()
             }
@@ -68,7 +69,7 @@ fun PassportScanScreen(
             onContinue = {
                 // If not success/loading, manual trigger (just in case)
                 if (sessionState.ocrStatus == OcrStatus.IDLE || sessionState.ocrStatus == OcrStatus.ERROR) {
-                    uiState.capturedBitmap?.let { sessionViewModel.startOcrAndVerify(it) }
+                    uiState.capturedBitmap?.let { sessionViewModel.startOcrAndVerify(it, bookingId) }
                 }
             },
             onPassportCaptured = { bitmap ->
@@ -97,7 +98,7 @@ fun PassportScanScreen(
                     CircularProgressIndicator(color = Color.White)
                     Spacer(modifier = Modifier.height(20.dp))
                     Text(
-                        text = if (sessionState.ocrStatus == OcrStatus.SCANNING) 
+                        text = if (sessionState.ocrStatus == OcrStatus.SCANNING)
                             "Reading passport data..." else "Verifying with airline records...",
                         color = Color.White,
                         fontSize = 18.sp,
@@ -267,5 +268,3 @@ fun PassportScanScreenContent(
         }
     }
 }
-
-

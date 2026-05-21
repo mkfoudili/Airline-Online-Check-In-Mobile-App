@@ -24,8 +24,4 @@ class BookingDataSource @Inject constructor(
             if (e.code() == 404) null else throw e
         }
     }
-
-    suspend fun getPassengersByBookingId(bookingId: String): List<PassengerDto> {
-        return emptyList()
-    }
 }
