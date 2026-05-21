@@ -29,10 +29,13 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
+        val fromLogout = intent.getBooleanExtra("FROM_LOGOUT", false)
+
         setContent {
             CheckInMobileAppTheme {
                 LoginNavGraph(
                     viewModel = viewModel,
+                    startFromLogout = fromLogout,
                     onLoginSuccess = { goToMain() }
                 )
             }

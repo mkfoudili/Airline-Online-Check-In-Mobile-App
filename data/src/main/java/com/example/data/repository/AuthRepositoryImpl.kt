@@ -77,6 +77,17 @@ class AuthRepositoryImpl @Inject constructor(
             }
         }
     }
+    override fun loginWithGoogle(idToken: String, callback: (Result<User>) -> Unit) {
+        scope.launch {
+            try {
+                val response = api.loginWithGoogle(GoogleAuthRequest(idToken))
+                handleAuthSuccess(response.user, response.token, response.refreshToken)
+                callback(Result.success(response.user.toDomain()))
+            } catch (e: Exception) {
+                callback(Result.failure(Exception("Google Sign-In failed: ${e.message}")))
+            }
+        }
+    }
 
     override fun logout(callback: () -> Unit) {
         scope.launch {

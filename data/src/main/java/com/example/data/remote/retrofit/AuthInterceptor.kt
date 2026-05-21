@@ -9,13 +9,24 @@ class AuthInterceptor @Inject constructor(
     private val secureStorage: SecureStorage
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
-        val token = secureStorage.getAuthToken()
-        val request = chain.request().newBuilder()
-
-        if (token != null) {
-            request.addHeader("Authorization", "Bearer $token")
+        val request = chain.request()
+        val path = request.url.encodedPath
+        
+        // Skip adding Authorization header for auth endpoints
+        if (path.contains("/auth/login") || 
+            path.contains("/auth/register") || 
+            path.contains("/auth/google") ||
+            path.contains("/auth/exists")) {
+            return chain.proceed(request)
         }
 
-        return chain.proceed(request.build())
+        val token = secureStorage.getAuthToken()
+        val newRequest = request.newBuilder()
+
+        if (token != null) {
+            newRequest.addHeader("Authorization", "Bearer $token")
+        }
+
+        return chain.proceed(newRequest.build())
     }
 }
