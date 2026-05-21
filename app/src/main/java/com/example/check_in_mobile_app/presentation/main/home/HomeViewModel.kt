@@ -4,7 +4,9 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.check_in_mobile_app.di.NetworkMonitor
+import com.example.check_in_mobile_app.sync.SyncScheduler
 import com.example.domain.repository.AuthRepository
+import com.example.domain.repository.BoardingPassRepository
 import com.example.domain.repository.BookingRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -12,6 +14,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -21,8 +26,10 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     application: Application,
     private val bookingRepository: BookingRepository,
+    private val boardingPassRepository: BoardingPassRepository,
     private val authRepository: AuthRepository,
-    private val networkMonitor: NetworkMonitor
+    private val networkMonitor: NetworkMonitor,
+    private val syncScheduler: SyncScheduler
 ) : AndroidViewModel(application) {
 
     val isOnline: StateFlow<Boolean> = networkMonitor.isOnline
@@ -38,12 +45,27 @@ class HomeViewModel @Inject constructor(
     init {
         loadUserName()
         loadActiveFlight()
+        observeConnectivity()
+    }
+
+    private fun observeConnectivity() {
+        viewModelScope.launch {
+            networkMonitor.isOnline
+                .drop(1)
+                .distinctUntilChanged()
+                .collect { online ->
+                    if (online) {
+                        loadActiveFlight()
+                    } else {
+                        // Passage en offline → charger le boarding pass depuis le cache local
+                        loadCachedBoardingPass()
+                    }
+                }
+        }
     }
 
     private fun loadUserName() {
         val uid = authRepository.getCurrentUserId() ?: return
-        // Le nom complet n'est pas stocké directement dans AuthRepository ;
-        // on utilise l'UID comme fallback (à enrichir si ProfileRepository est ajouté)
         _uiState.update { it.copy(userName = uid.take(12)) }
     }
 
@@ -63,13 +85,25 @@ class HomeViewModel @Inject constructor(
                     }
                 }
                 .onFailure { error ->
+                    // Réseau indisponible → charger le boarding pass depuis le cache
                     _uiState.update {
                         it.copy(
                             isActiveFlightLoading = false,
                             errorMessage = error.message
                         )
                     }
+                    loadCachedBoardingPass()
                 }
+        }
+    }
+
+    private fun loadCachedBoardingPass() {
+        viewModelScope.launch {
+            val boardingPass = boardingPassRepository
+                .getAllBoardingPasses()
+                .firstOrNull()
+                ?.firstOrNull()
+            _uiState.update { it.copy(cachedBoardingPass = boardingPass) }
         }
     }
 

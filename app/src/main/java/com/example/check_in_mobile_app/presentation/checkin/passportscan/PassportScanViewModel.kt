@@ -2,37 +2,28 @@ package com.example.check_in_mobile_app.presentation.checkin.passportscan
 
 import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import javax.inject.Inject
-
-enum class ScanStatus { PENDING, SUCCESS }
 
 data class PassportScanUiState(
-    val capturedBitmap: Bitmap? = null,
-    val scanStatus: ScanStatus = ScanStatus.PENDING
+    val capturedBitmap: Bitmap? = null
 )
 
-@HiltViewModel
-class PassportScanViewModel @Inject constructor() : ViewModel() {
+/**
+ * Lightweight VM — only holds the captured bitmap.
+ * All OCR + verification logic lives in [CheckInSessionViewModel].
+ */
+class PassportScanViewModel : ViewModel() {
 
     private val _uiState = MutableStateFlow(PassportScanUiState())
     val uiState: StateFlow<PassportScanUiState> = _uiState.asStateFlow()
 
-    /** Called when the camera or gallery returns a result. */
     fun onPassportCaptured(bitmap: Bitmap?) {
-        _uiState.update { state ->
-            state.copy(
-                capturedBitmap = bitmap,
-                scanStatus = if (bitmap != null) ScanStatus.SUCCESS else ScanStatus.PENDING
-            )
-        }
+        _uiState.update { it.copy(capturedBitmap = bitmap) }
     }
 
-    /** Resets to allow retake. */
     fun onClearScan() {
         _uiState.update { PassportScanUiState() }
     }

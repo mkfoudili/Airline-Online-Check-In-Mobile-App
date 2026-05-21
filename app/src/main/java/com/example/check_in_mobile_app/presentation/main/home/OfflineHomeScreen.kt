@@ -24,16 +24,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.presentation.components.OfflineBanner
-import com.example.check_in_mobile_app.presentation.components.flightdetails.FlightInfoCard
 import com.example.check_in_mobile_app.ui.theme.*
-import java.util.concurrent.TimeUnit
-
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 @Composable
 fun OfflineHomeScreen(
     onNavigateToBoardingScreen: () -> Unit = {},
     screenWidth: Dp = LocalConfiguration.current.screenWidthDp.dp,
     uiState: HomeUiState
 ) {
+    // Header
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -84,16 +85,9 @@ fun OfflineHomeScreen(
 
     Spacer(modifier = Modifier.height(24.dp))
 
-    // Affiche la date de sync si on a un vol en cache
-    val cachedBooking = uiState.activeFlight
-    val syncedAgo = cachedBooking?.let {
-        val now = System.currentTimeMillis()
-        // On approxime depuis le lastSyncedAt de l'entity, ici on utilise le timestamp actuel comme proxy
-        val diff = now - (it.flight.departureTime - 86_400_000L) // heuristique simple
-        val mins = TimeUnit.MILLISECONDS.toMinutes(kotlin.math.abs(diff)).coerceAtMost(59)
-        "$mins min"
-    }
+    val boardingPass = uiState.cachedBoardingPass
 
+    // Section titre + timestamp de sync
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -111,33 +105,48 @@ fun OfflineHomeScreen(
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.weight(1f)
         )
-        Row(
-            modifier = Modifier.width(150.dp),
-            horizontalArrangement = Arrangement.End,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.sync),
-                contentDescription = null,
-                tint = CoolGray
-            )
-            Spacer(modifier = Modifier.width(4.dp))
-            Text(
-                text = syncedAgo?.let {
-                    stringResource(R.string.offline_synced_ago, it)
-                } ?: stringResource(R.string.offline_not_synced),
-                fontSize = 9.sp,
-                color = CoolGray,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
+        if (boardingPass != null) {
+            Row(
+                modifier = Modifier.width(150.dp),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.sync),
+                    contentDescription = null,
+                    tint = CoolGray
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                val syncTime = if (boardingPass.lastSyncedAt > 0L) {
+                    val elapsedMs = System.currentTimeMillis() - boardingPass.lastSyncedAt
+                    val elapsedMin = (elapsedMs / 60_000).toInt()
+                    when {
+                        elapsedMin < 1  -> stringResource(R.string.offline_synced_just_now)
+                        elapsedMin < 60 -> stringResource(R.string.offline_synced_minutes_ago, elapsedMin)
+                        else -> {
+                            val hours = elapsedMin / 60
+                            stringResource(R.string.offline_synced_hours_ago, hours)
+                        }
+                    }
+                } else {
+                    "--:--"
+                }
+                Text(
+                    text = syncTime,
+                    fontSize = 9.sp,
+                    color = CoolGray,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
         }
     }
 
     Spacer(modifier = Modifier.height(24.dp))
 
-    if (cachedBooking != null) {
-        FlightInfoCard(booking = cachedBooking)
+    if (boardingPass != null) {
+        // Carte vol depuis le boarding pass en cache
+        CachedFlightCard(boardingPass = boardingPass)
 
         Spacer(modifier = Modifier.height(30.dp))
 
@@ -195,7 +204,7 @@ fun OfflineHomeScreen(
             }
         }
     } else {
-        // Aucun vol en cache
+        // Aucun boarding pass en cache
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -211,6 +220,93 @@ fun OfflineHomeScreen(
                 fontWeight = FontWeight.Medium
             )
         }
+    }
+}
+
+@Composable
+private fun CachedFlightCard(boardingPass: com.example.domain.model.BoardingPass) {
+    val sdf = SimpleDateFormat("dd MMM yyyy  HH:mm", Locale.getDefault())
+    val departureFormatted = boardingPass.departureTime?.let { sdf.format(Date(it)) } ?: "--"
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            // Route
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(horizontalAlignment = Alignment.Start) {
+                    Text(
+                        text = boardingPass.origin,
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = NavyBlue
+                    )
+                    Text(
+                        text = boardingPass.originCity,
+                        fontSize = 12.sp,
+                        color = CoolGray
+                    )
+                }
+                Icon(
+                    painter = painterResource(id = R.drawable.plane),
+                    contentDescription = null,
+                    tint = NavyBlue,
+                    modifier = Modifier.size(24.dp)
+                )
+                Column(horizontalAlignment = Alignment.End) {
+                    Text(
+                        text = boardingPass.destination,
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = NavyBlue
+                    )
+                    Text(
+                        text = boardingPass.destinationCity,
+                        fontSize = 12.sp,
+                        color = CoolGray
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+            HorizontalDivider(color = LightGray)
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // Infos vol
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                InfoItem(label = "Flight", value = boardingPass.flightNumber)
+                InfoItem(label = "Seat", value = boardingPass.seatNumber ?: "--")
+                InfoItem(label = "Terminal", value = boardingPass.terminal ?: "--")
+                InfoItem(label = "Gate", value = boardingPass.gate ?: "--")
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = departureFormatted,
+                fontSize = 12.sp,
+                color = CoolGray,
+                modifier = Modifier.align(Alignment.End)
+            )
+        }
+    }
+}
+
+@Composable
+private fun InfoItem(label: String, value: String) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(text = label, fontSize = 11.sp, color = CoolGray)
+        Text(text = value, fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = NavyBlue)
     }
 }
 

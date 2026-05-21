@@ -32,7 +32,8 @@ class NetworkMonitor(context: Context) {
         val callback = object : ConnectivityManager.NetworkCallback() {
 
             override fun onAvailable(network: Network) {
-
+                validNetworks.add(network)
+                emit()
             }
 
             override fun onCapabilitiesChanged(

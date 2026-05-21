@@ -102,6 +102,8 @@
     <string name="confirmation_download_pdf">تنزيل PDF</string>
     <string name="confirmation_back_dashboard">العودة إلى لوحة التحكم</string>
     <string name="confirmation_download_toast">طلب تنزيل PDF</string>
+    <string name="confirmation_error_generic">حدث خطأ. يرجى المحاولة مرة أخرى.</string>
+    <string name="confirmation_retry">إعادة المحاولة</string>
     <!-- Home Screen -->
     <string name="home_greeting">مرحباً، %1$s</string>
     <string name="home_retrieve_booking">استرجاع حجز</string>
@@ -116,6 +118,9 @@
     <string name="offline_features_require_internet">بعض الميزات تتطلب اتصالاً بالإنترنت.</string>
     <string name="offline_upcoming_flight">الرحلة القادمة</string>
     <string name="offline_synced_ago">آخر مزامنة منذ %1$s</string>
+    <string name="offline_synced_just_now">تمت المزامنة للتو</string>
+    <string name="offline_synced_minutes_ago">مزامنة منذ %1$d دقيقة</string>
+    <string name="offline_synced_hours_ago">مزامنة منذ %1$d ساعة</string>
     <string name="offline_available_actions">الإجراءات المتاحة</string>
     <string name="offline_data_saved_note">تم حفظ بيانات رحلتك تلقائياً للوصول دون إنترنت. للتحديث، أعد الاتصال بشبكة Wi-Fi أو البيانات الخلوية.</string>
     <string name="offline_view_boarding_pass">عرض بطاقة الصعود</string>

@@ -17,23 +17,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.check_in_mobile_app.R
-import com.example.check_in_mobile_app.ui.theme.*
 import com.example.check_in_mobile_app.presentation.components.flightdetails.FlightInfoCard
 import com.example.check_in_mobile_app.presentation.components.flightdetails.PassengerCard
 import com.example.check_in_mobile_app.presentation.components.flightdetails.ScheduleTimeline
-import com.example.domain.model.Booking
-import com.example.domain.model.CheckInStatus
-import com.example.domain.model.Flight
-import com.example.domain.model.Passenger
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.check_in_mobile_app.ui.theme.*
+import com.example.domain.model.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FlightDetailsScreen(
     onBack: () -> Unit = {},
-    onStartCheckIn: () -> Unit = {},
+    onStartCheckIn: (passengerId: String, bookingId: String) -> Unit = { _, _ -> },
     viewModel: FlightDetailsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -51,8 +48,8 @@ fun FlightDetailsScreen(
         }
         is FlightDetailsUiState.Success -> {
             FlightDetailsScreenContent(
-                booking = state.booking,
-                onBack = onBack,
+                booking        = state.booking,
+                onBack         = onBack,
                 onStartCheckIn = onStartCheckIn
             )
         }
@@ -64,7 +61,7 @@ fun FlightDetailsScreen(
 fun FlightDetailsScreenContent(
     booking: Booking,
     onBack: () -> Unit,
-    onStartCheckIn: () -> Unit
+    onStartCheckIn: (passengerId: String, bookingId: String) -> Unit
 ) {
     Scaffold(
         containerColor = Color.White,
@@ -72,25 +69,23 @@ fun FlightDetailsScreenContent(
             TopAppBar(
                 title = {
                     Text(
-                        text = stringResource(R.string.flight_details_title),
-                        fontSize = 20.sp,
+                        text       = stringResource(R.string.flight_details_title),
+                        fontSize   = 20.sp,
                         fontWeight = FontWeight.Bold,
-                        color = DarkText,
+                        color      = DarkText,
                         fontFamily = Poppins
                     )
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(
-                            painter = painterResource(id = R.drawable.chevron_left),
+                            painter            = painterResource(id = R.drawable.chevron_left),
                             contentDescription = stringResource(R.string.back),
-                            tint = DarkText
+                            tint               = DarkText
                         )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.White
-                )
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
             )
         },
         bottomBar = {
@@ -99,46 +94,56 @@ fun FlightDetailsScreenContent(
                     .fillMaxWidth()
                     .background(Color.White)
                     .padding(
-                        start = 24.dp,
-                        end = 24.dp,
-                        top = 24.dp,
-                        bottom = 24.dp + WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+                        start   = 24.dp,
+                        end     = 24.dp,
+                        top     = 24.dp,
+                        bottom  = 24.dp + WindowInsets.navigationBars
+                            .asPaddingValues()
+                            .calculateBottomPadding()
                     )
             ) {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier              = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment     = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = stringResource(R.string.checkin_status_label),
-                        fontSize = 14.sp,
+                        text       = stringResource(R.string.checkin_status_label),
+                        fontSize   = 14.sp,
                         fontWeight = FontWeight.Medium,
-                        color = MediumGray
+                        color      = MediumGray
                     )
                     Text(
-                        text = if (booking.status == CheckInStatus.CHECK_IN_OPEN) stringResource(R.string.checkin_status_available) else booking.status.name,
-                        fontSize = 14.sp,
+                        text = if (booking.status == CheckInStatus.CHECK_IN_OPEN)
+                            stringResource(R.string.checkin_status_available)
+                        else
+                            booking.status.name,
+                        fontSize   = 14.sp,
                         fontWeight = FontWeight.Bold,
-                        color = if (booking.status == CheckInStatus.CHECK_IN_OPEN) ActiveGreen else DarkText
+                        color      = if (booking.status == CheckInStatus.CHECK_IN_OPEN) ActiveGreen else DarkText
                     )
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
-                    onClick = onStartCheckIn,
+                    // FIX: on transmet maintenant passengerId ET bookingId
+                    onClick = {
+                        val passengerId = booking.passengers.firstOrNull()?.passengerId ?: ""
+                        val bookingId   = booking.bookingId
+                        onStartCheckIn(passengerId, bookingId)
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(52.dp),
-                    shape = RoundedCornerShape(12.dp),
+                    shape  = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = NavyBlue,
-                        contentColor = Color.White
+                        contentColor   = Color.White
                     )
                 ) {
                     Text(
-                        text = stringResource(R.string.start_checkin),
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.SemiBold,
+                        text          = stringResource(R.string.start_checkin),
+                        fontSize      = 16.sp,
+                        fontWeight    = FontWeight.SemiBold,
                         letterSpacing = (-0.2).sp
                     )
                 }
@@ -157,20 +162,20 @@ fun FlightDetailsScreenContent(
             FlightInfoCard(booking)
             Spacer(modifier = Modifier.height(24.dp))
             Text(
-                text = stringResource(R.string.passenger_label),
-                fontSize = 18.sp,
+                text       = stringResource(R.string.passenger_label),
+                fontSize   = 18.sp,
                 fontWeight = FontWeight.Bold,
-                color = DarkText,
+                color      = DarkText,
                 fontFamily = Poppins
             )
             Spacer(modifier = Modifier.height(12.dp))
             PassengerCard(booking, infoText = "${stringResource(R.string.pnr_label)} ${booking.pnr}")
             Spacer(modifier = Modifier.height(24.dp))
             Text(
-                text = stringResource(R.string.schedule_label),
-                fontSize = 18.sp,
+                text       = stringResource(R.string.schedule_label),
+                fontSize   = 18.sp,
                 fontWeight = FontWeight.Bold,
-                color = DarkText,
+                color      = DarkText,
                 fontFamily = Poppins
             )
             Spacer(modifier = Modifier.height(16.dp))
@@ -185,42 +190,42 @@ fun FlightDetailsScreenContent(
 fun FlightDetailsScreenPreview() {
     FlightDetailsScreenContent(
         booking = Booking(
-            bookingId = "b1",
+            bookingId  = "b1",
             bookingRef = "BB9XC2",
-            pnr = "BB9XC2",
-            lastName = "Fatma",
-            status = CheckInStatus.CHECK_IN_OPEN,
-            gate = "G24",
+            pnr        = "BB9XC2",
+            lastName   = "Fatma",
+            status     = CheckInStatus.CHECK_IN_OPEN,
+            gate       = "G24",
             passengers = listOf(
                 Passenger(
-                    passengerId = "p1",
-                    uid = "u1",
-                    firstName = "Djerfi",
-                    lastName = "Fatma",
+                    passengerId    = "passenger-fatma-001",
+                    uid            = "u1",
+                    firstName      = "Djerfi",
+                    lastName       = "Fatma",
                     passportNumber = "AB123456",
-                    nationality = "Algerian",
-                    dateOfBirth = "1990-01-01",
-                    expiryDate = null,
-                    seatNumber = "12A",
-                    checkinStatus = "PENDING"
+                    nationality    = "Algerian",
+                    dateOfBirth    = "1990-01-01",
+                    expiryDate     = null,
+                    seatNumber     = "12A",
+                    checkinStatus  = "PENDING"
                 )
             ),
             flight = Flight(
-                flightId = "f1",
-                flightNumber = "UA2402",
-                origin = "SFO",
-                originCity = "San Francisco",
-                destination = "JFK",
-                destinationCity = "New York",
-                departureTime = System.currentTimeMillis() + 86400000,
-                arrivalTime = System.currentTimeMillis() + 90000000,
+                flightId         = "f1",
+                flightNumber     = "AH 1042",
+                origin           = "ALG",
+                originCity       = "Algiers",
+                destination      = "CDG",
+                destinationCity  = "Paris",
+                departureTime    = System.currentTimeMillis() + 86_400_000L,
+                arrivalTime      = System.currentTimeMillis() + 90_000_000L,
                 checkInOpensTime = "06:15",
-                boardingTime = "08:00",
-                aircraftType = "Boeing 737",
-                status = "Scheduled"
+                boardingTime     = "07:50",
+                aircraftType     = "Boeing 737",
+                status           = "Scheduled"
             )
         ),
-        onBack = {},
-        onStartCheckIn = {}
+        onBack         = {},
+        onStartCheckIn = { _, _ -> }
     )
 }

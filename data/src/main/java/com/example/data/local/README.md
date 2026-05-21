@@ -1,1 +1,0 @@
-Base de données locale (Room), cache offline

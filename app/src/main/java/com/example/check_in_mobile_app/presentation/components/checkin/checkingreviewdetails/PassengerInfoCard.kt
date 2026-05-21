@@ -93,12 +93,8 @@ private fun InfoRow(
     iconRes: Int,
     iconBgColor: Color,
     label: String,
-    initialValue: String,
-    onValueSaved: (String) -> Unit = {}
+    initialValue: String
 ) {
-    var isEditing by remember { mutableStateOf(false) }
-    var textValue by remember(initialValue) { mutableStateOf(initialValue) }
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -123,7 +119,6 @@ private fun InfoRow(
 
         Spacer(modifier = Modifier.width(12.dp))
 
-
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = label,
@@ -133,59 +128,14 @@ private fun InfoRow(
                 letterSpacing = 0.5.sp
             )
             Spacer(modifier = Modifier.height(2.dp))
-            if (isEditing) {
-                BasicTextField(
-                    value = textValue,
-                    onValueChange = { textValue = it },
-                    textStyle = TextStyle(
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = Color.Black
-                    ),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color(0xFFF1F5F9), RoundedCornerShape(4.dp))
-                        .padding(horizontal = 8.dp, vertical = 4.dp),
-                    singleLine = true
-                )
-            } else {
-                Text(
-                    text = textValue,
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = Color.Black
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.width(8.dp))
-
-
-        IconButton(
-            onClick = {
-                if (isEditing) {
-                    onValueSaved(textValue)
-                }
-                isEditing = !isEditing
-            },
-            modifier = Modifier.size(32.dp)
-        ) {
-            Icon(
-                imageVector = if (isEditing) Icons.Default.Check else Icons.Outlined.Edit,
-                contentDescription = if (isEditing) stringResource(R.string.common_save_changes) else stringResource(R.string.common_edit),
-                tint = if (isEditing) NavyBlue else CoolGray,
-                modifier = Modifier.size(20.dp)
+            Text(
+                text = initialValue,
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Medium,
+                color = Color.Black
             )
         }
     }
 }
 
-//@Preview(showBackground = true)
-//@Composable
-//private fun PassengerInfoCardPreview() {
-//    val previewPassenger = com.example.data.repository.CheckInRepositoryImpl()
-//        .getPassengerForReview()
-//    Box(modifier = Modifier.padding(16.dp)) {
-//        PassengerInfoCard(passenger = previewPassenger)
-//    }
-//}
+

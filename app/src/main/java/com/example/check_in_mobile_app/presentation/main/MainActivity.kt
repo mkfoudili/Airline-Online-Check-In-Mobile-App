@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
     private val checkInLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
+        if (result.resultCode == RESULT_OK) {
             navigateToHomeAfterCheckIn.value = true
         }
     }
@@ -33,15 +33,15 @@ class MainActivity : AppCompatActivity() {
         setContent {
             CheckInMobileAppTheme {
                 MainNavGraph(
-                    onCheckInClick = { bookingRef ->
+                    onCheckInClick = { bookingRef, passengerId, bookingId ->
                         Intent(this, CheckInActivity::class.java).also {
-                            it.putExtra("booking_ref", bookingRef)
-                            // We can also pass flightId and passengerId if we have them, 
-                            // but usually they are retrieved from the booking object.
+                            it.putExtra("booking_ref",  bookingRef)
+                            it.putExtra("passenger_id", passengerId)
+                            it.putExtra("booking_id",   bookingId)
                             checkInLauncher.launch(it)
                         }
                     },
-                    navigateToHome = navigateToHomeAfterCheckIn,
+                    navigateToHome          = navigateToHomeAfterCheckIn,
                     onNavigateToHomeHandled = { navigateToHomeAfterCheckIn.value = false }
                 )
             }

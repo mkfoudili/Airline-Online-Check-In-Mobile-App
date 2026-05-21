@@ -23,5 +23,6 @@ data class BoardingPassEntity(
     val terminal: String?,
     val qrCodeData: String?,
     val issuedAt: Long,
+    val lastSyncedAt: Long = System.currentTimeMillis(),
     val isSyncedWithServer: Boolean = false
 )

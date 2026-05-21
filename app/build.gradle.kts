@@ -54,6 +54,7 @@ dependencies {
     implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
     implementation(project(":domain"))
     implementation(project(":data"))
+
     implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.navigation:navigation-compose:2.8.5")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
@@ -70,6 +71,8 @@ dependencies {
     
     // Hilt
     implementation(libs.hilt.android)
+    implementation(libs.androidx.hilt.work)
+    ksp("androidx.hilt:hilt-compiler:1.2.0")
     ksp(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
@@ -79,12 +82,19 @@ dependencies {
     implementation("androidx.room:room-runtime:$room_version")
     implementation("androidx.room:room-ktx:$room_version")
 
+    //WorkManager
+    val work_version = "2.10.1"
+    implementation("androidx.work:work-runtime-ktx:${work_version}")
+
     // CameraX dependencies
     implementation(libs.androidx.camera.core)
     implementation(libs.androidx.camera.camera2)
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.view)
     implementation(libs.androidx.compose.foundation)
+
+    // ML Kit Text Recognition
+    implementation("com.google.mlkit:text-recognition:16.0.1")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
