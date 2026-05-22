@@ -19,7 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.presentation.components.checkin.CheckInTopBar
 import com.example.check_in_mobile_app.presentation.components.checkin.checkingreviewdetails.PassengerAvatarRow
@@ -29,19 +29,20 @@ import com.example.check_in_mobile_app.presentation.components.checkin.checkingr
 import com.example.check_in_mobile_app.presentation.components.checkin.checkingreviewdetails.ReviewContinueButton
 import com.example.check_in_mobile_app.ui.theme.ErrorRed
 import com.example.check_in_mobile_app.ui.theme.NavyBlue
-import com.example.data.repository.CheckInRepositoryImpl
 import com.example.domain.model.Passenger
 
 @Composable
 fun CheckingDetailsReviewScreen(
     onBack: () -> Unit = {},
     onContinue: () -> Unit = {},
-    viewModel: CheckingDetailsReviewViewModel = viewModel()
+    viewModel: CheckingDetailsReviewViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    val passenger = uiState.passenger ?: return
+
     CheckingDetailsReviewScreenContent(
-        passenger = uiState.passenger,
+        passenger = passenger,
         isConfirmed = uiState.isConfirmed,
         onBack = onBack,
         onContinue = onContinue,
@@ -119,4 +120,3 @@ fun CheckingDetailsReviewScreenContent(
         }
     }
 }
-

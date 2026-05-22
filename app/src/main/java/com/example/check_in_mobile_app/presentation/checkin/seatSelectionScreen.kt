@@ -49,6 +49,7 @@ import com.example.check_in_mobile_app.presentation.components.checkin.CheckInTo
 
 import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.check_in_mobile_app.presentation.components.checkin.generateFallbackSeats
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -91,7 +92,7 @@ fun SeatSelection(
                 SeatLegend()
 
                 SeatGrid(
-                    seats = uiState.seats,
+                    seats = uiState.seats.ifEmpty { generateFallbackSeats(flightId) },
                     modifier = Modifier
                         .weight(1f)
                         .background(color = Color(0xFFF9FAFA)),

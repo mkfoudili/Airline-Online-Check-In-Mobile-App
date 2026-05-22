@@ -24,6 +24,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.check_in_mobile_app.presentation.checkin.CheckInSessionViewModel
+import com.example.check_in_mobile_app.presentation.checkin.CheckInViewModel
 import com.example.check_in_mobile_app.presentation.checkin.checkingdetailsreview.CheckingDetailsReviewViewModel
 
 @Composable
@@ -32,11 +33,17 @@ fun CheckInNavGraph(
     bookingId: String,
     passengerId: String,
     onBackFromFirstStep: () -> Unit,
-    onCheckInComplete: () -> Unit
+    onCheckInComplete: () -> Unit,
+    viewModel: CheckInViewModel = hiltViewModel()
 ) {
     val navController = rememberNavController()
     val sessionViewModel: CheckInSessionViewModel = hiltViewModel()
     val sessionState by sessionViewModel.state.collectAsStateWithLifecycle()
+    val booking by viewModel.booking.collectAsState()
+
+    LaunchedEffect(bookingRef) {
+        viewModel.loadBooking(bookingRef)
+    }
 
     NavHost(
         navController      = navController,
@@ -70,32 +77,32 @@ fun CheckInNavGraph(
         ) {
             val verifiedPassenger = sessionState.verifiedPassenger
             if (verifiedPassenger != null) {
-                val reviewViewModel: CheckingDetailsReviewViewModel = viewModel(
-                    factory = object : ViewModelProvider.Factory {
-                        @Suppress("UNCHECKED_CAST")
-                        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                            return CheckingDetailsReviewViewModel(verifiedPassenger) as T
-                        }
-                    }
-                )
+                val viewModel: CheckingDetailsReviewViewModel = hiltViewModel()
+                LaunchedEffect(verifiedPassenger) {
+                    viewModel.setPassenger(verifiedPassenger)
+                }
                 CheckingDetailsReviewScreen(
                     onBack     = { navController.popBackStack() },
                     onContinue = { navController.navigate(Destination.Selection.route) },
-                    viewModel  = reviewViewModel
+                    viewModel  = viewModel
                 )
             }
         }
 
         composable(Destination.Selection.route) {
+            val flightId = booking?.flight?.flightId ?: ""
+            val passengerId = booking?.passengers?.firstOrNull()?.passengerId ?: ""
             SeatSelection(
                 onNavigateBack = { navController.popBackStack() },
-                onContinue     = { navController.navigate(Destination.Baggage.route) }
+                onContinue     = { navController.navigate(Destination.Baggage.route)},
+                flightId = flightId,
+                passengerId = passengerId
             )
         }
 
         composable(Destination.Baggage.route) {
             BaggageScreen(
-                viewModel       = viewModel<BaggageViewModel>(),
+                viewModel       = hiltViewModel<BaggageViewModel>(),
                 onBackClick     = { navController.popBackStack() },
                 onContinueClick = {
                     val pid = sessionState.verifiedPassenger?.passengerId ?: passengerId

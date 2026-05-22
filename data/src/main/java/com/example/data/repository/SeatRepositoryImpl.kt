@@ -1,20 +1,29 @@
 package com.example.data.repository
 
+import com.example.data.remote.retrofit.Endpoint
 import com.example.domain.model.Seat
 import com.example.domain.repository.SeatRepository
+import javax.inject.Inject
 
-class SeatRepositoryImpl(
+class SeatRepositoryImpl @Inject constructor(
+    private val api: Endpoint
 ) : SeatRepository {
 
-    override fun getSeatMap(flightId: String, callback: (Result<List<Seat>>) -> Unit) {
-      // TODO
+    override suspend fun getSeatMap(flightId: String): List<Seat> {
+        // TODO
+        return emptyList()
     }
 
-    override fun reserveSeat(seatId: String, passengerId: String, callback: (Result<Seat>) -> Unit) {
+    override suspend fun selectSeat(passengerId: String, seatNumber: String): Seat {
         // TODO
-    }
-
-    override fun releaseSeat(seatId: String, callback: (Result<Unit>) -> Unit) {
-        // TODO
+        return Seat(
+            seatId = seatNumber,
+            flightId = "",
+            seatNumber = seatNumber,
+            seatClass = "ECONOMY",
+            isAvailable = false,
+            isPremium = false,
+            occupiedBy = passengerId
+        )
     }
 }
