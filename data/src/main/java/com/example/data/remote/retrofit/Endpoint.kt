@@ -40,6 +40,9 @@ interface Endpoint {
     @GET("auth/exists")
     suspend fun emailExists(@Query("email") email: String): Boolean
 
+    @POST("auth/google")
+    suspend fun loginWithGoogle(@Body request: GoogleAuthRequest): AuthResponse
+
     @POST("auth/logout")
     suspend fun logout()
 
@@ -71,6 +74,22 @@ interface Endpoint {
 
     @GET("checkin/baggage/{passengerId}")
     suspend fun getBaggage(@Path("passengerId") passengerId: String): BaggageResponse*/
+    @GET("selectseats/flights/{flightId}/seats")
+    suspend fun getSeatMap(@Path("flightId") flightId: String): List<SeatMapDto>
+
+    @POST("selectseats/passengers/{passengerId}/seat")
+    suspend fun selectSeat(
+        @Path("passengerId") passengerId: String,
+        @Body request: SelectSeatRequest
+    ): SeatMapDto
+
+    // --- Special Requests & Preferences ---
+    @GET("preferences/{uid}")
+    suspend fun getUserPreferences(@Path("uid") uid: String): PreferencesDto
+
+    @POST("preferences/conclude")
+    suspend fun concludeCheckin(@Body request: ConcludeCheckinRequest): ConcludeCheckinResponse
+
 
     // Boarding Pass
     @POST("boarding/generate")

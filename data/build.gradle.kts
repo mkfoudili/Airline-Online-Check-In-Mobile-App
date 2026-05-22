@@ -75,6 +75,7 @@ dependencies {
 
     // Hilt
     implementation(libs.hilt.android)
+    implementation(libs.vision.common)
     ksp(libs.hilt.compiler)
 
     // Retrofit

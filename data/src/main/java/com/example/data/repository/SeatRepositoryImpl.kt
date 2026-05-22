@@ -1,5 +1,7 @@
 package com.example.data.repository
 
+import com.example.data.mapper.toDomain
+import com.example.data.remote.dto.SelectSeatRequest
 import com.example.data.remote.retrofit.Endpoint
 import com.example.domain.model.Seat
 import com.example.domain.repository.SeatRepository
@@ -10,20 +12,16 @@ class SeatRepositoryImpl @Inject constructor(
 ) : SeatRepository {
 
     override suspend fun getSeatMap(flightId: String): List<Seat> {
-        // TODO
-        return emptyList()
+        return try {
+            api.getSeatMap(flightId).map { it.toDomain() }
+        } catch (e: Exception) {
+            emptyList()
+        }
     }
 
     override suspend fun selectSeat(passengerId: String, seatNumber: String): Seat {
-        // TODO
-        return Seat(
-            seatId = seatNumber,
-            flightId = "",
-            seatNumber = seatNumber,
-            seatClass = "ECONOMY",
-            isAvailable = false,
-            isPremium = false,
-            occupiedBy = passengerId
-        )
+        val request = SelectSeatRequest(seatNumber = seatNumber)
+        val dto = api.selectSeat(passengerId, request)
+        return dto.toDomain()
     }
 }

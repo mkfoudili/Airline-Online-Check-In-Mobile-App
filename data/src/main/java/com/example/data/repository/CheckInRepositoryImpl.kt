@@ -5,10 +5,12 @@ import com.example.data.remote.PassengerVerifyDataSource
 import com.example.data.remote.PassportVerificationException
 import com.example.data.remote.dto.AdvanceStepRequest
 import com.example.data.remote.dto.CheckinSessionDto
+import com.example.data.remote.dto.ConcludeCheckinRequest
 import com.example.data.remote.dto.CreateSessionRequest
 import com.example.data.remote.retrofit.Endpoint
 import com.example.domain.model.CheckInSession
 import com.example.domain.model.Passenger
+import com.example.domain.model.SpecialRequests
 import com.example.domain.repository.CheckInRepository
 import javax.inject.Inject
 
@@ -84,5 +86,48 @@ class CheckInRepositoryImpl @Inject constructor(
             seatNumber     = null,
             checkinStatus  = "PENDING"
         )
+    }
+
+    override suspend fun getUserPreferences(uid: String): Result<SpecialRequests> {
+        return try {
+            val dto = endpoint.getUserPreferences(uid)
+            Result.success(
+                SpecialRequests(
+                    preferredSoutien = dto.preferredSoutien,
+                    preferredVisualsAudit = dto.preferredVisualsAudit,
+                    preferredChildCare = dto.preferredChildCare,
+                    preferredPetCare = dto.preferredPetCare,
+                    mealPreference = dto.mealPreference
+                )
+            )
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun concludeCheckin(
+        passengerId: String,
+        uid: String,
+        specialRequests: SpecialRequests
+    ): Result<Unit> {
+        return try {
+            val request = ConcludeCheckinRequest(
+                passengerId = passengerId,
+                uid = uid,
+                preferredSoutien = specialRequests.preferredSoutien,
+                preferredVisualsAudit = specialRequests.preferredVisualsAudit,
+                preferredChildCare = specialRequests.preferredChildCare,
+                preferredPetCare = specialRequests.preferredPetCare,
+                mealPreference = specialRequests.mealPreference
+            )
+            val response = endpoint.concludeCheckin(request)
+            if (response.success) {
+                Result.success(Unit)
+            } else {
+                Result.failure(Exception(response.message))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 }

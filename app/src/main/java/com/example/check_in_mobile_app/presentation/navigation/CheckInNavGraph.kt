@@ -6,26 +6,24 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.*
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.check_in_mobile_app.presentation.checkin.CheckInSessionViewModel
+import com.example.check_in_mobile_app.presentation.checkin.CheckInViewModel
 import com.example.check_in_mobile_app.presentation.checkin.SeatSelection
 import com.example.check_in_mobile_app.presentation.checkin.baggage.BaggageScreen
 import com.example.check_in_mobile_app.presentation.checkin.baggage.BaggageViewModel
 import com.example.check_in_mobile_app.presentation.checkin.checkingdetailsreview.CheckingDetailsReviewScreen
+import com.example.check_in_mobile_app.presentation.checkin.checkingdetailsreview.CheckingDetailsReviewViewModel
 import com.example.check_in_mobile_app.presentation.checkin.confirmation.ConfirmationScreen
 import com.example.check_in_mobile_app.presentation.checkin.passportscan.PassportScanScreen
 import com.example.check_in_mobile_app.presentation.checkin.specialRequest
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.check_in_mobile_app.presentation.checkin.CheckInSessionViewModel
-import com.example.check_in_mobile_app.presentation.checkin.CheckInViewModel
-import com.example.check_in_mobile_app.presentation.checkin.checkingdetailsreview.CheckingDetailsReviewViewModel
 
 @Composable
 fun CheckInNavGraph(
@@ -92,14 +90,14 @@ fun CheckInNavGraph(
         composable(Destination.Selection.route) {
             val flightId = booking?.flight?.flightId ?: ""
             val passengerId = booking?.passengers?.firstOrNull()?.passengerId ?: ""
+            
             SeatSelection(
-                onNavigateBack = { navController.popBackStack() },
-                onContinue     = { navController.navigate(Destination.Baggage.route)},
                 flightId = flightId,
-                passengerId = passengerId
+                passengerId = passengerId,
+                onNavigateBack = { navController.popBackStack() },
+                onContinue = { navController.navigate(Destination.Baggage.route) }
             )
         }
-
         composable(Destination.Baggage.route) {
             BaggageScreen(
                 viewModel       = hiltViewModel<BaggageViewModel>(),
@@ -110,18 +108,17 @@ fun CheckInNavGraph(
                 }
             )
         }
-
         composable(
-            route     = Destination.preference.route,
+            route = Destination.preference.route,
             arguments = listOf(navArgument("passengerId") { type = NavType.StringType })
         ) { backStackEntry ->
-            val pid = backStackEntry.arguments?.getString("passengerId") ?: passengerId
+            val pid = backStackEntry.arguments?.getString("passengerId") ?: (sessionState.verifiedPassenger?.passengerId ?: "")
             specialRequest(
-                onNavigateBack  = { navController.popBackStack() },
-                onFinishCheckIn = { confirmedPassengerId ->
-                    navController.navigate(Destination.Confirmation.routeWithArg(confirmedPassengerId))
-                },
-                passengerId = pid
+                passengerId = pid,
+                onNavigateBack = { navController.popBackStack() },
+                onFinishCheckIn = {
+                    navController.navigate(Destination.Confirmation.routeWithArg(pid))
+                }
             )
         }
 
