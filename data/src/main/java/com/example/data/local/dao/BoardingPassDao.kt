@@ -29,6 +29,6 @@ interface BoardingPassDao {
     @Query("DELETE FROM boarding_passes")
     suspend fun deleteAll()
 
-    @Query("UPDATE boarding_passes SET isSyncedWithServer = 1 WHERE passId = :passId")
-    suspend fun markAsSynced(passId: String)
+    @Query("UPDATE boarding_passes SET isSyncedWithServer = 1, lastSyncedAt = :syncedAt WHERE passId = :passId")
+    suspend fun markAsSynced(passId: String, syncedAt: Long = System.currentTimeMillis())
 }

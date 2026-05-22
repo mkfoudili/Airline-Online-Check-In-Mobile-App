@@ -104,6 +104,8 @@
     <string name="confirmation_download_pdf">Download PDF</string>
     <string name="confirmation_back_dashboard">Back to Dashboard</string>
     <string name="confirmation_download_toast">Download PDF clicked</string>
+    <string name="confirmation_error_generic">An error occurred. Please try again.</string>
+    <string name="confirmation_retry">Retry</string>
     <!-- Home Screen -->
     <string name="home_greeting">Hello, %1$s</string>
     <string name="home_retrieve_booking">Retrieve Booking</string>
@@ -118,6 +120,9 @@
     <string name="offline_features_require_internet">Some features require an internet connection.</string>
     <string name="offline_upcoming_flight">Upcoming Flight</string>
     <string name="offline_synced_ago">Synced %1$s ago</string>
+    <string name="offline_synced_just_now">Synced just now</string>
+    <string name="offline_synced_minutes_ago">Synced %1$d min ago</string>
+    <string name="offline_synced_hours_ago">Synced %1$d h ago</string>
     <string name="offline_available_actions">AVAILABLE ACTIONS</string>
     <string name="offline_data_saved_note">Your flight data was saved automatically for offline access. To update information, reconnect to Wi-Fi or Cellular data.</string>
     <string name="offline_view_boarding_pass">View Boarding Pass</string>

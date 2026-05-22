@@ -203,14 +203,14 @@
 ////                }
 ////            )
 ////        }
-////        composable(route = Destination.preference.route) {
-////            specialRequest(
-////                onNavigateBack = { navController.popBackStack() },
-////                onFinishCheckIn = {
-////                    navController.navigate(Destination.Confirmation.route)
-////                }
-////            )
-////        }
+//        composable(route = Destination.preference.route) {
+//            specialRequest(
+//                onNavigateBack = { navController.popBackStack() },
+//                onFinishCheckIn = {
+//                    navController.navigate(Destination.Confirmation.route)
+//                }
+//            )
+//        }
 //        composable(
 //            route = Destination.CheckingDetailsReview.route,
 //            enterTransition = { slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(300)) },

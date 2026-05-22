@@ -22,8 +22,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.check_in_mobile_app.BaseApplication
 import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.presentation.components.OfflineBanner
 import com.example.check_in_mobile_app.presentation.components.boarding.BoardingPassCard
