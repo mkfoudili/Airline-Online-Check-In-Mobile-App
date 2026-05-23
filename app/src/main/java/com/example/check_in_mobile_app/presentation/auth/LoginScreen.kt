@@ -162,8 +162,21 @@ fun LoginScreen(
                                 request = request
                             )
                             val credential = result.credential
+
                             if (credential is GoogleIdTokenCredential) {
                                 viewModel.signInWithGoogle(credential.idToken)
+                            } else if (credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
+                                try {
+                                    val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
+                                    Log.d("AuthDebug", "idToken: ${googleIdTokenCredential.idToken.take(20)}...")
+                                    viewModel.signInWithGoogle(googleIdTokenCredential.idToken)
+                                } catch (e: Exception) {
+                                    Log.e("AuthDebug", "Erreur parsing GoogleIdTokenCredential: ${e.message}")
+                                    viewModel.setError("Google Sign-In failed: ${e.message}")
+                                }
+                            } else {
+                                Log.e("AuthDebug", "Type inconnu: ${credential.type}")
+                                viewModel.setError("Unexpected credential type: ${credential.type}")
                             }
                         } catch (e: GetCredentialException) {
                             Log.e("AuthDebug", "Credential Manager Error: ${e.type} - ${e.message}")

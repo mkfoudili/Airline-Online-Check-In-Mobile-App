@@ -70,7 +70,7 @@ fun OnlineHomeScreen(
                 stringResource(R.string.home_greeting, uiState.userName)
             else
                 stringResource(R.string.home_greeting_default),
-            fontSize = 25.sp,
+            fontSize = 20.sp,
             color = DarkText,
             fontWeight = FontWeight.Bold,
             letterSpacing = (-0.5).sp,
