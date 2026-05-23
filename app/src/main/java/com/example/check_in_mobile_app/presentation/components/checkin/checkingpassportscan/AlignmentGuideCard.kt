@@ -60,34 +60,14 @@ fun AlignmentGuideCard(modifier: Modifier = Modifier) {
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "Ensure your passport photo page is fully visible within the frame. Avoid glare from overhead lights.",
+                    text = "Place passport about 8cm away from phone to ensure the photo page is fully visible within the frame and free of glare or shadows.",
                     fontSize = 13.sp,
                     color = SubtleText,
                     lineHeight = 18.sp
                 )
             }
         }
-
         Spacer(modifier = Modifier.height(10.dp))
 
-        // Green encryption row
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.padding(horizontal = 4.dp)
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.shield_check),
-                contentDescription = "Encrypted",
-                tint = EncryptionGreen,
-                modifier = Modifier.size(18.dp)
-            )
-            Text(
-                text = "Your biometric data is encrypted and never stored.",
-                fontSize = 13.sp,
-                color = EncryptionGreen,
-                fontWeight = FontWeight.Medium
-            )
-        }
     }
 }

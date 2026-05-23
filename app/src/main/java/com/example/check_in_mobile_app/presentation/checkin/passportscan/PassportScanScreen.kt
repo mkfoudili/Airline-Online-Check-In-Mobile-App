@@ -19,6 +19,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.check_in_mobile_app.presentation.components.checkin.*
 import com.example.check_in_mobile_app.presentation.components.checkin.CheckInTopBar
+import com.example.check_in_mobile_app.presentation.components.checkin.checkingpassportscan.AlignmentGuideCard
 import com.example.check_in_mobile_app.presentation.components.checkin.checkingpassportscan.CameraViewfinder
 import com.example.check_in_mobile_app.presentation.components.checkin.checkingpassportscan.PassportPreviewCard
 import com.example.check_in_mobile_app.presentation.components.checkin.checkingpassportscan.ScanContinueButton
@@ -243,7 +244,7 @@ fun PassportScanScreenContent(
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-
+                AlignmentGuideCard()
 
                 ScanPassportButton(
                     onClick = { if (!isLoading) capturePhoto() }

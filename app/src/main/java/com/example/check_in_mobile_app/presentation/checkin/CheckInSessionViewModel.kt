@@ -49,11 +49,10 @@ class CheckInSessionViewModel @Inject constructor(
                 val extractedLastName = parsed?.lastName ?: ""
 
                 if (extractedPassportNumber.isBlank() || extractedLastName.isBlank()) {
-                    val debugText = if (ocrText.length > 150) ocrText.take(150) + "..." else ocrText
                     _state.update {
                         it.copy(
                             ocrStatus    = OcrStatus.ERROR,
-                            errorMessage = "Could not read passport. (Read: $debugText). Please ensure the photo is clear."
+                            errorMessage = "We couldn't read your passport details clearly. Please place your passport on a flat surface in a well-lit area (free of glare or shadows), and make sure the camera is focused."
                         )
                     }
                     return@launch
@@ -72,10 +71,21 @@ class CheckInSessionViewModel @Inject constructor(
                 )
 
                 val passenger = verifyResult.getOrElse { error ->
+                    val userFriendlyError = when {
+                        error.message?.contains("does not match any booking", ignoreCase = true) == true ||
+                        error.message?.contains("Passenger not found", ignoreCase = true) == true -> {
+                            "We couldn't find a matching passenger for these passport details. Please make sure the passport belongs to the passenger on this booking, and try scanning again in good lighting."
+                        }
+                        error.message?.contains("Network error", ignoreCase = true) == true ||
+                        error.message?.contains("connection", ignoreCase = true) == true -> {
+                            "Connection issue. Please check your network and try again."
+                        }
+                        else -> error.message ?: "Passenger not found in database."
+                    }
                     _state.update {
                         it.copy(
                             ocrStatus    = OcrStatus.ERROR,
-                            errorMessage = error.message ?: "Passenger not found in database."
+                            errorMessage = userFriendlyError
                         )
                     }
                     return@launch
@@ -113,7 +123,7 @@ class CheckInSessionViewModel @Inject constructor(
                 _state.update {
                     it.copy(
                         ocrStatus    = OcrStatus.ERROR,
-                        errorMessage = "An unexpected error occurred: ${e.localizedMessage}"
+                        errorMessage = "Something went wrong while scanning. Please capture your passport again in a well-lit room or upload a clear photo from your gallery."
                     )
                 }
             }

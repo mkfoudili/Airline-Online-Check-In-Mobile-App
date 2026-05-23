@@ -11,10 +11,6 @@ data class PassportScanUiState(
     val capturedBitmap: Bitmap? = null
 )
 
-/**
- * Lightweight VM — only holds the captured bitmap.
- * All OCR + verification logic lives in [CheckInSessionViewModel].
- */
 class PassportScanViewModel : ViewModel() {
 
     private val _uiState = MutableStateFlow(PassportScanUiState())

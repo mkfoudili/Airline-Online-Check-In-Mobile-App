@@ -36,7 +36,7 @@ class PassengerVerifyDataSource @Inject constructor(
         } catch (e: retrofit2.HttpException) {
             if (e.code() == 404) {
                 throw PassportVerificationException(
-                    "Passport does not match any booking. Please try again."
+                    "We couldn't match this passport to any passenger on this booking. Please ensure you are scanning the correct passport in good lighting with no glare, and try again."
                 )
             } else throw e
         }
