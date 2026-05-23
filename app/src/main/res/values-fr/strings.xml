@@ -154,4 +154,8 @@
     <string name="active_flight_upcoming">Votre prochain vol vers %1$s.</string>
     <string name="offline_no_cached_flight">Aucune donnée de vol disponible hors ligne.</string>
     <string name="offline_not_synced">Pas encore synchronisé</string>
+
+    <!-- Connection Error -->
+    <string name="connection_timed_out">Connexion expirée</string>
+    <string name="connection_error_description">Nos serveurs sont inaccessibles. Veuillez vérifier votre connexion de données ou Wi-Fi et réessayer.</string>
 </resources>

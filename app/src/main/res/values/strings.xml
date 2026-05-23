@@ -156,4 +156,8 @@
     <string name="active_flight_upcoming">Your upcoming flight to %1$s.</string>
     <string name="offline_no_cached_flight">No flight data available offline.</string>
     <string name="offline_not_synced">Not synced yet</string>
+
+    <!-- Connection Error -->
+    <string name="connection_timed_out">Connection Timed Out</string>
+    <string name="connection_error_description">Our servers are unreachable. Please check your data or Wi-Fi connection and try again.</string>
 </resources>

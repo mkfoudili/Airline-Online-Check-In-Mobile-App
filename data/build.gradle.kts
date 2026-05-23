@@ -27,10 +27,11 @@ android {
     defaultConfig {
         minSdk = 24
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        val backendUrl = (localProps["URL"] ?: "http://10.0.2.2:3000/").toString()
         buildConfigField(
             "String",
             "URL",
-            localProps["URL"].toString().quoted()
+            backendUrl.quoted()
         )
     }
 

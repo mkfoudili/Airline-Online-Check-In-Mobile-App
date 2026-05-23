@@ -154,4 +154,8 @@
     <string name="active_flight_upcoming">رحلتك القادمة إلى %1$s.</string>
     <string name="offline_no_cached_flight">لا توجد بيانات رحلة متاحة بدون إنترنت.</string>
     <string name="offline_not_synced">لم تتم المزامنة بعد</string>
+
+    <!-- Connection Error -->
+    <string name="connection_timed_out">انتهت مهلة الاتصال</string>
+    <string name="connection_error_description">لا يمكن الوصول إلى خوادمنا. يرجى التحقق من اتصال البيانات أو Wi-Fi والمحاولة مرة أخرى.</string>
 </resources>
