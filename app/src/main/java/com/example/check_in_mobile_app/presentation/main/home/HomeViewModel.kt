@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.check_in_mobile_app.di.NetworkMonitor
 import com.example.check_in_mobile_app.sync.SyncScheduler
+import com.example.data.preferences.UserPreferencesRepository
 import com.example.domain.repository.AuthRepository
 import com.example.domain.repository.BoardingPassRepository
 import com.example.domain.repository.BookingRepository
@@ -29,7 +30,7 @@ class HomeViewModel @Inject constructor(
     private val boardingPassRepository: BoardingPassRepository,
     private val authRepository: AuthRepository,
     private val networkMonitor: NetworkMonitor,
-    private val syncScheduler: SyncScheduler
+    private val userPrefs: UserPreferencesRepository
 ) : AndroidViewModel(application) {
 
     val isOnline: StateFlow<Boolean> = networkMonitor.isOnline
@@ -65,8 +66,11 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun loadUserName() {
-        val uid = authRepository.getCurrentUserId() ?: return
-        _uiState.update { it.copy(userName = uid.take(12)) }
+        viewModelScope.launch {
+            userPrefs.userNameFlow.firstOrNull()?.let { name ->
+                _uiState.update { it.copy(userName = name) }
+            }
+        }
     }
 
     fun loadActiveFlight() {
