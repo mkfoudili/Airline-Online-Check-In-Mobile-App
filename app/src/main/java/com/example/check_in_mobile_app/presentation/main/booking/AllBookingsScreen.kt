@@ -33,6 +33,7 @@ import java.util.Date
 import java.util.Locale
 
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.Alignment
 
 @Composable
 fun AllBookingsScreen(
@@ -45,6 +46,7 @@ fun AllBookingsScreen(
     val selectedDate by viewModel.selectedDate.collectAsState()
     val selectedStatus by viewModel.selectedStatus.collectAsState()
     val filteredBookings by viewModel.filteredBookings.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
 
     AllBookingsScreenContent(
         onNavigateBack = onNavigateBack,
@@ -57,6 +59,7 @@ fun AllBookingsScreen(
         selectedStatus = selectedStatus,
         onStatusSelect = viewModel::updateSelectedStatus,
         filteredBookings = filteredBookings,
+        isLoading = isLoading,
         onCheckInClick = onCheckInClick
     )
 }
@@ -74,6 +77,7 @@ fun AllBookingsScreenContent(
     selectedStatus: String,
     onStatusSelect: (String) -> Unit,
     filteredBookings: List<Booking>,
+    isLoading: Boolean = false,
     onCheckInClick: (String) -> Unit = {}
 ) {
     Scaffold(
@@ -129,9 +133,7 @@ fun AllBookingsScreenContent(
             // Filters
             val statusOptions = listOf(
                 "All" to stringResource(R.string.status_all),
-                "Confirmed" to stringResource(R.string.status_confirmed),
                 "Check In open" to stringResource(R.string.status_check_in_open),
-                "Checked In" to stringResource(R.string.status_checked_in),
                 "Passed" to stringResource(R.string.status_passed)
             )
 
@@ -152,20 +154,30 @@ fun AllBookingsScreenContent(
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
 
-
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Bookings List
-            LazyColumn(
-                modifier = Modifier.fillMaxWidth().weight(1f),
-                contentPadding = PaddingValues(bottom = 16.dp)
-            ) {
-                items(filteredBookings) { booking ->
-                    BookingCard(
-                        booking = booking,
-                        onCheckInClick = onCheckInClick,
-                        onBoarding = onBoarding
-                    )
+            if (isLoading) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(color = NavyBlue)
+                }
+            } else {
+                // Bookings List
+                LazyColumn(
+                    modifier = Modifier.fillMaxWidth().weight(1f),
+                    contentPadding = PaddingValues(bottom = 16.dp)
+                ) {
+                    items(filteredBookings) { booking ->
+                        BookingCard(
+                            booking = booking,
+                            onCheckInClick = onCheckInClick,
+                            onBoarding = onBoarding
+                        )
+                    }
                 }
             }
         }
@@ -181,7 +193,6 @@ fun AllBookingsScreenPreview() {
     
     val allBookings = emptyList<Booking>()
 
-
     val filteredBookings = allBookings.filter { booking ->
         val matchesQuery = searchQuery.value.isBlank() || 
                            booking.flight.destinationCity.contains(searchQuery.value, ignoreCase = true) ||                            
@@ -191,7 +202,7 @@ fun AllBookingsScreenPreview() {
         val depDateStr = sdfDate.format(Date(booking.flight.departureTime))
         val matchesDate = selectedDate.value == null || depDateStr == selectedDate.value
         
-        val uiStatus = try { CheckInStatus.valueOf(booking.status.name) } catch (e: Exception) { CheckInStatus.CONFIRMED }
+        val uiStatus = try { CheckInStatus.valueOf(booking.status.name) } catch (e: Exception) { CheckInStatus.CHECK_IN_OPEN }
         val matchesStatus = selectedStatus.value == "All" || uiStatus.name.replace("_", " ").equals(selectedStatus.value, ignoreCase = true)
         
         matchesQuery && matchesDate && matchesStatus
@@ -206,6 +217,7 @@ fun AllBookingsScreenPreview() {
         onDateSelected = { selectedDate.value = it },
         selectedStatus = selectedStatus.value,
         onStatusSelect = { selectedStatus.value = it },
-        filteredBookings = filteredBookings
+        filteredBookings = filteredBookings,
+        isLoading = false
     )
 }

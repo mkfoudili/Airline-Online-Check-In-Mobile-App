@@ -24,6 +24,9 @@ class AllBookingsViewModel @Inject constructor(
     // Base data
     private val allBookingsAmount = MutableStateFlow<List<Booking>>(emptyList())
 
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
+
     // Filters
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: StateFlow<String> = _searchQuery
@@ -40,21 +43,32 @@ class AllBookingsViewModel @Inject constructor(
 
     private fun loadBookings() {
         viewModelScope.launch {
+            _isLoading.value = true
             val result = searchBookingsUseCase()
             allBookingsAmount.value = result.getOrDefault(emptyList())
+            _isLoading.value = false
         }
     }
 
     val filteredBookings: StateFlow<List<Booking>> = combine(
+        allBookingsAmount,
         _searchQuery,
         _selectedDate,
         _selectedStatus
-    ) { query, date, status ->
-        Triple(query, date, status)
-    }.flatMapLatest { (query, date, status) ->
-        flow {
-            val result = searchBookingsUseCase(query = query, date = date, status = status)
-            emit(result.getOrDefault(emptyList()))
+    ) { bookings, query, date, status ->
+        bookings.filter { booking ->
+            val matchesQuery = query.isBlank() || 
+                               booking.flight.destinationCity.contains(query, ignoreCase = true) ||                            
+                               booking.flight.destination.contains(query, ignoreCase = true)
+            
+            val sdfDate = java.text.SimpleDateFormat("dd MMM", java.util.Locale.getDefault())
+            val depDateStr = sdfDate.format(java.util.Date(booking.flight.departureTime))
+            val matchesDate = date == null || depDateStr == date
+            
+            val matchesStatus = status == "All" || 
+                                booking.status.name.replace("_", " ").equals(status, ignoreCase = true)
+            
+            matchesQuery && matchesDate && matchesStatus
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 

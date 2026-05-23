@@ -197,6 +197,24 @@ fun BookingCard(
             }
 
             CheckInStatus.CONFIRMED -> {
+                val now = System.currentTimeMillis()
+                val departureTime = booking.flight.departureTime
+                val checkInOpenTime = departureTime - (24L * 60 * 60 * 1000)
+                val diffMs = checkInOpenTime - now
+                val diffMinutes = (diffMs / (1000 * 60)).coerceAtLeast(1)
+                val timeString = if (diffMinutes >= 60) {
+                    val hours = diffMinutes / 60
+                    if (hours >= 24) {
+                        val days = hours / 24
+                        val remainingHours = hours % 24
+                        if (remainingHours > 0) "${days}d ${remainingHours}h" else "${days}d"
+                    } else {
+                        "${hours}h"
+                    }
+                } else {
+                    "${diffMinutes}m"
+                }
+
                 Spacer(modifier = Modifier.height(12.dp))
                 Box(
                     modifier = Modifier
@@ -207,7 +225,7 @@ fun BookingCard(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = stringResource(R.string.check_in_opens_in, "4h"),
+                        text = stringResource(R.string.check_in_opens_in, timeString),
                         fontSize = 13.sp,
                         color = MediumGray,
                         fontWeight = FontWeight.Medium
