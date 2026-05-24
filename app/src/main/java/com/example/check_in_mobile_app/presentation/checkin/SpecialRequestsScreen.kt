@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.checkin
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -54,7 +56,7 @@ fun specialRequest(
         },
         bottomBar = {
             Surface(
-                color = Color.White,
+                color = MaterialTheme.colorScheme.surface,
                 shadowElevation = 8.dp,
                 tonalElevation = 0.dp
             ) {
@@ -77,7 +79,7 @@ fun specialRequest(
                             text = stringResource(R.string.checkin_finish_checkin),
                             fontSize = 16.sp,
                             fontWeight = FontWeight.SemiBold,
-                            color = Color.White
+                            color = MaterialTheme.colorScheme.surface
                         )
                     }
                 }

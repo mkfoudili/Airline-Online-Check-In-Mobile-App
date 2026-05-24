@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.components.baggage
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,7 +25,7 @@ fun BaggageRulesCard(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .background(SurfaceGray, RoundedCornerShape(12.dp))
+            .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(12.dp))
             .padding(16.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {

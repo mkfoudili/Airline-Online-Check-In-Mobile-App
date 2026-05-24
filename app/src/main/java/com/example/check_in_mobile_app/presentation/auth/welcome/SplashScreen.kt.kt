@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.auth.welcome
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.animation.core.EaseInOutCubic
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -58,7 +60,7 @@ fun SplashScreen() {
                 modifier = Modifier
                     .size(90.dp)
                     .clip(RoundedCornerShape(22.dp))
-                    .background(Color.White),
+                    .background(MaterialTheme.colorScheme.surface),
                 contentAlignment = Alignment.Center
             ) {
                 Image(
@@ -75,7 +77,7 @@ fun SplashScreen() {
                 text = "Airline Check-In",
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.White,
+                color = MaterialTheme.colorScheme.surface,
                 textAlign = TextAlign.Center
             )
 
@@ -86,7 +88,7 @@ fun SplashScreen() {
                 text = "FLIGHT",
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Medium,
-                color = Color.White.copy(alpha = 0.7f),
+                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.7f),
                 letterSpacing = 4.sp,
                 textAlign = TextAlign.Center
             )
@@ -98,7 +100,7 @@ fun SplashScreen() {
                 text = "DIGITAL BOARDING SYSTEM",
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Medium,
-                color = Color.White.copy(alpha = 0.7f),
+                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.7f),
                 letterSpacing = 3.sp,
                 textAlign = TextAlign.Center
             )
@@ -117,7 +119,7 @@ fun SplashScreen() {
                 text = "Synchronizing flight data...",
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Light,
-                color = Color.White.copy(alpha = 0.5f),
+                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f),
                 fontStyle = FontStyle.Italic
             )
 

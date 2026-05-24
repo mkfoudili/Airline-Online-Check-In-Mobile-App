@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.components.checkin.checkingpassportscan
 
+import androidx.compose.material3.MaterialTheme
+
 import android.graphics.Bitmap
 import android.graphics.DashPathEffect
 import androidx.compose.foundation.Image
@@ -85,7 +87,7 @@ fun PassportPreviewCard(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(14.dp))
-            .background(if (isPending) SurfaceGray else Color(0xFFDCFCE7).copy(alpha=0.5f))
+            .background(if (isPending) MaterialTheme.colorScheme.surfaceVariant else Color(0xFFDCFCE7).copy(alpha=0.5f))
             .dashedBorder(
                 color        = if (isPending) BorderLight else Color(0xFFDCFCE7),
                 strokeWidth  = 1.dp,
@@ -102,7 +104,7 @@ fun PassportPreviewCard(
             modifier = Modifier
                 .size(56.dp)
                 .clip(RoundedCornerShape(10.dp))
-                .background(Color.White),
+                .background(MaterialTheme.colorScheme.surface),
             contentAlignment = Alignment.Center
         ) {
             if (capturedBitmap != null) {

@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.checkin.passportscan
 
+import androidx.compose.material3.MaterialTheme
+
 import android.graphics.Bitmap
 import android.net.Uri
 import android.provider.MediaStore
@@ -96,12 +98,12 @@ fun PassportScanScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    CircularProgressIndicator(color = Color.White)
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.surface)
                     Spacer(modifier = Modifier.height(20.dp))
                     Text(
                         text = if (sessionState.ocrStatus == OcrStatus.SCANNING)
                             "Reading passport data..." else "Verifying with airline records...",
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.surface,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Medium,
                         textAlign = androidx.compose.ui.text.style.TextAlign.Center,
@@ -214,7 +216,7 @@ fun PassportScanScreenContent(
     }
 
     Scaffold(
-        containerColor = Color.White,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = { CheckInTopBar(onBack = onBack, currentStep = 1, title = stringResource(R.string.checkin_step1_title)) }
     ) { innerPadding ->
 

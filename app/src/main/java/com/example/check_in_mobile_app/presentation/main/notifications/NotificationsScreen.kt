@@ -58,7 +58,7 @@ fun NotificationsContent(
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.White
+                    containerColor = MaterialTheme.colorScheme.surface
                 )
             )
         },
@@ -68,7 +68,7 @@ fun NotificationsContent(
                 onTabSelected = onTabSelected
             )
         },
-        containerColor = SurfaceGray
+        containerColor = MaterialTheme.colorScheme.surfaceVariant
     ) { paddingValues ->
         Box(
             modifier = Modifier

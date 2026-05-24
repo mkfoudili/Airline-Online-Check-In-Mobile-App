@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.components.baggage
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -35,7 +37,7 @@ fun BaggageCard(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .border(1.dp, BorderColor, RoundedCornerShape(12.dp))
+            .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(12.dp))
             .padding(16.dp)
     ) {
         Row(
@@ -47,7 +49,7 @@ fun BaggageCard(
                 modifier = Modifier
                     .size(48.dp)
                     .clip(RoundedCornerShape(8.dp))
-                    .background(SurfaceGray),
+                    .background(MaterialTheme.colorScheme.surfaceVariant),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
@@ -112,7 +114,7 @@ fun BaggageCard(
                 Box(
                     modifier = Modifier
                         .size(44.dp)
-                        .border(1.dp, BorderColor, CircleShape)
+                        .border(1.dp, MaterialTheme.colorScheme.outline, CircleShape)
                         .clickable(enabled = quantity > 0) { onDecrement() },
                     contentAlignment = Alignment.Center
                 ) {

@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.components.flightdetails
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -80,8 +82,8 @@ fun TimelineItem(
             modifier = Modifier
                 .size(40.dp)
                 .clip(CircleShape)
-                .background(Color.White)
-                .border(1.dp, BorderLight, CircleShape),
+                .background(MaterialTheme.colorScheme.surface)
+                .border(1.dp, MaterialTheme.colorScheme.outlineVariant, CircleShape),
             contentAlignment = Alignment.Center
         ) {
             Icon(
@@ -129,7 +131,7 @@ fun TimelineSpacing() {
             modifier = Modifier
                 .width(2.dp)
                 .height(30.dp)
-                .background(BorderLight)
+                .background(MaterialTheme.colorScheme.outlineVariant)
         )
     }
 }

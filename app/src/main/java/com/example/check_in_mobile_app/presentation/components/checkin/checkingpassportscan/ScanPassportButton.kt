@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.components.checkin.checkingpassportscan
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -39,7 +41,7 @@ fun ScanPassportButton(
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = stringResource(R.string.scan_passport_button),
-            color = Color.White,
+            color = MaterialTheme.colorScheme.surface,
             fontSize = 15.sp,
             fontWeight = FontWeight.SemiBold
         )

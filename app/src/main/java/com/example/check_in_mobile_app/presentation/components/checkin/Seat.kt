@@ -7,6 +7,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,13 +32,13 @@ fun Seat(
     seatSize: androidx.compose.ui.unit.Dp = 48.dp
 ) {
     val backgroundColor = when (seatState) {
-        SeatState.AVAILABLE -> Color.White
+        SeatState.AVAILABLE -> MaterialTheme.colorScheme.surface
         SeatState.SELECTED  -> Color(0xFF34A853)
         SeatState.BLOCKED   -> NavyBlue
     }
 
     val iconTint = when (seatState) {
-        SeatState.SELECTED -> Color.White
+        SeatState.SELECTED -> MaterialTheme.colorScheme.onPrimary
         else               -> NavyBlue
     }
 
@@ -50,7 +52,7 @@ fun Seat(
             .background(backgroundColor)
             .border(
                 width = 1.dp,
-                color = Color(0xFFE0E0E0),
+                color = MaterialTheme.colorScheme.outline,
                 shape = RoundedCornerShape(10.dp)
             )
             .clickable(enabled = seatState != SeatState.BLOCKED) { onClick() }

@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.auth
 
+import androidx.compose.material3.MaterialTheme
+
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts

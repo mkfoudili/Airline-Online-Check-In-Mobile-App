@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.components.checkin.checkingpassportscan
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -30,7 +32,7 @@ fun AlignmentGuideCard(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(14.dp))
-                .border(1.dp, BorderLight, RoundedCornerShape(14.dp))
+                .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(14.dp))
                 .padding(horizontal = 16.dp, vertical = 14.dp),
             verticalAlignment = Alignment.Top,
             horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -40,7 +42,7 @@ fun AlignmentGuideCard(modifier: Modifier = Modifier) {
                 modifier = Modifier
                     .size(36.dp)
                     .clip(RoundedCornerShape(50))
-                    .border(1.dp, BorderLight, RoundedCornerShape(50)),
+                    .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(50)),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(

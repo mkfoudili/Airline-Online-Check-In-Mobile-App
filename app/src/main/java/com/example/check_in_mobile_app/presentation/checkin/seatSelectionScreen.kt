@@ -87,7 +87,7 @@ fun SeatSelection(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(color = Color(0xFFF9FAFA))
+                    .background(color = MaterialTheme.colorScheme.background)
             ) {
                 SeatLegend()
 
@@ -95,7 +95,7 @@ fun SeatSelection(
                     seats = uiState.seats.ifEmpty { generateFallbackSeats(flightId) },
                     modifier = Modifier
                         .weight(1f)
-                        .background(color = Color(0xFFF9FAFA)),
+                        .background(color = MaterialTheme.colorScheme.background),
                     selectedSeatId = selectedSeat?.seatId,
                     onSeatSelected = { seat ->
                         selectedSeat = seat
@@ -163,9 +163,9 @@ fun SelectedSeatBottomBar(
                 modifier = Modifier.size(16.dp)
             )
             Text(
-                text = if (seat.isPremium) 
-                    stringResource(R.string.checkin_premium_seat) 
-                else 
+                text = if (seat.isPremium)
+                    stringResource(R.string.checkin_premium_seat)
+                else
                     stringResource(R.string.checkin_standard_seat),
                 fontSize = 13.sp,
                 color = Color.Gray

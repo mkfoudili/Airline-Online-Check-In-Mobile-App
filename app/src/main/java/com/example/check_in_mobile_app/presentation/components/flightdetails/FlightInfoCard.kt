@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.components.flightdetails
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -37,12 +39,15 @@ fun FlightInfoCard(booking: Booking, modifier: Modifier = Modifier) {
     val sdf = java.text.SimpleDateFormat("dd MMM yyyy", java.util.Locale.getDefault())
     val departureDateText = sdf.format(java.util.Date(booking.flight.departureTime)).uppercase()
 
+    // Capture before entering DrawScope
+    val dividerColor = MaterialTheme.colorScheme.outlineVariant
+
     Column(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
-            .border(1.dp, BorderLight, RoundedCornerShape(16.dp))
-            .background(Color.White)
+            .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(16.dp))
+            .background(MaterialTheme.colorScheme.surface)
     ) {
         // Navy blue header
         Box(
@@ -65,7 +70,7 @@ fun FlightInfoCard(booking: Booking, modifier: Modifier = Modifier) {
                     text = "${stringResource(R.string.flight_label)} ${booking.flight.flightNumber}",
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.surface,
                     letterSpacing = 0.5.sp
                 )
             }
@@ -167,14 +172,14 @@ fun FlightInfoCard(booking: Booking, modifier: Modifier = Modifier) {
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // Solid or dashed divider
+            // Divider
             Canvas(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(1.dp)
             ) {
                 drawLine(
-                    color = BorderLight,
+                    color = dividerColor,
                     start = Offset(0f, 0f),
                     end = Offset(size.width, 0f),
                     strokeWidth = 2f
@@ -193,8 +198,8 @@ fun FlightInfoCard(booking: Booking, modifier: Modifier = Modifier) {
                         modifier = Modifier
                             .size(36.dp)
                             .clip(RoundedCornerShape(8.dp))
-                            .background(SurfaceGray)
-                            .border(1.dp, BorderLight, RoundedCornerShape(8.dp)),
+                            .background(MaterialTheme.colorScheme.surfaceVariant)
+                            .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(8.dp)),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
@@ -227,8 +232,8 @@ fun FlightInfoCard(booking: Booking, modifier: Modifier = Modifier) {
                         modifier = Modifier
                             .size(36.dp)
                             .clip(RoundedCornerShape(8.dp))
-                            .background(SurfaceGray)
-                            .border(1.dp, BorderLight, RoundedCornerShape(8.dp)),
+                            .background(MaterialTheme.colorScheme.surfaceVariant)
+                            .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(8.dp)),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(

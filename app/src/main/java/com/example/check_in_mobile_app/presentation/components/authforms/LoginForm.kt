@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.components.authforms
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -94,8 +96,8 @@ fun LoginForm(
                 errorTextColor = Color.Black,
                 unfocusedBorderColor = borderColor,
                 focusedBorderColor = primaryColor,
-                unfocusedContainerColor = Color.White,
-                focusedContainerColor = Color.White,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                focusedContainerColor = MaterialTheme.colorScheme.surface,
                 cursorColor = primaryColor
             ),
             modifier = Modifier
@@ -162,8 +164,8 @@ fun LoginForm(
                 errorTextColor = Color.Black,
                 unfocusedBorderColor = borderColor,
                 focusedBorderColor = primaryColor,
-                unfocusedContainerColor = Color.White,
-                focusedContainerColor = Color.White,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                focusedContainerColor = MaterialTheme.colorScheme.surface,
                 cursorColor = primaryColor
             ),
             modifier = Modifier
@@ -209,7 +211,7 @@ fun LoginForm(
                 .height(52.dp),
             shape = RoundedCornerShape(12.dp),
             border = BorderStroke(1.dp, borderColor),
-            colors = ButtonDefaults.outlinedButtonColors(containerColor = Color.White)
+            colors = ButtonDefaults.outlinedButtonColors(containerColor = MaterialTheme.colorScheme.background)
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.google),

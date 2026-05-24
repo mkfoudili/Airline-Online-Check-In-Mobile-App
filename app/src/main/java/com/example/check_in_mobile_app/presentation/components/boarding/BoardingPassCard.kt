@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.components.boarding
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -47,7 +49,7 @@ fun BoardingPassCard(uiState: BoardingUiState, modifier: Modifier = Modifier) {
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
-            .border(1.dp, BorderLight, RoundedCornerShape(16.dp))
+            .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(16.dp))
     ) {
         Box(
             modifier = Modifier.fillMaxWidth().background(NavyBlue)
@@ -66,16 +68,16 @@ fun BoardingPassCard(uiState: BoardingUiState, modifier: Modifier = Modifier) {
                     Icon(painterResource(R.drawable.diamond), null, tint = Color.White)
                     Text(
                         text = stringResource(R.string.boarding_airline),
-                        fontSize = 13.sp, fontWeight = FontWeight.Bold, color = Color.White,
+                        fontSize = 13.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.surface,
                         letterSpacing = 0.5.sp, maxLines = 1, overflow = TextOverflow.Ellipsis
                     )
                 }
                 Text("FLIGHT ${uiState.flightNumber}", fontSize = 11.sp,
-                    color = Color.White.copy(alpha = 0.8f), maxLines = 1)
+                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f), maxLines = 1)
             }
         }
 
-        Box(modifier = Modifier.fillMaxWidth().background(Color.White)
+        Box(modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface)
             .padding(horizontal = 20.dp, vertical = 24.dp)) {
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {
@@ -118,7 +120,7 @@ fun BoardingPassCard(uiState: BoardingUiState, modifier: Modifier = Modifier) {
                 pathEffect = PathEffect.dashPathEffect(floatArrayOf(12f, 8f)))
         }
 
-        Column(modifier = Modifier.fillMaxWidth().background(Color.White)
+        Column(modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface)
             .padding(horizontal = 20.dp, vertical = 20.dp)) {
 
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
@@ -138,7 +140,7 @@ fun BoardingPassCard(uiState: BoardingUiState, modifier: Modifier = Modifier) {
             Spacer(Modifier.height(50.dp))
         }
 
-        HorizontalDivider(color = BorderLight, thickness = 1.dp)
+        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 1.dp)
 
         Row(
             modifier = Modifier.fillMaxWidth().background(Color(0xFFF8FAFC))
@@ -154,7 +156,7 @@ fun BoardingPassCard(uiState: BoardingUiState, modifier: Modifier = Modifier) {
                     color = DarkText, maxLines = 1, overflow = TextOverflow.Ellipsis)
             }
             Box(modifier = Modifier.clip(RoundedCornerShape(12.dp))
-                .border(1.dp, BorderColor, RoundedCornerShape(16.dp))
+                .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(16.dp))
                 .padding(horizontal = 10.dp, vertical = 5.dp)) {
                 Text(stringResource(R.string.boarding_economy_plus), fontSize = 12.sp,
                     fontWeight = FontWeight.Bold, color = Color(0xFF2A3343),
@@ -169,7 +171,7 @@ private fun QrCodeBox(bitmap: ImageBitmap?) {
     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
         Box(
             modifier = Modifier.size(192.dp).clip(RoundedCornerShape(16.dp))
-                .border(1.dp, QrBorder, RoundedCornerShape(16.dp)).background(Color.White),
+                .border(1.dp, QrBorder, RoundedCornerShape(16.dp)).background(MaterialTheme.colorScheme.surface),
             contentAlignment = Alignment.Center
         ) {
             if (bitmap != null) {

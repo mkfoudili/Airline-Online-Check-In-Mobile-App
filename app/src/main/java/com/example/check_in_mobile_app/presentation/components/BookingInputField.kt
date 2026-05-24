@@ -70,9 +70,9 @@ fun BookingInputField(
                 focusedTextColor     = DarkText,
                 unfocusedTextColor   = DarkText,
                 cursorColor          = MaterialTheme.colorScheme.primary,
-                focusedContainerColor   = Color.White,
-                unfocusedContainerColor = Color.White,
-                disabledContainerColor  = Color.White
+                focusedContainerColor   = MaterialTheme.colorScheme.surface,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                disabledContainerColor  = MaterialTheme.colorScheme.surface
             ),
             modifier = Modifier.fillMaxWidth()
         )

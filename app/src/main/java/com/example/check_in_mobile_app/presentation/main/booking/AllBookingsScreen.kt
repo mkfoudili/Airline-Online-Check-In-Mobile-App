@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.main.booking
 
+import androidx.compose.material3.MaterialTheme
+
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -83,7 +85,7 @@ fun AllBookingsScreenContent(
     onCheckInClick: (String) -> Unit = {}
 ) {
     Scaffold(
-        containerColor = Color.White,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 title = {
@@ -103,7 +105,7 @@ fun AllBookingsScreenContent(
                         )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
             )
         }
     ) { paddingValues ->
@@ -112,7 +114,7 @@ fun AllBookingsScreenContent(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            HorizontalDivider(color = Color(0xFFF1F5F9), thickness = 1.dp)
+            HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant, thickness = 1.dp)
 
             // Bannière offline intégrée en haut du contenu
             if (!isOnline) {
@@ -206,10 +208,10 @@ fun AllBookingsScreenPreview() {
     val allBookings = emptyList<Booking>()
 
     val filteredBookings = allBookings.filter { booking ->
-        val matchesQuery = searchQuery.value.isBlank() || 
-                           booking.flight.destinationCity.contains(searchQuery.value, ignoreCase = true) ||                            
-                           booking.flight.destination.contains(searchQuery.value, ignoreCase = true)
-        
+        val matchesQuery = searchQuery.value.isBlank() ||
+                booking.flight.destinationCity.contains(searchQuery.value, ignoreCase = true) ||
+                booking.flight.destination.contains(searchQuery.value, ignoreCase = true)
+
         val sdfDate = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).apply {
             timeZone = TimeZone.getTimeZone("UTC")
         }

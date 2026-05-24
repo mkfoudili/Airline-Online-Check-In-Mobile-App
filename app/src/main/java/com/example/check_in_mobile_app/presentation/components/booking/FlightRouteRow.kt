@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,6 +36,9 @@ fun FlightRouteRow(
     duration: String,
     modifier: Modifier = Modifier
 ) {
+    // Capture before entering DrawScope
+    val lineColor = MaterialTheme.colorScheme.outline
+
     Row(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -67,7 +71,7 @@ fun FlightRouteRow(
             ) {
                 Canvas(modifier = Modifier.weight(1f).height(8.dp)) {
                     drawLine(
-                        color = Color(0xFFCBD5E1),
+                        color = lineColor,
                         start = Offset(0f, size.height / 2),
                         end = Offset(size.width, size.height / 2),
                         strokeWidth = 3f,
@@ -82,7 +86,7 @@ fun FlightRouteRow(
                 )
                 Canvas(modifier = Modifier.weight(1f).height(8.dp)) {
                     drawLine(
-                        color = Color(0xFFCBD5E1),
+                        color = lineColor,
                         start = Offset(0f, size.height / 2),
                         end = Offset(size.width, size.height / 2),
                         strokeWidth = 3f,

@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.components.checkin.checkingreviewdetails
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -33,7 +35,7 @@ fun PassengerInfoCard(passenger: Passenger) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column {
@@ -48,7 +50,7 @@ fun PassengerInfoCard(passenger: Passenger) {
                     text = stringResource(R.string.review_document_details),
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.surface,
                     letterSpacing = 1.sp
                 )
             }

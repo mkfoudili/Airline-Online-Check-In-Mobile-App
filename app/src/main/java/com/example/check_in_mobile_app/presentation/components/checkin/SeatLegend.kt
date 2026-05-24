@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.components.checkin
 
+import androidx.compose.material3.MaterialTheme
+
 import android.R.color.white
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -30,7 +32,7 @@ fun SeatLegend(
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
-            .background(color = Color.White)
+            .background(color = MaterialTheme.colorScheme.surface)
     ) {
         Row(
             modifier = Modifier
