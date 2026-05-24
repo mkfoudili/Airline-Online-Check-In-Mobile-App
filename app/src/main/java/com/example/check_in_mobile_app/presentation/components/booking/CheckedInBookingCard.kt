@@ -13,8 +13,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -191,16 +192,16 @@ fun CheckedInBookingCard(
                 )
             }
         } else {
-            Button(
+            OutlinedButton(
                 onClick = {
                     println("BOARDING_DEBUG: onBoarding clicked with passengerId = " + booking.checkinPassengerId)
                     onBoarding(booking.checkinPassengerId ?: "")
                 },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(10.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = NavyBlue,
-                    contentColor = Color.White
+                border = BorderStroke(1.dp, NavyBlue),
+                colors = ButtonDefaults.outlinedButtonColors(
+                    contentColor = NavyBlue
                 )
             ) {
                 Text(
