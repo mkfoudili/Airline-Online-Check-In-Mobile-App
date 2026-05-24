@@ -7,6 +7,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,6 +23,7 @@ import androidx.compose.ui.unit.sp
 import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.ui.theme.ActiveGreen
 import com.example.check_in_mobile_app.ui.theme.SurfaceGray
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 
 @Composable
 fun SecurityStatusBanner(
@@ -31,7 +33,7 @@ fun SecurityStatusBanner(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
-            .background(SurfaceGray)
+            .background(LocalAppColors.current.surfaceVariant)
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -40,7 +42,7 @@ fun SecurityStatusBanner(
             modifier = Modifier
                 .size(44.dp)
                 .clip(CircleShape)
-                .background(Color(0xFFE2E8F0).copy(alpha = 0.5f)),
+                .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)),
             contentAlignment = Alignment.Center
         ) {
             Box(contentAlignment = Alignment.BottomEnd) {
@@ -57,7 +59,7 @@ fun SecurityStatusBanner(
                     modifier = Modifier
                         .size(12.dp)
                         .offset(x = 2.dp, y = 2.dp)
-                        .background(Color.White, CircleShape)
+                        .background(LocalAppColors.current.surfaceVariant, CircleShape)
                         .padding(1.dp),
                     tint = ActiveGreen
                 )

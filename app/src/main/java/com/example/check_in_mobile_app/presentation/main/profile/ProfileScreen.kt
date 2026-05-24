@@ -53,6 +53,7 @@ import com.example.check_in_mobile_app.ui.theme.Poppins
 import com.example.check_in_mobile_app.ui.theme.SubtleText
 import com.example.check_in_mobile_app.ui.theme.DividerColor
 import com.example.check_in_mobile_app.ui.theme.SurfaceGray
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import androidx.core.os.LocaleListCompat
 import com.example.check_in_mobile_app.utils.LanguagePreferences
 import kotlinx.coroutines.flow.collectLatest
@@ -72,7 +73,7 @@ fun ProfileScreen(
                 is ProfileUiAction.ChangeLanguage -> {
                     // Save to preferences for legacy/backup support
                     LanguagePreferences.saveLanguage(context, action.languageCode)
-                    
+
                     // Trigger global language change
                     val appLocale: LocaleListCompat = LocaleListCompat.forLanguageTags(action.languageCode)
                     AppCompatDelegate.setApplicationLocales(appLocale)
@@ -125,7 +126,7 @@ private fun ProfileBaseScreen(
     content: @Composable ColumnScope.() -> Unit
 ) {
     Scaffold(
-        containerColor = Color.White,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             Column {
                 TopAppBar(
@@ -151,10 +152,10 @@ private fun ProfileBaseScreen(
                     },
                     actions = actions,
                     colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = Color.White
+                        containerColor = MaterialTheme.colorScheme.background
                     )
                 )
-                HorizontalDivider(color = DividerColor, thickness = 1.dp)
+                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 1.dp)
             }
         },
         bottomBar = bottomBar
@@ -183,10 +184,10 @@ private fun ProfileBottomActions(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.surface)
             .padding(horizontal = 24.dp, vertical = 20.dp)
     ) {
-        HorizontalDivider(color = DividerColor, thickness = 1.dp)
+        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 1.dp)
         Spacer(modifier = Modifier.height(24.dp))
 
         ProfileActionButton(
@@ -454,8 +455,8 @@ fun EditProfileScreen(
                 .fillMaxWidth()
                 .clickable { onEvent(ProfileEvent.OnEditPasswordClicked) },
             shape = RoundedCornerShape(12.dp),
-            color = SurfaceGray,
-            border = androidx.compose.foundation.BorderStroke(1.dp, BorderLight)
+            color = MaterialTheme.colorScheme.surfaceVariant,
+            border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
         ) {
             Row(
                 modifier = Modifier.padding(16.dp),
@@ -556,8 +557,8 @@ fun LanguageDropdownField(
                     focusedTextColor = DarkText,
                     unfocusedTextColor = DarkText,
                     cursorColor = MaterialTheme.colorScheme.primary,
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White
+                    focusedContainerColor = MaterialTheme.colorScheme.surface,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surface
                 ),
                 modifier = Modifier
                     .menuAnchor()
@@ -567,7 +568,7 @@ fun LanguageDropdownField(
             ExposedDropdownMenu(
                 expanded = isExpanded,
                 onDismissRequest = onToggle,
-                modifier = Modifier.background(Color.White)
+                modifier = Modifier.background(MaterialTheme.colorScheme.surface)
             ) {
                 languages.forEach { (displayName, languageValue) ->
                     DropdownMenuItem(
@@ -623,7 +624,7 @@ fun ChangePasswordScreen(
                     modifier = Modifier
                         .size(48.dp)
                         .clip(RoundedCornerShape(12.dp))
-                        .background(Color.White),
+                        .background(MaterialTheme.colorScheme.surface),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(

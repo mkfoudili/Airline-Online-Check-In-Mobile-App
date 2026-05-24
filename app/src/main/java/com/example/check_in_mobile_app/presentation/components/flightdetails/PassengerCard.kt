@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.components.flightdetails
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -31,8 +33,8 @@ fun PassengerCard(booking: Booking, modifier: Modifier = Modifier, infoText : St
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
-            .background(Color.White)
-            .border(1.dp, BorderLight, RoundedCornerShape(16.dp))
+            .background(MaterialTheme.colorScheme.surface)
+            .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(16.dp))
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -41,8 +43,8 @@ fun PassengerCard(booking: Booking, modifier: Modifier = Modifier, infoText : St
             modifier = Modifier
                 .size(52.dp)
                 .clip(CircleShape)
-                .background(SurfaceGray)
-                .border(2.dp, Color(0xFFF1F5F9), CircleShape),
+                .background(MaterialTheme.colorScheme.surfaceVariant)
+                .border(2.dp, MaterialTheme.colorScheme.surfaceVariant, CircleShape),
             contentAlignment = Alignment.Center
         ) {
             Icon(

@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.auth.welcome
 
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -159,7 +161,7 @@ private fun FeatureCard(
     Column(
         modifier = modifier
             .clip(RoundedCornerShape(14.dp))
-            .background(LightGray)
+            .background(LocalAppColors.current.iconBackground)
             .padding(14.dp)
     ) {
         Image(

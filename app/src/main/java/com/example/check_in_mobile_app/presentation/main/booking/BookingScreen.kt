@@ -81,7 +81,7 @@ fun BookingScreenContent(
     onCheckInClick: (String) -> Unit = {}
 ) {
     Scaffold(
-        containerColor = Color.White,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 title = {
@@ -95,7 +95,7 @@ fun BookingScreenContent(
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.White
+                    containerColor = MaterialTheme.colorScheme.background
                 )
             )
         },
@@ -109,10 +109,10 @@ fun BookingScreenContent(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.White)
+                .background(MaterialTheme.colorScheme.background)
                 .padding(paddingValues)
         ) {
-            HorizontalDivider(color = Color(0xFFF1F5F9), thickness = 1.dp)
+            HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f), thickness = 1.dp)
             Spacer(modifier = Modifier.height(16.dp))
 
             when {
@@ -180,7 +180,7 @@ fun BookingOfflineBanner(modifier: Modifier = Modifier) {
         Box(
             modifier = Modifier
                 .size(96.dp)
-                .background(Color(0xFFF1F5F9), shape = CircleShape),
+                .background(MaterialTheme.colorScheme.surfaceVariant, shape = CircleShape),
             contentAlignment = Alignment.Center
         ) {
             Icon(

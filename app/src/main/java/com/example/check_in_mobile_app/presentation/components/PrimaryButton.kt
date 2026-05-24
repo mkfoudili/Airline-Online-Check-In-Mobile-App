@@ -66,7 +66,7 @@ fun SecondaryButton(
             .height(52.dp),
         shape = RoundedCornerShape(14.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = LightGray,
+            containerColor = MaterialTheme.colorScheme.surfaceVariant,
             contentColor = NavyBlue,
             disabledContainerColor = LightGray.copy(alpha = 0.5f),
             disabledContentColor = NavyBlue.copy(alpha = 0.5f)

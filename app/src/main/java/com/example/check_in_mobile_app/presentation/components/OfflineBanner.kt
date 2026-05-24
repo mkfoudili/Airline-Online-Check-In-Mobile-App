@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.components
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -35,11 +37,11 @@ fun OfflineBanner(
     description: String,
     isVerifiedBadge : Boolean = false
 ) {
-    HorizontalDivider(color = BorderLight, thickness = 1.dp)
+    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 1.dp)
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(SurfaceGray)
+            .background(MaterialTheme.colorScheme.surfaceVariant)
             .padding(horizontal = 16.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
@@ -94,5 +96,5 @@ fun OfflineBanner(
             }
         }
     }
-    HorizontalDivider(color = BorderLight, thickness = 1.dp)
+    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 1.dp)
 }

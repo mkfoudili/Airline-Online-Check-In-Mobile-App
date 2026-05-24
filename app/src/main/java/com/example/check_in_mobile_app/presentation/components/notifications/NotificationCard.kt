@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.components.notifications
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -33,12 +35,12 @@ fun NotificationCard(
 ) {
     val isUnread = !notification.isRead
     val borderColor = if (isUnread) NavyBlue else BorderColor
-    val iconBackground = if (isUnread) NavyBlue else LightGray
-    val iconTint = if (isUnread) Color.White else NavyBlue
+    val iconBackground = if (isUnread) NavyBlue else MaterialTheme.colorScheme.surfaceVariant
+    val iconTint = if (isUnread) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary
 
     Card(
         onClick = onClick,
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background),
         shape = RoundedCornerShape(12.dp),
         modifier = modifier
             .fillMaxWidth()
@@ -145,7 +147,7 @@ private fun getNotificationIcon(type: NotificationType): ImageVector {
 fun NotificationCardPreview() {
     Column(
         modifier = Modifier
-            .background(SurfaceGray)
+            .background(MaterialTheme.colorScheme.surfaceVariant)
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {

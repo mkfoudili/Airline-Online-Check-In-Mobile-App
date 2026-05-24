@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.main.booking
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -38,7 +40,7 @@ fun FlightDetailsScreen(
         is FlightDetailsUiState.Loading -> {
             // Fond blanc + TopAppBar visible pour éviter le flash gris pendant la navigation
             Scaffold(
-                containerColor = Color.White,
+                containerColor = MaterialTheme.colorScheme.background,
                 topBar = {
                     TopAppBar(
                         title = {},
@@ -51,7 +53,7 @@ fun FlightDetailsScreen(
                                 )
                             }
                         },
-                        colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
+                        colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
                     )
                 }
             ) { innerPadding ->
@@ -68,7 +70,7 @@ fun FlightDetailsScreen(
         }
         is FlightDetailsUiState.Error -> {
             Scaffold(
-                containerColor = Color.White,
+                containerColor = MaterialTheme.colorScheme.background,
                 topBar = {
                     TopAppBar(
                         title = {},
@@ -81,7 +83,7 @@ fun FlightDetailsScreen(
                                 )
                             }
                         },
-                        colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
+                        colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
                     )
                 }
             ) { innerPadding ->
@@ -116,7 +118,7 @@ fun FlightDetailsScreenContent(
     onStartCheckIn: (passengerId: String, bookingId: String) -> Unit
 ) {
     Scaffold(
-        containerColor = Color.White,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 title = {
@@ -137,14 +139,14 @@ fun FlightDetailsScreenContent(
                         )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
             )
         },
         bottomBar = {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.White)
+                    .background(MaterialTheme.colorScheme.surface)
                     .padding(
                         start   = 24.dp,
                         end     = 24.dp,
@@ -208,9 +210,9 @@ fun FlightDetailsScreenContent(
                     shape  = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor         = NavyBlue,
-                        contentColor           = Color.White,
+                        contentColor           = MaterialTheme.colorScheme.onPrimary,
                         disabledContainerColor = NavyBlue.copy(alpha = 0.4f),
-                        disabledContentColor   = Color.White.copy(alpha = 0.6f)
+                        disabledContentColor   = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.6f)
                     )
                 ) {
                     Text(

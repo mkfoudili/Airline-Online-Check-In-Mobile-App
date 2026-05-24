@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,7 +37,7 @@ fun DateField(
         modifier = modifier
             .fillMaxWidth()
             .height(40.dp)
-            .border(1.dp, Color(0xFFE2E8F0), RoundedCornerShape(16.dp))
+            .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(16.dp))
             .clickable { showDatePicker = true }
             .padding(start = 12.dp, end = 4.dp)
     ) {
@@ -60,7 +61,7 @@ fun DateField(
                         fontWeight = FontWeight.Medium
                     )
                 } else {
-                    Text(selectedDate!!, fontSize = 14.sp, color = Color.Black)
+                    Text(selectedDate!!, fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurface)
                 }
             }
             if (hasDate) {

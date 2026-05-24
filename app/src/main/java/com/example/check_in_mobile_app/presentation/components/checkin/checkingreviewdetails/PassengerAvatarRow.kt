@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.components.checkin.checkingreviewdetails
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -32,7 +34,7 @@ fun PassengerAvatarRow(passenger: Passenger) {
             modifier = Modifier
                 .size(64.dp)
                 .clip(CircleShape)
-                .background(Color(0xFFE2E8F0)),
+                .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)),
             contentAlignment = Alignment.Center
         ) {
             Icon(

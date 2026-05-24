@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -30,6 +32,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.check_in_mobile_app.ui.theme.MediumGray
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import com.example.check_in_mobile_app.ui.theme.NavyBlue
 import com.example.domain.model.Booking
 import com.example.domain.model.CheckInStatus
@@ -46,7 +49,7 @@ fun BookingCard(
             .padding(horizontal = 16.dp, vertical = 6.dp)
             .border(1.dp, Color(0xFFF1F5F9), RoundedCornerShape(16.dp))
             .clip(RoundedCornerShape(16.dp))
-            .background(Color.White)
+            .background(LocalAppColors.current.surface)
             .padding(16.dp)
     ) {
         // ── Row 1: flight icon + number + status badge ──────────────
@@ -59,7 +62,7 @@ fun BookingCard(
                 modifier = Modifier
                     .size(32.dp)
                     .clip(RoundedCornerShape(8.dp))
-                    .background(Color(0xFFF4F5F8)),
+                    .background(LocalAppColors.current.iconBackground),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
@@ -84,7 +87,7 @@ fun BookingCard(
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-        HorizontalDivider(color = Color(0xFFE2E8F0), thickness = 1.dp)
+        HorizontalDivider(color = LocalAppColors.current.divider, thickness = 1.dp)
         Spacer(modifier = Modifier.height(16.dp))
 
 
@@ -126,7 +129,7 @@ fun BookingCard(
                 Spacer(modifier = Modifier.width(6.dp))
                 val sdfDate = java.text.SimpleDateFormat("dd MMM", java.util.Locale.getDefault())
                 val departureDate = sdfDate.format(java.util.Date(booking.flight.departureTime))
-                
+
                 Text(
                     text = departureDate,
                     fontSize = 13.sp,
@@ -144,7 +147,7 @@ fun BookingCard(
                 Spacer(modifier = Modifier.width(6.dp))
                 val sdfTime = java.text.SimpleDateFormat("HH:mm", java.util.Locale.getDefault())
                 val departureTime = sdfTime.format(java.util.Date(booking.flight.departureTime))
-                
+
                 Text(
                     text = departureTime,
                     fontSize = 13.sp,
@@ -164,10 +167,10 @@ fun BookingCard(
                     shape = RoundedCornerShape(10.dp),
                     border = androidx.compose.foundation.BorderStroke(1.dp, NavyBlue),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.White,
+                        containerColor = MaterialTheme.colorScheme.background,
                         contentColor = NavyBlue,
 
-                    )
+                        )
                 ) {
                     Text(
                         text = stringResource(R.string.boarding_pass),
@@ -220,7 +223,7 @@ fun BookingCard(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(12.dp))
-                        .background(Color(0xFFE2E8F0))
+                        .background(LocalAppColors.current.chipUnselected)
                         .padding(vertical = 10.dp),
                     contentAlignment = Alignment.Center
                 ) {

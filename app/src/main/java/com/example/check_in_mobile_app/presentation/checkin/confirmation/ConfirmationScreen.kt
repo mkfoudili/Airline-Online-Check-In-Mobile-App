@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.checkin.confirmation
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -53,7 +55,7 @@ fun ConfirmationScreen(
     }
 
     Scaffold(
-        containerColor = Color.White,
+        containerColor = MaterialTheme.colorScheme.background,
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
@@ -67,7 +69,7 @@ fun ConfirmationScreen(
                         overflow   = TextOverflow.Ellipsis
                     )
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
             )
         }
     ) { paddingValues ->
@@ -78,7 +80,7 @@ fun ConfirmationScreen(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
         ) {
-            Box(modifier = Modifier.fillMaxWidth().height(1.dp).background(DividerColor))
+            Box(modifier = Modifier.fillMaxWidth().height(1.dp).background(MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)))
             Spacer(modifier = Modifier.height(24.dp))
 
             when {
@@ -111,7 +113,7 @@ fun ConfirmationScreen(
                         ) {
                             Text(
                                 text  = stringResource(R.string.confirmation_retry),
-                                color = Color.White
+                                color = MaterialTheme.colorScheme.surface
                             )
                         }
                     }
@@ -195,7 +197,7 @@ fun ConfirmationScreen(
                             modifier  = Modifier
                                 .weight(1f)
                                 .border(1.dp, NavyBlue, RoundedCornerShape(10.dp))
-                                .background(Color.White)
+                                .background(MaterialTheme.colorScheme.surface)
                                 .height(91.dp),
                             title     = stringResource(R.string.confirmation_seat_label),
                             value     = bp.seatNumber.orEmpty().ifBlank { "N/A" },
@@ -206,7 +208,7 @@ fun ConfirmationScreen(
                             modifier  = Modifier
                                 .weight(1f)
                                 .border(1.dp, NavyBlue, RoundedCornerShape(10.dp))
-                                .background(Color.White)
+                                .background(MaterialTheme.colorScheme.surface)
                                 .height(91.dp),
                             title     = stringResource(R.string.confirmation_baggage_label),
                             value     = "01",
@@ -226,8 +228,8 @@ fun ConfirmationScreen(
                             .border(1.dp, NavyBlue, RoundedCornerShape(14.dp)),
                         shape  = RoundedCornerShape(14.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor         = Color.White,
-                            disabledContainerColor = Color.White
+                            containerColor         = MaterialTheme.colorScheme.surface,
+                            disabledContainerColor = MaterialTheme.colorScheme.surface
                         )
                     ) {
                         if (uiState.isDownloadingPdf) {
@@ -288,7 +290,7 @@ private fun SuccessHeader() {
         Box(
             modifier         = Modifier
                 .size(80.dp)
-                .background(Color.White, CircleShape)
+                .background(MaterialTheme.colorScheme.surface, CircleShape)
                 .border(2.dp, Color(0x332EE8AA), CircleShape),
             contentAlignment = Alignment.Center
         ) {

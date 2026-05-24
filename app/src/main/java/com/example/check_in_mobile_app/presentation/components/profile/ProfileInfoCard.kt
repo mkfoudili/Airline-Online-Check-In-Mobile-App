@@ -9,6 +9,7 @@ import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Language
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Phone
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -35,8 +36,8 @@ fun ProfileInfoCard(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
-            .background(Color.White)
-            .border(1.dp, BorderLight, RoundedCornerShape(16.dp))
+            .background(MaterialTheme.colorScheme.surface)
+            .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(16.dp))
     ) {
         ProfileInfoRow(
             icon = Icons.Outlined.Email,
@@ -44,11 +45,11 @@ fun ProfileInfoCard(
             value = email,
             onClick = onEditEmailClick
         )
-        
+
         HorizontalDivider(
             modifier = Modifier.padding(horizontal = 16.dp),
             thickness = 1.dp,
-            color = BorderLight
+            color = MaterialTheme.colorScheme.outlineVariant
         )
 
         ProfileInfoRow(
@@ -61,7 +62,7 @@ fun ProfileInfoCard(
         HorizontalDivider(
             modifier = Modifier.padding(horizontal = 16.dp),
             thickness = 1.dp,
-            color = BorderLight
+            color = MaterialTheme.colorScheme.outlineVariant
         )
 
         ProfileInfoRow(
@@ -79,7 +80,7 @@ fun ProfileInfoCard(
         HorizontalDivider(
             modifier = Modifier.padding(horizontal = 16.dp),
             thickness = 1.dp,
-            color = BorderLight
+            color = MaterialTheme.colorScheme.outlineVariant
         )
 
         ProfileInfoRow(

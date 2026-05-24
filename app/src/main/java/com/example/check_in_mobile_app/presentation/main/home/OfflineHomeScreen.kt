@@ -1,5 +1,9 @@
 package com.example.check_in_mobile_app.presentation.main.home
 
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
+
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -42,7 +46,7 @@ fun OfflineHomeScreen(
         modifier = Modifier
             .fillMaxWidth()
             .height(50.dp)
-            .background(Color.White),
+            .background(MaterialTheme.colorScheme.surface),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -116,7 +120,7 @@ fun OfflineHomeScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(12.dp))
-                .background(LightGray)
+                .background(LocalAppColors.current.iconBackground)
                 .padding(24.dp),
             contentAlignment = Alignment.Center
         ) {
@@ -143,7 +147,7 @@ fun OfflineHomeScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(12.dp))
-                    .background(LightGray)
+                    .background(LocalAppColors.current.iconBackground)
                     .padding(16.dp),
                 contentAlignment = Alignment.Center
             ) {
@@ -239,7 +243,7 @@ private fun CachedFlightCard(
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -284,7 +288,7 @@ private fun CachedFlightCard(
             }
 
             Spacer(modifier = Modifier.height(12.dp))
-            HorizontalDivider(color = LightGray)
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
             Spacer(modifier = Modifier.height(12.dp))
 
             // Infos vol

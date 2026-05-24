@@ -17,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,6 +40,7 @@ import com.example.check_in_mobile_app.presentation.components.BookingInputField
 import com.example.check_in_mobile_app.presentation.components.PrimaryButton
 import com.example.check_in_mobile_app.presentation.components.home.ActiveFlightCard
 import com.example.check_in_mobile_app.ui.theme.*
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import com.example.domain.model.Booking
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -82,7 +84,7 @@ fun OnlineHomeScreen(
             modifier = Modifier
                 .size(42.dp)
                 .clip(CircleShape)
-                .background(LightGray)
+                .background(LocalAppColors.current.iconBackground)
                 .clickable { onProfileClick() },
             contentAlignment = Alignment.Center
         ) {
@@ -100,7 +102,7 @@ fun OnlineHomeScreen(
         modifier = Modifier
             .requiredWidth(screenWidth)
             .height(1.dp)
-            .background(DividerColor)
+            .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.3f))
     )
     Spacer(modifier = Modifier.height(24.dp))
 
@@ -130,7 +132,7 @@ fun OnlineHomeScreen(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(12.dp))
-            .background(Color.White)
+            .background(LocalAppColors.current.surface)
             .border(1.dp, DividerColor, RoundedCornerShape(12.dp))
             .padding(16.dp)
     ) {
@@ -296,7 +298,7 @@ private fun SearchResultPreview(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
-            .background(Color.White)
+            .background(LocalAppColors.current.surface)
             .border(1.dp, NavyBlue.copy(alpha = 0.25f), RoundedCornerShape(16.dp))
             .padding(16.dp)
     ) {
@@ -316,7 +318,7 @@ private fun SearchResultPreview(
             Box(
                 modifier = Modifier
                     .clip(RoundedCornerShape(20.dp))
-                    .background(NavyBlue.copy(alpha = 0.08f))
+                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.08f))
                     .padding(horizontal = 10.dp, vertical = 4.dp)
             ) {
                 Text(
@@ -376,7 +378,7 @@ private fun SearchResultPreview(
         }
 
         Spacer(modifier = Modifier.height(12.dp))
-        HorizontalDivider(color = DividerColor)
+        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
         Spacer(modifier = Modifier.height(12.dp))
 
         // Détails

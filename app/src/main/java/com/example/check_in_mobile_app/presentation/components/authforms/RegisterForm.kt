@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.components.authforms
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -174,13 +176,13 @@ fun RegisterForm(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
         ) {
-            HorizontalDivider(modifier = Modifier.weight(1f), color = BorderColor)
+            HorizontalDivider(modifier = Modifier.weight(1f), color = MaterialTheme.colorScheme.outline)
             Text(
                 text = "  " + androidx.compose.ui.res.stringResource(R.string.common_or) + "  ",
                 color = MediumGray,
                 fontSize = 13.sp
             )
-            HorizontalDivider(modifier = Modifier.weight(1f), color = BorderColor)
+            HorizontalDivider(modifier = Modifier.weight(1f), color = MaterialTheme.colorScheme.outline)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -193,7 +195,7 @@ fun RegisterForm(
                 .height(52.dp),
             shape = RoundedCornerShape(14.dp),
             border = BorderStroke(1.dp, BorderColor),
-            colors = ButtonDefaults.outlinedButtonColors(containerColor = Color.White)
+            colors = ButtonDefaults.outlinedButtonColors(containerColor = MaterialTheme.colorScheme.background)
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.google),
@@ -319,9 +321,9 @@ private fun AuthTextField(
             unfocusedBorderColor = BorderColor,
             focusedBorderColor = NavyBlue,
             errorBorderColor = ErrorRed,
-            unfocusedContainerColor = Color.White,
-            focusedContainerColor = Color.White,
-            errorContainerColor = Color.White,
+            unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+            focusedContainerColor = MaterialTheme.colorScheme.surface,
+            errorContainerColor = MaterialTheme.colorScheme.surface,
             cursorColor = NavyBlue
         ),
         modifier = Modifier

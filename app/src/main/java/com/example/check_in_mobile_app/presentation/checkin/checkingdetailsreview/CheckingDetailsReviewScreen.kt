@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.checkin.checkingdetailsreview
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -59,7 +61,7 @@ fun CheckingDetailsReviewScreenContent(
     onConfirmedChanged: (Boolean) -> Unit
 ) {
     Scaffold(
-        containerColor = Color.White,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             CheckInTopBar(
                 onBack = onBack,

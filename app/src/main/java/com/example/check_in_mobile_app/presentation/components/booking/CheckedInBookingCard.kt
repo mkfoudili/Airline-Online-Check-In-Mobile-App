@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.foundation.BorderStroke
@@ -31,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.ui.theme.MediumGray
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import com.example.check_in_mobile_app.ui.theme.NavyBlue
 import com.example.domain.model.Booking
 
@@ -48,7 +50,7 @@ fun CheckedInBookingCard(
             .padding(horizontal = 16.dp, vertical = 6.dp)
             .border(1.dp, Color(0xFFF1F5F9), RoundedCornerShape(16.dp))
             .clip(RoundedCornerShape(16.dp))
-            .background(Color.White)
+            .background(LocalAppColors.current.surface)
             .padding(16.dp)
     ) {
         // ── Row 1: flight icon + number + badge ────────────────────
@@ -60,7 +62,7 @@ fun CheckedInBookingCard(
                 modifier = Modifier
                     .size(32.dp)
                     .clip(RoundedCornerShape(8.dp))
-                    .background(Color(0xFFF4F5F8)),
+                    .background(LocalAppColors.current.iconBackground),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
@@ -83,7 +85,7 @@ fun CheckedInBookingCard(
 
             // Badge : "Terminé" si vol passé, "Enregistré" sinon
             val (bgColor, textColor, labelRes) = if (isPassed) {
-                Triple(Color(0xFFF1F5F9), MediumGray, R.string.status_passed)
+                Triple(LocalAppColors.current.chipUnselected, MediumGray, R.string.status_passed)
             } else {
                 Triple(
                     com.example.check_in_mobile_app.ui.theme.CheckedInBg,
@@ -108,7 +110,7 @@ fun CheckedInBookingCard(
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-        HorizontalDivider(color = Color(0xFFE2E8F0), thickness = 1.dp)
+        HorizontalDivider(color = LocalAppColors.current.divider, thickness = 1.dp)
         Spacer(modifier = Modifier.height(16.dp))
 
         // ── Row 2: Origin ── ✈ duration ── Destination ─────────────

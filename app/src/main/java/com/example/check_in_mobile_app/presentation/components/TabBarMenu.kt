@@ -24,6 +24,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.check_in_mobile_app.R
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
+import com.example.check_in_mobile_app.ui.theme.NavyBlue
 
 
 enum class TabItem(@DrawableRes val icon: Int, val labelRes: Int) {
@@ -39,7 +41,7 @@ fun TabBarMenu(
     onTabSelected: (TabItem) -> Unit
 ) {
     NavigationBar(
-        containerColor = Color.White,
+        containerColor = LocalAppColors.current.navBackground,
         tonalElevation = 0.dp,
         modifier = Modifier.height(100.dp)
     ) {

@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.components.checkin.checkingpassportscan
 
+import androidx.compose.material3.MaterialTheme
+
 import android.graphics.Bitmap
 import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.PreviewView
@@ -144,7 +146,7 @@ fun CameraViewfinder(
                     strokeWidth = 4.dp.toPx()
                 )
             }
-    }
+        }
 
 
         if (capturedBitmap == null) {
@@ -157,7 +159,7 @@ fun CameraViewfinder(
             ) {
                 Text(
                     text = if (hasCameraPermission) "PLACE PASSPORT WITHIN FRAME" else "CAMERA PERMISSION REQUIRED",
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.surface,
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Bold,
                     letterSpacing = 1.sp,
@@ -179,7 +181,7 @@ fun CameraViewfinder(
         ) {
             Text(
                 text = if (capturedBitmap == null) "Ready to Scan" else "Image Captured",
-                color = Color.White,
+                color = MaterialTheme.colorScheme.surface,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.SemiBold
             )
