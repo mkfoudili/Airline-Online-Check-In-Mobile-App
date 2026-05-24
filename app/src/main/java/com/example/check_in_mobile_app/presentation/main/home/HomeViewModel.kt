@@ -4,16 +4,17 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.check_in_mobile_app.di.NetworkMonitor
-import com.example.check_in_mobile_app.sync.SyncScheduler
 import com.example.data.preferences.UserPreferencesRepository
 import com.example.domain.repository.AuthRepository
-import com.example.domain.repository.BoardingPassRepository
 import com.example.domain.repository.BookingRepository
+import com.example.domain.repository.FlightRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
@@ -27,7 +28,7 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     application: Application,
     private val bookingRepository: BookingRepository,
-    private val boardingPassRepository: BoardingPassRepository,
+    private val flightRepository: FlightRepository,
     private val authRepository: AuthRepository,
     private val networkMonitor: NetworkMonitor,
     private val userPrefs: UserPreferencesRepository
@@ -42,10 +43,16 @@ class HomeViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
+    private val _navigateToFlightDetails = MutableSharedFlow<String>(extraBufferCapacity = 1)
+    val navigateToFlightDetails = _navigateToFlightDetails.asSharedFlow()
 
     init {
         loadUserName()
-        loadActiveFlight()
+        if (networkMonitor.currentlyOnline()) {
+            loadActiveFlight()
+        } else {
+            loadCachedFlights()
+        }
         observeConnectivity()
     }
 
@@ -58,8 +65,7 @@ class HomeViewModel @Inject constructor(
                     if (online) {
                         loadActiveFlight()
                     } else {
-                        // Passage en offline → charger le boarding pass depuis le cache local
-                        loadCachedBoardingPass()
+                        loadCachedFlights()
                     }
                 }
         }
@@ -89,25 +95,21 @@ class HomeViewModel @Inject constructor(
                     }
                 }
                 .onFailure { error ->
-                    // Réseau indisponible → charger le boarding pass depuis le cache
                     _uiState.update {
                         it.copy(
                             isActiveFlightLoading = false,
                             errorMessage = error.message
                         )
                     }
-                    loadCachedBoardingPass()
+                    loadCachedFlights()
                 }
         }
     }
 
-    private fun loadCachedBoardingPass() {
+    private fun loadCachedFlights() {
         viewModelScope.launch {
-            val boardingPass = boardingPassRepository
-                .getAllBoardingPasses()
-                .firstOrNull()
-                ?.firstOrNull()
-            _uiState.update { it.copy(cachedBoardingPass = boardingPass) }
+            val flights = flightRepository.getAllCachedFlights()
+            _uiState.update { it.copy(cachedFlights = flights) }
         }
     }
 
@@ -160,7 +162,10 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onCheckInNow() {
-        // Navigue vers le check-in pour le vol actif, géré par le NavGraph
+        val bookingRef = _uiState.value.activeFlight?.bookingRef?.trim().orEmpty()
+        if (bookingRef.isNotBlank()) {
+            _navigateToFlightDetails.tryEmit(bookingRef)
+        }
     }
 
     fun onRefresh() {

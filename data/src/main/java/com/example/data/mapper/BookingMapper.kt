@@ -6,13 +6,14 @@ import com.example.domain.model.Booking
 import com.example.domain.model.Passenger
 
 fun BookingDto.toDomain(): Booking = Booking(
-    bookingId  = bookingId,
-    pnr        = pnr,
-    lastName   = lastName,
-    status     = status,
-    flight     = flight.toDomain(),
-    passengers = passengers.map { it.toDomain() },
-    bookingRef = bookingRef
+    bookingId           = bookingId,
+    pnr                 = pnr,
+    lastName            = lastName,
+    status              = status,
+    flight              = flight.toDomain(),
+    passengers          = passengers.map { it.toDomain() },
+    bookingRef          = bookingRef,
+    checkinPassengerId  = checkinSession?.passengerId
 )
 
 fun PassengerDto.toDomain(): Passenger = Passenger(

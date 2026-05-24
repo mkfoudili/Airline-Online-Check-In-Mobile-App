@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -44,19 +43,18 @@ import com.example.check_in_mobile_app.ui.theme.NavyBlue
 import com.example.check_in_mobile_app.ui.theme.Poppins
 import com.example.check_in_mobile_app.ui.theme.Slate500
 import com.example.domain.model.Flight
-
 import androidx.compose.ui.res.stringResource
 import com.example.check_in_mobile_app.R
-
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import com.example.check_in_mobile_app.presentation.main.MainActivity
+import com.example.check_in_mobile_app.presentation.components.booking.CheckedInBookingCard
 
 @Composable
 fun BookingScreen(
     viewModel: BookingViewModel = hiltViewModel(),
     onViewAllClick: () -> Unit = {},
-    onBoarding: () -> Unit = {},
+    onBoarding: (passengerId: String) -> Unit = {},
     onTabSelected: (TabItem) -> Unit = {},
     onCheckInClick: (String) -> Unit = {}
 ) {
@@ -66,9 +64,9 @@ fun BookingScreen(
         uiState = uiState,
         isOnline = isOnline,
         onViewAllClick = onViewAllClick,
-        onBoarding = onBoarding,
         onTabSelected = onTabSelected,
-        onCheckInClick = onCheckInClick
+        onCheckInClick = onCheckInClick,
+        onBoarding = onBoarding
     )
 }
 
@@ -78,7 +76,7 @@ fun BookingScreenContent(
     uiState: BookingUiState,
     isOnline: Boolean = true,
     onViewAllClick: () -> Unit = {},
-    onBoarding: () -> Unit = {},
+    onBoarding: (String) -> Unit = {},
     onTabSelected: (TabItem) -> Unit = {},
     onCheckInClick: (String) -> Unit = {}
 ) {
@@ -101,14 +99,12 @@ fun BookingScreenContent(
                 )
             )
         },
-
         bottomBar = {
             TabBarMenu(
                 selectedTab = TabItem.TICKETS,
                 onTabSelected = onTabSelected
             )
         }
-
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -118,51 +114,48 @@ fun BookingScreenContent(
         ) {
             HorizontalDivider(color = Color(0xFFF1F5F9), thickness = 1.dp)
             Spacer(modifier = Modifier.height(16.dp))
-            if (!isOnline) {
-                OfflineBookingScreen()
-            } else {
-                when (val state = uiState) {
-                    is BookingUiState.Loading -> {
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            CircularProgressIndicator(color = NavyBlue)
-                        }
-                    }
 
-                    is BookingUiState.Error -> {
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = state.message,
-                                color = NavyBlue,
-                                fontSize = 14.sp
-                            )
-                        }
+            when {
+                // État offline — on affiche une bannière mais on reste dans le flow normal
+                uiState is BookingUiState.Loading -> {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(color = NavyBlue)
                     }
+                }
 
-                    is BookingUiState.Success -> {
-                        ViewAllButton(
-                            title = stringResource(R.string.upcoming_flights),
-                            actionLabel = stringResource(R.string.view_all),
-                            onActionClick = onViewAllClick
+                uiState is BookingUiState.Error -> {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = uiState.message,
+                            color = NavyBlue,
+                            fontSize = 14.sp
                         )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        LazyColumn(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .weight(1f)
-                        ) {
-                            items(state.bookings) { booking ->
-                                BookingCard(
-                                    booking = booking,
-                                    onCheckInClick = onCheckInClick,
-                                    onBoarding = onBoarding
-                                )
-                            }
+                    }
+                }
+
+                uiState is BookingUiState.Success -> {
+                    ViewAllButton(
+                        title = stringResource(R.string.upcoming_flights),
+                        actionLabel = stringResource(R.string.view_all),
+                        onActionClick = onViewAllClick
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                    ) {
+                        items(uiState.bookings) { booking ->
+                            CheckedInBookingCard(
+                                booking = booking,
+                                onBoarding = { passengerId -> onBoarding(passengerId) }
+                            )
                         }
                     }
                 }
@@ -171,8 +164,12 @@ fun BookingScreenContent(
     }
 }
 
+/**
+ * Bannière inline affichée dans BookingScreen (et AllBookingsScreen) quand hors ligne.
+ * Pas un screen dédié — s'intègre dans le flux existant.
+ */
 @Composable
-fun OfflineBookingScreen(modifier: Modifier = Modifier) {
+fun BookingOfflineBanner(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -193,9 +190,9 @@ fun OfflineBookingScreen(modifier: Modifier = Modifier) {
                 modifier = Modifier.size(44.dp)
             )
         }
-        
+
         Spacer(modifier = Modifier.height(28.dp))
-        
+
         Text(
             text = stringResource(R.string.connection_timed_out),
             fontFamily = Poppins,
@@ -204,9 +201,9 @@ fun OfflineBookingScreen(modifier: Modifier = Modifier) {
             color = DarkText,
             textAlign = TextAlign.Center
         )
-        
+
         Spacer(modifier = Modifier.height(16.dp))
-        
+
         Text(
             text = stringResource(R.string.connection_error_description),
             fontFamily = Poppins,
@@ -231,7 +228,7 @@ fun BookingScreenPreview() {
         destination = "CDG",
         destinationCity = "LONDON",
         departureTime = System.currentTimeMillis() + 86400000,
-        arrivalTime = System.currentTimeMillis() + 90000000 + (11 * 60 * 60 * 1000) + (20 * 60 * 1000), // ~11h 20m later
+        arrivalTime = System.currentTimeMillis() + 90000000 + (11 * 60 * 60 * 1000) + (20 * 60 * 1000),
         checkInOpensTime = "06:15",
         boardingTime = "22:15",
         aircraftType = "Boeing 737",

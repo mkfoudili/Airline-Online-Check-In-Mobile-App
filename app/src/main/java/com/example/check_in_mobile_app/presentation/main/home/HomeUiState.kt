@@ -1,13 +1,13 @@
 package com.example.check_in_mobile_app.presentation.main.home
 
-import com.example.domain.model.BoardingPass
 import com.example.domain.model.Booking
+import com.example.domain.model.Flight
 
 data class HomeUiState(
     val userName: String = "",
     val activeFlight: Booking? = null,
     val isActiveFlightLoading: Boolean = false,
-    val cachedBoardingPass: BoardingPass? = null,
+    val cachedFlights: List<Flight> = emptyList(),
 
     val bookingReference: String = "",
     val lastName: String = "",

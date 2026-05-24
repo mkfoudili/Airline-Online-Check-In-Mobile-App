@@ -8,5 +8,6 @@ data class Booking(
     val flight: Flight,
     val passengers: List<Passenger>,
     val gate: String = "",
-    val bookingRef: String = ""
+    val bookingRef: String = "",
+    val checkinPassengerId: String? = null
 )

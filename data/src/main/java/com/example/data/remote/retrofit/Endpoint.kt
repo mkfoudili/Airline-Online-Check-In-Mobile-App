@@ -99,4 +99,7 @@ interface Endpoint {
 
     @GET("boarding/my")
     suspend fun getMyBoardingPass(): BoardingPassResponse
+
+    @GET("boarding/my/all")
+    suspend fun getMyBoardingPasses(): BoardingPassListResponse
 }

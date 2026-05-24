@@ -26,10 +26,11 @@ private fun parseIso8601(value: String): Long {
     }
 }
 
-// Entity to Domain
+// Entity → Domain
 
 fun BoardingPassEntity.toDomain(): BoardingPass = BoardingPass(
     passId             = passId,
+    uid                = uid,
     passengerId        = passengerId,
     flightId           = flightId,
     flightNumber       = flightNumber,
@@ -50,9 +51,12 @@ fun BoardingPassEntity.toDomain(): BoardingPass = BoardingPass(
     lastSyncedAt       = lastSyncedAt,
     isSyncedWithServer = isSyncedWithServer
 )
+
+// Domain → Entity (uid obligatoire pour garantir le filtrage)
 
 fun BoardingPass.toEntity(): BoardingPassEntity = BoardingPassEntity(
     passId             = passId,
+    uid                = uid,
     passengerId        = passengerId,
     flightId           = flightId,
     flightNumber       = flightNumber,
@@ -74,10 +78,11 @@ fun BoardingPass.toEntity(): BoardingPassEntity = BoardingPassEntity(
     isSyncedWithServer = isSyncedWithServer
 )
 
-// DTO to Domain
+// DTO → Domain (uid vient du contexte appelant, pas du DTO)
 
-fun BoardingPassDto.toDomain(): BoardingPass = BoardingPass(
+fun BoardingPassDto.toDomain(uid: String = ""): BoardingPass = BoardingPass(
     passId             = passId,
+    uid                = uid,
     passengerId        = passengerId,
     flightId           = flightId,
     flightNumber       = flightNumber,

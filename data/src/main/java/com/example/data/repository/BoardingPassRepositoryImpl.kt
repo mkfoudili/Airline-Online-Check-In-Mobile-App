@@ -7,7 +7,6 @@ import com.example.data.remote.retrofit.Endpoint
 import com.example.domain.model.BoardingPass
 import com.example.domain.repository.BoardingPassRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -25,6 +24,9 @@ class BoardingPassRepositoryImpl @Inject constructor(
     override fun getAllBoardingPasses(): Flow<List<BoardingPass>> =
         boardingPassDao.getAllBoardingPasses().map { entities -> entities.map { it.toDomain() } }
 
+    override suspend fun getBoardingPassesByUid(uid: String): List<BoardingPass> =
+        boardingPassDao.getBoardingPassesByUid(uid).map { it.toDomain() }
+
     override suspend fun saveBoardingPassLocally(boardingPass: BoardingPass) {
         boardingPassDao.insertBoardingPass(boardingPass.toEntity())
     }
@@ -34,16 +36,17 @@ class BoardingPassRepositoryImpl @Inject constructor(
         val boardingPass = response.data.toDomain()
         boardingPassDao.insertBoardingPass(boardingPass.toEntity())
         boardingPassDao.markAsSynced(boardingPass.passId)
-
         return boardingPass
     }
 
-    override suspend fun refreshBoardingPassesFromRemote(): Result<Unit> {
+    override suspend fun refreshBoardingPassesFromRemote(uid: String): Result<Unit> {
         return try {
-            val response = endpoint.getMyBoardingPass()
-            val boardingPass = response.data.toDomain()
-            boardingPassDao.insertBoardingPass(boardingPass.toEntity())
-            boardingPassDao.markAsSynced(boardingPass.passId)
+            val response = endpoint.getMyBoardingPasses()
+            response.data.forEach { dto ->
+                val boardingPass = dto.toDomain(uid = uid)
+                boardingPassDao.insertBoardingPass(boardingPass.toEntity())
+                boardingPassDao.markAsSynced(boardingPass.passId)
+            }
             Result.success(Unit)
         } catch (e: retrofit2.HttpException) {
             if (e.code() == 404) Result.success(Unit)

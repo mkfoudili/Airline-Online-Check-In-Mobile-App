@@ -12,6 +12,9 @@ interface FlightDao {
     @Query("SELECT * FROM flights WHERE flightId = :flightId")
     suspend fun getFlightById(flightId: String): FlightEntity?
 
+    @Query("SELECT * FROM flights")
+    suspend fun getAllFlights(): List<FlightEntity>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertFlight(entity: FlightEntity)
 }

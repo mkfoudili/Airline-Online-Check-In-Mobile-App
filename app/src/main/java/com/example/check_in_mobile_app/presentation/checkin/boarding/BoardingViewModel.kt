@@ -49,8 +49,10 @@ class BoardingViewModel @Inject constructor(
             // If we have a specific passengerId, observe that pass directly.
             // Otherwise, take the first pass from the full list.
             val flow = if (passengerId.isNotBlank()) {
+                println("BOARDING_DEBUG: loading by passengerId = $passengerId")
                 boardingPassRepository.getBoardingPass(passengerId)
             } else {
+                println("BOARDING_DEBUG: passengerId is blank, loading all")
                 boardingPassRepository.getAllBoardingPasses()
                     .map { list -> list.firstOrNull() }
             }
