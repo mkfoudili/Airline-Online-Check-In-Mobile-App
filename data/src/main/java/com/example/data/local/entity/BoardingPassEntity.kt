@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 data class BoardingPassEntity(
     @PrimaryKey val passId: String,
     val passengerId: String,
+    val uid: String = "",
     val flightId: String,
     val flightNumber: String,
     val origin: String,

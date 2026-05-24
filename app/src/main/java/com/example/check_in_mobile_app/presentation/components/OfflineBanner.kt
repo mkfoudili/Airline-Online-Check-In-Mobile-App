@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -51,6 +52,8 @@ fun OfflineBanner(
             Icon(
                 painter = painterResource(id = iconId),
                 contentDescription = iconDescription,
+                modifier = Modifier.size(20.dp),
+                tint = Color.DarkGray
             )
             Column(
                 modifier = Modifier.padding(10.dp, 0.dp)

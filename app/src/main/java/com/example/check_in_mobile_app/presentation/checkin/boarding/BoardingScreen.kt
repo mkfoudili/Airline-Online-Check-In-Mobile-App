@@ -125,7 +125,7 @@ fun BoardingScreen(
                         iconDescription = "wifi-off",
                         title = stringResource(R.string.boarding_available_offline),
                         description = stringResource(R.string.boarding_offline_desc),
-                        isVerifiedBadge = true
+                        isVerifiedBadge = true,
                     )
                     Spacer(Modifier.height(20.dp))
                     BoardingPassCard(

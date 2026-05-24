@@ -29,6 +29,12 @@ fun HomeScreen(
     val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    LaunchedEffect(Unit) {
+        viewModel.navigateToFlightDetails.collect { bookingRef ->
+            onNavigateToFlightDetails(bookingRef)
+        }
+    }
+
     val scrollState = remember(isOnline) { ScrollState(initial = 0) }
     val screenWidth: Dp = rememberScreenWidth()
 
@@ -71,7 +77,7 @@ fun HomeScreen(
                         )
                     } else {
                         OfflineHomeScreen(
-                            onNavigateToBoardingScreen = onNavigateToBoardingScreen,
+                            onNavigateToFlightDetails = onNavigateToFlightDetails,
                             screenWidth = screenWidth,
                             uiState = uiState
                         )

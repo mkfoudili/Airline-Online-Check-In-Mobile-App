@@ -7,7 +7,6 @@ sealed class Destination(val route: String) {
     object FlightDetails : Destination("flight_details/{bookingRef}") {
         fun createRoute(bookingRef: String) = "flight_details/$bookingRef"
     }
-    object Boarding : Destination("boarding")
     object PassportScan : Destination("passport_scan")
     object Baggage : Destination("baggage")
     object CheckingDetailsReview : Destination("checking_details_review")
@@ -23,5 +22,9 @@ sealed class Destination(val route: String) {
     }
     object Confirmation : Destination("confirmation/{passengerId}") {
         fun routeWithArg(passengerId: String) = "confirmation/$passengerId"
+    }
+
+    object Boarding : Destination("boarding/{passengerId}") {
+        fun createRoute(passengerId: String) = "boarding/$passengerId"
     }
 }

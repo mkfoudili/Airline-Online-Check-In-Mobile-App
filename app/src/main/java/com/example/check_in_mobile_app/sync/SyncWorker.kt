@@ -37,7 +37,7 @@ class SyncWorker @AssistedInject constructor(
             return Result.retry()
         }
 
-        val boardingResult = boardingPassRepository.refreshBoardingPassesFromRemote()
+        val boardingResult = boardingPassRepository.refreshBoardingPassesFromRemote(uid)
         Log.d("SyncWorker", "boardingResult success=${boardingResult.isSuccess} error=${boardingResult.exceptionOrNull()?.message}")
 
         return Result.success()

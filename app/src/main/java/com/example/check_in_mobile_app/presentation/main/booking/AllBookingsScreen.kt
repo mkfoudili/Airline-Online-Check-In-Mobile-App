@@ -25,9 +25,7 @@ import com.example.check_in_mobile_app.presentation.components.booking.DateField
 import com.example.check_in_mobile_app.presentation.components.booking.FilterChipsRow
 import com.example.check_in_mobile_app.presentation.components.booking.SearchField
 import com.example.check_in_mobile_app.ui.theme.NavyBlue
-import com.example.data.repository.BookingRepositoryImpl
 import com.example.domain.model.CheckInStatus
-import com.example.domain.usecase.booking.GetUpcomingBookingsUseCase
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -47,6 +45,7 @@ fun AllBookingsScreen(
     val selectedStatus by viewModel.selectedStatus.collectAsState()
     val filteredBookings by viewModel.filteredBookings.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
+    val isOnline by viewModel.isOnline.collectAsState()
 
     AllBookingsScreenContent(
         onNavigateBack = onNavigateBack,
@@ -60,6 +59,7 @@ fun AllBookingsScreen(
         onStatusSelect = viewModel::updateSelectedStatus,
         filteredBookings = filteredBookings,
         isLoading = isLoading,
+        isOnline = isOnline,
         onCheckInClick = onCheckInClick
     )
 }
@@ -78,6 +78,7 @@ fun AllBookingsScreenContent(
     onStatusSelect: (String) -> Unit,
     filteredBookings: List<Booking>,
     isLoading: Boolean = false,
+    isOnline: Boolean = true,
     onCheckInClick: (String) -> Unit = {}
 ) {
     Scaffold(
@@ -94,7 +95,11 @@ fun AllBookingsScreenContent(
                 },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(painter = painterResource(id = R.drawable.chevron_left), contentDescription = stringResource(R.string.back), tint = NavyBlue)
+                        Icon(
+                            painter = painterResource(id = R.drawable.chevron_left),
+                            contentDescription = stringResource(R.string.back),
+                            tint = NavyBlue
+                        )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
@@ -107,7 +112,13 @@ fun AllBookingsScreenContent(
                 .padding(paddingValues)
         ) {
             HorizontalDivider(color = Color(0xFFF1F5F9), thickness = 1.dp)
-            
+
+            // Bannière offline intégrée en haut du contenu
+            if (!isOnline) {
+                BookingOfflineBanner()
+                return@Column
+            }
+
             Spacer(modifier = Modifier.height(16.dp))
 
             // Search Bar
@@ -190,24 +201,24 @@ fun AllBookingsScreenPreview() {
     val searchQuery = remember { mutableStateOf("") }
     val selectedDate = remember { mutableStateOf<String?>(null) }
     val selectedStatus = remember { mutableStateOf("All") }
-    
+
     val allBookings = emptyList<Booking>()
 
     val filteredBookings = allBookings.filter { booking ->
-        val matchesQuery = searchQuery.value.isBlank() || 
-                           booking.flight.destinationCity.contains(searchQuery.value, ignoreCase = true) ||                            
-                           booking.flight.destination.contains(searchQuery.value, ignoreCase = true)
-        
+        val matchesQuery = searchQuery.value.isBlank() ||
+                booking.flight.destinationCity.contains(searchQuery.value, ignoreCase = true) ||
+                booking.flight.destination.contains(searchQuery.value, ignoreCase = true)
+
         val sdfDate = SimpleDateFormat("dd MMM", Locale.getDefault())
         val depDateStr = sdfDate.format(Date(booking.flight.departureTime))
         val matchesDate = selectedDate.value == null || depDateStr == selectedDate.value
-        
+
         val uiStatus = try { CheckInStatus.valueOf(booking.status.name) } catch (e: Exception) { CheckInStatus.CHECK_IN_OPEN }
         val matchesStatus = selectedStatus.value == "All" || uiStatus.name.replace("_", " ").equals(selectedStatus.value, ignoreCase = true)
-        
+
         matchesQuery && matchesDate && matchesStatus
     }
-    
+
     AllBookingsScreenContent(
         onNavigateBack = {},
         onBoarding = {},
@@ -218,6 +229,7 @@ fun AllBookingsScreenPreview() {
         selectedStatus = selectedStatus.value,
         onStatusSelect = { selectedStatus.value = it },
         filteredBookings = filteredBookings,
-        isLoading = false
+        isLoading = false,
+        isOnline = true
     )
 }

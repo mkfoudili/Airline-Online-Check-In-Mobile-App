@@ -25,6 +25,8 @@ import com.example.domain.model.Booking
 
 @Composable
 fun PassengerCard(booking: Booking, modifier: Modifier = Modifier, infoText : String) {
+    val passenger = booking.passengers.firstOrNull()
+
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -55,7 +57,10 @@ fun PassengerCard(booking: Booking, modifier: Modifier = Modifier, infoText : St
 
         Column {
             Text(
-                text = booking.passengers[0].firstName + ' ' + booking.passengers[0].lastName,
+                text = if (passenger != null)
+                    "${passenger.firstName} ${passenger.lastName}"
+                else
+                    "—",
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Bold,
                 color = DarkText

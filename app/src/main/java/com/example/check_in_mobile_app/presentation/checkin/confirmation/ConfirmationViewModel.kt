@@ -35,11 +35,6 @@ class ConfirmationViewModel @Inject constructor(
             _uiState.update { it.copy(isGenerating = true, errorMessage = null) }
             try {
                 withContext(Dispatchers.IO) {
-                    // Avancer la session au dernier step requis
-                    checkInRepository.advanceSessionStep(
-                        passengerId = passengerId,
-                        step        = "SPECIAL_REQUESTS"
-                    )
                     // Générer le boarding pass
                     boardingPassRepository.generateAndSyncFromServer(passengerId)
                 }.let { boardingPass ->
