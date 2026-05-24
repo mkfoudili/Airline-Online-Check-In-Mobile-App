@@ -6,6 +6,7 @@
     <string name="all_bookings">كل الحجوزات</string>
     <string name="all_flights">كل الرحلات</string>
     <string name="upcoming_flights">الرحلات القادمة</string>
+    <string name="checked_in_flights">الرحلات المسجلة</string>
     <string name="view_all">عرض الكل</string>
     <string name="search_hint">ابحث عن وجهة</string>
     <string name="back">رجوع</string>
