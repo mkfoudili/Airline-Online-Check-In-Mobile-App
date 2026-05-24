@@ -13,5 +13,10 @@ data class BookingDto(
     val checkinDeadline: Date?,
     val createdAt: Date?,
     val flight: FlightDto,
-    val passengers: List<PassengerDto> = emptyList()
+    val passengers: List<PassengerDto> = emptyList(),
+    val checkinSession: CheckinSessionRefDto? = null
+)
+
+data class CheckinSessionRefDto(
+    val passengerId: String
 )

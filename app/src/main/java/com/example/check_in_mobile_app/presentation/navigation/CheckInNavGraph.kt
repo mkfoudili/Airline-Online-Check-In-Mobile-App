@@ -89,7 +89,9 @@ fun CheckInNavGraph(
 
         composable(Destination.Selection.route) {
             val flightId = booking?.flight?.flightId ?: ""
-            val passengerId = booking?.passengers?.firstOrNull()?.passengerId ?: ""
+            val passengerId = sessionState.verifiedPassenger?.passengerId
+                ?: booking?.passengers?.firstOrNull()?.passengerId
+                ?: ""
             
             SeatSelection(
                 flightId = flightId,

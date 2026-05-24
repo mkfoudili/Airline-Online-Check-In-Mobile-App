@@ -1,8 +1,9 @@
 package com.example.check_in_mobile_app.presentation.main.home
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -25,12 +26,14 @@ import androidx.compose.ui.unit.sp
 import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.presentation.components.OfflineBanner
 import com.example.check_in_mobile_app.ui.theme.*
+import com.example.domain.model.Flight
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+
 @Composable
 fun OfflineHomeScreen(
-    onNavigateToBoardingScreen: () -> Unit = {},
+    onNavigateToFlightDetails: (flightId: String) -> Unit = {},
     screenWidth: Dp = LocalConfiguration.current.screenWidthDp.dp,
     uiState: HomeUiState
 ) {
@@ -59,7 +62,8 @@ fun OfflineHomeScreen(
             Icon(
                 painter = painterResource(id = R.drawable.wifi_off2),
                 contentDescription = null,
-                tint = ErrorRed
+                tint = ErrorRed,
+                modifier = Modifier.size(10.dp)
             )
             Spacer(modifier = Modifier.width(4.dp))
             Text(
@@ -85,126 +89,29 @@ fun OfflineHomeScreen(
 
     Spacer(modifier = Modifier.height(24.dp))
 
-    val boardingPass = uiState.cachedBoardingPass
+    // Section titre
+    Text(
+        text = stringResource(R.string.offline_upcoming_flight),
+        fontSize = 16.sp,
+        letterSpacing = 0.7.sp,
+        fontWeight = FontWeight.Bold,
+        color = CoolGray,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis
+    )
 
-    // Section titre + timestamp de sync
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color.White),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = stringResource(R.string.offline_upcoming_flight),
-            fontSize = 16.sp,
-            letterSpacing = 0.7.sp,
-            fontWeight = FontWeight.Bold,
-            color = CoolGray,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.weight(1f)
-        )
-        if (boardingPass != null) {
-            Row(
-                modifier = Modifier.width(150.dp),
-                horizontalArrangement = Arrangement.End,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.sync),
-                    contentDescription = null,
-                    tint = CoolGray
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                val syncTime = if (boardingPass.lastSyncedAt > 0L) {
-                    val elapsedMs = System.currentTimeMillis() - boardingPass.lastSyncedAt
-                    val elapsedMin = (elapsedMs / 60_000).toInt()
-                    when {
-                        elapsedMin < 1  -> stringResource(R.string.offline_synced_just_now)
-                        elapsedMin < 60 -> stringResource(R.string.offline_synced_minutes_ago, elapsedMin)
-                        else -> {
-                            val hours = elapsedMin / 60
-                            stringResource(R.string.offline_synced_hours_ago, hours)
-                        }
-                    }
-                } else {
-                    "--:--"
-                }
-                Text(
-                    text = syncTime,
-                    fontSize = 9.sp,
-                    color = CoolGray,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
-        }
+    Spacer(modifier = Modifier.height(16.dp))
+
+    val now = System.currentTimeMillis()
+    val threeDaysMs = 5 * 24 * 60 * 60 * 1000L
+
+    val upcomingFlights = uiState.cachedFlights.filter { it.departureTime >= now }
+    val pastFlights = uiState.cachedFlights.filter {
+        it.departureTime in (now - threeDaysMs)..(now - 1)
     }
 
-    Spacer(modifier = Modifier.height(24.dp))
-
-    if (boardingPass != null) {
-        // Carte vol depuis le boarding pass en cache
-        CachedFlightCard(boardingPass = boardingPass)
-
-        Spacer(modifier = Modifier.height(30.dp))
-
-        Text(
-            text = stringResource(R.string.offline_available_actions),
-            fontSize = 16.sp,
-            letterSpacing = 0.7.sp,
-            fontWeight = FontWeight.Bold,
-            color = CoolGray
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        BoardingPassButton(onNavigateToBoardingScreen)
-
-        Spacer(modifier = Modifier.height(50.dp))
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-                .drawBehind {
-                    drawRoundRect(
-                        color = NavyBlue,
-                        size = size,
-                        cornerRadius = CornerRadius(12.dp.toPx()),
-                        style = Stroke(
-                            width = 1.dp.toPx(),
-                            pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
-                        )
-                    )
-                }
-                .padding(16.dp, vertical = 10.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.Top
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.info),
-                    contentDescription = null,
-                    tint = CoolGray,
-                    modifier = Modifier.size(18.dp).offset(0.dp, 5.dp)
-                )
-                Spacer(modifier = Modifier.width(12.dp))
-                Text(
-                    text = stringResource(R.string.offline_data_saved_note),
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.Normal,
-                    color = CoolGray,
-                    lineHeight = 19.sp
-                )
-            }
-        }
-    } else {
-        // Aucun boarding pass en cache
+    if (uiState.cachedFlights.isEmpty()) {
+        // Aucun vol en cache
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -220,13 +127,114 @@ fun OfflineHomeScreen(
                 fontWeight = FontWeight.Medium
             )
         }
+    } else {
+        // --- Vols à venir ---
+        if (upcomingFlights.isNotEmpty()) {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                upcomingFlights.forEach { flight ->
+                    CachedFlightCard(
+                        flight = flight,
+                        onViewDetail = { onNavigateToFlightDetails(flight.flightId) }
+                    )
+                }
+            }
+        } else {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(LightGray)
+                    .padding(16.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = stringResource(R.string.offline_no_upcoming_flight),
+                    fontSize = 14.sp,
+                    color = CoolGray,
+                    fontWeight = FontWeight.Medium
+                )
+            }
+        }
+
+        // --- Vols passés ---
+        if (pastFlights.isNotEmpty()) {
+            Spacer(modifier = Modifier.height(24.dp))
+            Text(
+                text = stringResource(R.string.offline_past_flights),
+                fontSize = 16.sp,
+                letterSpacing = 0.7.sp,
+                fontWeight = FontWeight.Bold,
+                color = CoolGray,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                pastFlights.forEach { flight ->
+                    CachedFlightCard(
+                        flight = flight,
+                        onViewDetail = { onNavigateToFlightDetails(flight.flightId) }
+                    )
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Note d'information
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .drawBehind {
+                    drawRoundRect(
+                        color = NavyBlue,
+                        size = size,
+                        cornerRadius = CornerRadius(12.dp.toPx()),
+                        style = Stroke(
+                            width = 1.dp.toPx(),
+                            pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
+                        )
+                    )
+                }
+                .padding(horizontal = 16.dp, vertical = 10.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.Top
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.info),
+                    contentDescription = null,
+                    tint = CoolGray,
+                    modifier = Modifier
+                        .size(18.dp)
+                        .offset(0.dp, 5.dp)
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+                Text(
+                    text = stringResource(R.string.offline_data_saved_note),
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Normal,
+                    color = CoolGray,
+                    lineHeight = 19.sp
+                )
+            }
+        }
     }
 }
 
 @Composable
-private fun CachedFlightCard(boardingPass: com.example.domain.model.BoardingPass) {
+private fun CachedFlightCard(
+    flight: Flight,
+    onViewDetail: () -> Unit
+) {
     val sdf = SimpleDateFormat("dd MMM yyyy  HH:mm", Locale.getDefault())
-    val departureFormatted = boardingPass.departureTime?.let { sdf.format(Date(it)) } ?: "--"
+    val departureFormatted = if (flight.departureTime > 0L)
+        sdf.format(Date(flight.departureTime))
+    else "--"
 
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -243,13 +251,13 @@ private fun CachedFlightCard(boardingPass: com.example.domain.model.BoardingPass
             ) {
                 Column(horizontalAlignment = Alignment.Start) {
                     Text(
-                        text = boardingPass.origin,
+                        text = flight.origin,
                         fontSize = 22.sp,
                         fontWeight = FontWeight.ExtraBold,
                         color = NavyBlue
                     )
                     Text(
-                        text = boardingPass.originCity,
+                        text = flight.originCity,
                         fontSize = 12.sp,
                         color = CoolGray
                     )
@@ -262,13 +270,13 @@ private fun CachedFlightCard(boardingPass: com.example.domain.model.BoardingPass
                 )
                 Column(horizontalAlignment = Alignment.End) {
                     Text(
-                        text = boardingPass.destination,
+                        text = flight.destination,
                         fontSize = 22.sp,
                         fontWeight = FontWeight.ExtraBold,
                         color = NavyBlue
                     )
                     Text(
-                        text = boardingPass.destinationCity,
+                        text = flight.destinationCity,
                         fontSize = 12.sp,
                         color = CoolGray
                     )
@@ -284,10 +292,9 @@ private fun CachedFlightCard(boardingPass: com.example.domain.model.BoardingPass
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                InfoItem(label = "Flight", value = boardingPass.flightNumber)
-                InfoItem(label = "Seat", value = boardingPass.seatNumber ?: "--")
-                InfoItem(label = "Terminal", value = boardingPass.terminal ?: "--")
-                InfoItem(label = "Gate", value = boardingPass.gate ?: "--")
+                FlightInfoItem(label = "Flight", value = flight.flightNumber)
+                FlightInfoItem(label = "Terminal", value = flight.terminal.ifBlank { "--" })
+                FlightInfoItem(label = "Gate", value = flight.gate.ifBlank { "--" })
             }
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -298,71 +305,31 @@ private fun CachedFlightCard(boardingPass: com.example.domain.model.BoardingPass
                 color = CoolGray,
                 modifier = Modifier.align(Alignment.End)
             )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // Bouton voir détail
+            OutlinedButton(
+                onClick = onViewDetail,
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(10.dp),
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = NavyBlue),
+                border = androidx.compose.foundation.BorderStroke(1.dp, NavyBlue)
+            ) {
+                Text(
+                    text = stringResource(R.string.offline_view_flight_details),
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
         }
     }
 }
 
 @Composable
-private fun InfoItem(label: String, value: String) {
+private fun FlightInfoItem(label: String, value: String) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(text = label, fontSize = 11.sp, color = CoolGray)
         Text(text = value, fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = NavyBlue)
-    }
-}
-
-@Composable
-private fun BoardingPassButton(onNavigateToBoardingScreen: () -> Unit) {
-    Button(
-        onClick = onNavigateToBoardingScreen,
-        modifier = Modifier.fillMaxWidth().height(82.dp),
-        shape = RoundedCornerShape(12.dp),
-        border = BorderStroke(1.dp, NavyBlue),
-        colors = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = NavyBlue)
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(
-                modifier = Modifier.width(48.dp).height(48.dp)
-                    .clip(RoundedCornerShape(6.dp)).background(NavyBlue),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.qr_code),
-                    contentDescription = null,
-                    tint = Color.White,
-                    modifier = Modifier.size(28.dp)
-                )
-            }
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.Start,
-                modifier = Modifier.offset((10).dp, 0.dp).weight(1f),
-            ) {
-                Text(
-                    text = stringResource(R.string.offline_view_boarding_pass),
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.ExtraBold,
-                    color = NavyBlue,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Text(
-                    text = stringResource(R.string.offline_accessible_without_connection),
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Normal,
-                    color = CoolGray,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
-            Icon(
-                painter = painterResource(id = R.drawable.chevron_right),
-                contentDescription = null,
-                tint = NavyBlue
-            )
-        }
     }
 }

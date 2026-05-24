@@ -11,6 +11,7 @@
     <string name="view_all">View All</string>
     <string name="search_hint">Search for a destination </string>
     <string name="back">Back</string>
+    <string name="flight_completed">Flight completed</string>
     <!-- Date Picker -->
     <string name="select_date">Select Date</string>
     <string name="ok">OK</string>
@@ -40,6 +41,7 @@
     <string name="schedule_label">Schedule</string>
     <string name="pnr_label">PNR:</string>
     <string name="departure_label">Departure</string>
+    <string name="arrival_label">Arrival</string>
     <string name="checkin_opens_label">Check-In Opens</string>
     <string name="boarding_starts_label">Boarding Starts</string>
     <string name="gate_label">Gate</string>
@@ -127,6 +129,8 @@
     <string name="offline_data_saved_note">Your flight data was saved automatically for offline access. To update information, reconnect to Wi-Fi or Cellular data.</string>
     <string name="offline_view_boarding_pass">View Boarding Pass</string>
     <string name="offline_accessible_without_connection">Accessible without connection</string>
+    <string name="offline_view_flight_details">View Flight Details</string>
+    <string name="offline_checkin_unavailable">Check-in is unavailable without an internet connection.</string>
     <!-- Active Flight Card (Online Home) -->
     <string name="active_now_badge">ACTIVE NOW</string>
     <string name="active_ready_to_fly">Ready to fly?</string>
@@ -155,6 +159,8 @@
     <string name="home_search_error_generic">An error occurred. Please try again.</string>
     <string name="active_flight_upcoming">Your upcoming flight to %1$s.</string>
     <string name="offline_no_cached_flight">No flight data available offline.</string>
+    <string name="offline_no_upcoming_flight">No upcoming flights.</string>
+    <string name="offline_past_flights">PAST FLIGHTS</string>
     <string name="offline_not_synced">Not synced yet</string>
 
     <!-- Connection Error -->

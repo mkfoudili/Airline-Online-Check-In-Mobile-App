@@ -21,7 +21,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.presentation.components.flightdetails.FlightInfoCard
-import com.example.check_in_mobile_app.presentation.components.flightdetails.PassengerCard
 import com.example.check_in_mobile_app.presentation.components.flightdetails.ScheduleTimeline
 import com.example.check_in_mobile_app.ui.theme.*
 import com.example.domain.model.*
@@ -37,19 +36,71 @@ fun FlightDetailsScreen(
 
     when (val state = uiState) {
         is FlightDetailsUiState.Loading -> {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator(color = NavyBlue)
+            // Fond blanc + TopAppBar visible pour éviter le flash gris pendant la navigation
+            Scaffold(
+                containerColor = Color.White,
+                topBar = {
+                    TopAppBar(
+                        title = {},
+                        navigationIcon = {
+                            IconButton(onClick = onBack) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.chevron_left),
+                                    contentDescription = null,
+                                    tint = DarkText
+                                )
+                            }
+                        },
+                        colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
+                    )
+                }
+            ) { innerPadding ->
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color(0xFFF8FAFC))
+                        .padding(innerPadding),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(color = NavyBlue)
+                }
             }
         }
         is FlightDetailsUiState.Error -> {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(text = state.message, color = Color.Red, modifier = Modifier.padding(20.dp))
+            Scaffold(
+                containerColor = Color.White,
+                topBar = {
+                    TopAppBar(
+                        title = {},
+                        navigationIcon = {
+                            IconButton(onClick = onBack) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.chevron_left),
+                                    contentDescription = null,
+                                    tint = DarkText
+                                )
+                            }
+                        },
+                        colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
+                    )
+                }
+            ) { innerPadding ->
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color(0xFFF8FAFC))
+                        .padding(innerPadding),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(text = state.message, color = Color.Red, modifier = Modifier.padding(20.dp))
+                }
             }
         }
         is FlightDetailsUiState.Success -> {
             FlightDetailsScreenContent(
-                booking        = state.booking,
-                onBack         = onBack,
+                booking    = state.booking,
+                isOnline   = state.isOnline,
+                onBack     = onBack,
                 onStartCheckIn = onStartCheckIn
             )
         }
@@ -60,6 +111,7 @@ fun FlightDetailsScreen(
 @Composable
 fun FlightDetailsScreenContent(
     booking: Booking,
+    isOnline: Boolean = true,
     onBack: () -> Unit,
     onStartCheckIn: (passengerId: String, bookingId: String) -> Unit
 ) {
@@ -114,30 +166,51 @@ fun FlightDetailsScreenContent(
                         color      = MediumGray
                     )
                     Text(
-                        text = if (booking.status == CheckInStatus.CHECK_IN_OPEN)
-                            stringResource(R.string.checkin_status_available)
-                        else
-                            booking.status.name,
+                        text = when {
+                            !isOnline -> stringResource(R.string.offline_badge)
+                            booking.status == CheckInStatus.CHECK_IN_OPEN ->
+                                stringResource(R.string.checkin_status_available)
+                            else -> booking.status.name
+                        },
                         fontSize   = 14.sp,
                         fontWeight = FontWeight.Bold,
-                        color      = if (booking.status == CheckInStatus.CHECK_IN_OPEN) ActiveGreen else DarkText
+                        color      = when {
+                            !isOnline -> ErrorRed
+                            booking.status == CheckInStatus.CHECK_IN_OPEN -> ActiveGreen
+                            else -> DarkText
+                        }
                     )
                 }
+
+                // Bannière offline si nécessaire
+                if (!isOnline) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text       = stringResource(R.string.offline_checkin_unavailable),
+                        fontSize   = 12.sp,
+                        color      = MediumGray,
+                        fontWeight = FontWeight.Normal
+                    )
+                }
+
                 Spacer(modifier = Modifier.height(16.dp))
+
                 Button(
-                    // FIX: on transmet maintenant passengerId ET bookingId
                     onClick = {
                         val passengerId = booking.passengers.firstOrNull()?.passengerId ?: ""
                         val bookingId   = booking.bookingId
                         onStartCheckIn(passengerId, bookingId)
                     },
+                    enabled  = isOnline && booking.status == CheckInStatus.CHECK_IN_OPEN,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(52.dp),
                     shape  = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = NavyBlue,
-                        contentColor   = Color.White
+                        containerColor         = NavyBlue,
+                        contentColor           = Color.White,
+                        disabledContainerColor = NavyBlue.copy(alpha = 0.4f),
+                        disabledContentColor   = Color.White.copy(alpha = 0.6f)
                     )
                 ) {
                     Text(
@@ -160,16 +233,6 @@ fun FlightDetailsScreenContent(
         ) {
             Spacer(modifier = Modifier.height(20.dp))
             FlightInfoCard(booking)
-            Spacer(modifier = Modifier.height(24.dp))
-            Text(
-                text       = stringResource(R.string.passenger_label),
-                fontSize   = 18.sp,
-                fontWeight = FontWeight.Bold,
-                color      = DarkText,
-                fontFamily = Poppins
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-            PassengerCard(booking, infoText = "${stringResource(R.string.pnr_label)} ${booking.pnr}")
             Spacer(modifier = Modifier.height(24.dp))
             Text(
                 text       = stringResource(R.string.schedule_label),
@@ -225,6 +288,40 @@ fun FlightDetailsScreenPreview() {
                 status           = "Scheduled"
             )
         ),
+        isOnline       = true,
+        onBack         = {},
+        onStartCheckIn = { _, _ -> }
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun FlightDetailsScreenOfflinePreview() {
+    FlightDetailsScreenContent(
+        booking = Booking(
+            bookingId  = "b1",
+            bookingRef = "BB9XC2",
+            pnr        = "BB9XC2",
+            lastName   = "Fatma",
+            status     = CheckInStatus.CHECK_IN_OPEN,
+            gate       = "G24",
+            passengers = emptyList(),
+            flight = Flight(
+                flightId         = "f1",
+                flightNumber     = "AH 1042",
+                origin           = "ALG",
+                originCity       = "Algiers",
+                destination      = "CDG",
+                destinationCity  = "Paris",
+                departureTime    = System.currentTimeMillis() + 86_400_000L,
+                arrivalTime      = System.currentTimeMillis() + 90_000_000L,
+                checkInOpensTime = "06:15",
+                boardingTime     = "07:50",
+                aircraftType     = "Boeing 737",
+                status           = "Scheduled"
+            )
+        ),
+        isOnline       = false,
         onBack         = {},
         onStartCheckIn = { _, _ -> }
     )

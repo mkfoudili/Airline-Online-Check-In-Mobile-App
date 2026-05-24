@@ -14,6 +14,9 @@ interface BoardingPassRepository {
     /** Returns all locally cached boarding passes. */
     fun getAllBoardingPasses(): Flow<List<BoardingPass>>
 
+    /** Returns all boarding passes cached for a specific user. */
+    suspend fun getBoardingPassesByUid(uid: String): List<BoardingPass>
+
     /** Saves (or updates) a boarding pass in the local cache. */
     suspend fun saveBoardingPassLocally(boardingPass: BoardingPass)
 
@@ -21,7 +24,7 @@ interface BoardingPassRepository {
 
     /**
      * Synchronise les cartes d'embarquement depuis le serveur vers le cache local.
-     * Appelé par SyncWorker quand les contraintes réseau sont satisfaites.
+     * Le uid est nécessaire pour taguer chaque boarding pass avec son propriétaire.
      */
-    suspend fun refreshBoardingPassesFromRemote(): Result<Unit>
+    suspend fun refreshBoardingPassesFromRemote(uid: String = ""): Result<Unit>
 }

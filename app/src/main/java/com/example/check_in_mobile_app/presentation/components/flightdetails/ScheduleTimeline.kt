@@ -39,15 +39,27 @@ fun ScheduleTimeline(booking: Booking, modifier: Modifier = Modifier) {
             iconRes = R.drawable.clock
         )
         TimelineSpacing()
-        
+
         val sdfTime = java.text.SimpleDateFormat("HH:mm", java.util.Locale.getDefault())
         val depTimeStr = sdfTime.format(java.util.Date(booking.flight.departureTime))
-        
+
         TimelineItem(
             time = depTimeStr,
             title = stringResource(R.string.departure_label),
             subtitle = "${booking.flight.originCity} (${booking.flight.origin})",
             iconRes = R.drawable.plane_up
+        )
+        TimelineSpacing()
+
+        val arrTimeStr = if (booking.flight.arrivalTime > 0L)
+            sdfTime.format(java.util.Date(booking.flight.arrivalTime))
+        else "--"
+
+        TimelineItem(
+            time = arrTimeStr,
+            title = stringResource(R.string.arrival_label),
+            subtitle = "${booking.flight.destinationCity} (${booking.flight.destination})",
+            iconRes = R.drawable.plane2
         )
     }
 }

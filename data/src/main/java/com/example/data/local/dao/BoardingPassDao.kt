@@ -23,6 +23,9 @@ interface BoardingPassDao {
     @Query("SELECT * FROM boarding_passes")
     fun getAllBoardingPasses(): Flow<List<BoardingPassEntity>>
 
+    @Query("SELECT * FROM boarding_passes WHERE uid = :uid")
+    suspend fun getBoardingPassesByUid(uid: String): List<BoardingPassEntity>
+
     @Query("SELECT * FROM boarding_passes WHERE passId = :passId")
     suspend fun getBoardingPassById(passId: String): BoardingPassEntity?
 

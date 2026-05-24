@@ -28,6 +28,10 @@ class FlightRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getAllCachedFlights(): List<Flight> {
+        return flightDao.getAllFlights().map { it.toDomain() }
+    }
+
     override suspend fun refreshFlightsFromRemote(uid: String): Result<Unit> {
         return try {
             val bookingDtos = bookingDataSource.getBookingsByUid(uid)

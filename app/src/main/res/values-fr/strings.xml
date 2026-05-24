@@ -9,6 +9,7 @@
     <string name="view_all">Voir Tout</string>
     <string name="search_hint">Rechercher une destination</string>
     <string name="back">Retour</string>
+    <string name="flight_completed">Vol terminé</string>
     <!-- Date Picker -->
     <string name="select_date">Sélectionner une date</string>
     <string name="ok">OK</string>
@@ -38,6 +39,7 @@
     <string name="schedule_label">Horaire</string>
     <string name="pnr_label">PNR :</string>
     <string name="departure_label">Départ</string>
+    <string name="arrival_label">Arrivée</string>
     <string name="checkin_opens_label">Enregistrement ouvert</string>
     <string name="boarding_starts_label">Début de l\'embarquement</string>
     <string name="gate_label">Porte</string>
@@ -125,6 +127,8 @@
     <string name="offline_data_saved_note">Vos données de vol ont été enregistrées automatiquement pour un accès hors ligne. Pour mettre à jour, reconnectez-vous au Wi-Fi ou aux données mobiles.</string>
     <string name="offline_view_boarding_pass">Carte d\'embarquement</string>
     <string name="offline_accessible_without_connection">Accessible sans connexion</string>
+    <string name="offline_view_flight_details">Voir les détails du vol</string>
+    <string name="offline_checkin_unavailable">L\'enregistrement n\'est pas disponible sans connexion internet.</string>
     <!-- Active Flight Card (Online Home) -->
     <string name="active_now_badge">EN COURS</string>
     <string name="active_ready_to_fly">Prêt à décoller ?</string>
@@ -153,6 +157,8 @@
     <string name="home_search_error_generic">Une erreur est survenue. Veuillez réessayer.</string>
     <string name="active_flight_upcoming">Votre prochain vol vers %1$s.</string>
     <string name="offline_no_cached_flight">Aucune donnée de vol disponible hors ligne.</string>
+    <string name="offline_no_upcoming_flight">Aucun vol à venir.</string>
+    <string name="offline_past_flights">VOLS PASSÉS</string>
     <string name="offline_not_synced">Pas encore synchronisé</string>
 
     <!-- Connection Error -->

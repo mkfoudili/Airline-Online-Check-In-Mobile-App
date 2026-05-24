@@ -9,11 +9,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.check_in_mobile_app.presentation.auth.AuthViewModel
 import com.example.check_in_mobile_app.presentation.checkin.boarding.BoardingScreen
 import com.example.check_in_mobile_app.presentation.components.TabItem
 import com.example.check_in_mobile_app.presentation.main.booking.AllBookingsScreen
@@ -26,6 +28,7 @@ import com.example.check_in_mobile_app.presentation.main.profile.ProfileScreen
 @Composable
 fun MainNavGraph(
     onCheckInClick: (bookingRef: String, passengerId: String, bookingId: String) -> Unit,
+    onLogout: () -> Unit,                          // ← nouveau paramètre
     navigateToHome: State<Boolean> = mutableStateOf(false),
     onNavigateToHomeHandled: () -> Unit = {}
 ) {
@@ -73,9 +76,9 @@ fun MainNavGraph(
         composable(Destination.Home.route) {
             HomeScreen(
                 onTabSelected              = navigateToTab,
-                onNavigateToBoardingScreen = { navController.navigate(Destination.Boarding.route) },
+                onNavigateToBoardingScreen = { navController.navigate(Destination.Boarding.createRoute("")) },
                 onProfileClick             = { navigateToTab(TabItem.PROFILE) },
-                onCheckInClick             = { /* resolved by HomeViewModel */ },
+                onCheckInClick             = { },
                 onNavigateToFlightDetails  = navigateToFlightDetails
             )
         }
@@ -87,7 +90,9 @@ fun MainNavGraph(
                 onCheckInClick = { bookingRef ->
                     navController.navigate(Destination.FlightDetails.createRoute(bookingRef))
                 },
-                onBoarding     = { navController.navigate(Destination.Boarding.route) }
+                onBoarding = { passengerId ->
+                    navController.navigate(Destination.Boarding.createRoute(passengerId))
+                }
             )
         }
 
@@ -118,19 +123,24 @@ fun MainNavGraph(
             val bookingRef = backStackEntry.arguments?.getString("bookingRef") ?: ""
             FlightDetailsScreen(
                 onBack         = { navController.popBackStack() },
-                // FIX: on reçoit maintenant passengerId ET bookingId, et on les transmet tous les deux
                 onStartCheckIn = { passengerId, bookingId ->
                     onCheckInClick(bookingRef, passengerId, bookingId)
                 }
             )
         }
 
-        composable(Destination.Boarding.route) {
+        composable(
+            route = Destination.Boarding.route,
+            arguments = listOf(navArgument("passengerId") { type = NavType.StringType })
+        ) {
             BoardingScreen(onBack = { navController.popBackStack() })
         }
 
         composable(Destination.Profile.route) {
-            ProfileScreen(onTabSelected = navigateToTab, onLogout = { })
+            ProfileScreen(
+                onTabSelected = navigateToTab,
+                onLogout      = onLogout          // ← branché ici
+            )
         }
 
         composable(Destination.Notifications.route) {
