@@ -61,7 +61,9 @@ class AllBookingsViewModel @Inject constructor(
                                booking.flight.destinationCity.contains(query, ignoreCase = true) ||                            
                                booking.flight.destination.contains(query, ignoreCase = true)
             
-            val sdfDate = java.text.SimpleDateFormat("dd MMM", java.util.Locale.getDefault())
+            val sdfDate = java.text.SimpleDateFormat("MMM dd, yyyy", java.util.Locale.getDefault()).apply {
+                timeZone = java.util.TimeZone.getTimeZone("UTC")
+            }
             val depDateStr = sdfDate.format(java.util.Date(booking.flight.departureTime))
             val matchesDate = date == null || depDateStr == date
             

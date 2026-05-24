@@ -34,6 +34,7 @@ import java.util.Locale
 
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.Alignment
+import java.util.TimeZone
 
 @Composable
 fun AllBookingsScreen(
@@ -198,7 +199,9 @@ fun AllBookingsScreenPreview() {
                            booking.flight.destinationCity.contains(searchQuery.value, ignoreCase = true) ||                            
                            booking.flight.destination.contains(searchQuery.value, ignoreCase = true)
         
-        val sdfDate = SimpleDateFormat("dd MMM", Locale.getDefault())
+        val sdfDate = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).apply {
+            timeZone = TimeZone.getTimeZone("UTC")
+        }
         val depDateStr = sdfDate.format(Date(booking.flight.departureTime))
         val matchesDate = selectedDate.value == null || depDateStr == selectedDate.value
         
