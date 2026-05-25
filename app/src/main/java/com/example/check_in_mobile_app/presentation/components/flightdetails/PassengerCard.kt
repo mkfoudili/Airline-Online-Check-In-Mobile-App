@@ -19,10 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.check_in_mobile_app.R
-import com.example.check_in_mobile_app.ui.theme.BorderLight
-import com.example.check_in_mobile_app.ui.theme.DarkText
-import com.example.check_in_mobile_app.ui.theme.MediumGray
-import com.example.check_in_mobile_app.ui.theme.SurfaceGray
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import com.example.domain.model.Booking
 
 @Composable
@@ -65,13 +62,13 @@ fun PassengerCard(booking: Booking, modifier: Modifier = Modifier, infoText : St
                     "—",
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Bold,
-                color = DarkText
+                color = LocalAppColors.current.textPrimary
             )
             Spacer(modifier = Modifier.height(2.dp))
             Text(
                 text = infoText/*"PNR: ${booking.pnr}"*/,
                 fontSize = 12.sp,
-                color = MediumGray,
+                color = LocalAppColors.current.textSecondary,
                 fontWeight = FontWeight.Medium
             )
         }

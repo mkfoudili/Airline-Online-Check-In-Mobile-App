@@ -34,11 +34,8 @@ import androidx.compose.ui.unit.sp
 import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.ui.theme.ActiveGreen
 import com.example.check_in_mobile_app.ui.theme.BorderLight
-import com.example.check_in_mobile_app.ui.theme.CheckedInText
-import com.example.check_in_mobile_app.ui.theme.DarkText
 import com.example.check_in_mobile_app.ui.theme.ErrorRed
-import com.example.check_in_mobile_app.ui.theme.Slate500
-import com.example.check_in_mobile_app.ui.theme.SurfaceGray
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 
 fun Modifier.dashedBorder(
     color: Color,
@@ -118,7 +115,7 @@ fun PassportPreviewCard(
                 Icon(
                     painter = painterResource(id = R.drawable.checking_review_passport),
                     contentDescription = "Passport",
-                    tint = Slate500,
+                    tint = LocalAppColors.current.textSecondary,
                     modifier = Modifier.size(28.dp)
                 )
             }
@@ -130,7 +127,7 @@ fun PassportPreviewCard(
                 text = stringResource(R.string.passport_preview_title),
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
-                color = if (isPending) DarkText else CheckedInText
+                color = if (isPending) LocalAppColors.current.textPrimary else LocalAppColors.current.checkedInText
             )
             Spacer(modifier = Modifier.height(3.dp))
             Text(
@@ -156,7 +153,7 @@ fun PassportPreviewCard(
                     text = if (isPending) stringResource(R.string.status_pending) else stringResource(R.string.status_ready),
                     fontSize = 12.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = if (isPending) Slate500 else CheckedInText
+                    color = if (isPending) LocalAppColors.current.textSecondary else LocalAppColors.current.checkedInText
                 )
             }
 

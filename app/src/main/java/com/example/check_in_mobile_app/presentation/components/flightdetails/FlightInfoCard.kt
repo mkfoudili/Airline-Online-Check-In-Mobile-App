@@ -23,10 +23,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.stringResource
 import com.example.check_in_mobile_app.R
-import com.example.check_in_mobile_app.ui.theme.BorderLight
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import com.example.check_in_mobile_app.ui.theme.NavyBlue
-import com.example.check_in_mobile_app.ui.theme.SubtleText
-import com.example.check_in_mobile_app.ui.theme.SurfaceGray
 import com.example.domain.model.Booking
 
 @Composable
@@ -92,13 +90,13 @@ fun FlightInfoCard(booking: Booking, modifier: Modifier = Modifier) {
                         text = booking.flight.origin,
                         fontSize = 32.sp,
                         fontWeight = FontWeight.Bold,
-                        color = NavyBlue,
+                        color = LocalAppColors.current.textAccent,
                         letterSpacing = (-1).sp
                     )
                     Text(
                         text = booking.flight.originCity,
                         fontSize = 11.sp,
-                        color = SubtleText,
+                        color = LocalAppColors.current.textSubtle,
                         letterSpacing = 0.5.sp
                     )
                 }
@@ -124,7 +122,7 @@ fun FlightInfoCard(booking: Booking, modifier: Modifier = Modifier) {
                         Icon(
                             painter = painterResource(id = R.drawable.plane_up),
                             contentDescription = "Plane icon",
-                            tint = NavyBlue,
+                            tint = LocalAppColors.current.textAccent,
                             modifier = Modifier.padding(horizontal = 8.dp).size(20.dp)
                         )
                         Canvas(modifier = Modifier.weight(1f).height(8.dp)) {
@@ -141,7 +139,7 @@ fun FlightInfoCard(booking: Booking, modifier: Modifier = Modifier) {
                     Text(
                         text = durationText,
                         fontSize = 10.sp,
-                        color = SubtleText,
+                        color = LocalAppColors.current.textSubtle,
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 0.5.sp
                     )
@@ -156,14 +154,14 @@ fun FlightInfoCard(booking: Booking, modifier: Modifier = Modifier) {
                         text = booking.flight.destination,
                         fontSize = 32.sp,
                         fontWeight = FontWeight.Bold,
-                        color = NavyBlue,
+                        color = LocalAppColors.current.textAccent,
                         letterSpacing = (-1).sp,
                         textAlign = TextAlign.End
                     )
                     Text(
                         text = booking.flight.destinationCity,
                         fontSize = 11.sp,
-                        color = SubtleText,
+                        color = LocalAppColors.current.textSubtle,
                         letterSpacing = 0.5.sp,
                         textAlign = TextAlign.End
                     )
@@ -205,7 +203,7 @@ fun FlightInfoCard(booking: Booking, modifier: Modifier = Modifier) {
                         Icon(
                             painter = painterResource(id = R.drawable.calendar),
                             contentDescription = "Date",
-                            tint = NavyBlue,
+                            tint = LocalAppColors.current.textAccent,
                             modifier = Modifier.size(16.dp)
                         )
                     }
@@ -214,7 +212,7 @@ fun FlightInfoCard(booking: Booking, modifier: Modifier = Modifier) {
                         Text(
                             text = stringResource(R.string.date_label),
                             fontSize = 10.sp,
-                            color = SubtleText,
+                            color = LocalAppColors.current.textSubtle,
                             fontWeight = FontWeight.Bold,
                             letterSpacing = 0.5.sp
                         )
@@ -222,7 +220,7 @@ fun FlightInfoCard(booking: Booking, modifier: Modifier = Modifier) {
                             text = departureDateText,
                             fontSize = 13.sp,
                             fontWeight = FontWeight.Bold,
-                            color = NavyBlue
+                            color = LocalAppColors.current.textAccent
                         )
                     }
                 }
@@ -239,7 +237,7 @@ fun FlightInfoCard(booking: Booking, modifier: Modifier = Modifier) {
                         Icon(
                             painter = painterResource(id = R.drawable.clock),
                             contentDescription = "Time",
-                            tint = NavyBlue,
+                            tint = LocalAppColors.current.textAccent,
                             modifier = Modifier.size(16.dp)
                         )
                     }
@@ -248,7 +246,7 @@ fun FlightInfoCard(booking: Booking, modifier: Modifier = Modifier) {
                         Text(
                             text = stringResource(R.string.boarding_label),
                             fontSize = 10.sp,
-                            color = SubtleText,
+                            color = LocalAppColors.current.textSubtle,
                             fontWeight = FontWeight.Bold,
                             letterSpacing = 0.5.sp
                         )
@@ -256,7 +254,7 @@ fun FlightInfoCard(booking: Booking, modifier: Modifier = Modifier) {
                             text = booking.flight.boardingTime,
                             fontSize = 13.sp,
                             fontWeight = FontWeight.Bold,
-                            color = NavyBlue
+                            color = LocalAppColors.current.textAccent
                         )
                     }
                 }

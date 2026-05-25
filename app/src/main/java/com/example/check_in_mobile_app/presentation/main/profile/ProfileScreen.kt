@@ -135,7 +135,7 @@ private fun ProfileBaseScreen(
                             text = title,
                             fontFamily = Poppins,
                             fontSize = titleFontSize.sp,
-                            color = NavyBlue,
+                            color = LocalAppColors.current.textAccent,
                             fontWeight = FontWeight.Bold
                         )
                     },
@@ -145,7 +145,7 @@ private fun ProfileBaseScreen(
                                 Icon(
                                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                     contentDescription = stringResource(R.string.common_back),
-                                    tint = NavyBlue
+                                    tint = LocalAppColors.current.textAccent
                                 )
                             }
                         }
@@ -246,7 +246,7 @@ fun ProfileScreenContent(
                 text = uiState.name,
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
-                color = NavyBlue,
+                color = LocalAppColors.current.textAccent,
                 fontFamily = Poppins,
                 letterSpacing = (-0.5).sp
             )
@@ -255,7 +255,7 @@ fun ProfileScreenContent(
                 imageVector = Icons.Default.Edit,
                 contentDescription = stringResource(R.string.profile_edit_name_desc),
                 modifier = Modifier.size(20.dp),
-                tint = NavyBlue.copy(alpha = 0.5f)
+                tint = LocalAppColors.current.textAccent.copy(alpha = 0.5f)
             )
         }
 
@@ -301,7 +301,7 @@ fun ProfileScreenContent(
                     imageVector = Icons.AutoMirrored.Filled.ExitToApp,
                     contentDescription = stringResource(R.string.profile_logout),
                     modifier = Modifier.size(18.dp),
-                    tint = NavyBlue
+                    tint = LocalAppColors.current.textAccent
                 )
             }
         )
@@ -337,7 +337,7 @@ fun EditProfileScreen(
                         imageVector = Icons.Default.Close,
                         contentDescription = null,
                         modifier = Modifier.size(18.dp),
-                        tint = NavyBlue
+                        tint = LocalAppColors.current.textAccent
                     )
                 }
             )
@@ -374,7 +374,7 @@ fun EditProfileScreen(
             text = stringResource(R.string.profile_change_photo_label),
             style = MaterialTheme.typography.labelLarge.copy(
                 fontWeight = FontWeight.SemiBold,
-                color = NavyBlue
+                color = LocalAppColors.current.textAccent
             ),
             modifier = Modifier.clickable { onEvent(ProfileEvent.OnChangePhotoClicked) }
         )
@@ -391,7 +391,7 @@ fun EditProfileScreen(
                     imageVector = Icons.Default.Person,
                     contentDescription = null,
                     modifier = Modifier.size(20.dp),
-                    tint = DarkText.copy(alpha = 0.6f)
+                    tint = LocalAppColors.current.textPrimary.copy(alpha = 0.6f)
                 )
             }
         )
@@ -409,7 +409,7 @@ fun EditProfileScreen(
                     imageVector = Icons.Default.Email,
                     contentDescription = null,
                     modifier = Modifier.size(20.dp),
-                    tint = DarkText.copy(alpha = 0.6f)
+                    tint = LocalAppColors.current.textPrimary.copy(alpha = 0.6f)
                 )
             }
         )
@@ -427,7 +427,7 @@ fun EditProfileScreen(
                     imageVector = Icons.Default.Phone,
                     contentDescription = null,
                     modifier = Modifier.size(20.dp),
-                    tint = DarkText.copy(alpha = 0.6f)
+                    tint = LocalAppColors.current.textPrimary.copy(alpha = 0.6f)
                 )
             }
         )
@@ -473,7 +473,7 @@ fun EditProfileScreen(
                         imageVector = Icons.Default.Lock,
                         contentDescription = null,
                         modifier = Modifier.size(20.dp),
-                        tint = NavyBlue
+                        tint = LocalAppColors.current.textAccent
                     )
                 }
 
@@ -484,13 +484,13 @@ fun EditProfileScreen(
                         text = stringResource(R.string.common_change_password),
                         style = MaterialTheme.typography.titleSmall.copy(
                             fontWeight = FontWeight.Bold,
-                            color = NavyBlue
+                            color = LocalAppColors.current.textAccent
                         )
                     )
                     Text(
                         text = stringResource(R.string.profile_keep_account_secure),
                         style = MaterialTheme.typography.bodySmall.copy(
-                            color = SubtleText
+                            color = LocalAppColors.current.textSubtle
                         )
                     )
                 }
@@ -498,7 +498,7 @@ fun EditProfileScreen(
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                     contentDescription = null,
-                    tint = SubtleText
+                    tint = LocalAppColors.current.textSubtle
                 )
             }
         }
@@ -528,7 +528,7 @@ fun LanguageDropdownField(
             text = stringResource(R.string.profile_language_label),
             fontSize = 11.sp,
             fontWeight = FontWeight.SemiBold,
-            color = SubtleText,
+            color = LocalAppColors.current.textSubtle,
             letterSpacing = 0.8.sp
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -547,15 +547,15 @@ fun LanguageDropdownField(
                         imageVector = Icons.Default.Language,
                         contentDescription = null,
                         modifier = Modifier.size(20.dp),
-                        tint = DarkText.copy(alpha = 0.6f)
+                        tint = LocalAppColors.current.textPrimary.copy(alpha = 0.6f)
                     )
                 },
                 shape = RoundedCornerShape(12.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = MaterialTheme.colorScheme.primary,
                     unfocusedBorderColor = BorderLight,
-                    focusedTextColor = DarkText,
-                    unfocusedTextColor = DarkText,
+                    focusedTextColor = LocalAppColors.current.textPrimary,
+                    unfocusedTextColor = LocalAppColors.current.textPrimary,
                     cursorColor = MaterialTheme.colorScheme.primary,
                     focusedContainerColor = MaterialTheme.colorScheme.surface,
                     unfocusedContainerColor = MaterialTheme.colorScheme.surface
@@ -576,7 +576,7 @@ fun LanguageDropdownField(
                             Text(
                                 text = displayName,
                                 style = MaterialTheme.typography.bodyLarge,
-                                color = DarkText
+                                color = LocalAppColors.current.textPrimary
                             )
                         },
                         onClick = {
@@ -711,7 +711,7 @@ fun PasswordInputField(
                 imageVector = Icons.Default.Lock,
                 contentDescription = null,
                 modifier = Modifier.size(20.dp),
-                tint = DarkText.copy(alpha = 0.6f)
+                tint = LocalAppColors.current.textPrimary.copy(alpha = 0.6f)
             )
         },
         trailingIcon = {
@@ -719,7 +719,7 @@ fun PasswordInputField(
                 Icon(
                     imageVector = if (isVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
                     contentDescription = if (isVisible) stringResource(R.string.common_hide_password) else stringResource(R.string.common_show_password),
-                    tint = DarkText.copy(alpha = 0.6f),
+                    tint = LocalAppColors.current.textPrimary.copy(alpha = 0.6f),
                     modifier = Modifier.size(20.dp)
                 )
             }

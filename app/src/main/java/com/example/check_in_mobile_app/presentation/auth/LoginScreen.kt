@@ -31,6 +31,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.presentation.components.authforms.LoginForm
 import com.example.check_in_mobile_app.ui.theme.*
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import com.example.data.remote.GOOGLE_WEB_CLIENT_ID
 import kotlinx.coroutines.launch
 
@@ -61,7 +62,7 @@ fun LoginScreen(
                         text = androidx.compose.ui.res.stringResource(R.string.auth_sign_in),
                         fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = NavyBlue
+                        color = LocalAppColors.current.textAccent
                     )
                 },
                 navigationIcon = {
@@ -69,7 +70,7 @@ fun LoginScreen(
                         Icon(
                             painter = painterResource(id = R.drawable.chevron_left),
                             contentDescription = "Back",
-                            tint = NavyBlue,
+                            tint = LocalAppColors.current.textAccent,
                             modifier = Modifier.size(20.dp)
                         )
                     }
@@ -114,7 +115,7 @@ fun LoginScreen(
                 text = androidx.compose.ui.res.stringResource(R.string.auth_welcome_back),
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
-                color = DarkText111
+                color = LocalAppColors.current.textPrimary
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -123,7 +124,7 @@ fun LoginScreen(
             Text(
                 text = androidx.compose.ui.res.stringResource(R.string.auth_login_subtitle),
                 fontSize = 14.sp,
-                color = MediumGray,
+                color = LocalAppColors.current.textSecondary,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(horizontal = 32.dp)
             )

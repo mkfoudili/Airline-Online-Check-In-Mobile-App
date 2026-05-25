@@ -32,7 +32,7 @@ fun BaggageRulesCard(
             Icon(
                 imageVector = Icons.Outlined.Info,
                 contentDescription = null,
-                tint = NavyBlue,
+                tint = LocalAppColors.current.textAccent,
                 modifier = Modifier.size(20.dp)
             )
             Spacer(modifier = Modifier.width(8.dp))
@@ -40,7 +40,7 @@ fun BaggageRulesCard(
                 text = "BAGGAGE RULES & LIMITS",
                 style = Typography.bodyLarge.copy(
                     fontWeight = FontWeight.Bold,
-                    color = NavyBlue,
+                    color = LocalAppColors.current.textAccent,
                     fontSize = 14.sp,
                     letterSpacing = 0.5.sp
                 )
@@ -58,11 +58,11 @@ fun BaggageRulesCard(
 @Composable
 private fun RuleItem(text: String, highlight: String) {
     Row(modifier = Modifier.fillMaxWidth()) {
-        Text(text = "• ", color = DarkText, fontSize = 14.sp)
+        Text(text = "• ", color = LocalAppColors.current.textPrimary, fontSize = 14.sp)
         Text(
             text = text,
             style = Typography.bodyLarge.copy(
-                color = Slate500,
+                color = LocalAppColors.current.textSecondary,
                 fontSize = 14.sp,
                 lineHeight = 20.sp
             )

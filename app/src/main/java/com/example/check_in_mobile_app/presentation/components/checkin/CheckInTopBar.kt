@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.ui.theme.BorderLight
-import com.example.check_in_mobile_app.ui.theme.NavyBlue
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,7 +35,7 @@ fun CheckInTopBar(
                     text = title,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = NavyBlue
+                    color = LocalAppColors.current.textAccent
                 )
             },
             navigationIcon = {
@@ -43,7 +43,7 @@ fun CheckInTopBar(
                     Icon(
                         painter = painterResource(id = R.drawable.chevron_left),
                         contentDescription = stringResource(R.string.back),
-                        tint = NavyBlue
+                        tint = LocalAppColors.current.textAccent
                     )
                 }
             },
@@ -64,7 +64,7 @@ fun CheckInTopBar(
                         .height(3.dp)
                         .clip(RoundedCornerShape(50))
                         .background(
-                            if (index < currentStep) NavyBlue
+                            if (index < currentStep) LocalAppColors.current.textAccent
                             else BorderLight
                         )
                 )

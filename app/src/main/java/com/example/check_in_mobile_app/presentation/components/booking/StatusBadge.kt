@@ -14,12 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.check_in_mobile_app.ui.theme.CheckedInBg
 import com.example.check_in_mobile_app.ui.theme.LocalAppColors
-import com.example.check_in_mobile_app.ui.theme.CheckedInText
-import com.example.check_in_mobile_app.ui.theme.LightGray
-import com.example.check_in_mobile_app.ui.theme.MediumGray
-import com.example.check_in_mobile_app.ui.theme.NavyBlue
 import com.example.domain.model.CheckInStatus
 
 import androidx.compose.ui.res.stringResource
@@ -31,7 +26,7 @@ fun StatusBadge(status: CheckInStatus) {
         CheckInStatus.CHECKED_IN    -> Triple(LocalAppColors.current.checkedInBg, LocalAppColors.current.checkedInText, R.string.status_checked_in)
         CheckInStatus.CHECK_IN_OPEN -> Triple(MaterialTheme.colorScheme.primary.copy(alpha = 0.12f), MaterialTheme.colorScheme.primary, R.string.status_check_in_open)
         CheckInStatus.CONFIRMED     -> Triple(LocalAppColors.current.chipUnselected, MaterialTheme.colorScheme.primary, R.string.status_confirmed)
-        CheckInStatus.PASSED        -> Triple(LocalAppColors.current.chipUnselected, MediumGray,    R.string.status_passed)
+        CheckInStatus.PASSED        -> Triple(LocalAppColors.current.chipUnselected, LocalAppColors.current.textSecondary, R.string.status_passed)
     }
 
     Box(

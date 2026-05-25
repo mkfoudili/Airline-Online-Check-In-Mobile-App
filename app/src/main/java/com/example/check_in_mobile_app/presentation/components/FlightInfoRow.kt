@@ -11,15 +11,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.example.check_in_mobile_app.ui.theme.DarkText
-import com.example.check_in_mobile_app.ui.theme.SubtleText
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 
 @Composable
 fun FlightInfoRow(
     label: String,
     value: String,
     modifier: Modifier = Modifier,
-    valueColor: Color = DarkText
+    valueColor: Color? = null
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -30,14 +29,14 @@ fun FlightInfoRow(
             text = label,
             fontSize = 11.sp,
             fontWeight = FontWeight.SemiBold,
-            color = SubtleText,
+            color = LocalAppColors.current.textSubtle,
             letterSpacing = 0.6.sp
         )
         Text(
             text = value,
             fontSize = 14.sp,
             fontWeight = FontWeight.SemiBold,
-            color = valueColor
+            color = valueColor ?: LocalAppColors.current.textPrimary
         )
     }
 }
@@ -54,14 +53,14 @@ fun FlightInfoCell(
             text = label,
             fontSize = 10.sp,
             fontWeight = FontWeight.Medium,
-            color = SubtleText,
+            color = LocalAppColors.current.textSubtle,
             letterSpacing = 0.8.sp
         )
         Text(
             text = value,
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
-            color = DarkText,
+            color = LocalAppColors.current.textPrimary,
             letterSpacing = (-0.3).sp
         )
     }

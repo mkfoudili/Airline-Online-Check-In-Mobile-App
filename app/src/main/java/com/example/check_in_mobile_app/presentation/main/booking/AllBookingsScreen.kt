@@ -26,7 +26,7 @@ import com.example.check_in_mobile_app.presentation.components.booking.BookingCa
 import com.example.check_in_mobile_app.presentation.components.booking.DateField
 import com.example.check_in_mobile_app.presentation.components.booking.FilterChipsRow
 import com.example.check_in_mobile_app.presentation.components.booking.SearchField
-import com.example.check_in_mobile_app.ui.theme.NavyBlue
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import com.example.domain.model.CheckInStatus
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -93,7 +93,7 @@ fun AllBookingsScreenContent(
                         text = stringResource(R.string.all_bookings),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
-                        color = NavyBlue
+                        color = LocalAppColors.current.textAccent
                     )
                 },
                 navigationIcon = {
@@ -101,7 +101,7 @@ fun AllBookingsScreenContent(
                         Icon(
                             painter = painterResource(id = R.drawable.chevron_left),
                             contentDescription = stringResource(R.string.back),
-                            tint = NavyBlue
+                            tint = LocalAppColors.current.textAccent
                         )
                     }
                 },
@@ -164,7 +164,7 @@ fun AllBookingsScreenContent(
                 text = stringResource(R.string.all_flights),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                color = NavyBlue,
+                color = LocalAppColors.current.textAccent,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
 
@@ -177,7 +177,7 @@ fun AllBookingsScreenContent(
                         .weight(1f),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(color = NavyBlue)
+                    CircularProgressIndicator(color = LocalAppColors.current.textAccent)
                 }
             } else {
                 // Bookings List

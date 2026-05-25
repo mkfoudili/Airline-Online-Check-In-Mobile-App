@@ -36,12 +36,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.presentation.checkin.boarding.BoardingUiState
-import com.example.check_in_mobile_app.ui.theme.BorderColor
-import com.example.check_in_mobile_app.ui.theme.BorderLight
-import com.example.check_in_mobile_app.ui.theme.DarkText
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import com.example.check_in_mobile_app.ui.theme.NavyBlue
 import com.example.check_in_mobile_app.ui.theme.QrBorder
-import com.example.check_in_mobile_app.ui.theme.SubtleText
+import com.example.check_in_mobile_app.ui.theme.SubtitleWhite
 
 @Composable
 fun BoardingPassCard(uiState: BoardingUiState, modifier: Modifier = Modifier) {
@@ -83,7 +81,7 @@ fun BoardingPassCard(uiState: BoardingUiState, modifier: Modifier = Modifier) {
                 Column(Modifier.weight(1f)) {
                     Text(uiState.departureCode, fontSize = 40.sp, fontWeight = FontWeight.Bold,
                         color = NavyBlue, lineHeight = 42.sp, maxLines = 1)
-                    Text(uiState.departureCity.uppercase(), fontSize = 11.sp, color = SubtleText,
+                    Text(uiState.departureCity.uppercase(), fontSize = 11.sp, color = LocalAppColors.current.textSubtle,
                         letterSpacing = 0.5.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 }
                 Column(Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
@@ -102,12 +100,12 @@ fun BoardingPassCard(uiState: BoardingUiState, modifier: Modifier = Modifier) {
                     }
                     Spacer(Modifier.height(4.dp))
                     Text(stringResource(R.string.boarding_duration), fontSize = 11.sp,
-                        color = SubtleText, fontWeight = FontWeight.Bold, maxLines = 1)
+                        color = LocalAppColors.current.textSubtle, fontWeight = FontWeight.Bold, maxLines = 1)
                 }
                 Column(Modifier.weight(1f), horizontalAlignment = Alignment.End) {
                     Text(uiState.arrivalCode, fontSize = 40.sp, fontWeight = FontWeight.Bold,
                         color = NavyBlue, lineHeight = 42.sp, textAlign = TextAlign.End, maxLines = 1)
-                    Text(uiState.arrivalCity.uppercase(), fontSize = 11.sp, color = SubtleText,
+                    Text(uiState.arrivalCity.uppercase(), fontSize = 11.sp, color = LocalAppColors.current.textSubtle,
                         letterSpacing = 0.5.sp, textAlign = TextAlign.End, maxLines = 1,
                         overflow = TextOverflow.Ellipsis)
                 }
@@ -150,16 +148,16 @@ fun BoardingPassCard(uiState: BoardingUiState, modifier: Modifier = Modifier) {
         ) {
             Column(Modifier.weight(1f)) {
                 Text(stringResource(R.string.boarding_passenger_label), fontSize = 12.sp,
-                    color = SubtleText, fontWeight = FontWeight.Bold, letterSpacing = 0.8.sp, maxLines = 1)
+                    color = LocalAppColors.current.textSubtle, fontWeight = FontWeight.Bold, letterSpacing = 0.8.sp, maxLines = 1)
                 Spacer(Modifier.height(2.dp))
                 Text(uiState.passengerName, fontSize = 16.sp, fontWeight = FontWeight.Bold,
-                    color = DarkText, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    color = LocalAppColors.current.textPrimary, maxLines = 1, overflow = TextOverflow.Ellipsis)
             }
             Box(modifier = Modifier.clip(RoundedCornerShape(12.dp))
                 .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(16.dp))
                 .padding(horizontal = 10.dp, vertical = 5.dp)) {
                 Text(stringResource(R.string.boarding_economy_plus), fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold, color = Color(0xFF2A3343),
+                    fontWeight = FontWeight.Bold, color = LocalAppColors.current.textPrimary,
                     letterSpacing = 0.5.sp, maxLines = 1)
             }
         }
@@ -186,10 +184,10 @@ private fun QrCodeBox(bitmap: ImageBitmap?) {
 @Composable
 private fun LabelValueCell(label: String, value: String, align: TextAlign = TextAlign.Start) {
     Column(horizontalAlignment = if (align == TextAlign.End) Alignment.End else Alignment.Start) {
-        Text(label, fontSize = 10.sp, color = SubtleText, fontWeight = FontWeight.SemiBold,
+        Text(label, fontSize = 10.sp, color = LocalAppColors.current.textSubtle, fontWeight = FontWeight.SemiBold,
             letterSpacing = 0.8.sp, textAlign = align, maxLines = 1)
         Spacer(Modifier.height(2.dp))
-        Text(value, fontSize = 26.sp, fontWeight = FontWeight.Bold, color = DarkText,
+        Text(value, fontSize = 26.sp, fontWeight = FontWeight.Bold, color = LocalAppColors.current.textPrimary,
             textAlign = align, maxLines = 1, overflow = TextOverflow.Ellipsis)
     }
 }

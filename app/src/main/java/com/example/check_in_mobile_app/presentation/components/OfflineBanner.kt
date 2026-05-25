@@ -24,10 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.check_in_mobile_app.ui.theme.BorderLight
-import com.example.check_in_mobile_app.ui.theme.DarkText
-import com.example.check_in_mobile_app.ui.theme.SubtleText
-import com.example.check_in_mobile_app.ui.theme.SurfaceGray
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 
 @Composable
 fun OfflineBanner(
@@ -64,12 +61,12 @@ fun OfflineBanner(
                     text = title,
                     fontWeight = FontWeight.Bold,
                     fontSize = 13.sp,
-                    color = DarkText
+                    color = LocalAppColors.current.textPrimary
                 )
                 Text(
                     text = description,
                     fontSize = 11.sp,
-                    color = SubtleText,
+                    color = LocalAppColors.current.textSubtle,
                     lineHeight = 15.sp
                 )
             }

@@ -31,7 +31,6 @@ import com.example.check_in_mobile_app.R
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.check_in_mobile_app.ui.theme.MediumGray
 import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import com.example.check_in_mobile_app.ui.theme.NavyBlue
 import com.example.domain.model.Booking
@@ -68,7 +67,7 @@ fun BookingCard(
                 Icon(
                     painter = painterResource(id = R.drawable.plane2),
                     contentDescription = "Flight",
-                    tint = NavyBlue,
+                    tint = LocalAppColors.current.textAccent,
                     modifier = Modifier.size(20.dp)
                 )
             }
@@ -79,7 +78,7 @@ fun BookingCard(
                 text = booking.flight.flightNumber,
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Bold,
-                color = NavyBlue,
+                color = LocalAppColors.current.textAccent,
                 modifier = Modifier.weight(1f)
             )
 
@@ -123,7 +122,7 @@ fun BookingCard(
                 Icon(
                     painter = painterResource(id = R.drawable.calendar),
                     contentDescription = "Date",
-                    tint = NavyBlue,
+                    tint = LocalAppColors.current.textAccent,
                     modifier = Modifier.size(14.dp)
                 )
                 Spacer(modifier = Modifier.width(6.dp))
@@ -133,7 +132,7 @@ fun BookingCard(
                 Text(
                     text = departureDate,
                     fontSize = 13.sp,
-                    color = NavyBlue,
+                    color = LocalAppColors.current.textAccent,
                     fontWeight = FontWeight.Medium
                 )
             }
@@ -141,7 +140,7 @@ fun BookingCard(
                 Icon(
                     painter = painterResource(id = R.drawable.clock),
                     contentDescription = "Time",
-                    tint = NavyBlue,
+                    tint = LocalAppColors.current.textAccent,
                     modifier = Modifier.size(14.dp)
                 )
                 Spacer(modifier = Modifier.width(6.dp))
@@ -151,7 +150,7 @@ fun BookingCard(
                 Text(
                     text = departureTime,
                     fontSize = 13.sp,
-                    color = NavyBlue,
+                    color = LocalAppColors.current.textAccent,
                     fontWeight = FontWeight.Medium
                 )
             }
@@ -165,10 +164,10 @@ fun BookingCard(
                     onClick = { onBoarding() },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(10.dp),
-                    border = androidx.compose.foundation.BorderStroke(1.dp, NavyBlue),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, LocalAppColors.current.textAccent),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.background,
-                        contentColor = NavyBlue,
+                        contentColor = LocalAppColors.current.textAccent,
 
                         )
                 ) {
@@ -230,7 +229,7 @@ fun BookingCard(
                     Text(
                         text = stringResource(R.string.check_in_opens_in, timeString),
                         fontSize = 13.sp,
-                        color = MediumGray,
+                        color = LocalAppColors.current.textSecondary,
                         fontWeight = FontWeight.Medium
                     )
                 }

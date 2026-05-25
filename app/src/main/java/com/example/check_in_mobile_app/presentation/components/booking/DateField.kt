@@ -15,7 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.check_in_mobile_app.R
-import com.example.check_in_mobile_app.ui.theme.MediumGray
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import com.example.check_in_mobile_app.ui.theme.NavyBlue
 import java.text.SimpleDateFormat
 import java.util.*
@@ -48,7 +48,7 @@ fun DateField(
             Icon(
                 painter = painterResource(id = R.drawable.calendar),
                 contentDescription = stringResource(R.string.select_date),
-                tint = NavyBlue,
+                tint = LocalAppColors.current.textAccent,
                 modifier = Modifier.size(20.dp)
             )
             Spacer(modifier = Modifier.width(8.dp))
@@ -57,7 +57,7 @@ fun DateField(
                     Text(
                         text = stringResource(R.string.select_date),
                         fontSize = 14.sp,
-                        color = NavyBlue,
+                        color = LocalAppColors.current.textAccent,
                         fontWeight = FontWeight.Medium
                     )
                 } else {
@@ -75,7 +75,7 @@ fun DateField(
                     Icon(
                         painter = painterResource(id = R.drawable.close),
                         contentDescription = "Clear date",
-                        tint = MediumGray,
+                        tint = LocalAppColors.current.textSecondary,
                         modifier = Modifier.size(18.dp)
                     )
                 }
@@ -84,7 +84,7 @@ fun DateField(
                 Icon(
                     painter = painterResource(id = R.drawable.chevron_down),
                     contentDescription = "Expand",
-                    tint = MediumGray,
+                    tint = LocalAppColors.current.textSecondary,
                     modifier = Modifier
                         .size(32.dp)
                         .padding(4.dp)
@@ -107,12 +107,12 @@ fun DateField(
                     }
                     showDatePicker = false
                 }) {
-                    Text(stringResource(R.string.ok), color = NavyBlue)
+                    Text(stringResource(R.string.ok), color = LocalAppColors.current.textAccent)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDatePicker = false }) {
-                    Text(stringResource(R.string.cancel), color = NavyBlue)
+                    Text(stringResource(R.string.cancel), color = LocalAppColors.current.textAccent)
                 }
             }
         ) {
@@ -120,8 +120,8 @@ fun DateField(
                 state = datePickerState,
                 colors = DatePickerDefaults.colors(
                     selectedDayContainerColor = NavyBlue,
-                    todayDateBorderColor = NavyBlue,
-                    todayContentColor = NavyBlue,
+                    todayDateBorderColor = LocalAppColors.current.textAccent,
+                    todayContentColor = LocalAppColors.current.textAccent,
                 )
             )
         }

@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.check_in_mobile_app.ui.theme.NavyBlue
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 
 @Composable
 fun ViewAllButton(
@@ -31,14 +31,14 @@ fun ViewAllButton(
             text = title,
             fontSize = 16.sp,
             fontWeight = FontWeight.SemiBold,
-            color = NavyBlue
+            color = LocalAppColors.current.textAccent
         )
         TextButton(onClick = onActionClick) {
             Text(
                 text = "$actionLabel >",
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Medium,
-                color = NavyBlue
+                color = LocalAppColors.current.textAccent
             )
         }
     }

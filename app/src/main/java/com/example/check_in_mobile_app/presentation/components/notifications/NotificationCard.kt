@@ -34,7 +34,7 @@ fun NotificationCard(
     onClick: () -> Unit = {}
 ) {
     val isUnread = !notification.isRead
-    val borderColor = if (isUnread) NavyBlue else BorderColor
+    val borderColor = if (isUnread) LocalAppColors.current.textAccent else LocalAppColors.current.border
     val iconBackground = if (isUnread) NavyBlue else MaterialTheme.colorScheme.surfaceVariant
     val iconTint = if (isUnread) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary
 
@@ -80,14 +80,14 @@ fun NotificationCard(
                     text = notification.title,
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.Bold,
-                        color = NavyBlue,
+                        color = LocalAppColors.current.textAccent,
                         fontSize = 16.sp
                     )
                 )
                 Text(
                     text = notification.description,
                     style = MaterialTheme.typography.bodyMedium.copy(
-                        color = Slate500,
+                        color = LocalAppColors.current.textSecondary,
                         lineHeight = 20.sp
                     ),
                     maxLines = 2,
@@ -100,7 +100,7 @@ fun NotificationCard(
                     notification.flightCode?.let { code ->
                         Surface(
                             shape = RoundedCornerShape(12.dp),
-                            border = BorderStroke(1.dp, MediumGray),
+                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                             color = Color.Transparent
                         ) {
                             Text(
@@ -108,7 +108,7 @@ fun NotificationCard(
                                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
                                 style = MaterialTheme.typography.labelSmall.copy(
                                     fontWeight = FontWeight.Bold,
-                                    color = DarkText
+                                    color = LocalAppColors.current.textPrimary
                                 )
                             )
                         }
@@ -117,7 +117,7 @@ fun NotificationCard(
                     Text(
                         text = notification.timeAgo,
                         style = MaterialTheme.typography.labelSmall.copy(
-                            color = MediumGray
+                            color = LocalAppColors.current.textSecondary
                         )
                     )
                 }
