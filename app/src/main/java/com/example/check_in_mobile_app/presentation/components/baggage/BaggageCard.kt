@@ -55,7 +55,7 @@ fun BaggageCard(
                 Icon(
                     painter = painterResource(id = iconResId),
                     contentDescription = null,
-                    tint = NavyBlue,
+                    tint = LocalAppColors.current.textAccent,
                     modifier = Modifier.size(24.dp)
                 )
             }
@@ -67,14 +67,14 @@ fun BaggageCard(
                     text = title,
                     style = Typography.bodyLarge.copy(
                         fontWeight = FontWeight.Bold,
-                        color = NavyBlue,
+                        color = LocalAppColors.current.textAccent,
                         fontSize = 18.sp
                     )
                 )
                 Text(
                     text = description,
                     style = Typography.bodyLarge.copy(
-                        color = Slate500,
+                        color = LocalAppColors.current.textSecondary,
                         fontSize = 14.sp,
                         lineHeight = 20.sp
                     )
@@ -94,7 +94,7 @@ fun BaggageCard(
                     text = "QUANTITY",
                     style = Typography.bodyLarge.copy(
                         fontWeight = FontWeight.Bold,
-                        color = MediumGray,
+                        color = LocalAppColors.current.textSecondary,
                         fontSize = 12.sp,
                         letterSpacing = 1.sp
                     )
@@ -103,7 +103,7 @@ fun BaggageCard(
                     text = quantity.toString(),
                     style = Typography.bodyLarge.copy(
                         fontWeight = FontWeight.Bold,
-                        color = NavyBlue,
+                        color = LocalAppColors.current.textAccent,
                         fontSize = 24.sp
                     )
                 )
@@ -121,7 +121,7 @@ fun BaggageCard(
                     Icon(
                         imageVector = Icons.Default.Remove,
                         contentDescription = "Decrease",
-                        tint = if (quantity > 0) NavyBlue else MediumGray,
+                        tint = if (quantity > 0) LocalAppColors.current.textAccent else LocalAppColors.current.textSecondary,
                         modifier = Modifier.size(24.dp)
                     )
                 }

@@ -30,7 +30,7 @@ import com.example.check_in_mobile_app.presentation.components.checkin.checkingr
 import com.example.check_in_mobile_app.presentation.components.checkin.checkingreviewdetails.ConfirmCheckbox
 import com.example.check_in_mobile_app.presentation.components.checkin.checkingreviewdetails.ReviewContinueButton
 import com.example.check_in_mobile_app.ui.theme.ErrorRed
-import com.example.check_in_mobile_app.ui.theme.NavyBlue
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import com.example.domain.model.Passenger
 
 @Composable
@@ -87,7 +87,7 @@ fun CheckingDetailsReviewScreenContent(
                     text = stringResource(R.string.review_verify_title),
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
-                    color = NavyBlue
+                    color = LocalAppColors.current.textAccent
                 )
                 Text(
                     text = stringResource(R.string.review_verify_subtitle),

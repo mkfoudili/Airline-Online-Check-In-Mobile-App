@@ -11,8 +11,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.os.LocaleListCompat
-import com.example.check_in_mobile_app.ui.theme.MediumGray
-import com.example.check_in_mobile_app.ui.theme.NavyBlue
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import com.example.check_in_mobile_app.utils.LanguagePreferences
 
 @Composable
@@ -20,7 +19,7 @@ fun LanguageSwitcherLinks(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    
+
     Row(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center,
@@ -33,7 +32,7 @@ fun LanguageSwitcherLinks(
         Text(
             text = "  •  ",
             fontSize = 12.sp,
-            color = MediumGray
+            color = LocalAppColors.current.textSecondary
         )
         LanguageLink(
             text = "Français",
@@ -42,7 +41,7 @@ fun LanguageSwitcherLinks(
         Text(
             text = "  •  ",
             fontSize = 12.sp,
-            color = MediumGray
+            color = LocalAppColors.current.textSecondary
         )
         LanguageLink(
             text = "العربية",
@@ -59,7 +58,7 @@ private fun LanguageLink(
     Text(
         text = text,
         fontSize = 12.sp,
-        color = NavyBlue,
+        color = LocalAppColors.current.textAccent,
         modifier = Modifier.clickable { onClick() }
     )
 }

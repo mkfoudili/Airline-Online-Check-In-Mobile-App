@@ -27,7 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.check_in_mobile_app.ui.theme.NavyBlue
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 
 @Composable
 fun PreferenceCard(
@@ -72,12 +72,12 @@ fun PreferenceCard(
                     text = title,
                     fontSize = 15.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = NavyBlue
+                    color = LocalAppColors.current.textAccent
                 )
                 Text(
                     text = description,
                     fontSize = 12.sp,
-                    color = Color.Gray,
+                    color = LocalAppColors.current.textSubtle,
                     lineHeight = 16.sp
                 )
             }

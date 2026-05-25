@@ -38,8 +38,7 @@ import com.example.check_in_mobile_app.presentation.components.booking.BookingCa
 import com.example.check_in_mobile_app.presentation.components.booking.ViewAllButton
 import com.example.check_in_mobile_app.presentation.components.TabBarMenu
 import com.example.check_in_mobile_app.presentation.components.TabItem
-import com.example.check_in_mobile_app.ui.theme.DarkText
-import com.example.check_in_mobile_app.ui.theme.NavyBlue
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import com.example.check_in_mobile_app.ui.theme.Poppins
 import com.example.check_in_mobile_app.ui.theme.Slate500
 import com.example.domain.model.Flight
@@ -89,7 +88,7 @@ fun BookingScreenContent(
                         text = stringResource(R.string.my_bookings),
                         fontFamily = Poppins,
                         fontSize = 25.sp,
-                        color = DarkText,
+                        color = LocalAppColors.current.textPrimary,
                         fontWeight = FontWeight.Bold,
                         letterSpacing = (-0.5).sp
                     )
@@ -122,7 +121,7 @@ fun BookingScreenContent(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
-                        CircularProgressIndicator(color = NavyBlue)
+                        CircularProgressIndicator(color = LocalAppColors.current.textAccent)
                     }
                 }
 
@@ -133,7 +132,7 @@ fun BookingScreenContent(
                     ) {
                         Text(
                             text = uiState.message,
-                            color = NavyBlue,
+                            color = LocalAppColors.current.textAccent,
                             fontSize = 14.sp
                         )
                     }
@@ -198,7 +197,7 @@ fun BookingOfflineBanner(modifier: Modifier = Modifier) {
             fontFamily = Poppins,
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
-            color = DarkText,
+            color = LocalAppColors.current.textPrimary,
             textAlign = TextAlign.Center
         )
 
@@ -209,7 +208,7 @@ fun BookingOfflineBanner(modifier: Modifier = Modifier) {
             fontFamily = Poppins,
             fontSize = 15.sp,
             fontWeight = FontWeight.Normal,
-            color = Slate500,
+            color = LocalAppColors.current.textSecondary,
             textAlign = TextAlign.Center,
             lineHeight = 22.sp
         )

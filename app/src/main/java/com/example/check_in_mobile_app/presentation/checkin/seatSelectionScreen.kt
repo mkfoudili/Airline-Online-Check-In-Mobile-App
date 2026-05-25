@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.stringResource
 import com.example.check_in_mobile_app.R
-import com.example.check_in_mobile_app.ui.theme.NavyBlue
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import com.example.check_in_mobile_app.presentation.components.checkin.ProgressBar
 import com.example.check_in_mobile_app.presentation.components.checkin.SeatGrid
 import com.example.check_in_mobile_app.presentation.components.checkin.SeatLegend
@@ -144,7 +144,7 @@ fun SelectedSeatBottomBar(
             text = stringResource(R.string.checkin_seat_label, seat.seatNumber),
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
-            color = NavyBlue
+            color = LocalAppColors.current.textAccent
         )
 
         Row(
@@ -181,19 +181,19 @@ fun SelectedSeatBottomBar(
                 .fillMaxWidth()
                 .height(52.dp),
             shape = RoundedCornerShape(12.dp),
-            border = BorderStroke(1.dp, NavyBlue)
+            border = BorderStroke(1.dp, LocalAppColors.current.textAccent)
         ) {
             if (isLoading) {
                 androidx.compose.material3.CircularProgressIndicator(
                     modifier = Modifier.size(24.dp),
-                    color = NavyBlue,
+                    color = LocalAppColors.current.textAccent,
                     strokeWidth = 2.dp
                 )
             } else {
                 Text(
                     text = stringResource(R.string.checkin_confirm_seat),
                     fontSize = 15.sp,
-                    color = NavyBlue,
+                    color = LocalAppColors.current.textAccent,
                     fontWeight = FontWeight.Medium
                 )
             }

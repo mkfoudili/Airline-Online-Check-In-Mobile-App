@@ -20,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import com.example.check_in_mobile_app.ui.theme.NavyBlue
 
 @Composable
@@ -39,7 +40,7 @@ fun Seat(
 
     val iconTint = when (seatState) {
         SeatState.SELECTED -> MaterialTheme.colorScheme.onPrimary
-        else               -> NavyBlue
+        else               -> LocalAppColors.current.textAccent
     }
 
     val iconSize = seatSize * 0.3f
@@ -87,7 +88,7 @@ fun Seat(
                     text = label,
                     fontSize = (seatSize.value * 0.3f).sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = NavyBlue
+                    color = LocalAppColors.current.textAccent
                 )
             }
         }

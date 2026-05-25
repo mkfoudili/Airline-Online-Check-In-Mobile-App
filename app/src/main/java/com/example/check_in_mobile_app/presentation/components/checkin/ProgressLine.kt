@@ -12,8 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import com.example.check_in_mobile_app.ui.theme.NavyBlue
-import com.example.check_in_mobile_app.ui.theme.SurfaceGray
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 
 @Composable
 fun ProgressBar(
@@ -31,7 +30,7 @@ fun ProgressBar(
             modifier = Modifier
                 .fillMaxHeight()
                 .fillMaxWidth(progress)
-                .background(NavyBlue)
+                .background(LocalAppColors.current.textAccent)
         )
     }
 }

@@ -17,10 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.check_in_mobile_app.R
-import com.example.check_in_mobile_app.ui.theme.BorderLight
-import com.example.check_in_mobile_app.ui.theme.DarkText
-import com.example.check_in_mobile_app.ui.theme.NavyBlue
-import com.example.check_in_mobile_app.ui.theme.SubtleText
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 
 private val EncryptionGreen = Color(0xFF00C48C)
 
@@ -48,7 +45,7 @@ fun AlignmentGuideCard(modifier: Modifier = Modifier) {
                 Icon(
                     painter = painterResource(id = R.drawable.info_circle),
                     contentDescription = "Info",
-                    tint = NavyBlue,
+                    tint = LocalAppColors.current.textAccent,
                     modifier = Modifier.size(18.dp)
                 )
             }
@@ -58,13 +55,13 @@ fun AlignmentGuideCard(modifier: Modifier = Modifier) {
                     text = "Alignment Guide",
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
-                    color = DarkText
+                    color = LocalAppColors.current.textPrimary
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = "Place passport about 8cm away from phone to ensure the photo page is fully visible within the frame and free of glare or shadows.",
                     fontSize = 13.sp,
-                    color = SubtleText,
+                    color = LocalAppColors.current.textSubtle,
                     lineHeight = 18.sp
                 )
             }

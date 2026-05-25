@@ -17,10 +17,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.check_in_mobile_app.ui.theme.BorderLight
-import com.example.check_in_mobile_app.ui.theme.DarkText
-import com.example.check_in_mobile_app.ui.theme.NavyBlue
-import com.example.check_in_mobile_app.ui.theme.SubtleText
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 
 @Composable
 fun ProfileInfoRow(
@@ -48,7 +45,7 @@ fun ProfileInfoRow(
                 imageVector = icon,
                 contentDescription = null,
                 modifier = Modifier.size(20.dp),
-                tint = NavyBlue
+                tint = LocalAppColors.current.textAccent
             )
         }
 
@@ -60,7 +57,7 @@ fun ProfileInfoRow(
                 text = label.uppercase(),
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Bold,
-                color = SubtleText,
+                color = LocalAppColors.current.textSubtle,
                 letterSpacing = 0.5.sp
             )
             Spacer(modifier = Modifier.height(2.dp))
@@ -68,7 +65,7 @@ fun ProfileInfoRow(
                 text = value,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = DarkText
+                color = LocalAppColors.current.textPrimary
             )
         }
 
@@ -78,14 +75,14 @@ fun ProfileInfoRow(
                 imageVector = Icons.Outlined.Edit,
                 contentDescription = "Edit",
                 modifier = Modifier.size(20.dp),
-                tint = SubtleText
+                tint = LocalAppColors.current.textSubtle
             )
             Spacer(modifier = Modifier.width(8.dp))
             Icon(
                 imageVector = Icons.Outlined.KeyboardArrowRight,
                 contentDescription = null,
                 modifier = Modifier.size(20.dp),
-                tint = BorderLight
+                tint = LocalAppColors.current.borderLight
             )
         }
     }

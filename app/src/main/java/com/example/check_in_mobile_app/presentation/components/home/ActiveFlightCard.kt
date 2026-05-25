@@ -136,7 +136,7 @@ fun ActiveFlightCard(
                     shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.background,
-                        contentColor = NavyBlue
+                        contentColor = MaterialTheme.colorScheme.primary
                     ),
                     contentPadding = PaddingValues(horizontal = 22.dp, vertical = 11.dp),
                     elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp)

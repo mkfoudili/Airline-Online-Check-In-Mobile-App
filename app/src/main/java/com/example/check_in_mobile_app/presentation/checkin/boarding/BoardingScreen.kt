@@ -105,7 +105,7 @@ fun BoardingScreen(
                     androidx.compose.material3.Text(
                         text = androidx.compose.ui.res.stringResource(R.string.boarding_no_pass_found),
                         fontSize = 15.sp,
-                        color = com.example.check_in_mobile_app.ui.theme.CoolGray,
+                        color = com.example.check_in_mobile_app.ui.theme.LocalAppColors.current.textSubtle,
                         fontWeight = FontWeight.Medium,
                         textAlign = androidx.compose.ui.text.style.TextAlign.Center
                     )

@@ -25,6 +25,7 @@ import com.example.check_in_mobile_app.presentation.components.checkin.CheckInTo
 import com.example.check_in_mobile_app.presentation.components.checkin.PreferenceCard
 import com.example.check_in_mobile_app.presentation.components.checkin.PreferenceSectionLabel
 import com.example.check_in_mobile_app.presentation.components.checkin.SafetyNoteCard
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import com.example.check_in_mobile_app.ui.theme.NavyBlue
 
 @Composable
@@ -85,7 +86,7 @@ fun specialRequest(
                 }
             }
         },
-        containerColor = Color(0xFFF9FAFA)
+        containerColor = MaterialTheme.colorScheme.background
     ) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
             LazyColumn(
@@ -99,13 +100,13 @@ fun specialRequest(
                         text = stringResource(R.string.checkin_final_preferences),
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
-                        color = NavyBlue,
+                        color = LocalAppColors.current.textAccent,
                         modifier = Modifier.padding(top = 16.dp)
                     )
                     Text(
                         text = stringResource(R.string.checkin_preferences_subtitle),
                         fontSize = 14.sp,
-                        color = Color.Gray,
+                        color = LocalAppColors.current.textSubtle,
                         modifier = Modifier.padding(top = 4.dp, bottom = 16.dp)
                     )
                 }
@@ -185,7 +186,7 @@ fun specialRequest(
                         .padding(paddingValues),
                     contentAlignment = androidx.compose.ui.Alignment.Center
                 ) {
-                    CircularProgressIndicator(color = NavyBlue)
+                    CircularProgressIndicator(color = LocalAppColors.current.textAccent)
                 }
             }
         }

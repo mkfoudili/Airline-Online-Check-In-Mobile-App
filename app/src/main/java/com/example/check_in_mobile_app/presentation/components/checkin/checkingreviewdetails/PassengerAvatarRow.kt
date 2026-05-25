@@ -18,7 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.check_in_mobile_app.R
-import com.example.check_in_mobile_app.ui.theme.NavyBlue
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import com.example.domain.model.Passenger
 
 import androidx.compose.ui.res.stringResource
@@ -53,7 +53,7 @@ fun PassengerAvatarRow(passenger: Passenger) {
                 text = "${passenger.firstName} ${passenger.lastName}",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                color = NavyBlue
+                color = LocalAppColors.current.textAccent
             )
 
             Spacer(modifier = Modifier.height(6.dp))

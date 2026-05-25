@@ -25,11 +25,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.presentation.components.PrimaryButton
-import com.example.check_in_mobile_app.ui.theme.NavyBlue
-import com.example.check_in_mobile_app.ui.theme.DarkText
 import com.example.check_in_mobile_app.ui.theme.BorderColor
-import com.example.check_in_mobile_app.ui.theme.MediumGray
-import com.example.check_in_mobile_app.ui.theme.SubtleText
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
+import com.example.check_in_mobile_app.ui.theme.NavyBlue
 import com.example.check_in_mobile_app.presentation.components.LanguageSwitcherLinks
 
 
@@ -45,12 +43,13 @@ fun LoginForm(
     var passwordVisible by remember { mutableStateOf(false) }
 
 
+    val appColors = LocalAppColors.current
     val primaryColor = NavyBlue
     val borderColor = BorderColor
-    val labelColor = DarkText
-    val hintColor = MediumGray
-    val linkColor = NavyBlue
-    val dividerTextColor = SubtleText
+    val labelColor = appColors.textPrimary
+    val hintColor = appColors.textSecondary
+    val linkColor = appColors.textAccent
+    val dividerTextColor = appColors.textSubtle
 
     Column(
         modifier = modifier
@@ -90,10 +89,10 @@ fun LoginForm(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             shape = RoundedCornerShape(10.dp),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedTextColor = Color.Black,
-                unfocusedTextColor = Color.Black,
-                disabledTextColor = Color.Black,
-                errorTextColor = Color.Black,
+                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                disabledTextColor = MaterialTheme.colorScheme.onSurface,
+                errorTextColor = MaterialTheme.colorScheme.onSurface,
                 unfocusedBorderColor = borderColor,
                 focusedBorderColor = primaryColor,
                 unfocusedContainerColor = MaterialTheme.colorScheme.surface,
@@ -158,10 +157,10 @@ fun LoginForm(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             shape = RoundedCornerShape(10.dp),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedTextColor = Color.Black,
-                unfocusedTextColor = Color.Black,
-                disabledTextColor = Color.Black,
-                errorTextColor = Color.Black,
+                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                disabledTextColor = MaterialTheme.colorScheme.onSurface,
+                errorTextColor = MaterialTheme.colorScheme.onSurface,
                 unfocusedBorderColor = borderColor,
                 focusedBorderColor = primaryColor,
                 unfocusedContainerColor = MaterialTheme.colorScheme.surface,
@@ -250,7 +249,7 @@ fun LoginForm(
                     text = androidx.compose.ui.res.stringResource(R.string.auth_sign_up),
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
-                    color = NavyBlue
+                    color = appColors.textAccent
                 )
             }
         }

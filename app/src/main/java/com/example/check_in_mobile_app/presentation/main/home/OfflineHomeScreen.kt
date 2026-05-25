@@ -5,6 +5,7 @@ import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import androidx.compose.material3.MaterialTheme
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -54,7 +55,7 @@ fun OfflineHomeScreen(
             text = stringResource(R.string.offline_dashboard_title),
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
-            color = NavyBlue,
+            color = LocalAppColors.current.textAccent,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
@@ -99,7 +100,7 @@ fun OfflineHomeScreen(
         fontSize = 16.sp,
         letterSpacing = 0.7.sp,
         fontWeight = FontWeight.Bold,
-        color = CoolGray,
+        color = LocalAppColors.current.textSubtle,
         maxLines = 1,
         overflow = TextOverflow.Ellipsis
     )
@@ -127,7 +128,7 @@ fun OfflineHomeScreen(
             Text(
                 text = stringResource(R.string.offline_no_cached_flight),
                 fontSize = 14.sp,
-                color = CoolGray,
+                color = LocalAppColors.current.textSubtle,
                 fontWeight = FontWeight.Medium
             )
         }
@@ -154,7 +155,7 @@ fun OfflineHomeScreen(
                 Text(
                     text = stringResource(R.string.offline_no_upcoming_flight),
                     fontSize = 14.sp,
-                    color = CoolGray,
+                    color = LocalAppColors.current.textSubtle,
                     fontWeight = FontWeight.Medium
                 )
             }
@@ -168,7 +169,7 @@ fun OfflineHomeScreen(
                 fontSize = 16.sp,
                 letterSpacing = 0.7.sp,
                 fontWeight = FontWeight.Bold,
-                color = CoolGray,
+                color = LocalAppColors.current.textSubtle,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -186,13 +187,14 @@ fun OfflineHomeScreen(
         Spacer(modifier = Modifier.height(24.dp))
 
         // Note d'information
+        val dashedBorderColor = LocalAppColors.current.textAccent
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
                 .drawBehind {
                     drawRoundRect(
-                        color = NavyBlue,
+                        color = dashedBorderColor,
                         size = size,
                         cornerRadius = CornerRadius(12.dp.toPx()),
                         style = Stroke(
@@ -212,7 +214,7 @@ fun OfflineHomeScreen(
                 Icon(
                     painter = painterResource(id = R.drawable.info),
                     contentDescription = null,
-                    tint = CoolGray,
+                    tint = LocalAppColors.current.textSubtle,
                     modifier = Modifier
                         .size(18.dp)
                         .offset(0.dp, 5.dp)
@@ -222,7 +224,7 @@ fun OfflineHomeScreen(
                     text = stringResource(R.string.offline_data_saved_note),
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Normal,
-                    color = CoolGray,
+                    color = LocalAppColors.current.textSubtle,
                     lineHeight = 19.sp
                 )
             }
@@ -241,10 +243,10 @@ private fun CachedFlightCard(
     else "--"
 
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(16.dp)),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             // Route
@@ -258,18 +260,18 @@ private fun CachedFlightCard(
                         text = flight.origin,
                         fontSize = 22.sp,
                         fontWeight = FontWeight.ExtraBold,
-                        color = NavyBlue
+                        color = LocalAppColors.current.textAccent
                     )
                     Text(
                         text = flight.originCity,
                         fontSize = 12.sp,
-                        color = CoolGray
+                        color = LocalAppColors.current.textSubtle
                     )
                 }
                 Icon(
                     painter = painterResource(id = R.drawable.plane),
                     contentDescription = null,
-                    tint = NavyBlue,
+                    tint = LocalAppColors.current.textAccent,
                     modifier = Modifier.size(24.dp)
                 )
                 Column(horizontalAlignment = Alignment.End) {
@@ -277,12 +279,12 @@ private fun CachedFlightCard(
                         text = flight.destination,
                         fontSize = 22.sp,
                         fontWeight = FontWeight.ExtraBold,
-                        color = NavyBlue
+                        color = LocalAppColors.current.textAccent
                     )
                     Text(
                         text = flight.destinationCity,
                         fontSize = 12.sp,
-                        color = CoolGray
+                        color = LocalAppColors.current.textSubtle
                     )
                 }
             }
@@ -306,7 +308,7 @@ private fun CachedFlightCard(
             Text(
                 text = departureFormatted,
                 fontSize = 12.sp,
-                color = CoolGray,
+                color = LocalAppColors.current.textSubtle,
                 modifier = Modifier.align(Alignment.End)
             )
 
@@ -317,8 +319,8 @@ private fun CachedFlightCard(
                 onClick = onViewDetail,
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(10.dp),
-                colors = ButtonDefaults.outlinedButtonColors(contentColor = NavyBlue),
-                border = androidx.compose.foundation.BorderStroke(1.dp, NavyBlue)
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = LocalAppColors.current.textAccent),
+                border = androidx.compose.foundation.BorderStroke(1.dp, LocalAppColors.current.textAccent)
             ) {
                 Text(
                     text = stringResource(R.string.offline_view_flight_details),
@@ -333,7 +335,7 @@ private fun CachedFlightCard(
 @Composable
 private fun FlightInfoItem(label: String, value: String) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(text = label, fontSize = 11.sp, color = CoolGray)
-        Text(text = value, fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = NavyBlue)
+        Text(text = label, fontSize = 11.sp, color = LocalAppColors.current.textSubtle)
+        Text(text = value, fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = LocalAppColors.current.textAccent)
     }
 }

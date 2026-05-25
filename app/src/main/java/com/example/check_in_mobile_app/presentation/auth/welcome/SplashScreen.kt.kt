@@ -60,7 +60,7 @@ fun SplashScreen() {
                 modifier = Modifier
                     .size(90.dp)
                     .clip(RoundedCornerShape(22.dp))
-                    .background(MaterialTheme.colorScheme.surface),
+                    .background(Color.White.copy(alpha = 0.15f)),
                 contentAlignment = Alignment.Center
             ) {
                 Image(
@@ -77,7 +77,7 @@ fun SplashScreen() {
                 text = "Airline Check-In",
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.surface,
+                color = Color.White,
                 textAlign = TextAlign.Center
             )
 
@@ -88,7 +88,7 @@ fun SplashScreen() {
                 text = "FLIGHT",
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Medium,
-                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.7f),
+                color = Color.White.copy(alpha = 0.7f),
                 letterSpacing = 4.sp,
                 textAlign = TextAlign.Center
             )
@@ -100,7 +100,7 @@ fun SplashScreen() {
                 text = "DIGITAL BOARDING SYSTEM",
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Medium,
-                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.7f),
+                color = Color.White.copy(alpha = 0.7f),
                 letterSpacing = 3.sp,
                 textAlign = TextAlign.Center
             )
@@ -119,7 +119,7 @@ fun SplashScreen() {
                 text = "Synchronizing flight data...",
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Light,
-                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f),
+                color = Color.White.copy(alpha = 0.5f),
                 fontStyle = FontStyle.Italic
             )
 

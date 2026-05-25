@@ -23,9 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.check_in_mobile_app.R
-import com.example.check_in_mobile_app.ui.theme.MediumGray
-import com.example.check_in_mobile_app.ui.theme.NavyBlue
-import com.example.check_in_mobile_app.ui.theme.Slate500
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 
 @Composable
 fun FlightRouteRow(
@@ -50,13 +48,13 @@ fun FlightRouteRow(
                 text = origin,
                 fontSize = 26.sp,
                 fontWeight = FontWeight.Bold,
-                color = NavyBlue
+                color = LocalAppColors.current.textAccent
             )
             Text(
                 text = originCity.uppercase(),
                 fontSize = 11.sp,
                 letterSpacing = 1.sp,
-                color = Slate500
+                color = LocalAppColors.current.textSecondary
             )
         }
 
@@ -81,7 +79,7 @@ fun FlightRouteRow(
                 Icon(
                     painter = painterResource(id = R.drawable.plane2),
                     contentDescription = "Flight",
-                    tint = NavyBlue,
+                    tint = LocalAppColors.current.textAccent,
                     modifier = Modifier.padding(horizontal = 8.dp).size(20.dp)
                 )
                 Canvas(modifier = Modifier.weight(1f).height(8.dp)) {
@@ -98,7 +96,7 @@ fun FlightRouteRow(
             Text(
                 text = duration,
                 fontSize = 11.sp,
-                color = MediumGray
+                color = LocalAppColors.current.textSecondary
             )
         }
 
@@ -108,13 +106,13 @@ fun FlightRouteRow(
                 text = destination,
                 fontSize = 26.sp,
                 fontWeight = FontWeight.Bold,
-                color = NavyBlue
+                color = LocalAppColors.current.textAccent
             )
             Text(
                 text = destinationCity.uppercase(),
                 fontSize = 11.sp,
                 letterSpacing = 1.sp,
-                color = Slate500
+                color = LocalAppColors.current.textSecondary
             )
         }
     }

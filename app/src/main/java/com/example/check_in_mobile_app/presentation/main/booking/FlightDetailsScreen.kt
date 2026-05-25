@@ -25,6 +25,7 @@ import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.presentation.components.flightdetails.FlightInfoCard
 import com.example.check_in_mobile_app.presentation.components.flightdetails.ScheduleTimeline
 import com.example.check_in_mobile_app.ui.theme.*
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import com.example.domain.model.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -49,7 +50,7 @@ fun FlightDetailsScreen(
                                 Icon(
                                     painter = painterResource(id = R.drawable.chevron_left),
                                     contentDescription = null,
-                                    tint = DarkText
+                                    tint = LocalAppColors.current.textPrimary
                                 )
                             }
                         },
@@ -60,7 +61,7 @@ fun FlightDetailsScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(Color(0xFFF8FAFC))
+                        .background(MaterialTheme.colorScheme.background)
                         .padding(innerPadding),
                     contentAlignment = Alignment.Center
                 ) {
@@ -79,7 +80,7 @@ fun FlightDetailsScreen(
                                 Icon(
                                     painter = painterResource(id = R.drawable.chevron_left),
                                     contentDescription = null,
-                                    tint = DarkText
+                                    tint = LocalAppColors.current.textPrimary
                                 )
                             }
                         },
@@ -90,7 +91,7 @@ fun FlightDetailsScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(Color(0xFFF8FAFC))
+                        .background(MaterialTheme.colorScheme.background)
                         .padding(innerPadding),
                     contentAlignment = Alignment.Center
                 ) {
@@ -126,7 +127,7 @@ fun FlightDetailsScreenContent(
                         text       = stringResource(R.string.flight_details_title),
                         fontSize   = 20.sp,
                         fontWeight = FontWeight.Bold,
-                        color      = DarkText,
+                        color      = LocalAppColors.current.textPrimary,
                         fontFamily = Poppins
                     )
                 },
@@ -135,7 +136,7 @@ fun FlightDetailsScreenContent(
                         Icon(
                             painter            = painterResource(id = R.drawable.chevron_left),
                             contentDescription = stringResource(R.string.back),
-                            tint               = DarkText
+                            tint               = LocalAppColors.current.textPrimary
                         )
                     }
                 },
@@ -165,7 +166,7 @@ fun FlightDetailsScreenContent(
                         text       = stringResource(R.string.checkin_status_label),
                         fontSize   = 14.sp,
                         fontWeight = FontWeight.Medium,
-                        color      = MediumGray
+                        color      = LocalAppColors.current.textSecondary
                     )
                     Text(
                         text = when {
@@ -179,7 +180,7 @@ fun FlightDetailsScreenContent(
                         color      = when {
                             !isOnline -> ErrorRed
                             booking.status == CheckInStatus.CHECK_IN_OPEN -> ActiveGreen
-                            else -> DarkText
+                            else -> LocalAppColors.current.textPrimary
                         }
                     )
                 }
@@ -190,7 +191,7 @@ fun FlightDetailsScreenContent(
                     Text(
                         text       = stringResource(R.string.offline_checkin_unavailable),
                         fontSize   = 12.sp,
-                        color      = MediumGray,
+                        color      = LocalAppColors.current.textSecondary,
                         fontWeight = FontWeight.Normal
                     )
                 }
@@ -228,7 +229,7 @@ fun FlightDetailsScreenContent(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFFF8FAFC))
+                .background(MaterialTheme.colorScheme.background)
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 24.dp)
@@ -240,7 +241,7 @@ fun FlightDetailsScreenContent(
                 text       = stringResource(R.string.schedule_label),
                 fontSize   = 18.sp,
                 fontWeight = FontWeight.Bold,
-                color      = DarkText,
+                color      = LocalAppColors.current.textPrimary,
                 fontFamily = Poppins
             )
             Spacer(modifier = Modifier.height(16.dp))

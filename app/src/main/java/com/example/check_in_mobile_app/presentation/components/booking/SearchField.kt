@@ -17,7 +17,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.check_in_mobile_app.R
-import com.example.check_in_mobile_app.ui.theme.MediumGray
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 
 @Composable
 fun SearchField(
@@ -45,13 +45,13 @@ fun SearchField(
                 Icon(
                     painter = painterResource(id = R.drawable.search),
                     contentDescription = "Search",
-                    tint = MediumGray,
+                    tint = LocalAppColors.current.textSecondary,
                     modifier = Modifier.size(20.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Box(Modifier.weight(1f)) {
                     if (query.isEmpty()) {
-                        Text(placeholderText, fontSize = 14.sp, color = MediumGray)
+                        Text(placeholderText, fontSize = 14.sp, color = LocalAppColors.current.textSecondary)
                     }
                     innerTextField()
                 }
@@ -63,7 +63,7 @@ fun SearchField(
                         Icon(
                             painter = painterResource(id = R.drawable.close),
                             contentDescription = "Clear",
-                            tint = MediumGray,
+                            tint = LocalAppColors.current.textSecondary,
                             modifier = Modifier.size(18.dp)
                         )
                     }

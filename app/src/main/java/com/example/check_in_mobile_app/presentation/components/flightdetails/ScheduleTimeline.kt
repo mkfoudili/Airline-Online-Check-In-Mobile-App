@@ -19,10 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.stringResource
 import com.example.check_in_mobile_app.R
-import com.example.check_in_mobile_app.ui.theme.BorderLight
-import com.example.check_in_mobile_app.ui.theme.DarkText
-import com.example.check_in_mobile_app.ui.theme.MediumGray
-import com.example.check_in_mobile_app.ui.theme.NavyBlue
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import com.example.domain.model.Booking
 
 @Composable
@@ -89,7 +86,7 @@ fun TimelineItem(
             Icon(
                 painter = painterResource(id = iconRes),
                 contentDescription = null,
-                tint = NavyBlue,
+                tint = LocalAppColors.current.textAccent,
                 modifier = Modifier.size(16.dp)
             )
         }
@@ -102,21 +99,21 @@ fun TimelineItem(
                 text = time,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
-                color = DarkText
+                color = LocalAppColors.current.textPrimary
             )
             Spacer(modifier = Modifier.height(2.dp))
             Text(
                 text = title,
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Medium,
-                color = DarkText
+                color = LocalAppColors.current.textPrimary
             )
             if (subtitle != null) {
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = subtitle,
                     fontSize = 11.sp,
-                    color = MediumGray
+                    color = LocalAppColors.current.textSecondary
                 )
             }
         }

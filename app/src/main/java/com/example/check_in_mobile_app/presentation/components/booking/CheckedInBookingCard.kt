@@ -31,9 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.check_in_mobile_app.R
-import com.example.check_in_mobile_app.ui.theme.MediumGray
 import com.example.check_in_mobile_app.ui.theme.LocalAppColors
-import com.example.check_in_mobile_app.ui.theme.NavyBlue
 import com.example.domain.model.Booking
 
 @Composable
@@ -68,7 +66,7 @@ fun CheckedInBookingCard(
                 Icon(
                     painter = painterResource(id = R.drawable.plane2),
                     contentDescription = "Flight",
-                    tint = NavyBlue,
+                    tint = LocalAppColors.current.textAccent,
                     modifier = Modifier.size(20.dp)
                 )
             }
@@ -79,17 +77,17 @@ fun CheckedInBookingCard(
                 text = booking.flight.flightNumber,
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Bold,
-                color = NavyBlue,
+                color = LocalAppColors.current.textAccent,
                 modifier = Modifier.weight(1f)
             )
 
             // Badge : "Terminé" si vol passé, "Enregistré" sinon
             val (bgColor, textColor, labelRes) = if (isPassed) {
-                Triple(LocalAppColors.current.chipUnselected, MediumGray, R.string.status_passed)
+                Triple(LocalAppColors.current.chipUnselected, LocalAppColors.current.textSecondary, R.string.status_passed)
             } else {
                 Triple(
-                    com.example.check_in_mobile_app.ui.theme.CheckedInBg,
-                    com.example.check_in_mobile_app.ui.theme.CheckedInText,
+                    LocalAppColors.current.checkedInBg,
+                    LocalAppColors.current.checkedInText,
                     R.string.status_checked_in
                 )
             }
@@ -142,7 +140,7 @@ fun CheckedInBookingCard(
                 Icon(
                     painter = painterResource(id = R.drawable.calendar),
                     contentDescription = "Date",
-                    tint = NavyBlue,
+                    tint = LocalAppColors.current.textAccent,
                     modifier = Modifier.size(14.dp)
                 )
                 Spacer(modifier = Modifier.width(6.dp))
@@ -151,7 +149,7 @@ fun CheckedInBookingCard(
                 Text(
                     text = departureDate,
                     fontSize = 13.sp,
-                    color = NavyBlue,
+                    color = LocalAppColors.current.textAccent,
                     fontWeight = FontWeight.Medium
                 )
             }
@@ -159,7 +157,7 @@ fun CheckedInBookingCard(
                 Icon(
                     painter = painterResource(id = R.drawable.clock),
                     contentDescription = "Time",
-                    tint = NavyBlue,
+                    tint = LocalAppColors.current.textAccent,
                     modifier = Modifier.size(14.dp)
                 )
                 Spacer(modifier = Modifier.width(6.dp))
@@ -168,7 +166,7 @@ fun CheckedInBookingCard(
                 Text(
                     text = departureTime,
                     fontSize = 13.sp,
-                    color = NavyBlue,
+                    color = LocalAppColors.current.textAccent,
                     fontWeight = FontWeight.Medium
                 )
             }
@@ -182,14 +180,14 @@ fun CheckedInBookingCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(12.dp))
-                    .background(Color(0xFFE2E8F0))
+                    .background(LocalAppColors.current.chipUnselected)
                     .padding(vertical = 10.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = stringResource(R.string.flight_completed),
                     fontSize = 13.sp,
-                    color = MediumGray,
+                    color = LocalAppColors.current.textSecondary,
                     fontWeight = FontWeight.Medium
                 )
             }
@@ -201,9 +199,9 @@ fun CheckedInBookingCard(
                 },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(10.dp),
-                border = BorderStroke(1.dp, NavyBlue),
+                border = BorderStroke(1.dp, LocalAppColors.current.textAccent),
                 colors = ButtonDefaults.outlinedButtonColors(
-                    contentColor = NavyBlue
+                    contentColor = LocalAppColors.current.textAccent
                 )
             ) {
                 Text(

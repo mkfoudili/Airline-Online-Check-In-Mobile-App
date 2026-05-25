@@ -29,6 +29,7 @@ import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.presentation.components.flightdetails.FlightInfoCard
 import com.example.check_in_mobile_app.presentation.components.flightdetails.PassengerCard
 import com.example.check_in_mobile_app.ui.theme.*
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import com.example.domain.model.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -64,7 +65,7 @@ fun ConfirmationScreen(
                         text       = stringResource(R.string.confirmation_title),
                         fontSize   = 18.sp,
                         fontWeight = FontWeight.Bold,
-                        color      = NavyBlue,
+                        color      = LocalAppColors.current.textAccent,
                         maxLines   = 1,
                         overflow   = TextOverflow.Ellipsis
                     )
@@ -89,7 +90,7 @@ fun ConfirmationScreen(
                         modifier         = Modifier.fillMaxWidth().height(200.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        CircularProgressIndicator(color = NavyBlue)
+                        CircularProgressIndicator(color = LocalAppColors.current.textAccent)
                     }
                 }
 
@@ -173,7 +174,7 @@ fun ConfirmationScreen(
                         text       = stringResource(R.string.confirmation_passenger_details),
                         fontSize   = 16.sp,
                         fontWeight = FontWeight.ExtraBold,
-                        color      = CoolGray,
+                        color      = LocalAppColors.current.textSubtle,
                         maxLines   = 1,
                         overflow   = TextOverflow.Ellipsis,
                         modifier   = Modifier.padding(vertical = 16.dp)
@@ -196,7 +197,7 @@ fun ConfirmationScreen(
                         InfoCard(
                             modifier  = Modifier
                                 .weight(1f)
-                                .border(1.dp, NavyBlue, RoundedCornerShape(10.dp))
+                                .border(1.dp, LocalAppColors.current.textAccent, RoundedCornerShape(10.dp))
                                 .background(MaterialTheme.colorScheme.surface)
                                 .height(91.dp),
                             title     = stringResource(R.string.confirmation_seat_label),
@@ -207,7 +208,7 @@ fun ConfirmationScreen(
                         InfoCard(
                             modifier  = Modifier
                                 .weight(1f)
-                                .border(1.dp, NavyBlue, RoundedCornerShape(10.dp))
+                                .border(1.dp, LocalAppColors.current.textAccent, RoundedCornerShape(10.dp))
                                 .background(MaterialTheme.colorScheme.surface)
                                 .height(91.dp),
                             title     = stringResource(R.string.confirmation_baggage_label),
@@ -225,7 +226,7 @@ fun ConfirmationScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(52.dp)
-                            .border(1.dp, NavyBlue, RoundedCornerShape(14.dp)),
+                            .border(1.dp, LocalAppColors.current.textAccent, RoundedCornerShape(14.dp)),
                         shape  = RoundedCornerShape(14.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor         = MaterialTheme.colorScheme.surface,
@@ -235,19 +236,19 @@ fun ConfirmationScreen(
                         if (uiState.isDownloadingPdf) {
                             CircularProgressIndicator(
                                 modifier    = Modifier.size(20.dp),
-                                color       = NavyBlue,
+                                color       = LocalAppColors.current.textAccent,
                                 strokeWidth = 2.dp
                             )
                         } else {
                             Icon(
                                 painter            = painterResource(R.drawable.download),
                                 contentDescription = null,
-                                tint               = NavyBlue
+                                tint               = LocalAppColors.current.textAccent
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
                                 text       = stringResource(R.string.confirmation_download_pdf),
-                                color      = NavyBlue,
+                                color      = LocalAppColors.current.textAccent,
                                 fontSize   = 16.sp,
                                 fontWeight = FontWeight.SemiBold,
                                 maxLines   = 1,
@@ -266,7 +267,7 @@ fun ConfirmationScreen(
                     ) {
                         Text(
                             text       = stringResource(R.string.confirmation_back_dashboard),
-                            color      = NavyBlue,
+                            color      = LocalAppColors.current.textAccent,
                             fontSize   = 14.sp,
                             fontWeight = FontWeight.Normal,
                             maxLines   = 1,
@@ -314,7 +315,7 @@ private fun SuccessHeader() {
         Text(
             text       = stringResource(R.string.confirmation_success_desc),
             fontSize   = 16.sp,
-            color      = InfoGray,
+            color      = LocalAppColors.current.textSubtle,
             lineHeight = 22.sp,
             modifier   = Modifier.padding(horizontal = 32.dp, vertical = 12.dp),
             textAlign  = TextAlign.Center
@@ -332,12 +333,12 @@ private fun InfoCard(modifier: Modifier, title: String, value: String, iconResId
         Icon(
             painter            = painterResource(iconResId),
             contentDescription = null,
-            tint               = InfoGray
+            tint               = LocalAppColors.current.textSubtle
         )
         Text(
             text       = title,
             fontSize   = 10.sp,
-            color      = InfoGray,
+            color      = LocalAppColors.current.textSubtle,
             fontWeight = FontWeight.Light,
             maxLines   = 1,
             overflow   = TextOverflow.Ellipsis
@@ -345,7 +346,7 @@ private fun InfoCard(modifier: Modifier, title: String, value: String, iconResId
         Text(
             text       = value,
             fontSize   = 18.sp,
-            color      = NavyBlue,
+            color      = LocalAppColors.current.textAccent,
             fontWeight = FontWeight.ExtraBold,
             maxLines   = 1,
             overflow   = TextOverflow.Ellipsis
