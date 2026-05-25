@@ -2,6 +2,11 @@ package com.example.data.mapper
 
 import com.example.data.remote.dto.CheckinSessionDto
 import com.example.domain.model.CheckInSession
+import com.example.domain.model.CheckInStatus
+import com.google.gson.JsonDeserializationContext
+import com.google.gson.JsonDeserializer
+import com.google.gson.JsonElement
+import java.lang.reflect.Type
 import java.sql.Timestamp
 
 fun CheckinSessionDto.toDomain(): CheckInSession {
@@ -30,4 +35,20 @@ fun CheckInSession.toDto(): CheckinSessionDto {
         specialRequests = this.specialRequests?.toString(),
         completedAt = this.completedAt?.let { Timestamp(it) }
     )
+}
+
+class CheckInStatusDeserializer : JsonDeserializer<CheckInStatus?> {
+    override fun deserialize(
+        json: JsonElement?,
+        typeOfT: Type?,
+        context: JsonDeserializationContext?
+    ): CheckInStatus? {
+        val raw = json?.asString ?: return null
+        val normalized = raw.uppercase().replace("-", "_").trim()
+        return try {
+            CheckInStatus.valueOf(normalized)
+        } catch (e: IllegalArgumentException) {
+            null
+        }
+    }
 }

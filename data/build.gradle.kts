@@ -99,9 +99,6 @@ dependencies {
     // ML Kit Text Recognition
     implementation("com.google.mlkit:text-recognition:16.0.1")
 
-    // MySQL Connector
-    implementation(libs.mysql.connector)
-
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

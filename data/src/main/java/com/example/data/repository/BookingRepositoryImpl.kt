@@ -20,6 +20,16 @@ class BookingRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getAllBookings(): Result<List<Booking>> {
+        return try {
+            val dtos = bookingDataSource.getAllBookings()
+            val bookings: List<Booking> = dtos.map { dto -> dto.toDomain() }
+            Result.success(bookings)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
     override suspend fun getBooking(pnr: String, lastName: String): Result<Booking> {
         return try {
             val dto = bookingDataSource.getBooking(pnr, lastName)

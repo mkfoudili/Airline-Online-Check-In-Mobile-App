@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.check_in_mobile_app.di.NetworkMonitor
 import com.example.data.preferences.UserPreferencesRepository
+import com.example.domain.model.CheckInStatus
 import com.example.domain.repository.AuthRepository
 import com.example.domain.repository.BookingRepository
 import com.example.domain.repository.FlightRepository
@@ -81,15 +82,24 @@ class HomeViewModel @Inject constructor(
 
     fun loadActiveFlight() {
         viewModelScope.launch {
-            val uid = authRepository.getCurrentUserId() ?: return@launch
             _uiState.update { it.copy(isActiveFlightLoading = true, errorMessage = null) }
 
-            val result = bookingRepository.getUpcomingBookings(uid)
-            result
+            val now = System.currentTimeMillis()
+
+            bookingRepository.getAllBookings()
                 .onSuccess { bookings ->
+                    val upcoming = bookings.filter {
+                        it.flight.departureTime > now &&
+                                it.status != CheckInStatus.PASSED
+                    }
+
+                    val active = upcoming
+                        .filter { it.status == CheckInStatus.CHECK_IN_OPEN }
+                        .minByOrNull { it.flight.departureTime }
+
                     _uiState.update {
                         it.copy(
-                            activeFlight = bookings.firstOrNull(),
+                            activeFlight = active,
                             isActiveFlightLoading = false
                         )
                     }
