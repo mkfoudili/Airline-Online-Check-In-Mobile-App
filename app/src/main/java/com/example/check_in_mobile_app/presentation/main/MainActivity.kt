@@ -3,6 +3,7 @@ package com.example.check_in_mobile_app.presentation.main
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -15,6 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import com.example.check_in_mobile_app.presentation.checkin.CheckInActivity
 import com.example.check_in_mobile_app.presentation.navigation.MainNavGraph
 import com.example.check_in_mobile_app.ui.theme.CheckInMobileAppTheme
+import com.google.firebase.messaging.FirebaseMessaging
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -32,6 +34,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        FirebaseMessaging.getInstance().token.addOnSuccessListener { token ->
+            Log.d("FCM", "TOKEN = $token")
+        }
         enableEdgeToEdge()
 
         setContent {

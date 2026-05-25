@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.google.ksp)
     alias(libs.plugins.dagger.hilt.android)
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -49,6 +50,9 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 }
 
 dependencies {
+    implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
+
+    implementation("com.google.firebase:firebase-messaging")
     implementation(project(":domain"))
     implementation(project(":data"))
     implementation("androidx.compose.material:material-icons-extended")
