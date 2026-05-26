@@ -45,7 +45,6 @@ import com.example.check_in_mobile_app.ui.theme.NavyBlue
 fun PassportScanScreen(
     onBack: () -> Unit = {},
     onContinue: () -> Unit = {},
-    onSkip: () -> Unit = {},
     bookingId: String = "",
     viewModel: PassportScanViewModel = viewModel(),
     sessionViewModel: CheckInSessionViewModel = hiltViewModel()
@@ -77,7 +76,6 @@ fun PassportScanScreen(
                     uiState.capturedBitmap?.let { sessionViewModel.startOcrAndVerify(it, bookingId) }
                 }
             },
-            onSkip = onSkip,
             onPassportCaptured = { bitmap ->
                 viewModel.onPassportCaptured(bitmap)
             },
@@ -123,7 +121,6 @@ fun PassportScanScreenContent(
     capturedBitmap: Bitmap?,
     onBack: () -> Unit,
     onContinue: () -> Unit,
-    onSkip: () -> Unit = {},
     onPassportCaptured: (Bitmap?) -> Unit,
     isLoading: Boolean = false
 ) {
@@ -259,19 +256,6 @@ fun PassportScanScreenContent(
                 UploadFromLibraryButton(
                     onClick = { if (!isLoading) galleryLauncher.launch("image/*") }
                 )
-
-                if (!isLoading) {
-                    TextButton(
-                        onClick = onSkip,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            text = "Skip for testing",
-                            color = NavyBlue,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                    }
-                }
 
                 PassportPreviewCard(
                     capturedBitmap = capturedBitmap,

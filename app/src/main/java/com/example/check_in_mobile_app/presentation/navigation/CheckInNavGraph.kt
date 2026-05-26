@@ -64,9 +64,6 @@ fun CheckInNavGraph(
             PassportScanScreen(
                 onBack           = onBackFromFirstStep,
                 onContinue       = { navController.navigate(Destination.CheckingDetailsReview.route) },
-                onSkip           = {
-                    currentPassenger?.let { sessionViewModel.skipPassportScan(it, bookingId) }
-                },
                 bookingId        = bookingId,
                 sessionViewModel = sessionViewModel
             )
