@@ -8,12 +8,12 @@ import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.*
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.domain.model.Passenger
 import com.example.check_in_mobile_app.presentation.checkin.CheckInSessionViewModel
 import com.example.check_in_mobile_app.presentation.checkin.CheckInViewModel
 import com.example.check_in_mobile_app.presentation.checkin.SeatSelection
@@ -58,9 +58,15 @@ fun CheckInNavGraph(
             popEnterTransition = { EnterTransition.None },
             popExitTransition  = { slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(300)) }
         ) {
+            val currentPassenger = booking?.passengers?.find { it.passengerId == passengerId }
+                ?: booking?.passengers?.firstOrNull()
+
             PassportScanScreen(
                 onBack           = onBackFromFirstStep,
                 onContinue       = { navController.navigate(Destination.CheckingDetailsReview.route) },
+                onSkip           = {
+                    currentPassenger?.let { sessionViewModel.skipPassportScan(it, bookingId) }
+                },
                 bookingId        = bookingId,
                 sessionViewModel = sessionViewModel
             )

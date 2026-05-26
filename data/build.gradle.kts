@@ -27,7 +27,7 @@ android {
     defaultConfig {
         minSdk = 24
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        val backendUrl = (localProps["URL"] ?: "http://10.0.2.2:3000/").toString()
+        val backendUrl = (localProps["BASE_URL"] ?: "http://10.0.2.2:3000/").toString()
         buildConfigField(
             "String",
             "URL",
@@ -80,7 +80,7 @@ dependencies {
     ksp(libs.hilt.compiler)
 
     // Retrofit
-    implementation("com.squareup.retrofit2:retrofit:2.6.0")
+    api("com.squareup.retrofit2:retrofit:2.6.0")
     implementation("com.squareup.retrofit2:converter-gson:2.6.0")
     implementation("com.google.code.gson:gson:2.8.5")
     implementation("io.coil-kt:coil-compose:2.4.0")

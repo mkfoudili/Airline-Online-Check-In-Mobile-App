@@ -40,7 +40,7 @@ import com.example.domain.model.CheckInStatus
 fun BookingCard(
     booking: Booking,
     onCheckInClick: (String) -> Unit = {},
-    onBoarding: () -> Unit = {}
+    onBoarding: (String) -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -161,7 +161,7 @@ fun BookingCard(
             CheckInStatus.CHECKED_IN -> {
                 Spacer(modifier = Modifier.height(12.dp))
                 Button(
-                    onClick = { onBoarding() },
+                    onClick = { onBoarding(booking.checkinPassengerId ?: "") },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(10.dp),
                     border = androidx.compose.foundation.BorderStroke(1.dp, LocalAppColors.current.textAccent),

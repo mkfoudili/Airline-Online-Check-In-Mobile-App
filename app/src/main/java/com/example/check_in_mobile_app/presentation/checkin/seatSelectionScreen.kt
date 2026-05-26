@@ -13,6 +13,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -61,6 +64,7 @@ fun SeatSelection(
     viewModel: SeatSelectionViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.uiState
+    val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(flightId) {
         viewModel.loadSeats(flightId)
@@ -69,6 +73,12 @@ fun SeatSelection(
     LaunchedEffect(uiState.isSuccess) {
         if (uiState.isSuccess) {
             onContinue()
+        }
+    }
+
+    LaunchedEffect(uiState.errorMessage) {
+        uiState.errorMessage?.let {
+            snackbarHostState.showSnackbar(it)
         }
     }
 
@@ -82,6 +92,7 @@ fun SeatSelection(
                 title = stringResource(R.string.checkin_step3_title)
             )
         },
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { paddingValues ->
         Box(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
             Column(
@@ -89,6 +100,13 @@ fun SeatSelection(
                     .fillMaxSize()
                     .background(color = MaterialTheme.colorScheme.background)
             ) {
+                if (uiState.isLoading) {
+                    LinearProgressIndicator(
+                        modifier = Modifier.fillMaxWidth(),
+                        color = LocalAppColors.current.textAccent
+                    )
+                }
+
                 SeatLegend()
 
                 SeatGrid(
@@ -117,12 +135,6 @@ fun SeatSelection(
                 androidx.compose.material3.CircularProgressIndicator(
                     modifier = Modifier.align(Alignment.Center)
                 )
-            }
-
-            uiState.errorMessage?.let { error ->
-                androidx.compose.material3.Snackbar {
-                    Text(error)
-                }
             }
         }
     }

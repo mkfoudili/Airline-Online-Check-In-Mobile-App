@@ -50,8 +50,19 @@ fun RegisterForm(
     var passwordVisible        by remember { mutableStateOf(false) }
     var confirmPasswordVisible by remember { mutableStateOf(false) }
 
+    val emailRegex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$".toRegex()
+    val phoneRegex = "^(\\+213|0)(5|6|7)[0-9]{8}$".toRegex()
+
+    val isEmailValid = email.isEmpty() || email.matches(emailRegex)
+    val isPhoneValid = phone.isEmpty() || phone.matches(phoneRegex)
     val passwordMismatch = confirmPassword.isNotEmpty() && password != confirmPassword
     val passwordTooShort = password.isNotEmpty() && password.length < 8
+
+    val canRegister = fullName.isNotBlank()
+            && email.isNotBlank() && isEmailValid
+            && phone.isNotBlank() && isPhoneValid
+            && password.isNotBlank() && !passwordTooShort
+            && confirmPassword.isNotBlank() && !passwordMismatch
 
     Column(
         modifier = modifier
@@ -62,7 +73,7 @@ fun RegisterForm(
     ) {
 
         // ── Full Name ──────────────────────────────────────────────────
-        FieldLabel(androidx.compose.ui.res.stringResource(R.string.common_full_name))
+        FieldLabel(androidx.compose.ui.res.stringResource(R.string.common_full_name), isRequired = true)
         AuthTextField(
             value = fullName,
             onValueChange = { fullName = it },
@@ -74,31 +85,49 @@ fun RegisterForm(
         Spacer(modifier = Modifier.height(16.dp))
 
         // ── Email Address ──────────────────────────────────────────────
-        FieldLabel(androidx.compose.ui.res.stringResource(R.string.common_email_address))
+        FieldLabel(androidx.compose.ui.res.stringResource(R.string.common_email_address), isRequired = true)
         AuthTextField(
             value = email,
             onValueChange = { email = it },
             placeholder = androidx.compose.ui.res.stringResource(R.string.profile_email_placeholder),
             leadingIconRes = R.drawable.mail,
-            keyboardType = KeyboardType.Email
+            keyboardType = KeyboardType.Email,
+            isError = !isEmailValid
         )
+        if (!isEmailValid) {
+            Text(
+                text = "Please enter a valid email address",
+                color = ErrorRed,
+                fontSize = 12.sp,
+                modifier = Modifier.padding(top = 4.dp, start = 4.dp)
+            )
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
         // ── Phone Number ───────────────────────────────────────────────
-        FieldLabel(androidx.compose.ui.res.stringResource(R.string.common_phone_number))
+        FieldLabel(androidx.compose.ui.res.stringResource(R.string.common_phone_number), isRequired = true)
         AuthTextField(
             value = phone,
             onValueChange = { phone = it },
-            placeholder = androidx.compose.ui.res.stringResource(R.string.profile_phone_placeholder),
+            placeholder = "+213 5XX XX XX XX",
             leadingIconRes = R.drawable.phone,
-            keyboardType = KeyboardType.Phone
+            keyboardType = KeyboardType.Phone,
+            isError = !isPhoneValid
         )
+        if (!isPhoneValid) {
+            Text(
+                text = "Enter a valid Algerian phone number (+213 or 0 followed by 5/6/7)",
+                color = ErrorRed,
+                fontSize = 12.sp,
+                modifier = Modifier.padding(top = 4.dp, start = 4.dp)
+            )
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
         // ── Password ───────────────────────────────────────────────────
-        FieldLabel(androidx.compose.ui.res.stringResource(R.string.common_password))
+        FieldLabel(androidx.compose.ui.res.stringResource(R.string.common_password), isRequired = true)
         AuthTextField(
             value = password,
             onValueChange = { password = it },
@@ -129,7 +158,7 @@ fun RegisterForm(
         Spacer(modifier = Modifier.height(16.dp))
 
         // ── Confirm Password ───────────────────────────────────────────
-        FieldLabel(androidx.compose.ui.res.stringResource(R.string.profile_confirm_password_label))
+        FieldLabel(androidx.compose.ui.res.stringResource(R.string.profile_confirm_password_label), isRequired = true)
         AuthTextField(
             value = confirmPassword,
             onValueChange = { confirmPassword = it },
@@ -156,17 +185,11 @@ fun RegisterForm(
         PrimaryButton(
             text = androidx.compose.ui.res.stringResource(R.string.auth_create_account),
             onClick = {
-                if (!passwordTooShort && !passwordMismatch) {
+                if (canRegister) {
                     onCreateAccountClick(fullName, email, phone, password)
                 }
             },
-            enabled = fullName.isNotBlank()
-                    && email.isNotBlank()
-                    && phone.isNotBlank()
-                    && password.isNotBlank()
-                    && confirmPassword.isNotBlank()
-                    && !passwordTooShort
-                    && !passwordMismatch
+            enabled = canRegister
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -252,14 +275,24 @@ fun RegisterForm(
 
 // ── Reusable field label ───────────────────────────────────────────────────
 @Composable
-private fun FieldLabel(text: String) {
-    Text(
-        text = text,
-        fontSize = 14.sp,
-        fontWeight = FontWeight.Medium,
-        color = LocalAppColors.current.textPrimary,
-        modifier = Modifier.padding(bottom = 6.dp)
-    )
+private fun FieldLabel(text: String, isRequired: Boolean = false) {
+    Row {
+        Text(
+            text = text,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Medium,
+            color = LocalAppColors.current.textPrimary,
+            modifier = Modifier.padding(bottom = 6.dp)
+        )
+        if (isRequired) {
+            Text(
+                text = " *",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                color = ErrorRed
+            )
+        }
+    }
 }
 
 // ── Reusable text field ────────────────────────────────────────────────────

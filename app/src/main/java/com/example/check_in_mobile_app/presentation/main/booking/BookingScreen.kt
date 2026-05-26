@@ -140,7 +140,7 @@ fun BookingScreenContent(
 
                 uiState is BookingUiState.Success -> {
                     ViewAllButton(
-                        title = stringResource(R.string.checked_in_flights),
+                        title = stringResource(R.string.upcoming_flights),
                         actionLabel = stringResource(R.string.view_all),
                         onActionClick = onViewAllClick
                     )
@@ -151,8 +151,9 @@ fun BookingScreenContent(
                             .weight(1f)
                     ) {
                         items(uiState.bookings) { booking ->
-                            CheckedInBookingCard(
+                            BookingCard(
                                 booking = booking,
+                                onCheckInClick = onCheckInClick,
                                 onBoarding = { passengerId -> onBoarding(passengerId) }
                             )
                         }

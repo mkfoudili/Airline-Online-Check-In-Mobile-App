@@ -9,5 +9,6 @@ data class Booking(
     val passengers: List<Passenger>,
     val gate: String = "",
     val bookingRef: String = "",
-    val checkinPassengerId: String? = null
+    val checkinPassengerId: String? = null,
+    val checkinSessionId: String? = null
 )

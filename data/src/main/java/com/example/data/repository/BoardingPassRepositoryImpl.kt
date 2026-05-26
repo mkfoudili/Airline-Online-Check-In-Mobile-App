@@ -43,7 +43,7 @@ class BoardingPassRepositoryImpl @Inject constructor(
         return try {
             val response = endpoint.getMyBoardingPasses()
             response.data.forEach { dto ->
-                val boardingPass = dto.toDomain(uid = uid)
+                val boardingPass = dto.toDomain(contextUid = uid)
                 boardingPassDao.insertBoardingPass(boardingPass.toEntity())
                 boardingPassDao.markAsSynced(boardingPass.passId)
             }

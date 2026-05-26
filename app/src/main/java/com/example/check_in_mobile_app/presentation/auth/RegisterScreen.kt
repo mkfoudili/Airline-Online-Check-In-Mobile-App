@@ -1,15 +1,15 @@
 package com.example.check_in_mobile_app.presentation.auth
 
-import androidx.compose.material3.MaterialTheme
-
 import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.credentials.CredentialManager
@@ -20,7 +20,8 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.presentation.components.authforms.RegisterForm
-import com.example.check_in_mobile_app.ui.theme.DarkText
+import com.example.check_in_mobile_app.ui.theme.*
+import com.example.check_in_mobile_app.presentation.utils.toUserFriendlyMessage
 import com.example.data.remote.GOOGLE_WEB_CLIENT_ID
 import kotlinx.coroutines.launch
 
@@ -69,66 +70,69 @@ fun RegisterScreen(
         },
         containerColor = MaterialTheme.colorScheme.background
     ) { paddingValues ->
-        RegisterForm(
-            modifier = Modifier.padding(paddingValues),
-            onCreateAccountClick = { name, email, phone, pass ->
-                viewModel.register(name, email, phone, pass)
-            },
-            onGoogleSignUpClick = {
-                val googleIdOption = GetGoogleIdOption.Builder()
-                    .setFilterByAuthorizedAccounts(false)
-                    .setServerClientId(GOOGLE_WEB_CLIENT_ID)
-                    .setAutoSelectEnabled(false)
-                    .build()
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            if (state.errorMessage != null) {
+                Text(
+                    text = state.errorMessage,
+                    color = ErrorRed,
+                    fontSize = 14.sp,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp, vertical = 8.dp),
+                    textAlign = TextAlign.Center
+                )
+            }
 
-                val request = GetCredentialRequest.Builder()
-                    .addCredentialOption(googleIdOption)
-                    .build()
+            if (state.isLoading) {
+                LinearProgressIndicator(
+                    modifier = Modifier.fillMaxWidth(),
+                    color = NavyBlue,
+                    trackColor = LightGray
+                )
+            }
 
-                scope.launch {
-                    try {
-                        Log.d("AuthDebug", "Step 1: Building Google ID option")
-                        val googleIdOption = GetGoogleIdOption.Builder()
-                            .setFilterByAuthorizedAccounts(false)
-                            .setServerClientId(GOOGLE_WEB_CLIENT_ID)
-                            .setAutoSelectEnabled(false)
-                            .build()
-                        Log.d("AuthDebug", "Step 2: Google ID option built successfully")
+            RegisterForm(
+                modifier = Modifier.weight(1f),
+                onCreateAccountClick = { name, email, phone, pass ->
+                    viewModel.register(name, email, phone, pass)
+                },
+                onGoogleSignUpClick = {
+                    val googleIdOption = GetGoogleIdOption.Builder()
+                        .setFilterByAuthorizedAccounts(false)
+                        .setServerClientId(GOOGLE_WEB_CLIENT_ID)
+                        .setAutoSelectEnabled(false)
+                        .build()
 
-                        val request = GetCredentialRequest.Builder()
-                            .addCredentialOption(googleIdOption)
-                            .build()
-                        Log.d("AuthDebug", "Step 3: Request built successfully")
+                    val request = GetCredentialRequest.Builder()
+                        .addCredentialOption(googleIdOption)
+                        .build()
 
-                        val result = credentialManager.getCredential(
-                            context = context,
-                            request = request
-                        )
-                        Log.d("AuthDebug", "Step 4: Got credential result: ${result.credential.type}")
-
-                        val credential = result.credential
-                        if (credential is GoogleIdTokenCredential) {
-                            Log.d("AuthDebug", "Step 5: Valid GoogleIdTokenCredential, sending to ViewModel")
-                            viewModel.signInWithGoogle(credential.idToken)
-                        } else {
-                            Log.e("AuthDebug", "Step 5 FAILED: Unexpected credential type: ${credential.type}")
+                    scope.launch {
+                        try {
+                            val result = credentialManager.getCredential(
+                                context = context,
+                                request = request
+                            )
+                            val credential = result.credential
+                            if (credential is GoogleIdTokenCredential) {
+                                viewModel.signInWithGoogle(credential.idToken)
+                            } else {
+                                viewModel.setError("Authentication method not supported.")
+                            }
+                        } catch (e: GetCredentialException) {
+                            viewModel.setError("No Google account selected or sign-in was canceled.")
+                        } catch (e: Exception) {
+                            viewModel.setError(e.toUserFriendlyMessage())
                         }
-
-                    } catch (e: GetCredentialException) {
-                        Log.e("AuthDebug", "FAILED at GetCredentialException")
-                        Log.e("AuthDebug", "Type: ${e.type}")
-                        Log.e("AuthDebug", "Message: ${e.message}")
-                        Log.e("AuthDebug", "Cause: ${e.cause}")
-                        viewModel.setError("Google Sign-Up failed: ${e.message ?: "No accounts found"}")
-                    } catch (e: Exception) {
-                        Log.e("AuthDebug", "FAILED at unexpected Exception")
-                        Log.e("AuthDebug", "Message: ${e.message}")
-                        Log.e("AuthDebug", "Cause: ${e.cause}")
-                        viewModel.setError("An unexpected error occurred")
                     }
-                }
-            },
-            onSignInClick = onNavigateToLogin
-        )
+                },
+                onSignInClick = onNavigateToLogin
+            )
+        }
     }
 }

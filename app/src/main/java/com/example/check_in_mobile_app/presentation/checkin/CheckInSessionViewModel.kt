@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.model.CheckInSession
 import com.example.domain.model.Passenger
+import com.example.domain.repository.AuthRepository
 import com.example.domain.repository.CheckInRepository
 import com.example.domain.usecase.checkin.VerifyPassportUseCase
 import com.example.domain.usecase.ocr.ExtractPassportDataUseCase
@@ -29,7 +30,8 @@ data class CheckInSessionState(
 class CheckInSessionViewModel @Inject constructor(
     private val extractPassportDataUseCase: ExtractPassportDataUseCase,
     private val verifyPassportUseCase: VerifyPassportUseCase,
-    private val checkInRepository: CheckInRepository
+    private val checkInRepository: CheckInRepository,
+    private val authRepository: AuthRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(CheckInSessionState())
@@ -94,9 +96,12 @@ class CheckInSessionViewModel @Inject constructor(
                 // Étape 3 : Création/reprise de la session
                 _state.update { it.copy(ocrStatus = OcrStatus.CREATING_SESSION) }
 
+                val currentUid = authRepository.getCurrentUserId()
+
                 val sessionResult = checkInRepository.createOrResumeSession(
                     passengerId = passenger.passengerId,
-                    bookingId   = bookingId
+                    bookingId   = bookingId,
+                    uid         = currentUid
                 )
 
                 sessionResult.fold(
@@ -136,5 +141,49 @@ class CheckInSessionViewModel @Inject constructor(
 
     fun clearError() {
         _state.update { it.copy(ocrStatus = OcrStatus.IDLE, errorMessage = null) }
+    }
+
+    fun skipPassportScan(passenger: Passenger, bookingId: String) {
+        viewModelScope.launch {
+            try {
+                _state.update { it.copy(ocrStatus = OcrStatus.CREATING_SESSION, errorMessage = null) }
+
+                val currentUid = authRepository.getCurrentUserId()
+
+                val sessionResult = checkInRepository.createOrResumeSession(
+                    passengerId = passenger.passengerId,
+                    bookingId   = bookingId,
+                    uid         = currentUid
+                )
+
+                sessionResult.fold(
+                    onSuccess = { session ->
+                        _state.update {
+                            it.copy(
+                                ocrStatus         = OcrStatus.SUCCESS,
+                                verifiedPassenger = passenger,
+                                activeSession     = session,
+                                errorMessage      = null
+                            )
+                        }
+                    },
+                    onFailure = { error ->
+                        _state.update {
+                            it.copy(
+                                ocrStatus    = OcrStatus.ERROR,
+                                errorMessage = error.message ?: "Failed to start check-in session."
+                            )
+                        }
+                    }
+                )
+            } catch (e: Exception) {
+                _state.update {
+                    it.copy(
+                        ocrStatus    = OcrStatus.ERROR,
+                        errorMessage = "An unexpected error occurred during skip."
+                    )
+                }
+            }
+        }
     }
 }

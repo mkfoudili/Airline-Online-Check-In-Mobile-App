@@ -1,5 +1,6 @@
 package com.example.data.remote.dto
 
 data class SelectSeatRequest(
-    val seatNumber: String
+    val seatNumber: String,
+    val uid: String? = null
 )

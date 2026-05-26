@@ -35,6 +35,7 @@ import com.example.check_in_mobile_app.presentation.checkin.OcrStatus
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
@@ -44,6 +45,7 @@ import com.example.check_in_mobile_app.ui.theme.NavyBlue
 fun PassportScanScreen(
     onBack: () -> Unit = {},
     onContinue: () -> Unit = {},
+    onSkip: () -> Unit = {},
     bookingId: String = "",
     viewModel: PassportScanViewModel = viewModel(),
     sessionViewModel: CheckInSessionViewModel = hiltViewModel()
@@ -75,10 +77,11 @@ fun PassportScanScreen(
                     uiState.capturedBitmap?.let { sessionViewModel.startOcrAndVerify(it, bookingId) }
                 }
             },
+            onSkip = onSkip,
             onPassportCaptured = { bitmap ->
                 viewModel.onPassportCaptured(bitmap)
             },
-            isLoading = sessionState.ocrStatus == OcrStatus.SCANNING || sessionState.ocrStatus == OcrStatus.VERIFYING
+            isLoading = sessionState.ocrStatus == OcrStatus.SCANNING || sessionState.ocrStatus == OcrStatus.VERIFYING || sessionState.ocrStatus == OcrStatus.CREATING_SESSION
         )
 
         // Error snackbar host
@@ -120,6 +123,7 @@ fun PassportScanScreenContent(
     capturedBitmap: Bitmap?,
     onBack: () -> Unit,
     onContinue: () -> Unit,
+    onSkip: () -> Unit = {},
     onPassportCaptured: (Bitmap?) -> Unit,
     isLoading: Boolean = false
 ) {
@@ -255,6 +259,19 @@ fun PassportScanScreenContent(
                 UploadFromLibraryButton(
                     onClick = { if (!isLoading) galleryLauncher.launch("image/*") }
                 )
+
+                if (!isLoading) {
+                    TextButton(
+                        onClick = onSkip,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = "Skip for testing",
+                            color = NavyBlue,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
+                }
 
                 PassportPreviewCard(
                     capturedBitmap = capturedBitmap,
