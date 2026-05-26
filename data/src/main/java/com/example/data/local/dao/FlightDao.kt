@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Transaction
 import com.example.data.local.entity.FlightEntity
 
 @Dao
@@ -17,4 +16,7 @@ interface FlightDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertFlight(entity: FlightEntity)
+
+    @Query("DELETE FROM flights")
+    suspend fun deleteAllFlights()
 }
