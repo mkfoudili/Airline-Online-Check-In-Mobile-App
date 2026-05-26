@@ -34,6 +34,7 @@ class FlightRepositoryImpl @Inject constructor(
 
     override suspend fun refreshFlightsFromRemote(uid: String): Result<Unit> {
         return try {
+            flightDao.deleteAllFlights()
             val bookingDtos = bookingDataSource.getBookingsByUid(uid)
             bookingDtos.forEach { bookingDto ->
                 try {
