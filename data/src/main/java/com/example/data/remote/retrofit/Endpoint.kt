@@ -9,6 +9,7 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.PATCH
 import retrofit2.http.Query
 import retrofit2.http.Path
 
@@ -58,4 +59,18 @@ interface Endpoint {
 
     @POST("baggage")
     suspend fun declareBaggage(@Header("Authorization") token: String, @Body request: BaggageRequest): Response<BaggageResponse>
+
+    // --- Notifications ---
+
+    @POST("notifications/register-token")
+    suspend fun registerToken(@Body request: RegisterTokenRequest): Response<Unit>
+
+    @GET("notifications")
+    suspend fun getNotifications(): List<NotificationDto>
+
+    @PATCH("notifications/{notificationId}/read")
+    suspend fun markAsRead(@Path("notificationId") notificationId: String): NotificationDto
+
+    @PATCH("notifications/read-all")
+    suspend fun markAllAsRead(): ReadAllResponse
 }

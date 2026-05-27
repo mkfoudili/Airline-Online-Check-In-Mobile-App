@@ -1,55 +1,56 @@
 package com.example.data.repository
 
-import com.example.data.local.dao.NotificationDao
 import com.example.data.mapper.toDomain
-import com.example.data.mapper.toEntity
-import com.example.data.remote.NotificationDataSource
+import com.example.data.remote.retrofit.Endpoint
 import com.example.domain.model.Notification
 import com.example.domain.repository.NotificationRepository
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class NotificationRepositoryImpl(
-    private val notificationDataSource: NotificationDataSource? = null,
-    private val notificationDao: NotificationDao? = null
+/**
+ * Implementation of [NotificationRepository] using direct network calls.
+ * No local persistence (Room) is used.
+ */
+class NotificationRepositoryImpl @Inject constructor(
+    private val api: Endpoint
 ) : NotificationRepository {
 
-    override fun getNotifications(uid: String, callback: (Result<List<Notification>>) -> Unit) {
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val localNotifications = notificationDao?.getAll(uid) ?: emptyList()
-                if (localNotifications.isNotEmpty()) {
-                    callback(Result.success(localNotifications.map { it.toDomain() }))
-                } else {
-                    notificationDataSource?.getNotifications(uid) { result ->
-                        result.onSuccess { dtos ->
-                            val domainNotifications = dtos.map { it.toDomain() }
-                            // Cache locally
-                            CoroutineScope(Dispatchers.IO).launch {
-                                notificationDao?.insertAll(domainNotifications.map { it.toEntity(uid) })
-                            }
-                            callback(Result.success(domainNotifications))
-                        }.onFailure {
-                            callback(Result.failure(it))
-                        }
-                    } ?: callback(Result.failure(Exception("NotificationDataSource is null")))
-                }
-            } catch (e: Exception) {
-                callback(Result.failure(e))
-            }
+    override suspend fun getNotifications(uid: String): Result<List<Notification>> = withContext(Dispatchers.IO) {
+        try {
+            val dtos = api.getNotifications()
+            Result.success(dtos.map { it.toDomain() })
+        } catch (e: Exception) {
+            Result.failure(e)
         }
     }
 
-    override fun getUnreadCount(uid: String, callback: (Result<Int>) -> Unit) {
-        notificationDataSource?.getUnreadCount(uid, callback) ?: callback(Result.success(0))
+    override suspend fun markAsRead(notificationId: String): Result<Unit> = withContext(Dispatchers.IO) {
+        try {
+            api.markAsRead(notificationId)
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 
-    override fun markAllAsRead(uid: String, callback: (Result<Unit>) -> Unit) {
-        notificationDataSource?.markAllAsRead(uid, callback) ?: callback(Result.success(Unit))
+    override suspend fun markAllAsRead(uid: String): Result<Unit> = withContext(Dispatchers.IO) {
+        try {
+            api.markAllAsRead()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 
-    override fun markAsRead(notificationId: String, callback: (Result<Unit>) -> Unit) {
-        notificationDataSource?.markAsRead(notificationId, callback) ?: callback(Result.success(Unit))
+    override suspend fun getUnreadCount(uid: String): Result<Int> = withContext(Dispatchers.IO) {
+        try {
+            // Calculated from the notifications list as the backend doesn't provide a specific count endpoint
+            val dtos = api.getNotifications()
+            val unreadCount = dtos.count { !it.isRead }
+            Result.success(unreadCount)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 }

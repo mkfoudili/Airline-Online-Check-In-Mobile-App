@@ -2,9 +2,12 @@ package com.example.domain.repository
 
 import com.example.domain.model.Notification
 
+/**
+ * Repository for managing notifications.
+ */
 interface NotificationRepository {
-    fun getNotifications(uid: String, callback: (Result<List<Notification>>) -> Unit)
-    fun markAsRead(notificationId: String, callback: (Result<Unit>) -> Unit)
-    fun markAllAsRead(uid: String, callback: (Result<Unit>) -> Unit)
-    fun getUnreadCount(uid: String, callback: (Result<Int>) -> Unit)
+    suspend fun getNotifications(uid: String): Result<List<Notification>>
+    suspend fun markAsRead(notificationId: String): Result<Unit>
+    suspend fun markAllAsRead(uid: String): Result<Unit>
+    suspend fun getUnreadCount(uid: String): Result<Int>
 }
