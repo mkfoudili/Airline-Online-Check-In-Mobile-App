@@ -1,6 +1,7 @@
 package com.example.data.repository
 
 import com.example.data.mapper.toDomain
+import com.example.data.remote.dto.RegisterTokenRequest
 import com.example.data.remote.retrofit.Endpoint
 import com.example.domain.model.Notification
 import com.example.domain.repository.NotificationRepository
@@ -10,7 +11,6 @@ import javax.inject.Inject
 
 /**
  * Implementation of [NotificationRepository] using direct network calls.
- * No local persistence (Room) is used.
  */
 class NotificationRepositoryImpl @Inject constructor(
     private val api: Endpoint
@@ -45,10 +45,22 @@ class NotificationRepositoryImpl @Inject constructor(
 
     override suspend fun getUnreadCount(uid: String): Result<Int> = withContext(Dispatchers.IO) {
         try {
-            // Calculated from the notifications list as the backend doesn't provide a specific count endpoint
             val dtos = api.getNotifications()
             val unreadCount = dtos.count { !it.isRead }
             Result.success(unreadCount)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun registerToken(token: String): Result<Unit> = withContext(Dispatchers.IO) {
+        try {
+            val response = api.registerToken(RegisterTokenRequest(token))
+            if (response.isSuccessful) {
+                Result.success(Unit)
+            } else {
+                Result.failure(Exception("Failed to register token: ${response.code()}"))
+            }
         } catch (e: Exception) {
             Result.failure(e)
         }
