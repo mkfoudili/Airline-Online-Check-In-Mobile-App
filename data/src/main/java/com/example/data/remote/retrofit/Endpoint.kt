@@ -1,8 +1,6 @@
 package com.example.data.remote.retrofit
 
-import com.example.data.remote.dto.ProfileResponse
 import com.example.data.remote.dto.*
-import com.example.data.remote.dto.BookingDto
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -66,10 +64,10 @@ interface Endpoint {
     suspend fun registerToken(@Body request: RegisterTokenRequest): Response<Unit>
 
     @GET("notifications")
-    suspend fun getNotifications(): List<NotificationDto>
+    suspend fun getNotifications(): NotificationListResponse
 
     @PATCH("notifications/{notificationId}/read")
-    suspend fun markAsRead(@Path("notificationId") notificationId: String): NotificationDto
+    suspend fun markAsRead(@Path("notificationId") notificationId: String): NotificationResponse
 
     @PATCH("notifications/read-all")
     suspend fun markAllAsRead(): ReadAllResponse

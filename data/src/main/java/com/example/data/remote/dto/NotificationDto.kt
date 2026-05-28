@@ -18,6 +18,24 @@ data class NotificationDto(
 )
 
 /**
+ * Response wrapper for a list of notifications.
+ */
+data class NotificationListResponse(
+    val success: Boolean,
+    val data: List<NotificationDto>,
+    val message: String?
+)
+
+/**
+ * Response wrapper for a single notification.
+ */
+data class NotificationResponse(
+    val success: Boolean,
+    val data: NotificationDto,
+    val message: String?
+)
+
+/**
  * Request body for registering a push token.
  */
 data class RegisterTokenRequest(
@@ -28,5 +46,11 @@ data class RegisterTokenRequest(
  * Response body for read-all notifications.
  */
 data class ReadAllResponse(
+    val success: Boolean,
+    val data: ReadAllData?,
+    val message: String?
+)
+
+data class ReadAllData(
     val count: Int
 )
