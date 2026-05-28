@@ -4,10 +4,10 @@ import com.example.data.remote.dto.*
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
-import retrofit2.http.PATCH
 import retrofit2.http.Query
 import retrofit2.http.Path
 
@@ -72,11 +72,21 @@ interface Endpoint {
     ): VerifyPassportResponseDto
 
     // Check-in : Baggage
-    /*@POST("checkin/baggage")
+    @POST("checkin/baggage")
     suspend fun saveBaggage(@Body body: Map<String, Any>): BaggageResponse
 
     @GET("checkin/baggage/{passengerId}")
-    suspend fun getBaggage(@Path("passengerId") passengerId: String): BaggageResponse*/
+    suspend fun getBaggage(@Path("passengerId") passengerId: String): BaggageResponse
+
+    @GET("auth/profile")
+    suspend fun getProfile(@Header("Authorization") token: String): Response<ProfileResponse>
+
+    @PUT("auth/profile")
+    suspend fun updateProfile(@Header("Authorization") token: String, @Body request: UpdateProfileRequest): Response<ProfileResponse>
+
+    @PUT("auth/profile/password")
+    suspend fun updatePassword(@Header("Authorization") token: String, @Body request: UpdatePasswordRequest): Response<MessageResponse>
+
     @GET("selectseats/flights/{flightId}/seats")
     suspend fun getSeatMap(@Path("flightId") flightId: String): List<SeatMapDto>
 
