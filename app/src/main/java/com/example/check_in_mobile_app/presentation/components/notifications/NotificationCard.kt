@@ -3,11 +3,11 @@ package com.example.check_in_mobile_app.presentation.components.notifications
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Assignment
-import androidx.compose.material.icons.automirrored.outlined.LibraryBooks
 import androidx.compose.material.icons.outlined.ChevronRight
 import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.Info
@@ -33,7 +33,8 @@ import com.example.check_in_mobile_app.ui.theme.*
 fun NotificationCard(
     notification: NotificationItem,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
+    onNavigateToBooking: (String) -> Unit = {}
 ) {
     val isUnread = !notification.isRead
     val borderColor = if (isUnread) NavyBlue else BorderColor
@@ -131,7 +132,15 @@ fun NotificationCard(
                     imageVector = Icons.Outlined.ChevronRight,
                     contentDescription = null,
                     tint = BorderColor,
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier
+                        .size(24.dp)
+                        .clickable {
+                            if (notification.type == NotificationType.CHECK_IN_CONFIRMATION) {
+                                notification.bookingId?.takeIf { it.isNotBlank() }?.let {
+                                    onNavigateToBooking(it)
+                                }
+                            }
+                        }
                 )
             }
         }

@@ -23,7 +23,8 @@ data class NotificationItem(
     val isRead: Boolean,
     val type: NotificationType,
     val createdAt: Long,
-    val flightCode: String? = null
+    val flightCode: String? = null,
+    val bookingId: String? = null
 )
 
 /**
