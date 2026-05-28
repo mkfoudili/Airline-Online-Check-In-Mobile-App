@@ -6,11 +6,6 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.data.local.dao.BoardingPassDao
 import com.example.data.local.dao.FlightDao
-//import com.example.data.local.dao.NotificationDao
-//import com.example.data.local.dao.NotificationDao
-import com.example.data.local.dao.PassengerDao
-import com.example.data.local.dao.SeatMapDao
-import com.example.data.local.dao.UserDao
 import com.example.data.local.entity.BoardingPassEntity
 import com.example.data.local.entity.FlightEntity
 import com.example.data.local.entity.NotificationEntity
@@ -28,11 +23,6 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun boardingPassDao(): BoardingPassDao
     abstract fun flightDao(): FlightDao
-    //abstract fun notificationDao(): NotificationDao
-    abstract fun passengerDao(): PassengerDao
-    abstract fun seatMapDao(): SeatMapDao
-    abstract fun userDao(): UserDao
-
     companion object {
         @Volatile
         private var INSTANCE: AppDatabase? = null
