@@ -127,7 +127,7 @@ fun NotificationCard(
             }
 
             // Right Chevron
-            if (notification.type != NotificationType.OTHER) {
+            if (notification.type != NotificationType.OTHER && notification.type != NotificationType.BOARDING_REMINDER) {
                 Icon(
                     imageVector = Icons.Outlined.ChevronRight,
                     contentDescription = null,
