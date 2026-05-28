@@ -19,7 +19,8 @@ fun NotificationDto.toDomain(): Notification {
         body = this.body,
         type = mapToNotificationType(this.type),
         isRead = this.isRead,
-        createdAt = parseIsoDate(this.createdAt)
+        createdAt = parseIsoDate(this.createdAt),
+        bookingId = this.bookingId
     )
 }
 
@@ -32,6 +33,7 @@ fun NotificationDto.toEntity(uid: String): NotificationEntity {
         uid = uid,
         passengerId = this.passengerId,
         flightId = this.flightId,
+        bookingId = this.bookingId,
         type = this.type,
         title = this.title,
         body = this.body,
@@ -51,7 +53,8 @@ fun NotificationEntity.toDomain(): Notification {
         body = this.body ?: "",
         type = mapToNotificationType(this.type ?: ""),
         isRead = this.isRead,
-        createdAt = this.createdAt ?: 0L
+        createdAt = this.createdAt ?: 0L,
+        bookingId = this.bookingId
     )
 }
 
