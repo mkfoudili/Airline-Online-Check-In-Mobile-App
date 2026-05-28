@@ -34,7 +34,6 @@ fun NotificationCard(
     notification: NotificationItem,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
-    onNavigateToBooking: (String) -> Unit = {}
 ) {
     val isUnread = !notification.isRead
     val borderColor = if (isUnread) NavyBlue else BorderColor
@@ -126,23 +125,6 @@ fun NotificationCard(
                 }
             }
 
-            // Right Chevron
-            if (notification.type != NotificationType.OTHER && notification.type != NotificationType.BOARDING_REMINDER) {
-                Icon(
-                    imageVector = Icons.Outlined.ChevronRight,
-                    contentDescription = null,
-                    tint = BorderColor,
-                    modifier = Modifier
-                        .size(24.dp)
-                        .clickable {
-                            if (notification.type == NotificationType.CHECK_IN_CONFIRMATION) {
-                                notification.bookingId?.takeIf { it.isNotBlank() }?.let {
-                                    onNavigateToBooking(it)
-                                }
-                            }
-                        }
-                )
-            }
         }
     }
 }
