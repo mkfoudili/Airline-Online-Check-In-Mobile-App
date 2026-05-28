@@ -7,5 +7,6 @@ data class Notification(
     val body: String,
     val type: NotificationType,
     val isRead: Boolean,
-    val createdAt: Long
+    val createdAt: Long,
+    val bookingId: String? = null
 )

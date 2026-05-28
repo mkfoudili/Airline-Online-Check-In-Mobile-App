@@ -1,10 +1,13 @@
 package com.example.data.remote.retrofit
 
 import com.example.data.remote.dto.*
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.PATCH
 import retrofit2.http.Query
 import retrofit2.http.Path
 
@@ -102,4 +105,20 @@ interface Endpoint {
 
     @GET("boarding/my/all")
     suspend fun getMyBoardingPasses(): BoardingPassListResponse
+    @POST("baggage")
+    suspend fun declareBaggage(@Header("Authorization") token: String, @Body request: BaggageRequest): Response<BaggageResponse>
+
+    // --- Notifications ---
+
+    @POST("notifications/register-token")
+    suspend fun registerToken(@Body request: RegisterTokenRequest): Response<Unit>
+
+    @GET("notifications")
+    suspend fun getNotifications(): NotificationListResponse
+
+    @PATCH("notifications/{notificationId}/read")
+    suspend fun markAsRead(@Path("notificationId") notificationId: String): NotificationResponse
+
+    @PATCH("notifications/read-all")
+    suspend fun markAllAsRead(): ReadAllResponse
 }

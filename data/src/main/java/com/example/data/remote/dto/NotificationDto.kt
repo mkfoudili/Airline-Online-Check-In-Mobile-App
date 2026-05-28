@@ -1,16 +1,56 @@
 package com.example.data.remote.dto
 
-import java.sql.Timestamp
-
+/**
+ * Data Transfer Object for Notification.
+ */
 data class NotificationDto(
     val notificationId: String,
-    val uid: String?,
+    val type: String,
+    val title: String,
+    val body: String,
+    val screen: String,
+    val bookingId: String?,
+    val boardingPassId: String?,
     val passengerId: String?,
     val flightId: String?,
-    val type: String?,
-    val title: String?,
-    val body: String?,
     val isRead: Boolean,
-    val createdAt: Timestamp?
+    val createdAt: String
 )
-// - isRead
+
+/**
+ * Response wrapper for a list of notifications.
+ */
+data class NotificationListResponse(
+    val success: Boolean,
+    val data: List<NotificationDto>,
+    val message: String?
+)
+
+/**
+ * Response wrapper for a single notification.
+ */
+data class NotificationResponse(
+    val success: Boolean,
+    val data: NotificationDto,
+    val message: String?
+)
+
+/**
+ * Request body for registering a push token.
+ */
+data class RegisterTokenRequest(
+    val token: String
+)
+
+/**
+ * Response body for read-all notifications.
+ */
+data class ReadAllResponse(
+    val success: Boolean,
+    val data: ReadAllData?,
+    val message: String?
+)
+
+data class ReadAllData(
+    val count: Int
+)
