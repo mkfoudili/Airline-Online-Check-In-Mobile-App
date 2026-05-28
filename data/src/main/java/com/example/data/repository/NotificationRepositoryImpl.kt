@@ -18,8 +18,12 @@ class NotificationRepositoryImpl @Inject constructor(
 
     override suspend fun getNotifications(uid: String): Result<List<Notification>> = withContext(Dispatchers.IO) {
         try {
-            val dtos = api.getNotifications()
-            Result.success(dtos.map { it.toDomain() })
+            val response = api.getNotifications()
+            if (response.success) {
+                Result.success(response.data.map { it.toDomain() })
+            } else {
+                Result.failure(Exception(response.message ?: "Failed to retrieve notifications"))
+            }
         } catch (e: Exception) {
             Result.failure(e)
         }
@@ -27,8 +31,12 @@ class NotificationRepositoryImpl @Inject constructor(
 
     override suspend fun markAsRead(notificationId: String): Result<Unit> = withContext(Dispatchers.IO) {
         try {
-            api.markAsRead(notificationId)
-            Result.success(Unit)
+            val response = api.markAsRead(notificationId)
+            if (response.success) {
+                Result.success(Unit)
+            } else {
+                Result.failure(Exception(response.message ?: "Failed to mark notification as read"))
+            }
         } catch (e: Exception) {
             Result.failure(e)
         }
@@ -36,8 +44,12 @@ class NotificationRepositoryImpl @Inject constructor(
 
     override suspend fun markAllAsRead(uid: String): Result<Unit> = withContext(Dispatchers.IO) {
         try {
-            api.markAllAsRead()
-            Result.success(Unit)
+            val response = api.markAllAsRead()
+            if (response.success) {
+                Result.success(Unit)
+            } else {
+                Result.failure(Exception(response.message ?: "Failed to mark all as read"))
+            }
         } catch (e: Exception) {
             Result.failure(e)
         }
@@ -45,9 +57,13 @@ class NotificationRepositoryImpl @Inject constructor(
 
     override suspend fun getUnreadCount(uid: String): Result<Int> = withContext(Dispatchers.IO) {
         try {
-            val dtos = api.getNotifications()
-            val unreadCount = dtos.count { !it.isRead }
-            Result.success(unreadCount)
+            val response = api.getNotifications()
+            if (response.success) {
+                val unreadCount = response.data.count { !it.isRead }
+                Result.success(unreadCount)
+            } else {
+                Result.failure(Exception(response.message ?: "Failed to fetch unread count"))
+            }
         } catch (e: Exception) {
             Result.failure(e)
         }
