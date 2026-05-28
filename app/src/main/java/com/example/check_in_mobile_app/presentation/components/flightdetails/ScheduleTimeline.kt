@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.components.flightdetails
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -17,10 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.stringResource
 import com.example.check_in_mobile_app.R
-import com.example.check_in_mobile_app.ui.theme.BorderLight
-import com.example.check_in_mobile_app.ui.theme.DarkText
-import com.example.check_in_mobile_app.ui.theme.MediumGray
-import com.example.check_in_mobile_app.ui.theme.NavyBlue
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import com.example.domain.model.Booking
 
 @Composable
@@ -39,15 +38,27 @@ fun ScheduleTimeline(booking: Booking, modifier: Modifier = Modifier) {
             iconRes = R.drawable.clock
         )
         TimelineSpacing()
-        
+
         val sdfTime = java.text.SimpleDateFormat("HH:mm", java.util.Locale.getDefault())
         val depTimeStr = sdfTime.format(java.util.Date(booking.flight.departureTime))
-        
+
         TimelineItem(
             time = depTimeStr,
             title = stringResource(R.string.departure_label),
             subtitle = "${booking.flight.originCity} (${booking.flight.origin})",
             iconRes = R.drawable.plane_up
+        )
+        TimelineSpacing()
+
+        val arrTimeStr = if (booking.flight.arrivalTime > 0L)
+            sdfTime.format(java.util.Date(booking.flight.arrivalTime))
+        else "--"
+
+        TimelineItem(
+            time = arrTimeStr,
+            title = stringResource(R.string.arrival_label),
+            subtitle = "${booking.flight.destinationCity} (${booking.flight.destination})",
+            iconRes = R.drawable.plane2
         )
     }
 }
@@ -68,14 +79,14 @@ fun TimelineItem(
             modifier = Modifier
                 .size(40.dp)
                 .clip(CircleShape)
-                .background(Color.White)
-                .border(1.dp, BorderLight, CircleShape),
+                .background(MaterialTheme.colorScheme.surface)
+                .border(1.dp, MaterialTheme.colorScheme.outlineVariant, CircleShape),
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 painter = painterResource(id = iconRes),
                 contentDescription = null,
-                tint = NavyBlue,
+                tint = LocalAppColors.current.textAccent,
                 modifier = Modifier.size(16.dp)
             )
         }
@@ -88,21 +99,21 @@ fun TimelineItem(
                 text = time,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
-                color = DarkText
+                color = LocalAppColors.current.textPrimary
             )
             Spacer(modifier = Modifier.height(2.dp))
             Text(
                 text = title,
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Medium,
-                color = DarkText
+                color = LocalAppColors.current.textPrimary
             )
             if (subtitle != null) {
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = subtitle,
                     fontSize = 11.sp,
-                    color = MediumGray
+                    color = LocalAppColors.current.textSecondary
                 )
             }
         }
@@ -117,7 +128,7 @@ fun TimelineSpacing() {
             modifier = Modifier
                 .width(2.dp)
                 .height(30.dp)
-                .background(BorderLight)
+                .background(MaterialTheme.colorScheme.outlineVariant)
         )
     }
 }

@@ -3,6 +3,7 @@ package com.example.domain.model
 data class BoardingPass(
     val passId: String,
     val passengerId: String,
+    val uid: String = "",
     val flightId: String,
     val flightNumber: String,
     val origin: String,
@@ -19,5 +20,6 @@ data class BoardingPass(
     val terminal: String?,
     val qrCodeData: String?,
     val issuedAt: Long,
-    val isSyncedWithServer: Boolean = false
+    val isSyncedWithServer: Boolean = false,
+    val lastSyncedAt: Long = 0L
 )

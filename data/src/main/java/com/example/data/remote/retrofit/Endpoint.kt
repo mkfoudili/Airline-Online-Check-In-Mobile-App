@@ -1,27 +1,21 @@
 package com.example.data.remote.retrofit
 
-import com.example.data.remote.dto.ProfileResponse
 import com.example.data.remote.dto.*
-import com.example.data.remote.dto.BookingDto
-import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.Header
+import retrofit2.http.PATCH
 import retrofit2.http.POST
-import retrofit2.http.PUT
 import retrofit2.http.Query
 import retrofit2.http.Path
 
-/**
- * Retrofit API definitions for authentication and user management.
- * The implementation is provided by Hilt via NetworkModule.
- */
 interface Endpoint {
+
+    // Bookings
     @GET("bookings")
-    suspend fun getBookings(@Query("uid") uid: String): List<BookingDto>
+    suspend fun getBookings(): List<BookingDto>
 
     @GET("bookings/upcoming")
-    suspend fun getUpcomingBookings(@Query("uid") uid: String): List<BookingDto>
+    suspend fun getUpcomingBookings(): List<BookingDto>
 
     @GET("bookings/search")
     suspend fun searchBooking(
@@ -29,9 +23,11 @@ interface Endpoint {
         @Query("lastName") lastName: String
     ): BookingDto
 
+    // Flights
     @GET("flights/{id}")
     suspend fun getFlight(@Path("id") id: String): FlightDto
 
+    // Auth
     @POST("auth/register")
     suspend fun register(@Body request: RegisterRequest): AuthResponse
 
@@ -44,18 +40,66 @@ interface Endpoint {
     @GET("auth/exists")
     suspend fun emailExists(@Query("email") email: String): Boolean
 
+    @POST("auth/google")
+    suspend fun loginWithGoogle(@Body request: GoogleAuthRequest): AuthResponse
+
     @POST("auth/logout")
     suspend fun logout()
 
-    @GET("auth/profile")
-    suspend fun getProfile(@Header("Authorization") token: String): Response<ProfileResponse>
+    // Check-in : Session
+    @POST("checkin/session")
+    suspend fun createOrResumeSession(
+        @Body request: CreateSessionRequest
+    ): CreateSessionResponse
 
-    @PUT("auth/profile")
-    suspend fun updateProfile(@Header("Authorization") token: String, @Body request: UpdateProfileRequest): Response<ProfileResponse>
+    @PATCH("checkin/session/step")
+    suspend fun advanceSessionStep(
+        @Body request: AdvanceStepRequest
+    ): AdvanceStepResponse
 
-    @PUT("auth/profile/password")
-    suspend fun updatePassword(@Header("Authorization") token: String, @Body request: UpdatePasswordRequest): Response<MessageResponse>
+    // Check-in : Passport
+    @GET("checkin/verify-passport")
+    suspend fun verifyPassport(
+        @Query("passportNumber") passportNumber: String,
+        @Query("lastName") lastName: String,
+        @Query("firstName") firstName: String? = null,
+        @Query("nationality") nationality: String? = null,
+        @Query("dateOfBirth") dateOfBirth: String? = null,
+        @Query("expiryDate") expiryDate: String? = null
+    ): VerifyPassportResponseDto
 
-    @POST("baggage")
-    suspend fun declareBaggage(@Header("Authorization") token: String, @Body request: BaggageRequest): Response<BaggageResponse>
+    // Check-in : Baggage
+    /*@POST("checkin/baggage")
+    suspend fun saveBaggage(@Body body: Map<String, Any>): BaggageResponse
+
+    @GET("checkin/baggage/{passengerId}")
+    suspend fun getBaggage(@Path("passengerId") passengerId: String): BaggageResponse*/
+    @GET("selectseats/flights/{flightId}/seats")
+    suspend fun getSeatMap(@Path("flightId") flightId: String): List<SeatMapDto>
+
+    @POST("selectseats/passengers/{passengerId}/seat")
+    suspend fun selectSeat(
+        @Path("passengerId") passengerId: String,
+        @Body request: SelectSeatRequest
+    ): SeatMapDto
+
+    // --- Special Requests & Preferences ---
+    @GET("preferences/{uid}")
+    suspend fun getUserPreferences(@Path("uid") uid: String): PreferencesDto
+
+    @POST("preferences/conclude")
+    suspend fun concludeCheckin(@Body request: ConcludeCheckinRequest): ConcludeCheckinResponse
+
+
+    // Boarding Pass
+    @POST("boarding/generate")
+    suspend fun generateBoardingPass(
+        @Body body: Map<String, String>
+    ): BoardingPassResponse
+
+    @GET("boarding/my")
+    suspend fun getMyBoardingPass(): BoardingPassResponse
+
+    @GET("boarding/my/all")
+    suspend fun getMyBoardingPasses(): BoardingPassListResponse
 }

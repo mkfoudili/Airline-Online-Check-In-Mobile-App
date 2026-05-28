@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.checkin.boarding
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -22,8 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.check_in_mobile_app.BaseApplication
 import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.presentation.components.OfflineBanner
 import com.example.check_in_mobile_app.presentation.components.boarding.BoardingPassCard
@@ -58,7 +58,7 @@ fun BoardingScreen(
     }
 
     Scaffold(
-        containerColor = Color.White,
+        containerColor = MaterialTheme.colorScheme.background,
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = { BoardingTopBar(onBack = onBack) }
     ) { innerPadding ->
@@ -105,7 +105,7 @@ fun BoardingScreen(
                     androidx.compose.material3.Text(
                         text = androidx.compose.ui.res.stringResource(R.string.boarding_no_pass_found),
                         fontSize = 15.sp,
-                        color = com.example.check_in_mobile_app.ui.theme.CoolGray,
+                        color = com.example.check_in_mobile_app.ui.theme.LocalAppColors.current.textSubtle,
                         fontWeight = FontWeight.Medium,
                         textAlign = androidx.compose.ui.text.style.TextAlign.Center
                     )
@@ -127,7 +127,7 @@ fun BoardingScreen(
                         iconDescription = "wifi-off",
                         title = stringResource(R.string.boarding_available_offline),
                         description = stringResource(R.string.boarding_offline_desc),
-                        isVerifiedBadge = true
+                        isVerifiedBadge = true,
                     )
                     Spacer(Modifier.height(20.dp))
                     BoardingPassCard(
@@ -149,7 +149,7 @@ fun BoardingScreen(
                         if (uiState.isDownloadingPdf) {
                             CircularProgressIndicator(
                                 modifier = Modifier.size(20.dp),
-                                color = Color.White,
+                                color = MaterialTheme.colorScheme.surface,
                                 strokeWidth = 4.dp
                             )
                         } else {
@@ -160,7 +160,7 @@ fun BoardingScreen(
                             Spacer(Modifier.width(8.dp))
                             Text(
                                 text = stringResource(R.string.boarding_download_pdf),
-                                color = Color.White,
+                                color = MaterialTheme.colorScheme.surface,
                                 fontSize = 15.sp,
                                 fontWeight = FontWeight.SemiBold,
                                 maxLines = 1,

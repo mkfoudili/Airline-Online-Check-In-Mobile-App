@@ -6,9 +6,11 @@
     <string name="all_bookings">كل الحجوزات</string>
     <string name="all_flights">كل الرحلات</string>
     <string name="upcoming_flights">الرحلات القادمة</string>
+    <string name="checked_in_flights">الرحلات المسجلة</string>
     <string name="view_all">عرض الكل</string>
     <string name="search_hint">ابحث عن وجهة</string>
     <string name="back">رجوع</string>
+    <string name="flight_completed">اكتملت الرحلة</string>
     <!-- Date Picker -->
     <string name="select_date">اختر تاريخاً</string>
     <string name="ok">موافق</string>
@@ -38,6 +40,7 @@
     <string name="schedule_label">الجدول الزمني</string>
     <string name="pnr_label">رقم الحجز:</string>
     <string name="departure_label">المغادرة</string>
+    <string name="arrival_label">الوصول</string>
     <string name="checkin_opens_label">فتح تسجيل الوصول</string>
     <string name="boarding_starts_label">بدء الصعود</string>
     <string name="gate_label">البوابة</string>
@@ -100,6 +103,8 @@
     <string name="confirmation_download_pdf">تنزيل PDF</string>
     <string name="confirmation_back_dashboard">العودة إلى لوحة التحكم</string>
     <string name="confirmation_download_toast">طلب تنزيل PDF</string>
+    <string name="confirmation_error_generic">حدث خطأ. يرجى المحاولة مرة أخرى.</string>
+    <string name="confirmation_retry">إعادة المحاولة</string>
     <!-- Home Screen -->
     <string name="home_greeting">مرحباً، %1$s</string>
     <string name="home_retrieve_booking">استرجاع حجز</string>
@@ -114,10 +119,15 @@
     <string name="offline_features_require_internet">بعض الميزات تتطلب اتصالاً بالإنترنت.</string>
     <string name="offline_upcoming_flight">الرحلة القادمة</string>
     <string name="offline_synced_ago">آخر مزامنة منذ %1$s</string>
+    <string name="offline_synced_just_now">تمت المزامنة للتو</string>
+    <string name="offline_synced_minutes_ago">مزامنة منذ %1$d دقيقة</string>
+    <string name="offline_synced_hours_ago">مزامنة منذ %1$d ساعة</string>
     <string name="offline_available_actions">الإجراءات المتاحة</string>
     <string name="offline_data_saved_note">تم حفظ بيانات رحلتك تلقائياً للوصول دون إنترنت. للتحديث، أعد الاتصال بشبكة Wi-Fi أو البيانات الخلوية.</string>
     <string name="offline_view_boarding_pass">عرض بطاقة الصعود</string>
     <string name="offline_accessible_without_connection">متاح بدون اتصال</string>
+    <string name="offline_view_flight_details">عرض تفاصيل الرحلة</string>
+    <string name="offline_checkin_unavailable">لا يمكن إتمام تسجيل الوصول بدون اتصال بالإنترنت.</string>
     <!-- Active Flight Card (Online Home) -->
     <string name="active_now_badge">نشط الآن</string>
     <string name="active_ready_to_fly">هل أنت مستعد للسفر؟</string>
@@ -146,5 +156,11 @@
     <string name="home_search_error_generic">حدث خطأ. يرجى المحاولة مرة أخرى.</string>
     <string name="active_flight_upcoming">رحلتك القادمة إلى %1$s.</string>
     <string name="offline_no_cached_flight">لا توجد بيانات رحلة متاحة بدون إنترنت.</string>
+    <string name="offline_no_upcoming_flight">لا توجد رحلات قادمة.</string>
+    <string name="offline_past_flights">الرحلات الماضية</string>
     <string name="offline_not_synced">لم تتم المزامنة بعد</string>
+
+    <!-- Connection Error -->
+    <string name="connection_timed_out">انتهت مهلة الاتصال</string>
+    <string name="connection_error_description">لا يمكن الوصول إلى خوادمنا. يرجى التحقق من اتصال البيانات أو Wi-Fi والمحاولة مرة أخرى.</string>
 </resources>

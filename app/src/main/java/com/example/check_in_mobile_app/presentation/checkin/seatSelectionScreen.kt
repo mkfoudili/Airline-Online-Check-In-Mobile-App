@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.stringResource
 import com.example.check_in_mobile_app.R
-import com.example.check_in_mobile_app.ui.theme.NavyBlue
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import com.example.check_in_mobile_app.presentation.components.checkin.ProgressBar
 import com.example.check_in_mobile_app.presentation.components.checkin.SeatGrid
 import com.example.check_in_mobile_app.presentation.components.checkin.SeatLegend
@@ -47,12 +47,30 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import com.example.check_in_mobile_app.presentation.components.checkin.CheckInTopBar
 
+import androidx.compose.runtime.LaunchedEffect
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.check_in_mobile_app.presentation.components.checkin.generateFallbackSeats
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SeatSelection(
+    flightId: String,
+    passengerId: String,
     onNavigateBack: () -> Unit = {},
-    onContinue: () -> Unit = {}
+    onContinue: () -> Unit = {},
+    viewModel: SeatSelectionViewModel = hiltViewModel()
 ) {
+    val uiState = viewModel.uiState
+
+    LaunchedEffect(flightId) {
+        viewModel.loadSeats(flightId)
+    }
+
+    LaunchedEffect(uiState.isSuccess) {
+        if (uiState.isSuccess) {
+            onContinue()
+        }
+    }
 
     var selectedSeat by remember { mutableStateOf<SeatModel?>(null) }
 
@@ -65,32 +83,46 @@ fun SeatSelection(
             )
         },
     ) { paddingValues ->
-        Column(
+        Box(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = MaterialTheme.colorScheme.background)
+            ) {
+                SeatLegend()
 
-            modifier = Modifier
-                .padding(paddingValues)
-                .fillMaxSize()
-                .background(color = Color(0xFFF9FAFA))
-        ) {
-
-
-            SeatLegend()
-
-
-            SeatGrid(
-                modifier = Modifier.weight(1f).
-                background(color = Color(0xFFF9FAFA)),
-                selectedSeatId = selectedSeat?.seatId,
-                onSeatSelected = { seat ->
-                    selectedSeat = seat
-                }
-            )
-
-            selectedSeat?.let { seat ->
-                SelectedSeatBottomBar(
-                    seat = seat,
-                    onConfirm = onContinue
+                SeatGrid(
+                    seats = uiState.seats.ifEmpty { generateFallbackSeats(flightId) },
+                    modifier = Modifier
+                        .weight(1f)
+                        .background(color = MaterialTheme.colorScheme.background),
+                    selectedSeatId = selectedSeat?.seatId,
+                    onSeatSelected = { seat ->
+                        selectedSeat = seat
+                    }
                 )
+
+                selectedSeat?.let { seat ->
+                    SelectedSeatBottomBar(
+                        seat = seat,
+                        isLoading = uiState.isLoading,
+                        onConfirm = {
+                            viewModel.selectSeat(passengerId, seat.seatNumber)
+                        }
+                    )
+                }
+            }
+
+            if (uiState.isLoading && uiState.seats.isEmpty()) {
+                androidx.compose.material3.CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center)
+                )
+            }
+
+            uiState.errorMessage?.let { error ->
+                androidx.compose.material3.Snackbar {
+                    Text(error)
+                }
             }
         }
     }
@@ -99,6 +131,7 @@ fun SeatSelection(
 @Composable
 fun SelectedSeatBottomBar(
     seat: SeatModel,
+    isLoading: Boolean = false,
     onConfirm: () -> Unit = {}
 ) {
     Column(
@@ -107,15 +140,13 @@ fun SelectedSeatBottomBar(
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-
         Text(
             text = stringResource(R.string.checkin_seat_label, seat.seatNumber),
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
-            color = NavyBlue
+            color = LocalAppColors.current.textAccent
         )
 
-        // "Standard Passenger Seat" or "Premium Seat"
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(6.dp)
@@ -132,9 +163,9 @@ fun SelectedSeatBottomBar(
                 modifier = Modifier.size(16.dp)
             )
             Text(
-                text = if (seat.isPremium) 
-                    stringResource(R.string.checkin_premium_seat) 
-                else 
+                text = if (seat.isPremium)
+                    stringResource(R.string.checkin_premium_seat)
+                else
                     stringResource(R.string.checkin_standard_seat),
                 fontSize = 13.sp,
                 color = Color.Gray
@@ -143,21 +174,29 @@ fun SelectedSeatBottomBar(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Confirm button
         OutlinedButton(
             onClick = onConfirm,
+            enabled = !isLoading,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(52.dp),
             shape = RoundedCornerShape(12.dp),
-            border = BorderStroke(1.dp, NavyBlue)
+            border = BorderStroke(1.dp, LocalAppColors.current.textAccent)
         ) {
-            Text(
-                text = stringResource(R.string.checkin_confirm_seat),
-                fontSize = 15.sp,
-                color = NavyBlue,
-                fontWeight = FontWeight.Medium
-            )
+            if (isLoading) {
+                androidx.compose.material3.CircularProgressIndicator(
+                    modifier = Modifier.size(24.dp),
+                    color = LocalAppColors.current.textAccent,
+                    strokeWidth = 2.dp
+                )
+            } else {
+                Text(
+                    text = stringResource(R.string.checkin_confirm_seat),
+                    fontSize = 15.sp,
+                    color = LocalAppColors.current.textAccent,
+                    fontWeight = FontWeight.Medium
+                )
+            }
         }
     }
 }

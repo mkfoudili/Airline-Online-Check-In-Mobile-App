@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -14,7 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.check_in_mobile_app.R
-import com.example.check_in_mobile_app.ui.theme.MediumGray
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import com.example.check_in_mobile_app.ui.theme.NavyBlue
 import java.text.SimpleDateFormat
 import java.util.*
@@ -36,7 +37,7 @@ fun DateField(
         modifier = modifier
             .fillMaxWidth()
             .height(40.dp)
-            .border(1.dp, Color(0xFFE2E8F0), RoundedCornerShape(16.dp))
+            .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(16.dp))
             .clickable { showDatePicker = true }
             .padding(start = 12.dp, end = 4.dp)
     ) {
@@ -47,7 +48,7 @@ fun DateField(
             Icon(
                 painter = painterResource(id = R.drawable.calendar),
                 contentDescription = stringResource(R.string.select_date),
-                tint = NavyBlue,
+                tint = LocalAppColors.current.textAccent,
                 modifier = Modifier.size(20.dp)
             )
             Spacer(modifier = Modifier.width(8.dp))
@@ -56,11 +57,11 @@ fun DateField(
                     Text(
                         text = stringResource(R.string.select_date),
                         fontSize = 14.sp,
-                        color = NavyBlue,
+                        color = LocalAppColors.current.textAccent,
                         fontWeight = FontWeight.Medium
                     )
                 } else {
-                    Text(selectedDate!!, fontSize = 14.sp, color = Color.Black)
+                    Text(selectedDate!!, fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurface)
                 }
             }
             if (hasDate) {
@@ -74,7 +75,7 @@ fun DateField(
                     Icon(
                         painter = painterResource(id = R.drawable.close),
                         contentDescription = "Clear date",
-                        tint = MediumGray,
+                        tint = LocalAppColors.current.textSecondary,
                         modifier = Modifier.size(18.dp)
                     )
                 }
@@ -83,7 +84,7 @@ fun DateField(
                 Icon(
                     painter = painterResource(id = R.drawable.chevron_down),
                     contentDescription = "Expand",
-                    tint = MediumGray,
+                    tint = LocalAppColors.current.textSecondary,
                     modifier = Modifier
                         .size(32.dp)
                         .padding(4.dp)
@@ -106,12 +107,12 @@ fun DateField(
                     }
                     showDatePicker = false
                 }) {
-                    Text(stringResource(R.string.common_ok), color = NavyBlue)
+                    Text(stringResource(R.string.ok), color = LocalAppColors.current.textAccent)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDatePicker = false }) {
-                    Text(stringResource(R.string.common_cancel), color = NavyBlue)
+                    Text(stringResource(R.string.cancel), color = LocalAppColors.current.textAccent)
                 }
             }
         ) {
@@ -119,10 +120,12 @@ fun DateField(
                 state = datePickerState,
                 colors = DatePickerDefaults.colors(
                     selectedDayContainerColor = NavyBlue,
-                    todayDateBorderColor = NavyBlue,
-                    todayContentColor = NavyBlue,
+                    todayDateBorderColor = LocalAppColors.current.textAccent,
+                    todayContentColor = LocalAppColors.current.textAccent,
                 )
             )
         }
     }
 }
+
+

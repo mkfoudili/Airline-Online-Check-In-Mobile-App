@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.components.baggage
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -35,7 +37,7 @@ fun BaggageCard(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .border(1.dp, BorderColor, RoundedCornerShape(12.dp))
+            .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(12.dp))
             .padding(16.dp)
     ) {
         Row(
@@ -47,13 +49,13 @@ fun BaggageCard(
                 modifier = Modifier
                     .size(48.dp)
                     .clip(RoundedCornerShape(8.dp))
-                    .background(SurfaceGray),
+                    .background(MaterialTheme.colorScheme.surfaceVariant),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     painter = painterResource(id = iconResId),
                     contentDescription = null,
-                    tint = NavyBlue,
+                    tint = LocalAppColors.current.textAccent,
                     modifier = Modifier.size(24.dp)
                 )
             }
@@ -65,14 +67,14 @@ fun BaggageCard(
                     text = title,
                     style = Typography.bodyLarge.copy(
                         fontWeight = FontWeight.Bold,
-                        color = NavyBlue,
+                        color = LocalAppColors.current.textAccent,
                         fontSize = 18.sp
                     )
                 )
                 Text(
                     text = description,
                     style = Typography.bodyLarge.copy(
-                        color = Slate500,
+                        color = LocalAppColors.current.textSecondary,
                         fontSize = 14.sp,
                         lineHeight = 20.sp
                     )
@@ -92,7 +94,7 @@ fun BaggageCard(
                     text = "QUANTITY",
                     style = Typography.bodyLarge.copy(
                         fontWeight = FontWeight.Bold,
-                        color = MediumGray,
+                        color = LocalAppColors.current.textSecondary,
                         fontSize = 12.sp,
                         letterSpacing = 1.sp
                     )
@@ -101,7 +103,7 @@ fun BaggageCard(
                     text = quantity.toString(),
                     style = Typography.bodyLarge.copy(
                         fontWeight = FontWeight.Bold,
-                        color = NavyBlue,
+                        color = LocalAppColors.current.textAccent,
                         fontSize = 24.sp
                     )
                 )
@@ -112,14 +114,14 @@ fun BaggageCard(
                 Box(
                     modifier = Modifier
                         .size(44.dp)
-                        .border(1.dp, BorderColor, CircleShape)
+                        .border(1.dp, MaterialTheme.colorScheme.outline, CircleShape)
                         .clickable(enabled = quantity > 0) { onDecrement() },
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         imageVector = Icons.Default.Remove,
                         contentDescription = "Decrease",
-                        tint = if (quantity > 0) NavyBlue else MediumGray,
+                        tint = if (quantity > 0) LocalAppColors.current.textAccent else LocalAppColors.current.textSecondary,
                         modifier = Modifier.size(24.dp)
                     )
                 }

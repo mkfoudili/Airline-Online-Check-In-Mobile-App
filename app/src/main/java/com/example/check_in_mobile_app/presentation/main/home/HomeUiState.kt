@@ -1,11 +1,14 @@
 package com.example.check_in_mobile_app.presentation.main.home
 
 import com.example.domain.model.Booking
+import com.example.domain.model.Flight
+import com.example.domain.model.CheckInStatus
 
 data class HomeUiState(
     val userName: String = "",
     val activeFlight: Booking? = null,
     val isActiveFlightLoading: Boolean = false,
+    val cachedFlights: List<Flight> = emptyList(),
 
     val bookingReference: String = "",
     val lastName: String = "",
@@ -17,7 +20,7 @@ data class HomeUiState(
 ) {
     val isCheckInActive: Boolean
         get() = activeFlight?.status?.let { status ->
-            status.name == "CHECK_IN_OPEN"
+            status == CheckInStatus.CHECK_IN_OPEN
         } ?: false
 
     val activeFlightDestination: String

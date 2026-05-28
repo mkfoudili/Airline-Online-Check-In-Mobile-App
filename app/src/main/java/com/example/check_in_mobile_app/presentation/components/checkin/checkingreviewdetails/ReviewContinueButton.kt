@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.components.checkin.checkingreviewdetails
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -31,7 +33,7 @@ fun ReviewContinueButton(
         colors = ButtonDefaults.buttonColors(
             containerColor = NavyBlue,
             contentColor = Color.White,
-            disabledContainerColor = Color(0xFFE2E8F0),
+            disabledContainerColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f),
             disabledContentColor = Color(0xFF9CA3AF)
         )
     ) {

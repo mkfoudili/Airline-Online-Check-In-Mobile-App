@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -29,7 +31,7 @@ import com.example.check_in_mobile_app.R
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.check_in_mobile_app.ui.theme.MediumGray
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import com.example.check_in_mobile_app.ui.theme.NavyBlue
 import com.example.domain.model.Booking
 import com.example.domain.model.CheckInStatus
@@ -46,7 +48,7 @@ fun BookingCard(
             .padding(horizontal = 16.dp, vertical = 6.dp)
             .border(1.dp, Color(0xFFF1F5F9), RoundedCornerShape(16.dp))
             .clip(RoundedCornerShape(16.dp))
-            .background(Color.White)
+            .background(LocalAppColors.current.surface)
             .padding(16.dp)
     ) {
         // ── Row 1: flight icon + number + status badge ──────────────
@@ -59,13 +61,13 @@ fun BookingCard(
                 modifier = Modifier
                     .size(32.dp)
                     .clip(RoundedCornerShape(8.dp))
-                    .background(Color(0xFFF4F5F8)),
+                    .background(LocalAppColors.current.iconBackground),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.plane2),
                     contentDescription = "Flight",
-                    tint = NavyBlue,
+                    tint = LocalAppColors.current.textAccent,
                     modifier = Modifier.size(20.dp)
                 )
             }
@@ -76,7 +78,7 @@ fun BookingCard(
                 text = booking.flight.flightNumber,
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Bold,
-                color = NavyBlue,
+                color = LocalAppColors.current.textAccent,
                 modifier = Modifier.weight(1f)
             )
 
@@ -84,7 +86,7 @@ fun BookingCard(
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-        HorizontalDivider(color = Color(0xFFE2E8F0), thickness = 1.dp)
+        HorizontalDivider(color = LocalAppColors.current.divider, thickness = 1.dp)
         Spacer(modifier = Modifier.height(16.dp))
 
 
@@ -120,17 +122,17 @@ fun BookingCard(
                 Icon(
                     painter = painterResource(id = R.drawable.calendar),
                     contentDescription = "Date",
-                    tint = NavyBlue,
+                    tint = LocalAppColors.current.textAccent,
                     modifier = Modifier.size(14.dp)
                 )
                 Spacer(modifier = Modifier.width(6.dp))
                 val sdfDate = java.text.SimpleDateFormat("dd MMM", java.util.Locale.getDefault())
                 val departureDate = sdfDate.format(java.util.Date(booking.flight.departureTime))
-                
+
                 Text(
                     text = departureDate,
                     fontSize = 13.sp,
-                    color = NavyBlue,
+                    color = LocalAppColors.current.textAccent,
                     fontWeight = FontWeight.Medium
                 )
             }
@@ -138,17 +140,17 @@ fun BookingCard(
                 Icon(
                     painter = painterResource(id = R.drawable.clock),
                     contentDescription = "Time",
-                    tint = NavyBlue,
+                    tint = LocalAppColors.current.textAccent,
                     modifier = Modifier.size(14.dp)
                 )
                 Spacer(modifier = Modifier.width(6.dp))
                 val sdfTime = java.text.SimpleDateFormat("HH:mm", java.util.Locale.getDefault())
                 val departureTime = sdfTime.format(java.util.Date(booking.flight.departureTime))
-                
+
                 Text(
                     text = departureTime,
                     fontSize = 13.sp,
-                    color = NavyBlue,
+                    color = LocalAppColors.current.textAccent,
                     fontWeight = FontWeight.Medium
                 )
             }
@@ -162,12 +164,12 @@ fun BookingCard(
                     onClick = { onBoarding() },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(10.dp),
-                    border = androidx.compose.foundation.BorderStroke(1.dp, NavyBlue),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, LocalAppColors.current.textAccent),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.White,
-                        contentColor = NavyBlue,
+                        containerColor = MaterialTheme.colorScheme.background,
+                        contentColor = LocalAppColors.current.textAccent,
 
-                    )
+                        )
                 ) {
                     Text(
                         text = stringResource(R.string.boarding_pass),
@@ -197,19 +199,37 @@ fun BookingCard(
             }
 
             CheckInStatus.CONFIRMED -> {
+                val now = System.currentTimeMillis()
+                val departureTime = booking.flight.departureTime
+                val checkInOpenTime = departureTime - (24L * 60 * 60 * 1000)
+                val diffMs = checkInOpenTime - now
+                val diffMinutes = (diffMs / (1000 * 60)).coerceAtLeast(1)
+                val timeString = if (diffMinutes >= 60) {
+                    val hours = diffMinutes / 60
+                    if (hours >= 24) {
+                        val days = hours / 24
+                        val remainingHours = hours % 24
+                        if (remainingHours > 0) "${days}d ${remainingHours}h" else "${days}d"
+                    } else {
+                        "${hours}h"
+                    }
+                } else {
+                    "${diffMinutes}m"
+                }
+
                 Spacer(modifier = Modifier.height(12.dp))
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(12.dp))
-                        .background(Color(0xFFE2E8F0))
+                        .background(LocalAppColors.current.chipUnselected)
                         .padding(vertical = 10.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = stringResource(R.string.check_in_opens_in, "4h"),
+                        text = stringResource(R.string.check_in_opens_in, timeString),
                         fontSize = 13.sp,
-                        color = MediumGray,
+                        color = LocalAppColors.current.textSecondary,
                         fontWeight = FontWeight.Medium
                     )
                 }

@@ -17,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,6 +40,7 @@ import com.example.check_in_mobile_app.presentation.components.BookingInputField
 import com.example.check_in_mobile_app.presentation.components.PrimaryButton
 import com.example.check_in_mobile_app.presentation.components.home.ActiveFlightCard
 import com.example.check_in_mobile_app.ui.theme.*
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import com.example.domain.model.Booking
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -70,8 +72,8 @@ fun OnlineHomeScreen(
                 stringResource(R.string.home_greeting, uiState.userName)
             else
                 stringResource(R.string.home_greeting_default),
-            fontSize = 25.sp,
-            color = DarkText,
+            fontSize = 20.sp,
+            color = LocalAppColors.current.textPrimary,
             fontWeight = FontWeight.Bold,
             letterSpacing = (-0.5).sp,
             maxLines = 1,
@@ -82,14 +84,14 @@ fun OnlineHomeScreen(
             modifier = Modifier
                 .size(42.dp)
                 .clip(CircleShape)
-                .background(LightGray)
+                .background(LocalAppColors.current.iconBackground)
                 .clickable { onProfileClick() },
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 imageVector = Icons.Outlined.Person,
                 contentDescription = null,
-                tint = MediumGray,
+                tint = LocalAppColors.current.textSecondary,
                 modifier = Modifier.size(22.dp)
             )
         }
@@ -100,7 +102,7 @@ fun OnlineHomeScreen(
         modifier = Modifier
             .requiredWidth(screenWidth)
             .height(1.dp)
-            .background(DividerColor)
+            .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.3f))
     )
     Spacer(modifier = Modifier.height(24.dp))
 
@@ -117,7 +119,7 @@ fun OnlineHomeScreen(
         text = stringResource(R.string.home_retrieve_booking),
         fontSize = 25.sp,
         fontWeight = FontWeight.Bold,
-        color = NavyBlue,
+        color = LocalAppColors.current.textAccent,
         letterSpacing = (-0.2).sp,
         maxLines = 1,
         overflow = TextOverflow.Ellipsis
@@ -130,7 +132,7 @@ fun OnlineHomeScreen(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(12.dp))
-            .background(Color.White)
+            .background(LocalAppColors.current.surface)
             .border(1.dp, DividerColor, RoundedCornerShape(12.dp))
             .padding(16.dp)
     ) {
@@ -143,7 +145,7 @@ fun OnlineHomeScreen(
                 Icon(
                     imageVector = Icons.Outlined.Search,
                     contentDescription = null,
-                    tint = MediumGray,
+                    tint = LocalAppColors.current.textSecondary,
                     modifier = Modifier.size(18.dp)
                 )
             },
@@ -194,7 +196,7 @@ fun OnlineHomeScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             CircularProgressIndicator(
-                color = NavyBlue,
+                color = LocalAppColors.current.textAccent,
                 modifier = Modifier.size(32.dp),
                 strokeWidth = 3.dp
             )
@@ -202,7 +204,7 @@ fun OnlineHomeScreen(
             Text(
                 text = stringResource(R.string.home_search_loading),
                 fontSize = 13.sp,
-                color = CoolGray
+                color = LocalAppColors.current.textSubtle
             )
         }
     }
@@ -296,7 +298,7 @@ private fun SearchResultPreview(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
-            .background(Color.White)
+            .background(LocalAppColors.current.surface)
             .border(1.dp, NavyBlue.copy(alpha = 0.25f), RoundedCornerShape(16.dp))
             .padding(16.dp)
     ) {
@@ -311,19 +313,19 @@ private fun SearchResultPreview(
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
                 letterSpacing = 0.8.sp,
-                color = CoolGray
+                color = LocalAppColors.current.textSubtle
             )
             Box(
                 modifier = Modifier
                     .clip(RoundedCornerShape(20.dp))
-                    .background(NavyBlue.copy(alpha = 0.08f))
+                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.08f))
                     .padding(horizontal = 10.dp, vertical = 4.dp)
             ) {
                 Text(
                     text = booking.pnr,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Bold,
-                    color = NavyBlue,
+                    color = LocalAppColors.current.textAccent,
                     letterSpacing = 0.5.sp
                 )
             }
@@ -342,12 +344,12 @@ private fun SearchResultPreview(
                     text = flight.origin,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.ExtraBold,
-                    color = DarkText
+                    color = LocalAppColors.current.textPrimary
                 )
                 Text(
                     text = flight.originCity.ifBlank { flight.origin },
                     fontSize = 12.sp,
-                    color = CoolGray,
+                    color = LocalAppColors.current.textSubtle,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -355,7 +357,7 @@ private fun SearchResultPreview(
             Icon(
                 painter = painterResource(id = R.drawable.plane),
                 contentDescription = null,
-                tint = NavyBlue.copy(alpha = 0.5f),
+                tint = LocalAppColors.current.textAccent.copy(alpha = 0.5f),
                 modifier = Modifier.size(22.dp).weight(1f).wrapContentWidth()
             )
             Column(horizontalAlignment = Alignment.End) {
@@ -363,12 +365,12 @@ private fun SearchResultPreview(
                     text = flight.destination,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.ExtraBold,
-                    color = DarkText
+                    color = LocalAppColors.current.textPrimary
                 )
                 Text(
                     text = flight.destinationCity.ifBlank { flight.destination },
                     fontSize = 12.sp,
-                    color = CoolGray,
+                    color = LocalAppColors.current.textSubtle,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -376,7 +378,7 @@ private fun SearchResultPreview(
         }
 
         Spacer(modifier = Modifier.height(12.dp))
-        HorizontalDivider(color = DividerColor)
+        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
         Spacer(modifier = Modifier.height(12.dp))
 
         // Détails
@@ -424,7 +426,7 @@ private fun InfoChip(label: String, value: String) {
         Text(
             text = label.uppercase(),
             fontSize = 10.sp,
-            color = CoolGray,
+            color = LocalAppColors.current.textSubtle,
             letterSpacing = 0.6.sp,
             fontWeight = FontWeight.Medium
         )
@@ -432,7 +434,7 @@ private fun InfoChip(label: String, value: String) {
         Text(
             text = value,
             fontSize = 13.sp,
-            color = DarkText,
+            color = LocalAppColors.current.textPrimary,
             fontWeight = FontWeight.SemiBold,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis

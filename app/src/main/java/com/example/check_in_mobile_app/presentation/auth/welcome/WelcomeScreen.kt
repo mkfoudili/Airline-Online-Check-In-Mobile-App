@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.auth.welcome
 
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -69,7 +71,7 @@ fun WelcomeScreen(
                 text = stringResource(R.string.auth_welcome_title),
                 fontSize = 26.sp,
                 fontWeight = FontWeight.Bold,
-                color = DarkText111
+                color = LocalAppColors.current.textPrimary
             )
 
             Spacer(modifier = Modifier.height(10.dp))
@@ -77,7 +79,7 @@ fun WelcomeScreen(
             Text(
                 text = stringResource(R.string.auth_welcome_subtitle),
                 fontSize = 14.sp,
-                color = MediumGray,
+                color = LocalAppColors.current.textSecondary,
                 lineHeight = 22.sp
             )
         }
@@ -130,12 +132,12 @@ fun WelcomeScreen(
         Text(
             text = buildAnnotatedString {
                 append(termsPrefix)
-                withStyle(SpanStyle(fontWeight = FontWeight.Bold, color = NavyBlue)) {
+                withStyle(SpanStyle(fontWeight = FontWeight.Bold, color = LocalAppColors.current.textAccent)) {
                     append(termsLink)
                 }
             },
             fontSize = 12.sp,
-            color = MediumGray,
+            color = LocalAppColors.current.textSecondary,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 24.dp)
         )
@@ -159,7 +161,7 @@ private fun FeatureCard(
     Column(
         modifier = modifier
             .clip(RoundedCornerShape(14.dp))
-            .background(LightGray)
+            .background(LocalAppColors.current.iconBackground)
             .padding(14.dp)
     ) {
         Image(
@@ -172,13 +174,13 @@ private fun FeatureCard(
             text = title,
             fontSize = 13.sp,
             fontWeight = FontWeight.SemiBold,
-            color = DarkText111
+            color = LocalAppColors.current.textPrimary
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = subtitle,
             fontSize = 12.sp,
-            color = MediumGray,
+            color = LocalAppColors.current.textSecondary,
             lineHeight = 16.sp
         )
     }

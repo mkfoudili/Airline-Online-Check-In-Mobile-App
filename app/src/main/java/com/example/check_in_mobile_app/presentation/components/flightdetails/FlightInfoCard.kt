@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.components.flightdetails
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -21,10 +23,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.stringResource
 import com.example.check_in_mobile_app.R
-import com.example.check_in_mobile_app.ui.theme.BorderLight
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import com.example.check_in_mobile_app.ui.theme.NavyBlue
-import com.example.check_in_mobile_app.ui.theme.SubtleText
-import com.example.check_in_mobile_app.ui.theme.SurfaceGray
 import com.example.domain.model.Booking
 
 @Composable
@@ -37,12 +37,15 @@ fun FlightInfoCard(booking: Booking, modifier: Modifier = Modifier) {
     val sdf = java.text.SimpleDateFormat("dd MMM yyyy", java.util.Locale.getDefault())
     val departureDateText = sdf.format(java.util.Date(booking.flight.departureTime)).uppercase()
 
+    // Capture before entering DrawScope
+    val dividerColor = MaterialTheme.colorScheme.outlineVariant
+
     Column(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
-            .border(1.dp, BorderLight, RoundedCornerShape(16.dp))
-            .background(Color.White)
+            .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(16.dp))
+            .background(MaterialTheme.colorScheme.surface)
     ) {
         // Navy blue header
         Box(
@@ -65,7 +68,7 @@ fun FlightInfoCard(booking: Booking, modifier: Modifier = Modifier) {
                     text = "${stringResource(R.string.flight_label)} ${booking.flight.flightNumber}",
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.surface,
                     letterSpacing = 0.5.sp
                 )
             }
@@ -87,13 +90,13 @@ fun FlightInfoCard(booking: Booking, modifier: Modifier = Modifier) {
                         text = booking.flight.origin,
                         fontSize = 32.sp,
                         fontWeight = FontWeight.Bold,
-                        color = NavyBlue,
+                        color = LocalAppColors.current.textAccent,
                         letterSpacing = (-1).sp
                     )
                     Text(
                         text = booking.flight.originCity,
                         fontSize = 11.sp,
-                        color = SubtleText,
+                        color = LocalAppColors.current.textSubtle,
                         letterSpacing = 0.5.sp
                     )
                 }
@@ -119,7 +122,7 @@ fun FlightInfoCard(booking: Booking, modifier: Modifier = Modifier) {
                         Icon(
                             painter = painterResource(id = R.drawable.plane_up),
                             contentDescription = "Plane icon",
-                            tint = NavyBlue,
+                            tint = LocalAppColors.current.textAccent,
                             modifier = Modifier.padding(horizontal = 8.dp).size(20.dp)
                         )
                         Canvas(modifier = Modifier.weight(1f).height(8.dp)) {
@@ -136,7 +139,7 @@ fun FlightInfoCard(booking: Booking, modifier: Modifier = Modifier) {
                     Text(
                         text = durationText,
                         fontSize = 10.sp,
-                        color = SubtleText,
+                        color = LocalAppColors.current.textSubtle,
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 0.5.sp
                     )
@@ -151,14 +154,14 @@ fun FlightInfoCard(booking: Booking, modifier: Modifier = Modifier) {
                         text = booking.flight.destination,
                         fontSize = 32.sp,
                         fontWeight = FontWeight.Bold,
-                        color = NavyBlue,
+                        color = LocalAppColors.current.textAccent,
                         letterSpacing = (-1).sp,
                         textAlign = TextAlign.End
                     )
                     Text(
                         text = booking.flight.destinationCity,
                         fontSize = 11.sp,
-                        color = SubtleText,
+                        color = LocalAppColors.current.textSubtle,
                         letterSpacing = 0.5.sp,
                         textAlign = TextAlign.End
                     )
@@ -167,14 +170,14 @@ fun FlightInfoCard(booking: Booking, modifier: Modifier = Modifier) {
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // Solid or dashed divider
+            // Divider
             Canvas(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(1.dp)
             ) {
                 drawLine(
-                    color = BorderLight,
+                    color = dividerColor,
                     start = Offset(0f, 0f),
                     end = Offset(size.width, 0f),
                     strokeWidth = 2f
@@ -193,14 +196,14 @@ fun FlightInfoCard(booking: Booking, modifier: Modifier = Modifier) {
                         modifier = Modifier
                             .size(36.dp)
                             .clip(RoundedCornerShape(8.dp))
-                            .background(SurfaceGray)
-                            .border(1.dp, BorderLight, RoundedCornerShape(8.dp)),
+                            .background(MaterialTheme.colorScheme.surfaceVariant)
+                            .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(8.dp)),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.calendar),
                             contentDescription = "Date",
-                            tint = NavyBlue,
+                            tint = LocalAppColors.current.textAccent,
                             modifier = Modifier.size(16.dp)
                         )
                     }
@@ -209,7 +212,7 @@ fun FlightInfoCard(booking: Booking, modifier: Modifier = Modifier) {
                         Text(
                             text = stringResource(R.string.date_label),
                             fontSize = 10.sp,
-                            color = SubtleText,
+                            color = LocalAppColors.current.textSubtle,
                             fontWeight = FontWeight.Bold,
                             letterSpacing = 0.5.sp
                         )
@@ -217,7 +220,7 @@ fun FlightInfoCard(booking: Booking, modifier: Modifier = Modifier) {
                             text = departureDateText,
                             fontSize = 13.sp,
                             fontWeight = FontWeight.Bold,
-                            color = NavyBlue
+                            color = LocalAppColors.current.textAccent
                         )
                     }
                 }
@@ -227,14 +230,14 @@ fun FlightInfoCard(booking: Booking, modifier: Modifier = Modifier) {
                         modifier = Modifier
                             .size(36.dp)
                             .clip(RoundedCornerShape(8.dp))
-                            .background(SurfaceGray)
-                            .border(1.dp, BorderLight, RoundedCornerShape(8.dp)),
+                            .background(MaterialTheme.colorScheme.surfaceVariant)
+                            .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(8.dp)),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.clock),
                             contentDescription = "Time",
-                            tint = NavyBlue,
+                            tint = LocalAppColors.current.textAccent,
                             modifier = Modifier.size(16.dp)
                         )
                     }
@@ -243,7 +246,7 @@ fun FlightInfoCard(booking: Booking, modifier: Modifier = Modifier) {
                         Text(
                             text = stringResource(R.string.boarding_label),
                             fontSize = 10.sp,
-                            color = SubtleText,
+                            color = LocalAppColors.current.textSubtle,
                             fontWeight = FontWeight.Bold,
                             letterSpacing = 0.5.sp
                         )
@@ -251,7 +254,7 @@ fun FlightInfoCard(booking: Booking, modifier: Modifier = Modifier) {
                             text = booking.flight.boardingTime,
                             fontSize = 13.sp,
                             fontWeight = FontWeight.Bold,
-                            color = NavyBlue
+                            color = LocalAppColors.current.textAccent
                         )
                     }
                 }

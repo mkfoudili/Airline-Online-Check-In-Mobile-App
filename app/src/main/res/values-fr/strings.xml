@@ -6,9 +6,11 @@
     <string name="all_bookings">Toutes les Réservations</string>
     <string name="all_flights">Tous les Vols</string>
     <string name="upcoming_flights">Vols à Venir</string>
+    <string name="checked_in_flights">Vols enregistrés</string>
     <string name="view_all">Voir Tout</string>
     <string name="search_hint">Rechercher une destination</string>
     <string name="back">Retour</string>
+    <string name="flight_completed">Vol terminé</string>
     <!-- Date Picker -->
     <string name="select_date">Sélectionner une date</string>
     <string name="ok">OK</string>
@@ -38,6 +40,7 @@
     <string name="schedule_label">Horaire</string>
     <string name="pnr_label">PNR :</string>
     <string name="departure_label">Départ</string>
+    <string name="arrival_label">Arrivée</string>
     <string name="checkin_opens_label">Enregistrement ouvert</string>
     <string name="boarding_starts_label">Début de l\'embarquement</string>
     <string name="gate_label">Porte</string>
@@ -100,6 +103,8 @@
     <string name="confirmation_download_pdf">Télécharger le PDF</string>
     <string name="confirmation_back_dashboard">Retour au tableau de bord</string>
     <string name="confirmation_download_toast">Téléchargement PDF demandé</string>
+    <string name="confirmation_error_generic">Une erreur est survenue. Veuillez réessayer.</string>
+    <string name="confirmation_retry">Réessayer</string>
     <!-- Home Screen -->
     <string name="home_greeting">Bonjour, %1$s</string>
     <string name="home_retrieve_booking">Récupérer une réservation</string>
@@ -114,10 +119,15 @@
     <string name="offline_features_require_internet">Certaines fonctionnalités nécessitent une connexion internet.</string>
     <string name="offline_upcoming_flight">Vol à venir</string>
     <string name="offline_synced_ago">Synchronisé il y a %1$s</string>
+    <string name="offline_synced_just_now">Synchronisé à l\'instant</string>
+    <string name="offline_synced_minutes_ago">Synchronisé il y a %1$d min</string>
+    <string name="offline_synced_hours_ago">Synchronisé il y a %1$d h</string>
     <string name="offline_available_actions">ACTIONS DISPONIBLES</string>
     <string name="offline_data_saved_note">Vos données de vol ont été enregistrées automatiquement pour un accès hors ligne. Pour mettre à jour, reconnectez-vous au Wi-Fi ou aux données mobiles.</string>
     <string name="offline_view_boarding_pass">Carte d\'embarquement</string>
     <string name="offline_accessible_without_connection">Accessible sans connexion</string>
+    <string name="offline_view_flight_details">Voir les détails du vol</string>
+    <string name="offline_checkin_unavailable">L\'enregistrement n\'est pas disponible sans connexion internet.</string>
     <!-- Active Flight Card (Online Home) -->
     <string name="active_now_badge">EN COURS</string>
     <string name="active_ready_to_fly">Prêt à décoller ?</string>
@@ -146,5 +156,11 @@
     <string name="home_search_error_generic">Une erreur est survenue. Veuillez réessayer.</string>
     <string name="active_flight_upcoming">Votre prochain vol vers %1$s.</string>
     <string name="offline_no_cached_flight">Aucune donnée de vol disponible hors ligne.</string>
+    <string name="offline_no_upcoming_flight">Aucun vol à venir.</string>
+    <string name="offline_past_flights">VOLS PASSÉS</string>
     <string name="offline_not_synced">Pas encore synchronisé</string>
+
+    <!-- Connection Error -->
+    <string name="connection_timed_out">Connexion expirée</string>
+    <string name="connection_error_description">Nos serveurs sont inaccessibles. Veuillez vérifier votre connexion de données ou Wi-Fi et réessayer.</string>
 </resources>

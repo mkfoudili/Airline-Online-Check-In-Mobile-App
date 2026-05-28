@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.checkin.checkingdetailsreview
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -9,11 +11,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -21,7 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.presentation.components.checkin.CheckInTopBar
 import com.example.check_in_mobile_app.presentation.components.checkin.checkingreviewdetails.PassengerAvatarRow
@@ -30,22 +30,21 @@ import com.example.check_in_mobile_app.presentation.components.checkin.checkingr
 import com.example.check_in_mobile_app.presentation.components.checkin.checkingreviewdetails.ConfirmCheckbox
 import com.example.check_in_mobile_app.presentation.components.checkin.checkingreviewdetails.ReviewContinueButton
 import com.example.check_in_mobile_app.ui.theme.ErrorRed
-import com.example.check_in_mobile_app.ui.theme.NavyBlue
-import com.example.data.remote.retrofit.Endpoint
-import com.example.data.repository.CheckInRepositoryImpl
-import com.example.data.security.SecureStorage
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import com.example.domain.model.Passenger
 
 @Composable
 fun CheckingDetailsReviewScreen(
     onBack: () -> Unit = {},
     onContinue: () -> Unit = {},
-    viewModel: CheckingDetailsReviewViewModel = viewModel()
+    viewModel: CheckingDetailsReviewViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    val passenger = uiState.passenger ?: return
+
     CheckingDetailsReviewScreenContent(
-        passenger = uiState.passenger,
+        passenger = passenger,
         isConfirmed = uiState.isConfirmed,
         onBack = onBack,
         onContinue = onContinue,
@@ -62,7 +61,7 @@ fun CheckingDetailsReviewScreenContent(
     onConfirmedChanged: (Boolean) -> Unit
 ) {
     Scaffold(
-        containerColor = Color.White,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             CheckInTopBar(
                 onBack = onBack,
@@ -88,7 +87,7 @@ fun CheckingDetailsReviewScreenContent(
                     text = stringResource(R.string.review_verify_title),
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
-                    color = NavyBlue
+                    color = LocalAppColors.current.textAccent
                 )
                 Text(
                     text = stringResource(R.string.review_verify_subtitle),
@@ -122,29 +121,4 @@ fun CheckingDetailsReviewScreenContent(
             Spacer(modifier = Modifier.height(24.dp))
         }
     }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun CheckingDetailsReviewScreenPreview() {
-    val mockPassenger = Passenger(
-        firstName = "John",
-        lastName = "Doe",
-        nationality = "United States",
-        dateOfBirth = "1990-01-01",
-        passengerId = "",
-        uid = "",
-        passportNumber = "",
-        expiryDate = "",
-        seatNumber = "",
-        checkinStatus = ""
-    )
-
-    CheckingDetailsReviewScreenContent(
-        passenger = mockPassenger,
-        isConfirmed = false,
-        onBack = {},
-        onContinue = {},
-        onConfirmedChanged = {}
-    )
 }

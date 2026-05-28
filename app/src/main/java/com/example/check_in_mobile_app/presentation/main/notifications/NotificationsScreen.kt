@@ -21,8 +21,7 @@ import com.example.check_in_mobile_app.presentation.components.TabBarMenu
 import com.example.check_in_mobile_app.presentation.components.TabItem
 import com.example.check_in_mobile_app.presentation.components.notifications.NotificationCard
 import com.example.check_in_mobile_app.ui.theme.CheckInMobileAppTheme
-import com.example.check_in_mobile_app.ui.theme.NavyBlue
-import com.example.check_in_mobile_app.ui.theme.Slate500
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import com.example.check_in_mobile_app.ui.theme.SurfaceGray
 
 @Composable
@@ -53,12 +52,12 @@ fun NotificationsContent(
                         text = stringResource(R.string.notification_title),
                         style = MaterialTheme.typography.headlineSmall.copy(
                             fontWeight = FontWeight.Bold,
-                            color = NavyBlue
+                            color = LocalAppColors.current.textAccent
                         )
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.White
+                    containerColor = MaterialTheme.colorScheme.surface
                 )
             )
         },
@@ -68,7 +67,7 @@ fun NotificationsContent(
                 onTabSelected = onTabSelected
             )
         },
-        containerColor = SurfaceGray
+        containerColor = MaterialTheme.colorScheme.surfaceVariant
     ) { paddingValues ->
         Box(
             modifier = Modifier
@@ -113,7 +112,7 @@ fun NotificationsContent(
                                         text = stringResource(groupResId).uppercase(),
                                         style = MaterialTheme.typography.labelLarge.copy(
                                             fontWeight = FontWeight.Bold,
-                                            color = Slate500,
+                                            color = LocalAppColors.current.textSecondary,
                                             letterSpacing = 1.sp
                                         )
                                     )
@@ -122,7 +121,7 @@ fun NotificationsContent(
                                             Text(
                                                 text = stringResource(R.string.notification_mark_all_read),
                                                 style = MaterialTheme.typography.labelMedium.copy(
-                                                    color = Slate500
+                                                    color = LocalAppColors.current.textSecondary
                                                 )
                                             )
                                         }
@@ -147,7 +146,7 @@ fun NotificationsContent(
                             ) {
                                 Text(
                                     text = stringResource(R.string.notification_empty_state),
-                                    color = Slate500
+                                    color = LocalAppColors.current.textSecondary
                                 )
                             }
                         }

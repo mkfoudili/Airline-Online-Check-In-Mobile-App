@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.components.flightdetails
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -17,20 +19,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.check_in_mobile_app.R
-import com.example.check_in_mobile_app.ui.theme.BorderLight
-import com.example.check_in_mobile_app.ui.theme.DarkText
-import com.example.check_in_mobile_app.ui.theme.MediumGray
-import com.example.check_in_mobile_app.ui.theme.SurfaceGray
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import com.example.domain.model.Booking
 
 @Composable
 fun PassengerCard(booking: Booking, modifier: Modifier = Modifier, infoText : String) {
+    val passenger = booking.passengers.firstOrNull()
+
     Row(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
-            .background(Color.White)
-            .border(1.dp, BorderLight, RoundedCornerShape(16.dp))
+            .background(MaterialTheme.colorScheme.surface)
+            .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(16.dp))
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -39,8 +40,8 @@ fun PassengerCard(booking: Booking, modifier: Modifier = Modifier, infoText : St
             modifier = Modifier
                 .size(52.dp)
                 .clip(CircleShape)
-                .background(SurfaceGray)
-                .border(2.dp, Color(0xFFF1F5F9), CircleShape),
+                .background(MaterialTheme.colorScheme.surfaceVariant)
+                .border(2.dp, MaterialTheme.colorScheme.surfaceVariant, CircleShape),
             contentAlignment = Alignment.Center
         ) {
             Icon(
@@ -55,16 +56,19 @@ fun PassengerCard(booking: Booking, modifier: Modifier = Modifier, infoText : St
 
         Column {
             Text(
-                text = booking.passengers[0].firstName + ' ' + booking.passengers[0].lastName,
+                text = if (passenger != null)
+                    "${passenger.firstName} ${passenger.lastName}"
+                else
+                    "—",
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Bold,
-                color = DarkText
+                color = LocalAppColors.current.textPrimary
             )
             Spacer(modifier = Modifier.height(2.dp))
             Text(
                 text = infoText/*"PNR: ${booking.pnr}"*/,
                 fontSize = 12.sp,
-                color = MediumGray,
+                color = LocalAppColors.current.textSecondary,
                 fontWeight = FontWeight.Medium
             )
         }

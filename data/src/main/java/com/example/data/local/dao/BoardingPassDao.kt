@@ -23,12 +23,15 @@ interface BoardingPassDao {
     @Query("SELECT * FROM boarding_passes")
     fun getAllBoardingPasses(): Flow<List<BoardingPassEntity>>
 
+    @Query("SELECT * FROM boarding_passes WHERE uid = :uid")
+    suspend fun getBoardingPassesByUid(uid: String): List<BoardingPassEntity>
+
     @Query("SELECT * FROM boarding_passes WHERE passId = :passId")
     suspend fun getBoardingPassById(passId: String): BoardingPassEntity?
 
     @Query("DELETE FROM boarding_passes")
     suspend fun deleteAll()
 
-    @Query("UPDATE boarding_passes SET isSyncedWithServer = 1 WHERE passId = :passId")
-    suspend fun markAsSynced(passId: String)
+    @Query("UPDATE boarding_passes SET isSyncedWithServer = 1, lastSyncedAt = :syncedAt WHERE passId = :passId")
+    suspend fun markAsSynced(passId: String, syncedAt: Long = System.currentTimeMillis())
 }

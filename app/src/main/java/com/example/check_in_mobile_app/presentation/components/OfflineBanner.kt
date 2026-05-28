@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.components
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -8,6 +10,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -21,10 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.check_in_mobile_app.ui.theme.BorderLight
-import com.example.check_in_mobile_app.ui.theme.DarkText
-import com.example.check_in_mobile_app.ui.theme.SubtleText
-import com.example.check_in_mobile_app.ui.theme.SurfaceGray
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 
 @Composable
 fun OfflineBanner(
@@ -34,11 +34,11 @@ fun OfflineBanner(
     description: String,
     isVerifiedBadge : Boolean = false
 ) {
-    HorizontalDivider(color = BorderLight, thickness = 1.dp)
+    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 1.dp)
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(SurfaceGray)
+            .background(MaterialTheme.colorScheme.surfaceVariant)
             .padding(horizontal = 16.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
@@ -51,6 +51,8 @@ fun OfflineBanner(
             Icon(
                 painter = painterResource(id = iconId),
                 contentDescription = iconDescription,
+                modifier = Modifier.size(20.dp),
+                tint = Color.DarkGray
             )
             Column(
                 modifier = Modifier.padding(10.dp, 0.dp)
@@ -59,12 +61,12 @@ fun OfflineBanner(
                     text = title,
                     fontWeight = FontWeight.Bold,
                     fontSize = 13.sp,
-                    color = DarkText
+                    color = LocalAppColors.current.textPrimary
                 )
                 Text(
                     text = description,
                     fontSize = 11.sp,
-                    color = SubtleText,
+                    color = LocalAppColors.current.textSubtle,
                     lineHeight = 15.sp
                 )
             }
@@ -91,5 +93,5 @@ fun OfflineBanner(
             }
         }
     }
-    HorizontalDivider(color = BorderLight, thickness = 1.dp)
+    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 1.dp)
 }

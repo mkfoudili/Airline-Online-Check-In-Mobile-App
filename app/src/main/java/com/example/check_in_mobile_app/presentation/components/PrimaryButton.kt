@@ -14,8 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.check_in_mobile_app.ui.theme.LightGray
-import com.example.check_in_mobile_app.ui.theme.NavyBlue
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 
 @Composable
 fun PrimaryButton(
@@ -66,10 +65,10 @@ fun SecondaryButton(
             .height(52.dp),
         shape = RoundedCornerShape(14.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = LightGray,
-            contentColor = NavyBlue,
-            disabledContainerColor = LightGray.copy(alpha = 0.5f),
-            disabledContentColor = NavyBlue.copy(alpha = 0.5f)
+            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            contentColor = LocalAppColors.current.textAccent,
+            disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+            disabledContentColor = LocalAppColors.current.textAccent.copy(alpha = 0.5f)
         ),
         elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp)
     ) {

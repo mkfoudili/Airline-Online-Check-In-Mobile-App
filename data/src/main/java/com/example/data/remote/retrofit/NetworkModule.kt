@@ -1,8 +1,11 @@
 package com.example.data.remote.retrofit
 
 import android.content.Context
+import com.example.data.mapper.CheckInStatusDeserializer
 import com.example.data.remote.URL
 import com.example.data.security.SecureStorage
+import com.example.domain.model.CheckInStatus
+import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -37,10 +40,14 @@ object NetworkModule {
             .connectTimeout(15, TimeUnit.SECONDS)
             .build()
 
+        val gson = GsonBuilder()
+            .registerTypeAdapter(CheckInStatus::class.java, CheckInStatusDeserializer())
+            .create()
+
         val retrofit = Retrofit.Builder()
             .baseUrl(URL)
             .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
 
         return retrofit.create(Endpoint::class.java)

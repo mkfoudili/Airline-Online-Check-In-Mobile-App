@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.checkin.baggage
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -20,8 +22,8 @@ import com.example.check_in_mobile_app.presentation.components.baggage.BaggageNo
 import com.example.check_in_mobile_app.presentation.components.baggage.BaggageRulesCard
 import com.example.check_in_mobile_app.presentation.components.checkin.CheckInTopBar
 import com.example.check_in_mobile_app.ui.theme.CheckInMobileAppTheme
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import com.example.check_in_mobile_app.ui.theme.NavyBlue
-import com.example.check_in_mobile_app.ui.theme.Slate500
 import com.example.check_in_mobile_app.ui.theme.Typography
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -53,7 +55,7 @@ fun BaggageContent(
 ) {
     Scaffold(
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
-        containerColor = Color.White,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             CheckInTopBar(
                 onBack = onBackClick,
@@ -74,7 +76,7 @@ fun BaggageContent(
                 text = stringResource(R.string.checkin_baggage_declaration),
                 style = Typography.bodyLarge.copy(
                     fontWeight = FontWeight.Bold,
-                    color = NavyBlue,
+                    color = LocalAppColors.current.textAccent,
                     fontSize = 24.sp
                 )
             )
@@ -82,7 +84,7 @@ fun BaggageContent(
             Text(
                 text = stringResource(R.string.checkin_baggage_description),
                 style = Typography.bodyLarge.copy(
-                    color = Slate500,
+                    color = LocalAppColors.current.textSecondary,
                     fontSize = 16.sp,
                     lineHeight = 24.sp
                 )
@@ -124,7 +126,7 @@ fun BaggageContent(
                 text = stringResource(R.string.checkin_continue_to_step_5),
                 onClick = onContinueClick,
                 containerColor = NavyBlue,
-                contentColor = Color.White
+                contentColor = androidx.compose.ui.graphics.Color.White
             )
 
             Spacer(modifier = Modifier.height(16.dp))

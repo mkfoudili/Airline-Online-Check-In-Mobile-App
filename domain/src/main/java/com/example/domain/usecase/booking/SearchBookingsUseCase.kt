@@ -6,6 +6,7 @@ import com.example.domain.repository.BookingRepository
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 import javax.inject.Inject
 
 class SearchBookingsUseCase @Inject constructor(
@@ -27,7 +28,9 @@ class SearchBookingsUseCase @Inject constructor(
                     booking.flight.destinationCity.contains(query, ignoreCase = true) || 
                     booking.flight.destination.contains(query, ignoreCase = true)
                 
-                val sdfDate = SimpleDateFormat("dd MMM", Locale.getDefault())
+                val sdfDate = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).apply {
+                    timeZone = TimeZone.getTimeZone("UTC")
+                }
                 val depDateStr = sdfDate.format(Date(booking.flight.departureTime))
                 val matchesDate = date == null || depDateStr == date
                 

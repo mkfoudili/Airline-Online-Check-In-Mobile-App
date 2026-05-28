@@ -19,8 +19,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.check_in_mobile_app.ui.theme.BorderColor
-import com.example.check_in_mobile_app.ui.theme.DarkText
-import com.example.check_in_mobile_app.ui.theme.SubtleText
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 
 @Composable
 fun BookingInputField(
@@ -42,7 +41,7 @@ fun BookingInputField(
             text = label,
             fontSize = 11.sp,
             fontWeight = FontWeight.SemiBold,
-            color = SubtleText,
+            color = LocalAppColors.current.textSubtle,
             letterSpacing = 0.8.sp
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -54,7 +53,7 @@ fun BookingInputField(
                 Text(
                     text = placeholder,
                     fontSize = 14.sp,
-                    color = DarkText.copy(alpha = 0.45f)
+                    color = LocalAppColors.current.textPrimary.copy(alpha = 0.45f)
                 )
             },
             leadingIcon = leadingIcon,
@@ -67,12 +66,12 @@ fun BookingInputField(
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor   = MaterialTheme.colorScheme.primary,
                 unfocusedBorderColor = BorderColor,
-                focusedTextColor     = DarkText,
-                unfocusedTextColor   = DarkText,
+                focusedTextColor     = LocalAppColors.current.textPrimary,
+                unfocusedTextColor   = LocalAppColors.current.textPrimary,
                 cursorColor          = MaterialTheme.colorScheme.primary,
-                focusedContainerColor   = Color.White,
-                unfocusedContainerColor = Color.White,
-                disabledContainerColor  = Color.White
+                focusedContainerColor   = MaterialTheme.colorScheme.surface,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                disabledContainerColor  = MaterialTheme.colorScheme.surface
             ),
             modifier = Modifier.fillMaxWidth()
         )

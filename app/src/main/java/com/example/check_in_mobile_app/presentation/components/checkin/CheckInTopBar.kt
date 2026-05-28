@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -16,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.ui.theme.BorderLight
-import com.example.check_in_mobile_app.ui.theme.NavyBlue
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -34,19 +35,19 @@ fun CheckInTopBar(
                     text = title,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = NavyBlue
+                    color = LocalAppColors.current.textAccent
                 )
             },
             navigationIcon = {
                 IconButton(onClick = onBack) {
                     Icon(
                         painter = painterResource(id = R.drawable.chevron_left),
-                        contentDescription = stringResource(R.string.common_back),
-                        tint = NavyBlue
+                        contentDescription = stringResource(R.string.back),
+                        tint = LocalAppColors.current.textAccent
                     )
                 }
             },
-            colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
+            colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
         )
 
         // Step progress bar — totalSteps segments
@@ -63,7 +64,7 @@ fun CheckInTopBar(
                         .height(3.dp)
                         .clip(RoundedCornerShape(50))
                         .background(
-                            if (index < currentStep) NavyBlue
+                            if (index < currentStep) LocalAppColors.current.textAccent
                             else BorderLight
                         )
                 )
@@ -71,7 +72,7 @@ fun CheckInTopBar(
         }
 
         Spacer(modifier = Modifier.height(4.dp))
-        HorizontalDivider(color = Color(0xFFF1F5F9), thickness = 1.dp)
+        HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f), thickness = 1.dp)
     }
 }
 

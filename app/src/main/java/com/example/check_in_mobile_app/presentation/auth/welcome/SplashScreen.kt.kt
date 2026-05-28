@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.auth.welcome
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.animation.core.EaseInOutCubic
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -58,7 +60,7 @@ fun SplashScreen() {
                 modifier = Modifier
                     .size(90.dp)
                     .clip(RoundedCornerShape(22.dp))
-                    .background(Color.White),
+                    .background(Color.White.copy(alpha = 0.15f)),
                 contentAlignment = Alignment.Center
             ) {
                 Image(

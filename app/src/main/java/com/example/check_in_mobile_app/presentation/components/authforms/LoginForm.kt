@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.components.authforms
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,11 +25,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.presentation.components.PrimaryButton
-import com.example.check_in_mobile_app.ui.theme.NavyBlue
-import com.example.check_in_mobile_app.ui.theme.DarkText
 import com.example.check_in_mobile_app.ui.theme.BorderColor
-import com.example.check_in_mobile_app.ui.theme.MediumGray
-import com.example.check_in_mobile_app.ui.theme.SubtleText
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
+import com.example.check_in_mobile_app.ui.theme.NavyBlue
 import com.example.check_in_mobile_app.presentation.components.LanguageSwitcherLinks
 
 
@@ -43,12 +43,13 @@ fun LoginForm(
     var passwordVisible by remember { mutableStateOf(false) }
 
 
+    val appColors = LocalAppColors.current
     val primaryColor = NavyBlue
     val borderColor = BorderColor
-    val labelColor = DarkText
-    val hintColor = MediumGray
-    val linkColor = NavyBlue
-    val dividerTextColor = SubtleText
+    val labelColor = appColors.textPrimary
+    val hintColor = appColors.textSecondary
+    val linkColor = appColors.textAccent
+    val dividerTextColor = appColors.textSubtle
 
     Column(
         modifier = modifier
@@ -88,14 +89,14 @@ fun LoginForm(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             shape = RoundedCornerShape(10.dp),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedTextColor = Color.Black,
-                unfocusedTextColor = Color.Black,
-                disabledTextColor = Color.Black,
-                errorTextColor = Color.Black,
+                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                disabledTextColor = MaterialTheme.colorScheme.onSurface,
+                errorTextColor = MaterialTheme.colorScheme.onSurface,
                 unfocusedBorderColor = borderColor,
                 focusedBorderColor = primaryColor,
-                unfocusedContainerColor = Color.White,
-                focusedContainerColor = Color.White,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                focusedContainerColor = MaterialTheme.colorScheme.surface,
                 cursorColor = primaryColor
             ),
             modifier = Modifier
@@ -156,14 +157,14 @@ fun LoginForm(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             shape = RoundedCornerShape(10.dp),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedTextColor = Color.Black,
-                unfocusedTextColor = Color.Black,
-                disabledTextColor = Color.Black,
-                errorTextColor = Color.Black,
+                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                disabledTextColor = MaterialTheme.colorScheme.onSurface,
+                errorTextColor = MaterialTheme.colorScheme.onSurface,
                 unfocusedBorderColor = borderColor,
                 focusedBorderColor = primaryColor,
-                unfocusedContainerColor = Color.White,
-                focusedContainerColor = Color.White,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                focusedContainerColor = MaterialTheme.colorScheme.surface,
                 cursorColor = primaryColor
             ),
             modifier = Modifier
@@ -209,7 +210,7 @@ fun LoginForm(
                 .height(52.dp),
             shape = RoundedCornerShape(12.dp),
             border = BorderStroke(1.dp, borderColor),
-            colors = ButtonDefaults.outlinedButtonColors(containerColor = Color.White)
+            colors = ButtonDefaults.outlinedButtonColors(containerColor = MaterialTheme.colorScheme.background)
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.google),
@@ -248,7 +249,7 @@ fun LoginForm(
                     text = androidx.compose.ui.res.stringResource(R.string.auth_sign_up),
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
-                    color = NavyBlue
+                    color = appColors.textAccent
                 )
             }
         }

@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.components.checkin.checkingreviewdetails
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -16,7 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.check_in_mobile_app.R
-import com.example.check_in_mobile_app.ui.theme.NavyBlue
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import com.example.domain.model.Passenger
 
 import androidx.compose.ui.res.stringResource
@@ -32,7 +34,7 @@ fun PassengerAvatarRow(passenger: Passenger) {
             modifier = Modifier
                 .size(64.dp)
                 .clip(CircleShape)
-                .background(Color(0xFFE2E8F0)),
+                .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)),
             contentAlignment = Alignment.Center
         ) {
             Icon(
@@ -51,7 +53,7 @@ fun PassengerAvatarRow(passenger: Passenger) {
                 text = "${passenger.firstName} ${passenger.lastName}",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                color = NavyBlue
+                color = LocalAppColors.current.textAccent
             )
 
             Spacer(modifier = Modifier.height(6.dp))
@@ -79,23 +81,4 @@ fun PassengerAvatarRow(passenger: Passenger) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun PassengerAvatarRowPreview() {
-    val previewPassenger = Passenger(
-        firstName = "John",
-        lastName = "Doe",
-        nationality = "United States",
-        dateOfBirth = "1990-01-01",
-        passengerId = "P123",
-        uid = "U456",
-        passportNumber = "A12345678",
-        expiryDate = "2030-12-31",
-        seatNumber = "12A",
-        checkinStatus = "Pending"
-    )
 
-    Box(modifier = Modifier.padding(16.dp)) {
-        PassengerAvatarRow(passenger = previewPassenger)
-    }
-}

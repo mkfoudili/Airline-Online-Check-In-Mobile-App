@@ -1,5 +1,8 @@
 package com.example.check_in_mobile_app.presentation.auth
 
+import androidx.compose.material3.MaterialTheme
+
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -19,10 +22,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.credentials.CredentialManager
+import androidx.credentials.GetCredentialRequest
+import androidx.credentials.exceptions.GetCredentialException
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.presentation.components.authforms.LoginForm
 import com.example.check_in_mobile_app.ui.theme.*
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
+import com.example.data.remote.GOOGLE_WEB_CLIENT_ID
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,6 +44,9 @@ fun LoginScreen(
     viewModel: AuthViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.uiState
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val credentialManager = CredentialManager.create(context)
 
     LaunchedEffect(uiState.isSuccess) {
         if (uiState.isSuccess) {
@@ -48,7 +62,7 @@ fun LoginScreen(
                         text = androidx.compose.ui.res.stringResource(R.string.auth_sign_in),
                         fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = NavyBlue
+                        color = LocalAppColors.current.textAccent
                     )
                 },
                 navigationIcon = {
@@ -56,7 +70,7 @@ fun LoginScreen(
                         Icon(
                             painter = painterResource(id = R.drawable.chevron_left),
                             contentDescription = "Back",
-                            tint = NavyBlue,
+                            tint = LocalAppColors.current.textAccent,
                             modifier = Modifier.size(20.dp)
                         )
                     }
@@ -101,7 +115,7 @@ fun LoginScreen(
                 text = androidx.compose.ui.res.stringResource(R.string.auth_welcome_back),
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
-                color = DarkText111
+                color = LocalAppColors.current.textPrimary
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -110,7 +124,7 @@ fun LoginScreen(
             Text(
                 text = androidx.compose.ui.res.stringResource(R.string.auth_login_subtitle),
                 fontSize = 14.sp,
-                color = MediumGray,
+                color = LocalAppColors.current.textSecondary,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(horizontal = 32.dp)
             )
@@ -133,7 +147,49 @@ fun LoginScreen(
                 onSignInClick = { email, password ->
                     viewModel.login(email, password)
                 },
-                onGoogleSignInClick = {  },
+                onGoogleSignInClick = {
+                    val googleIdOption = GetGoogleIdOption.Builder()
+                        .setFilterByAuthorizedAccounts(false)
+                        .setServerClientId(GOOGLE_WEB_CLIENT_ID)
+                        .setAutoSelectEnabled(false)
+                        .build()
+
+                    val request = GetCredentialRequest.Builder()
+                        .addCredentialOption(googleIdOption)
+                        .build()
+
+                    scope.launch {
+                        try {
+                            val result = credentialManager.getCredential(
+                                context = context,
+                                request = request
+                            )
+                            val credential = result.credential
+
+                            if (credential is GoogleIdTokenCredential) {
+                                viewModel.signInWithGoogle(credential.idToken)
+                            } else if (credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
+                                try {
+                                    val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
+                                    Log.d("AuthDebug", "idToken: ${googleIdTokenCredential.idToken.take(20)}...")
+                                    viewModel.signInWithGoogle(googleIdTokenCredential.idToken)
+                                } catch (e: Exception) {
+                                    Log.e("AuthDebug", "Erreur parsing GoogleIdTokenCredential: ${e.message}")
+                                    viewModel.setError("Google Sign-In failed: ${e.message}")
+                                }
+                            } else {
+                                Log.e("AuthDebug", "Type inconnu: ${credential.type}")
+                                viewModel.setError("Unexpected credential type: ${credential.type}")
+                            }
+                        } catch (e: GetCredentialException) {
+                            Log.e("AuthDebug", "Credential Manager Error: ${e.type} - ${e.message}")
+                            viewModel.setError("Google Sign-In failed: ${e.message ?: "No accounts found"}")
+                        } catch (e: Exception) {
+                            Log.e("AuthDebug", "Unexpected Error", e)
+                            viewModel.setError("An unexpected error occurred")
+                        }
+                    }
+                },
                 onSignUpClick = onNavigateToRegister
             )
 

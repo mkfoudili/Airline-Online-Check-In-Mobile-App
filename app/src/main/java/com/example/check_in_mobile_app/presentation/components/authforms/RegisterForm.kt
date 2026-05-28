@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.components.authforms
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -118,7 +120,7 @@ fun RegisterForm(
         } else {
             Text(
                 text = androidx.compose.ui.res.stringResource(R.string.auth_password_hint),
-                color = MediumGray,
+                color = LocalAppColors.current.textSecondary,
                 fontSize = 12.sp,
                 modifier = Modifier.padding(top = 4.dp, start = 4.dp)
             )
@@ -174,13 +176,13 @@ fun RegisterForm(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
         ) {
-            HorizontalDivider(modifier = Modifier.weight(1f), color = BorderColor)
+            HorizontalDivider(modifier = Modifier.weight(1f), color = MaterialTheme.colorScheme.outline)
             Text(
                 text = "  " + androidx.compose.ui.res.stringResource(R.string.common_or) + "  ",
-                color = MediumGray,
+                color = LocalAppColors.current.textSecondary,
                 fontSize = 13.sp
             )
-            HorizontalDivider(modifier = Modifier.weight(1f), color = BorderColor)
+            HorizontalDivider(modifier = Modifier.weight(1f), color = MaterialTheme.colorScheme.outline)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -193,7 +195,7 @@ fun RegisterForm(
                 .height(52.dp),
             shape = RoundedCornerShape(14.dp),
             border = BorderStroke(1.dp, BorderColor),
-            colors = ButtonDefaults.outlinedButtonColors(containerColor = Color.White)
+            colors = ButtonDefaults.outlinedButtonColors(containerColor = MaterialTheme.colorScheme.background)
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.google),
@@ -206,7 +208,7 @@ fun RegisterForm(
                 text = androidx.compose.ui.res.stringResource(R.string.auth_continue_with_google),
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Medium,
-                color = DarkText
+                color = LocalAppColors.current.textPrimary
             )
         }
 
@@ -221,7 +223,7 @@ fun RegisterForm(
             Text(
                 text = androidx.compose.ui.res.stringResource(R.string.auth_already_have_account) + " ",
                 fontSize = 14.sp,
-                color = MediumGray,
+                color = LocalAppColors.current.textSecondary,
                 textAlign = TextAlign.Center
             )
             TextButton(
@@ -233,7 +235,7 @@ fun RegisterForm(
                     text = androidx.compose.ui.res.stringResource(R.string.auth_sign_in),
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
-                    color = NavyBlue
+                    color = LocalAppColors.current.textAccent
                 )
             }
         }
@@ -255,7 +257,7 @@ private fun FieldLabel(text: String) {
         text = text,
         fontSize = 14.sp,
         fontWeight = FontWeight.Medium,
-        color = DarkText,
+        color = LocalAppColors.current.textPrimary,
         modifier = Modifier.padding(bottom = 6.dp)
     )
 }
@@ -277,13 +279,13 @@ private fun AuthTextField(
         value = value,
         onValueChange = onValueChange,
         placeholder = {
-            Text(text = placeholder, color = MediumGray, fontSize = 14.sp)
+            Text(text = placeholder, color = LocalAppColors.current.textSecondary, fontSize = 14.sp)
         },
         leadingIcon = {
             Icon(
                 painter = painterResource(id = leadingIconRes),
                 contentDescription = null,
-                tint = MediumGray,
+                tint = LocalAppColors.current.textSecondary,
                 modifier = Modifier.size(20.dp)
             )
         },
@@ -299,7 +301,7 @@ private fun AuthTextField(
                         } else {
                             androidx.compose.ui.res.stringResource(R.string.common_show_password)
                         },
-                        tint = MediumGray,
+                        tint = LocalAppColors.current.textSecondary,
                         modifier = Modifier.size(20.dp)
                     )
                 }
@@ -312,17 +314,17 @@ private fun AuthTextField(
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
         shape = RoundedCornerShape(10.dp),
         colors = OutlinedTextFieldDefaults.colors(
-            focusedTextColor = Color.Black,
-            unfocusedTextColor = Color.Black,
-            disabledTextColor = Color.Black,
-            errorTextColor = Color.Black,
+            focusedTextColor = MaterialTheme.colorScheme.onSurface,
+            unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+            disabledTextColor = MaterialTheme.colorScheme.onSurface,
+            errorTextColor = MaterialTheme.colorScheme.onSurface,
             unfocusedBorderColor = BorderColor,
-            focusedBorderColor = NavyBlue,
+            focusedBorderColor = LocalAppColors.current.textAccent,
             errorBorderColor = ErrorRed,
-            unfocusedContainerColor = Color.White,
-            focusedContainerColor = Color.White,
-            errorContainerColor = Color.White,
-            cursorColor = NavyBlue
+            unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+            focusedContainerColor = MaterialTheme.colorScheme.surface,
+            errorContainerColor = MaterialTheme.colorScheme.surface,
+            cursorColor = LocalAppColors.current.textAccent
         ),
         modifier = Modifier
             .fillMaxWidth()

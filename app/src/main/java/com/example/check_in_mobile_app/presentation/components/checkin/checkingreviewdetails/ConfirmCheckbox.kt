@@ -14,9 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.check_in_mobile_app.R
 import androidx.compose.ui.res.stringResource
-import com.example.check_in_mobile_app.ui.theme.CoolGray
-import com.example.check_in_mobile_app.ui.theme.LightGray
-import com.example.check_in_mobile_app.ui.theme.NavyBlue
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 
 @Composable
 fun ConfirmCheckbox(
@@ -28,7 +26,7 @@ fun ConfirmCheckbox(
             .fillMaxWidth()
             .border(
                 width = 1.dp,
-                color = if (isConfirmed)  NavyBlue else LightGray ,
+                color = if (isConfirmed)  LocalAppColors.current.textAccent else LocalAppColors.current.border,
                 shape = RoundedCornerShape(10.dp)
             )
             .padding(16.dp),
@@ -39,15 +37,15 @@ fun ConfirmCheckbox(
             checked = isConfirmed,
             onCheckedChange = onConfirmedChanged,
             colors = CheckboxDefaults.colors(
-                checkedColor = NavyBlue,
-                uncheckedColor = CoolGray
+                checkedColor = LocalAppColors.current.textAccent,
+                uncheckedColor = LocalAppColors.current.textSubtle
             ),
             modifier = Modifier.size(20.dp)
         )
         Text(
             text = stringResource(R.string.review_confirm_text),
             fontSize = 14.sp,
-            color = Color.Black,
+            color = LocalAppColors.current.textPrimary,
             lineHeight = 20.sp,
             modifier = Modifier.padding(top = 2.dp)
         )

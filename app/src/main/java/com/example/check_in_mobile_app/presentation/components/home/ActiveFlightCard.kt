@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.components.home
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -72,7 +74,7 @@ fun ActiveFlightCard(
                     text = stringResource(R.string.active_now_badge),
                     fontSize = 10.sp,
                     fontWeight = FontWeight.Medium,
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.surface,
                     letterSpacing = 0.8.sp,
                     maxLines = 1
                 )
@@ -84,7 +86,7 @@ fun ActiveFlightCard(
                 text = stringResource(R.string.active_ready_to_fly),
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.White,
+                color = MaterialTheme.colorScheme.surface,
                 letterSpacing = (-0.3).sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
@@ -133,8 +135,8 @@ fun ActiveFlightCard(
                     onClick = onCheckInClick,
                     shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.White,
-                        contentColor = NavyBlue
+                        containerColor = MaterialTheme.colorScheme.background,
+                        contentColor = MaterialTheme.colorScheme.primary
                     ),
                     contentPadding = PaddingValues(horizontal = 22.dp, vertical = 11.dp),
                     elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp)

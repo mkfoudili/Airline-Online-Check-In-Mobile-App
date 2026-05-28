@@ -1,6 +1,7 @@
 package com.example.check_in_mobile_app.presentation.components.profile
 
 import androidx.compose.foundation.Image
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -20,6 +21,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.ui.theme.ActiveGreen
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import com.example.check_in_mobile_app.ui.theme.LightGray
 
 @Composable
@@ -38,7 +40,7 @@ fun ProfileAvatar(
             modifier = Modifier
                 .size(avatarSize)
                 .clip(CircleShape)
-                .background(LightGray)
+                .background(LocalAppColors.current.iconBackground)
                 .border(2.dp, Color(0xFFF1F5F9), CircleShape),
             contentAlignment = Alignment.Center
         ) {
@@ -56,7 +58,7 @@ fun ProfileAvatar(
                     .size(badgeSize)
                     .offset(x = (-4).dp, y = (-4).dp)
                     .clip(CircleShape)
-                    .background(Color.White)
+                    .background(MaterialTheme.colorScheme.surface)
                     .padding(3.dp)
                     .clip(CircleShape)
                     .background(ActiveGreen)

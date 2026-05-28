@@ -1,6 +1,7 @@
 package com.example.check_in_mobile_app.presentation.main.booking
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
@@ -23,7 +25,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -34,33 +38,34 @@ import com.example.check_in_mobile_app.presentation.components.booking.BookingCa
 import com.example.check_in_mobile_app.presentation.components.booking.ViewAllButton
 import com.example.check_in_mobile_app.presentation.components.TabBarMenu
 import com.example.check_in_mobile_app.presentation.components.TabItem
-import com.example.check_in_mobile_app.ui.theme.DarkText
-import com.example.check_in_mobile_app.ui.theme.NavyBlue
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import com.example.check_in_mobile_app.ui.theme.Poppins
+import com.example.check_in_mobile_app.ui.theme.Slate500
 import com.example.domain.model.Flight
-
 import androidx.compose.ui.res.stringResource
 import com.example.check_in_mobile_app.R
-
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import com.example.check_in_mobile_app.presentation.main.MainActivity
+import com.example.check_in_mobile_app.presentation.components.booking.CheckedInBookingCard
 
 @Composable
 fun BookingScreen(
     viewModel: BookingViewModel = hiltViewModel(),
     onViewAllClick: () -> Unit = {},
-    onBoarding: () -> Unit = {},
+    onBoarding: (passengerId: String) -> Unit = {},
     onTabSelected: (TabItem) -> Unit = {},
     onCheckInClick: (String) -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val isOnline by viewModel.isOnline.collectAsState()
     BookingScreenContent(
         uiState = uiState,
+        isOnline = isOnline,
         onViewAllClick = onViewAllClick,
-        onBoarding = onBoarding,
         onTabSelected = onTabSelected,
-        onCheckInClick = onCheckInClick
+        onCheckInClick = onCheckInClick,
+        onBoarding = onBoarding
     )
 }
 
@@ -68,13 +73,14 @@ fun BookingScreen(
 @Composable
 fun BookingScreenContent(
     uiState: BookingUiState,
+    isOnline: Boolean = true,
     onViewAllClick: () -> Unit = {},
-    onBoarding: () -> Unit = {},
+    onBoarding: (String) -> Unit = {},
     onTabSelected: (TabItem) -> Unit = {},
     onCheckInClick: (String) -> Unit = {}
 ) {
     Scaffold(
-        containerColor = Color.White,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 title = {
@@ -82,59 +88,59 @@ fun BookingScreenContent(
                         text = stringResource(R.string.my_bookings),
                         fontFamily = Poppins,
                         fontSize = 25.sp,
-                        color = DarkText,
+                        color = LocalAppColors.current.textPrimary,
                         fontWeight = FontWeight.Bold,
                         letterSpacing = (-0.5).sp
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.White
+                    containerColor = MaterialTheme.colorScheme.background
                 )
             )
         },
-
         bottomBar = {
             TabBarMenu(
                 selectedTab = TabItem.TICKETS,
                 onTabSelected = onTabSelected
             )
         }
-
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.White)
+                .background(MaterialTheme.colorScheme.background)
                 .padding(paddingValues)
         ) {
-            HorizontalDivider(color = Color(0xFFF1F5F9), thickness = 1.dp)
+            HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f), thickness = 1.dp)
             Spacer(modifier = Modifier.height(16.dp))
-            when (val state = uiState) {
-                is BookingUiState.Loading -> {
+
+            when {
+                // État offline — on affiche une bannière mais on reste dans le flow normal
+                uiState is BookingUiState.Loading -> {
                     Box(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
-                        CircularProgressIndicator(color = NavyBlue)
+                        CircularProgressIndicator(color = LocalAppColors.current.textAccent)
                     }
                 }
 
-                is BookingUiState.Error -> {
+                uiState is BookingUiState.Error -> {
                     Box(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = state.message,
-                            color = NavyBlue,
+                            text = uiState.message,
+                            color = LocalAppColors.current.textAccent,
                             fontSize = 14.sp
                         )
                     }
                 }
 
-                is BookingUiState.Success -> {
+                uiState is BookingUiState.Success -> {
                     ViewAllButton(
-                        title = stringResource(R.string.upcoming_flights),
+                        title = stringResource(R.string.checked_in_flights),
                         actionLabel = stringResource(R.string.view_all),
                         onActionClick = onViewAllClick
                     )
@@ -144,17 +150,68 @@ fun BookingScreenContent(
                             .fillMaxWidth()
                             .weight(1f)
                     ) {
-                        items(state.bookings) { booking ->
-                            BookingCard(
+                        items(uiState.bookings) { booking ->
+                            CheckedInBookingCard(
                                 booking = booking,
-                                onCheckInClick = onCheckInClick,
-                                onBoarding = onBoarding
+                                onBoarding = { passengerId -> onBoarding(passengerId) }
                             )
                         }
                     }
                 }
             }
         }
+    }
+}
+
+/**
+ * Bannière inline affichée dans BookingScreen (et AllBookingsScreen) quand hors ligne.
+ * Pas un screen dédié — s'intègre dans le flux existant.
+ */
+@Composable
+fun BookingOfflineBanner(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(horizontal = 32.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Box(
+            modifier = Modifier
+                .size(96.dp)
+                .background(MaterialTheme.colorScheme.surfaceVariant, shape = CircleShape),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.wifi_off),
+                contentDescription = null,
+                tint = Color.Unspecified,
+                modifier = Modifier.size(44.dp)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(28.dp))
+
+        Text(
+            text = stringResource(R.string.connection_timed_out),
+            fontFamily = Poppins,
+            fontSize = 22.sp,
+            fontWeight = FontWeight.Bold,
+            color = LocalAppColors.current.textPrimary,
+            textAlign = TextAlign.Center
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            text = stringResource(R.string.connection_error_description),
+            fontFamily = Poppins,
+            fontSize = 15.sp,
+            fontWeight = FontWeight.Normal,
+            color = LocalAppColors.current.textSecondary,
+            textAlign = TextAlign.Center,
+            lineHeight = 22.sp
+        )
     }
 }
 
@@ -170,7 +227,7 @@ fun BookingScreenPreview() {
         destination = "CDG",
         destinationCity = "LONDON",
         departureTime = System.currentTimeMillis() + 86400000,
-        arrivalTime = System.currentTimeMillis() + 90000000 + (11 * 60 * 60 * 1000) + (20 * 60 * 1000), // ~11h 20m later
+        arrivalTime = System.currentTimeMillis() + 90000000 + (11 * 60 * 60 * 1000) + (20 * 60 * 1000),
         checkInOpensTime = "06:15",
         boardingTime = "22:15",
         aircraftType = "Boeing 737",
@@ -216,6 +273,16 @@ fun BookingScreenPreview() {
         )
     )
     BookingScreenContent(
-        uiState = BookingUiState.Success(dummyBookings)
+        uiState = BookingUiState.Success(dummyBookings),
+        isOnline = true
+    )
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun BookingScreenOfflinePreview() {
+    BookingScreenContent(
+        uiState = BookingUiState.Loading,
+        isOnline = false
     )
 }

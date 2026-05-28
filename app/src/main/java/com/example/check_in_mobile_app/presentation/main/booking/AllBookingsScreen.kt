@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.main.booking
 
+import androidx.compose.material3.MaterialTheme
+
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,15 +26,15 @@ import com.example.check_in_mobile_app.presentation.components.booking.BookingCa
 import com.example.check_in_mobile_app.presentation.components.booking.DateField
 import com.example.check_in_mobile_app.presentation.components.booking.FilterChipsRow
 import com.example.check_in_mobile_app.presentation.components.booking.SearchField
-import com.example.check_in_mobile_app.ui.theme.NavyBlue
-import com.example.data.repository.BookingRepositoryImpl
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import com.example.domain.model.CheckInStatus
-import com.example.domain.usecase.booking.GetUpcomingBookingsUseCase
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.Alignment
+import java.util.TimeZone
 
 @Composable
 fun AllBookingsScreen(
@@ -45,6 +47,8 @@ fun AllBookingsScreen(
     val selectedDate by viewModel.selectedDate.collectAsState()
     val selectedStatus by viewModel.selectedStatus.collectAsState()
     val filteredBookings by viewModel.filteredBookings.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
+    val isOnline by viewModel.isOnline.collectAsState()
 
     AllBookingsScreenContent(
         onNavigateBack = onNavigateBack,
@@ -57,6 +61,8 @@ fun AllBookingsScreen(
         selectedStatus = selectedStatus,
         onStatusSelect = viewModel::updateSelectedStatus,
         filteredBookings = filteredBookings,
+        isLoading = isLoading,
+        isOnline = isOnline,
         onCheckInClick = onCheckInClick
     )
 }
@@ -74,10 +80,12 @@ fun AllBookingsScreenContent(
     selectedStatus: String,
     onStatusSelect: (String) -> Unit,
     filteredBookings: List<Booking>,
+    isLoading: Boolean = false,
+    isOnline: Boolean = true,
     onCheckInClick: (String) -> Unit = {}
 ) {
     Scaffold(
-        containerColor = Color.White,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 title = {
@@ -85,15 +93,19 @@ fun AllBookingsScreenContent(
                         text = stringResource(R.string.all_bookings),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
-                        color = NavyBlue
+                        color = LocalAppColors.current.textAccent
                     )
                 },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(painter = painterResource(id = R.drawable.chevron_left), contentDescription = stringResource(R.string.common_back), tint = NavyBlue)
+                        Icon(
+                            painter = painterResource(id = R.drawable.chevron_left),
+                            contentDescription = stringResource(R.string.back),
+                            tint = LocalAppColors.current.textAccent
+                        )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
             )
         }
     ) { paddingValues ->
@@ -102,8 +114,14 @@ fun AllBookingsScreenContent(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            HorizontalDivider(color = Color(0xFFF1F5F9), thickness = 1.dp)
-            
+            HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant, thickness = 1.dp)
+
+            // Bannière offline intégrée en haut du contenu
+            if (!isOnline) {
+                BookingOfflineBanner()
+                return@Column
+            }
+
             Spacer(modifier = Modifier.height(16.dp))
 
             // Search Bar
@@ -129,9 +147,7 @@ fun AllBookingsScreenContent(
             // Filters
             val statusOptions = listOf(
                 "All" to stringResource(R.string.status_all),
-                "Confirmed" to stringResource(R.string.status_confirmed),
                 "Check In open" to stringResource(R.string.status_check_in_open),
-                "Checked In" to stringResource(R.string.status_checked_in),
                 "Passed" to stringResource(R.string.status_passed)
             )
 
@@ -148,24 +164,34 @@ fun AllBookingsScreenContent(
                 text = stringResource(R.string.all_flights),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                color = NavyBlue,
+                color = LocalAppColors.current.textAccent,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
 
-
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Bookings List
-            LazyColumn(
-                modifier = Modifier.fillMaxWidth().weight(1f),
-                contentPadding = PaddingValues(bottom = 16.dp)
-            ) {
-                items(filteredBookings) { booking ->
-                    BookingCard(
-                        booking = booking,
-                        onCheckInClick = onCheckInClick,
-                        onBoarding = onBoarding
-                    )
+            if (isLoading) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(color = LocalAppColors.current.textAccent)
+                }
+            } else {
+                // Bookings List
+                LazyColumn(
+                    modifier = Modifier.fillMaxWidth().weight(1f),
+                    contentPadding = PaddingValues(bottom = 16.dp)
+                ) {
+                    items(filteredBookings) { booking ->
+                        BookingCard(
+                            booking = booking,
+                            onCheckInClick = onCheckInClick,
+                            onBoarding = onBoarding
+                        )
+                    }
                 }
             }
         }
@@ -178,25 +204,26 @@ fun AllBookingsScreenPreview() {
     val searchQuery = remember { mutableStateOf("") }
     val selectedDate = remember { mutableStateOf<String?>(null) }
     val selectedStatus = remember { mutableStateOf("All") }
-    
+
     val allBookings = emptyList<Booking>()
 
-
     val filteredBookings = allBookings.filter { booking ->
-        val matchesQuery = searchQuery.value.isBlank() || 
-                           booking.flight.destinationCity.contains(searchQuery.value, ignoreCase = true) ||                            
-                           booking.flight.destination.contains(searchQuery.value, ignoreCase = true)
-        
-        val sdfDate = SimpleDateFormat("dd MMM", Locale.getDefault())
+        val matchesQuery = searchQuery.value.isBlank() ||
+                booking.flight.destinationCity.contains(searchQuery.value, ignoreCase = true) ||
+                booking.flight.destination.contains(searchQuery.value, ignoreCase = true)
+
+        val sdfDate = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).apply {
+            timeZone = TimeZone.getTimeZone("UTC")
+        }
         val depDateStr = sdfDate.format(Date(booking.flight.departureTime))
         val matchesDate = selectedDate.value == null || depDateStr == selectedDate.value
-        
-        val uiStatus = try { CheckInStatus.valueOf(booking.status.name) } catch (e: Exception) { CheckInStatus.CONFIRMED }
+
+        val uiStatus = try { CheckInStatus.valueOf(booking.status.name) } catch (e: Exception) { CheckInStatus.CHECK_IN_OPEN }
         val matchesStatus = selectedStatus.value == "All" || uiStatus.name.replace("_", " ").equals(selectedStatus.value, ignoreCase = true)
-        
+
         matchesQuery && matchesDate && matchesStatus
     }
-    
+
     AllBookingsScreenContent(
         onNavigateBack = {},
         onBoarding = {},
@@ -206,6 +233,8 @@ fun AllBookingsScreenPreview() {
         onDateSelected = { selectedDate.value = it },
         selectedStatus = selectedStatus.value,
         onStatusSelect = { selectedStatus.value = it },
-        filteredBookings = filteredBookings
+        filteredBookings = filteredBookings,
+        isLoading = false,
+        isOnline = true
     )
 }

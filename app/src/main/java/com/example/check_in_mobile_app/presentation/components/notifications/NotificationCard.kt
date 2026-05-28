@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.components.notifications
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -32,13 +34,13 @@ fun NotificationCard(
     onClick: () -> Unit = {}
 ) {
     val isUnread = !notification.isRead
-    val borderColor = if (isUnread) NavyBlue else BorderColor
-    val iconBackground = if (isUnread) NavyBlue else LightGray
-    val iconTint = if (isUnread) Color.White else NavyBlue
+    val borderColor = if (isUnread) LocalAppColors.current.textAccent else LocalAppColors.current.border
+    val iconBackground = if (isUnread) NavyBlue else MaterialTheme.colorScheme.surfaceVariant
+    val iconTint = if (isUnread) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary
 
     Card(
         onClick = onClick,
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background),
         shape = RoundedCornerShape(12.dp),
         modifier = modifier
             .fillMaxWidth()
@@ -78,14 +80,14 @@ fun NotificationCard(
                     text = notification.title,
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.Bold,
-                        color = NavyBlue,
+                        color = LocalAppColors.current.textAccent,
                         fontSize = 16.sp
                     )
                 )
                 Text(
                     text = notification.description,
                     style = MaterialTheme.typography.bodyMedium.copy(
-                        color = Slate500,
+                        color = LocalAppColors.current.textSecondary,
                         lineHeight = 20.sp
                     ),
                     maxLines = 2,
@@ -98,7 +100,7 @@ fun NotificationCard(
                     notification.flightCode?.let { code ->
                         Surface(
                             shape = RoundedCornerShape(12.dp),
-                            border = BorderStroke(1.dp, MediumGray),
+                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                             color = Color.Transparent
                         ) {
                             Text(
@@ -106,7 +108,7 @@ fun NotificationCard(
                                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
                                 style = MaterialTheme.typography.labelSmall.copy(
                                     fontWeight = FontWeight.Bold,
-                                    color = DarkText
+                                    color = LocalAppColors.current.textPrimary
                                 )
                             )
                         }
@@ -115,7 +117,7 @@ fun NotificationCard(
                     Text(
                         text = notification.timeAgo,
                         style = MaterialTheme.typography.labelSmall.copy(
-                            color = MediumGray
+                            color = LocalAppColors.current.textSecondary
                         )
                     )
                 }
@@ -145,7 +147,7 @@ private fun getNotificationIcon(type: NotificationType): ImageVector {
 fun NotificationCardPreview() {
     Column(
         modifier = Modifier
-            .background(SurfaceGray)
+            .background(MaterialTheme.colorScheme.surfaceVariant)
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {

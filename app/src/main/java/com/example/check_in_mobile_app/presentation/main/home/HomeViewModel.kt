@@ -4,14 +4,22 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.check_in_mobile_app.di.NetworkMonitor
+import com.example.data.preferences.UserPreferencesRepository
+import com.example.domain.model.CheckInStatus
 import com.example.domain.repository.AuthRepository
 import com.example.domain.repository.BookingRepository
+import com.example.domain.repository.FlightRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -21,8 +29,10 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     application: Application,
     private val bookingRepository: BookingRepository,
+    private val flightRepository: FlightRepository,
     private val authRepository: AuthRepository,
-    private val networkMonitor: NetworkMonitor
+    private val networkMonitor: NetworkMonitor,
+    private val userPrefs: UserPreferencesRepository
 ) : AndroidViewModel(application) {
 
     val isOnline: StateFlow<Boolean> = networkMonitor.isOnline
@@ -34,30 +44,62 @@ class HomeViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
+    private val _navigateToFlightDetails = MutableSharedFlow<String>(extraBufferCapacity = 1)
+    val navigateToFlightDetails = _navigateToFlightDetails.asSharedFlow()
 
     init {
         loadUserName()
-        loadActiveFlight()
+        if (networkMonitor.currentlyOnline()) {
+            loadActiveFlight()
+        } else {
+            loadCachedFlights()
+        }
+        observeConnectivity()
+    }
+
+    private fun observeConnectivity() {
+        viewModelScope.launch {
+            networkMonitor.isOnline
+                .drop(1)
+                .distinctUntilChanged()
+                .collect { online ->
+                    if (online) {
+                        loadActiveFlight()
+                    } else {
+                        loadCachedFlights()
+                    }
+                }
+        }
     }
 
     private fun loadUserName() {
-        val uid = authRepository.getCurrentUserId() ?: return
-        // Le nom complet n'est pas stocké directement dans AuthRepository ;
-        // on utilise l'UID comme fallback (à enrichir si ProfileRepository est ajouté)
-        _uiState.update { it.copy(userName = uid.take(12)) }
+        viewModelScope.launch {
+            userPrefs.userNameFlow.firstOrNull()?.let { name ->
+                _uiState.update { it.copy(userName = name) }
+            }
+        }
     }
 
     fun loadActiveFlight() {
         viewModelScope.launch {
-            val uid = authRepository.getCurrentUserId() ?: return@launch
             _uiState.update { it.copy(isActiveFlightLoading = true, errorMessage = null) }
 
-            val result = bookingRepository.getUpcomingBookings(uid)
-            result
+            val now = System.currentTimeMillis()
+
+            bookingRepository.getAllBookings()
                 .onSuccess { bookings ->
+                    val upcoming = bookings.filter {
+                        it.flight.departureTime > now &&
+                                it.status != CheckInStatus.PASSED
+                    }
+
+                    val active = upcoming
+                        .filter { it.status == CheckInStatus.CHECK_IN_OPEN }
+                        .minByOrNull { it.flight.departureTime }
+
                     _uiState.update {
                         it.copy(
-                            activeFlight = bookings.firstOrNull(),
+                            activeFlight = active,
                             isActiveFlightLoading = false
                         )
                     }
@@ -69,7 +111,15 @@ class HomeViewModel @Inject constructor(
                             errorMessage = error.message
                         )
                     }
+                    loadCachedFlights()
                 }
+        }
+    }
+
+    private fun loadCachedFlights() {
+        viewModelScope.launch {
+            val flights = flightRepository.getAllCachedFlights()
+            _uiState.update { it.copy(cachedFlights = flights) }
         }
     }
 
@@ -122,7 +172,10 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onCheckInNow() {
-        // Navigue vers le check-in pour le vol actif, géré par le NavGraph
+        val bookingRef = _uiState.value.activeFlight?.bookingRef?.trim().orEmpty()
+        if (bookingRef.isNotBlank()) {
+            _navigateToFlightDetails.tryEmit(bookingRef)
+        }
     }
 
     fun onRefresh() {

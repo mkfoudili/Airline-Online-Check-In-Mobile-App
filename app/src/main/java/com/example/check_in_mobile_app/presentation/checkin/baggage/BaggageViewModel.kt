@@ -1,6 +1,5 @@
 package com.example.check_in_mobile_app.presentation.checkin.baggage
 
-import androidx.activity.result.launch
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.usecase.checkin.SelectBaggageUseCase
@@ -9,7 +8,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,15 +28,12 @@ class BaggageViewModel @Inject constructor(
 
     fun onContinueClick(onSuccess: () -> Unit) {
         _uiState.update { it.copy(isLoading = true, error = null) }
-
-        viewModelScope.launch {
-            val result = selectBaggageUseCase(
-                checkedBaggageCount = _uiState.value.checkedBaggageCount,
-                specialEquipmentCount = _uiState.value.specialEquipmentCount
-            )
-
+        
+        selectBaggageUseCase(
+            checkedBaggageCount = _uiState.value.checkedBaggageCount,
+            specialEquipmentCount = _uiState.value.specialEquipmentCount
+        ) { result ->
             _uiState.update { it.copy(isLoading = false) }
-
             result.onSuccess {
                 onSuccess()
             }.onFailure { throwable ->

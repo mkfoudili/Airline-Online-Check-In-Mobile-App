@@ -2,6 +2,7 @@ package com.example.check_in_mobile_app.presentation.checkin.boarding
 
 import android.content.Context
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.data.mapper.toBitmap
@@ -12,14 +13,15 @@ import com.example.domain.usecase.boarding.GeneratePdfUseCase
 import com.example.domain.usecase.boarding.GenerateQRCodeBitmapUseCase
 import com.example.domain.usecase.boarding.GenerateQRCodeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 @HiltViewModel
 class BoardingViewModel @Inject constructor(
@@ -27,9 +29,10 @@ class BoardingViewModel @Inject constructor(
     private val generateQRCodeUseCase: GenerateQRCodeUseCase,
     private val generateQRCodeBitmapUseCase: GenerateQRCodeBitmapUseCase,
     private val generatePdfUseCase: GeneratePdfUseCase,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val passengerId: String = "p1"
+    private val passengerId: String = savedStateHandle["passengerId"] ?: ""
 
     private val _uiState = MutableStateFlow(BoardingUiState(isLoading = true))
     val uiState: StateFlow<BoardingUiState> = _uiState.asStateFlow()
@@ -38,19 +41,31 @@ class BoardingViewModel @Inject constructor(
     private var cachedQrPayload: String? = null
 
     init {
-        viewModelScope.launch { boardingPassRepository.seedMockDataIfEmpty() }
         loadBoardingPass()
     }
 
     private fun loadBoardingPass() {
         viewModelScope.launch {
-            boardingPassRepository.getBoardingPass(passengerId).collect { boardingPass ->
+            // If we have a specific passengerId, observe that pass directly.
+            // Otherwise, take the first pass from the full list.
+            val flow = if (passengerId.isNotBlank()) {
+                println("BOARDING_DEBUG: loading by passengerId = $passengerId")
+                boardingPassRepository.getBoardingPass(passengerId)
+            } else {
+                println("BOARDING_DEBUG: passengerId is blank, loading all")
+                boardingPassRepository.getAllBoardingPasses()
+                    .map { list -> list.firstOrNull() }
+            }
+
+            flow.collect { boardingPass ->
                 if (boardingPass == null) {
                     _uiState.update { it.copy(isLoading = false, isEmpty = true) }
                     return@collect
                 }
+
                 currentPass = boardingPass
                 val qrPayload = generateQRCodeUseCase(boardingPass)
+
                 val qrBitmap = if (qrPayload == cachedQrPayload && _uiState.value.qrBitmap != null) {
                     _uiState.value.qrBitmap
                 } else {
@@ -59,23 +74,24 @@ class BoardingViewModel @Inject constructor(
                         generateQRCodeBitmapUseCase(qrPayload)?.toBitmap()?.asImageBitmap()
                     }
                 }
+
                 _uiState.update { current ->
                     current.copy(
-                        passengerName = boardingPass.passengerName,
-                        flightNumber = boardingPass.flightNumber,
-                        departureCode = boardingPass.origin,
-                        departureCity = boardingPass.originCity,
-                        arrivalCode = boardingPass.destination,
-                        arrivalCity = boardingPass.destinationCity,
-                        gate = boardingPass.gate ?: current.gate,
-                        seat = boardingPass.seatNumber ?: current.seat,
-                        boardingTime = boardingPass.boardingTime ?: current.boardingTime,
-                        terminal = boardingPass.terminal ?: current.terminal,
+                        passengerName    = boardingPass.passengerName,
+                        flightNumber     = boardingPass.flightNumber,
+                        departureCode    = boardingPass.origin,
+                        departureCity    = boardingPass.originCity,
+                        arrivalCode      = boardingPass.destination,
+                        arrivalCity      = boardingPass.destinationCity,
+                        gate             = boardingPass.gate ?: current.gate,
+                        seat             = boardingPass.seatNumber ?: current.seat,
+                        boardingTime     = boardingPass.boardingTime ?: current.boardingTime,
+                        terminal         = boardingPass.terminal ?: current.terminal,
                         bookingReference = boardingPass.bookingReference,
-                        qrCodeData = boardingPass.qrCodeData ?: current.qrCodeData,
-                        qrBitmap = qrBitmap,
-                        isOffline = !boardingPass.isSyncedWithServer,
-                        isLoading = false
+                        qrCodeData       = boardingPass.qrCodeData ?: current.qrCodeData,
+                        qrBitmap         = qrBitmap,
+                        isOffline        = !boardingPass.isSyncedWithServer,
+                        isLoading        = false
                     )
                 }
             }
@@ -90,22 +106,27 @@ class BoardingViewModel @Inject constructor(
             val result = withContext(Dispatchers.IO) {
                 PdfGenerator.generate(context, pdfData)
             }
-            _uiState.update {
-                it.copy(
-                    isDownloadingPdf = false,
-                    isPdfGenerated = result.isSuccess,
-                    showDownloadSuccess = result.isSuccess,
-                    errorMessage = result.exceptionOrNull()?.message
-                )
+            result.onSuccess { pdfResult ->
+                _uiState.update {
+                    it.copy(
+                        isDownloadingPdf    = false,
+                        isPdfGenerated      = true,
+                        showDownloadSuccess = true
+                    )
+                }
+                PdfGenerator.openWithChooser(context, pdfResult.uri)
+            }.onFailure { error ->
+                _uiState.update {
+                    it.copy(
+                        isDownloadingPdf = false,
+                        errorMessage     = error.message
+                    )
+                }
             }
         }
     }
 
     fun onDismissDownloadSuccess() {
         _uiState.update { it.copy(showDownloadSuccess = false) }
-    }
-
-    fun onConnectivityChanged(isConnected: Boolean) {
-        _uiState.update { it.copy(isOffline = !isConnected) }
     }
 }

@@ -4,6 +4,7 @@ import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -29,11 +30,17 @@ fun HomeScreen(
     val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    LaunchedEffect(Unit) {
+        viewModel.navigateToFlightDetails.collect { bookingRef ->
+            onNavigateToFlightDetails(bookingRef)
+        }
+    }
+
     val scrollState = remember(isOnline) { ScrollState(initial = 0) }
     val screenWidth: Dp = rememberScreenWidth()
 
     Scaffold(
-        containerColor = Color.White,
+        containerColor = MaterialTheme.colorScheme.background,
         bottomBar = {
             TabBarMenu(
                 selectedTab = TabItem.HOME,
@@ -71,7 +78,7 @@ fun HomeScreen(
                         )
                     } else {
                         OfflineHomeScreen(
-                            onNavigateToBoardingScreen = onNavigateToBoardingScreen,
+                            onNavigateToFlightDetails = onNavigateToFlightDetails,
                             screenWidth = screenWidth,
                             uiState = uiState
                         )

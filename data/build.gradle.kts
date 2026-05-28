@@ -1,9 +1,18 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.google.ksp)
     alias(libs.plugins.dagger.hilt.android)
+}
+
+fun String.quoted() = "\"$this\""
+
+val localProps = Properties().apply {
+    val f = rootProject.file("local.properties")
+    if (f.exists()) load(f.inputStream())
 }
 
 android {
@@ -18,6 +27,12 @@ android {
     defaultConfig {
         minSdk = 24
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        val backendUrl = (localProps["URL"] ?: "http://10.0.2.2:3000/").toString()
+        buildConfigField(
+            "String",
+            "URL",
+            backendUrl.quoted()
+        )
     }
 
     buildTypes {
@@ -35,6 +50,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -60,6 +76,7 @@ dependencies {
 
     // Hilt
     implementation(libs.hilt.android)
+    implementation(libs.vision.common)
     ksp(libs.hilt.compiler)
 
     // Retrofit
@@ -79,8 +96,8 @@ dependencies {
     // ZXing : QR Code generation
     implementation("com.google.zxing:core:3.5.3")
 
-    // MySQL Connector
-    implementation(libs.mysql.connector)
+    // ML Kit Text Recognition
+    implementation("com.google.mlkit:text-recognition:16.0.1")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

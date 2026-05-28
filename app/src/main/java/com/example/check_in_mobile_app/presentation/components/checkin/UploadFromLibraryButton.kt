@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.components.checkin
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -16,8 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.ui.theme.BorderLight
-import com.example.check_in_mobile_app.ui.theme.DarkText
-import com.example.check_in_mobile_app.ui.theme.NavyBlue
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 
 import androidx.compose.ui.res.stringResource
 
@@ -33,21 +34,21 @@ fun UploadFromLibraryButton(
             .height(52.dp),
         shape = RoundedCornerShape(14.dp),
         colors = ButtonDefaults.outlinedButtonColors(
-            containerColor = Color.White,
-            contentColor = NavyBlue
+            containerColor = MaterialTheme.colorScheme.background,
+            contentColor = LocalAppColors.current.textAccent
         ),
         border = androidx.compose.foundation.BorderStroke(1.dp, BorderLight)
     ) {
         Icon(
             painter = painterResource(id = R.drawable.image_placeholder),
             contentDescription = "Gallery icon",
-            tint = DarkText,
+            tint = LocalAppColors.current.textPrimary,
             modifier = Modifier.size(20.dp)
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = stringResource(R.string.upload_library_button),
-            color = DarkText,
+            color = LocalAppColors.current.textPrimary,
             fontSize = 15.sp,
             fontWeight = FontWeight.SemiBold
         )
