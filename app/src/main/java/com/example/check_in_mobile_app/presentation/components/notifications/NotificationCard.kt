@@ -126,12 +126,14 @@ fun NotificationCard(
             }
 
             // Right Chevron
-            Icon(
-                imageVector = Icons.Outlined.ChevronRight,
-                contentDescription = null,
-                tint = BorderColor,
-                modifier = Modifier.size(24.dp)
-            )
+            if (notification.type != NotificationType.OTHER) {
+                Icon(
+                    imageVector = Icons.Outlined.ChevronRight,
+                    contentDescription = null,
+                    tint = BorderColor,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
         }
     }
 }
