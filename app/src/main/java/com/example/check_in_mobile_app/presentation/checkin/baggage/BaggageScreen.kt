@@ -7,6 +7,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -24,6 +25,8 @@ import com.example.check_in_mobile_app.ui.theme.CheckInMobileAppTheme
 import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import com.example.check_in_mobile_app.ui.theme.NavyBlue
 import com.example.check_in_mobile_app.ui.theme.Typography
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun BaggageScreen(
@@ -135,15 +138,61 @@ fun BaggageContent(
 @Composable
 fun BaggageScreenPreview() {
     CheckInMobileAppTheme {
-        BaggageContent(
-            uiState = BaggageUiState(
-                checkedBaggageCount = 1,
-                specialEquipmentCount = 0
-            ),
-            onCheckedBaggageChange = {},
-            onSpecialEquipmentChange = {},
-            onBackClick = {},
-            onContinueClick = {}
-        )
+        var uiState by remember {
+            mutableStateOf(
+                BaggageUiState(
+                    checkedBaggageCount = 1,
+                    specialEquipmentCount = 0
+                )
+            )
+        }
+        var simulateError by remember { mutableStateOf(false) }
+        val scope = rememberCoroutineScope()
+
+        Column {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Checkbox(
+                    checked = simulateError,
+                    onCheckedChange = { simulateError = it }
+                )
+                Text(
+                    text = "Simulate Backend Error",
+                    style = Typography.bodyMedium,
+                    modifier = Modifier.padding(start = 8.dp)
+                )
+            }
+            
+            HorizontalDivider()
+
+            BaggageContent(
+                uiState = uiState,
+                onCheckedBaggageChange = { count ->
+                    uiState = uiState.copy(checkedBaggageCount = count)
+                },
+                onSpecialEquipmentChange = { count ->
+                    uiState = uiState.copy(specialEquipmentCount = count)
+                },
+                onBackClick = {},
+                onContinueClick = {
+                    uiState = uiState.copy(isLoading = true, error = null)
+                    scope.launch {
+                        delay(1500) // Simulate network delay
+                        uiState = if (simulateError) {
+                            uiState.copy(
+                                isLoading = false,
+                                error = "Backend Error: Unable to update baggage selection."
+                            )
+                        } else {
+                            uiState.copy(isLoading = false, error = null)
+                        }
+                    }
+                }
+            )
+        }
     }
 }

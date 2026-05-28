@@ -5,5 +5,6 @@ enum class NotificationType {
     BOARDING_REMINDER,
     FLIGHT_STATUS_UPDATE,
     GATE_CHANGE,
-    DELAY
+    DELAY,
+    OTHER // Fallback for unknown types
 }

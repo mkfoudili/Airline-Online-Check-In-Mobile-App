@@ -40,4 +40,7 @@ abstract class RepositoryModule {
 
     @Binds @Singleton
     abstract fun bindQrEncoder(impl: ZxingQrEncoder): QrEncoder
+
+    @Binds @Singleton
+    abstract fun bindProfileRepository(impl: ProfileRepositoryImpl): ProfileRepository
 }

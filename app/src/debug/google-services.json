@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "142134560267",
+    "project_id": "airline-chckin-mobile-app",
+    "storage_bucket": "airline-chckin-mobile-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:142134560267:android:5282bdbb284f7a958ae90e",
+        "android_client_info": {
+          "package_name": "com.example.check_in_mobile_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZIQl9dUnVZmW6mTzzTG8chz_xN3NOnCc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
