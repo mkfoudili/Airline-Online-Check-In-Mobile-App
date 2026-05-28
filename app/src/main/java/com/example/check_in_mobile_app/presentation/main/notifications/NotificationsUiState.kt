@@ -13,7 +13,7 @@ data class NotificationsUiState(
 )
 
 /**
- * UI model for a single notification item.
+ * UI model for a single notification item, adapted for the display.
  */
 data class NotificationItem(
     val id: String,
@@ -22,11 +22,12 @@ data class NotificationItem(
     val timeAgo: String,
     val isRead: Boolean,
     val type: NotificationType,
-    val createdAt: Long
+    val createdAt: Long,
+    val flightCode: String? = null
 )
 
 /**
- * Represents a navigation event triggered by a push notification.
+ * Navigation events triggered by push notification data.
  */
 sealed class RoutingEvent {
     data class NavigateToBooking(val bookingId: String) : RoutingEvent()

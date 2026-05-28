@@ -8,7 +8,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Assignment
 import androidx.compose.material.icons.automirrored.outlined.LibraryBooks
+import androidx.compose.material.icons.outlined.ChevronRight
 import androidx.compose.material.icons.outlined.History
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.Notifications
+import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,7 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.check_in_mobile_app.presentation.main.notifications.NotificationItem
-import com.example.check_in_mobile_app.presentation.main.notifications.NotificationType
+import com.example.domain.model.NotificationType
 import com.example.check_in_mobile_app.ui.theme.*
 
 @Composable
@@ -123,7 +127,7 @@ fun NotificationCard(
 
             // Right Chevron
             Icon(
-                imageVector = Icons.Outlined.History,
+                imageVector = Icons.Outlined.ChevronRight,
                 contentDescription = null,
                 tint = BorderColor,
                 modifier = Modifier.size(24.dp)
@@ -134,9 +138,12 @@ fun NotificationCard(
 
 private fun getNotificationIcon(type: NotificationType): ImageVector {
     return when (type) {
-        NotificationType.BOARDING -> Icons.Outlined.History
-        NotificationType.CHECK_IN -> Icons.AutoMirrored.Outlined.Assignment
-        NotificationType.DOCUMENT -> Icons.AutoMirrored.Outlined.LibraryBooks
+        NotificationType.CHECK_IN_CONFIRMATION -> Icons.AutoMirrored.Outlined.Assignment
+        NotificationType.BOARDING_REMINDER -> Icons.Outlined.History
+        NotificationType.FLIGHT_STATUS_UPDATE -> Icons.Outlined.Info
+        NotificationType.GATE_CHANGE -> Icons.Outlined.Notifications
+        NotificationType.DELAY -> Icons.Outlined.Schedule
+        NotificationType.OTHER -> Icons.Outlined.Notifications
     }
 }
 
@@ -153,22 +160,11 @@ fun NotificationCardPreview() {
             notification = NotificationItem(
                 id = "1",
                 title = "Boarding Starts in 30m",
-                description = "Prepare your boarding pass and ID. Boarding for Group 1 will start soon.",
-                flightCode = "AA241",
+                description = "Prepare your boarding pass and ID.",
                 timeAgo = "45m ago",
                 isRead = false,
-                type = NotificationType.BOARDING
-            )
-        )
-        NotificationCard(
-            notification = NotificationItem(
-                id = "2",
-                title = "Check-in Confirmed",
-                description = "Check-in successful! Your seat 14C is confirmed. View your boarding pass.",
-                flightCode = "AA241",
-                timeAgo = "2h ago",
-                isRead = true,
-                type = NotificationType.CHECK_IN
+                type = NotificationType.BOARDING_REMINDER,
+                createdAt = System.currentTimeMillis()
             )
         )
     }
