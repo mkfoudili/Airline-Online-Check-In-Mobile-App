@@ -96,7 +96,7 @@ class CheckInSessionViewModel @Inject constructor(
 
                 val sessionResult = checkInRepository.createOrResumeSession(
                     passengerId = passenger.passengerId,
-                    bookingId   = bookingId
+                    bookingId   = passenger.bookingId
                 )
 
                 sessionResult.fold(

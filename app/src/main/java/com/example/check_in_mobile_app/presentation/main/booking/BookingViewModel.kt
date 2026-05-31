@@ -89,6 +89,7 @@ class BookingViewModel @Inject constructor(
                     pnr        = bp.bookingReference,
                     lastName   = "",
                     status     = CheckInStatus.CHECKED_IN,
+                    checkinPassengerId  = bp.passengerId,
                     flight     = Flight(
                         flightId         = bp.flightId,
                         flightNumber     = bp.flightNumber,

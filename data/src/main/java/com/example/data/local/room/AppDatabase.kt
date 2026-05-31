@@ -16,7 +16,7 @@ import com.example.data.local.entity.NotificationEntity
         FlightEntity::class,
         NotificationEntity::class
     ],
-    version = 7,
+    version = 8,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
