@@ -1,10 +1,6 @@
 package com.example.check_in_mobile_app.presentation.auth
 
-import androidx.compose.material3.MaterialTheme
-
 import android.util.Log
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -30,6 +26,7 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.presentation.components.authforms.LoginForm
+import com.example.check_in_mobile_app.presentation.utils.toUserFriendlyMessage
 import com.example.check_in_mobile_app.ui.theme.*
 import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import com.example.data.remote.GOOGLE_WEB_CLIENT_ID
@@ -135,11 +132,21 @@ fun LoginScreen(
             if (uiState.errorMessage != null) {
                 Text(
                     text = uiState.errorMessage,
-                    color = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.padding(horizontal = 32.dp),
+                    color = ErrorRed,
+                    fontSize = 14.sp,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 32.dp, vertical = 8.dp),
                     textAlign = TextAlign.Center
                 )
-                Spacer(modifier = Modifier.height(16.dp))
+            }
+
+            if (uiState.isLoading) {
+                LinearProgressIndicator(
+                    modifier = Modifier.fillMaxWidth(),
+                    color = NavyBlue,
+                    trackColor = LightGray
+                )
             }
 
             // ── Login Form ─────────────────────────────────────────────
@@ -169,34 +176,20 @@ fun LoginScreen(
 
                             if (credential is GoogleIdTokenCredential) {
                                 viewModel.signInWithGoogle(credential.idToken)
-                            } else if (credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
-                                try {
-                                    val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
-                                    Log.d("AuthDebug", "idToken: ${googleIdTokenCredential.idToken.take(20)}...")
-                                    viewModel.signInWithGoogle(googleIdTokenCredential.idToken)
-                                } catch (e: Exception) {
-                                    Log.e("AuthDebug", "Erreur parsing GoogleIdTokenCredential: ${e.message}")
-                                    viewModel.setError("Google Sign-In failed: ${e.message}")
-                                }
                             } else {
-                                Log.e("AuthDebug", "Type inconnu: ${credential.type}")
-                                viewModel.setError("Unexpected credential type: ${credential.type}")
+                                viewModel.setError("Authentication method not supported")
                             }
                         } catch (e: GetCredentialException) {
                             Log.e("AuthDebug", "Credential Manager Error: ${e.type} - ${e.message}")
-                            viewModel.setError("Google Sign-In failed: ${e.message ?: "No accounts found"}")
+                            viewModel.setError("No Google account selected or sign-in was canceled.")
                         } catch (e: Exception) {
                             Log.e("AuthDebug", "Unexpected Error", e)
-                            viewModel.setError("An unexpected error occurred")
+                            viewModel.setError(e.toUserFriendlyMessage())
                         }
                     }
                 },
                 onSignUpClick = onNavigateToRegister
             )
-
-            if (uiState.isLoading) {
-                CircularProgressIndicator(modifier = Modifier.padding(16.dp))
-            }
         }
     }
 }

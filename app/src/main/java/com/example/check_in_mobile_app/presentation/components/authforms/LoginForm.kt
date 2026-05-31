@@ -42,6 +42,10 @@ fun LoginForm(
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
 
+    val emailRegex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$".toRegex()
+    val isEmailValid = email.isEmpty() || email.matches(emailRegex)
+    val canLogin = email.isNotBlank() && isEmailValid && password.isNotBlank()
+
 
     val appColors = LocalAppColors.current
     val primaryColor = NavyBlue
@@ -59,13 +63,21 @@ fun LoginForm(
     ) {
 
         // ── Email Address ──────────────────────────────────────────────
-        Text(
-            text = androidx.compose.ui.res.stringResource(R.string.common_email_address),
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Medium,
-            color = labelColor,
-            modifier = Modifier.padding(bottom = 6.dp)
-        )
+        Row {
+            Text(
+                text = androidx.compose.ui.res.stringResource(R.string.common_email_address),
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium,
+                color = labelColor,
+                modifier = Modifier.padding(bottom = 6.dp)
+            )
+            Text(
+                text = " *",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.error
+            )
+        }
 
         OutlinedTextField(
             value = email,
@@ -86,6 +98,7 @@ fun LoginForm(
                 )
             },
             singleLine = true,
+            isError = !isEmailValid,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             shape = RoundedCornerShape(10.dp),
             colors = OutlinedTextFieldDefaults.colors(
@@ -95,25 +108,43 @@ fun LoginForm(
                 errorTextColor = MaterialTheme.colorScheme.onSurface,
                 unfocusedBorderColor = borderColor,
                 focusedBorderColor = primaryColor,
+                errorBorderColor = MaterialTheme.colorScheme.error,
                 unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                 focusedContainerColor = MaterialTheme.colorScheme.surface,
+                errorContainerColor = MaterialTheme.colorScheme.surface,
                 cursorColor = primaryColor
             ),
             modifier = Modifier
                 .fillMaxWidth()
                 .height(52.dp)
         )
+        if (!isEmailValid) {
+            Text(
+                text = "Please enter a valid email address",
+                color = MaterialTheme.colorScheme.error,
+                fontSize = 12.sp,
+                modifier = Modifier.padding(top = 4.dp, start = 4.dp)
+            )
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
         // ── Password ───────────────────────────────────────────────────
-        Text(
-            text = androidx.compose.ui.res.stringResource(R.string.common_password),
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Medium,
-            color = labelColor,
-            modifier = Modifier.padding(bottom = 6.dp)
-        )
+        Row {
+            Text(
+                text = androidx.compose.ui.res.stringResource(R.string.common_password),
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium,
+                color = labelColor,
+                modifier = Modifier.padding(bottom = 6.dp)
+            )
+            Text(
+                text = " *",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.error
+            )
+        }
 
         OutlinedTextField(
             value = password,
@@ -177,7 +208,12 @@ fun LoginForm(
         // ── Sign In Button ─────────────────────────────────────────────
         PrimaryButton(
             text = androidx.compose.ui.res.stringResource(R.string.auth_sign_in),
-            onClick = { onSignInClick(email, password) }
+            onClick = { 
+                if (canLogin) {
+                    onSignInClick(email, password)
+                }
+            },
+            enabled = canLogin
         )
 
         Spacer(modifier = Modifier.height(16.dp))

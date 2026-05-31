@@ -7,6 +7,7 @@ data class CheckinSessionDto(
     @SerializedName("sessionId")          val sessionId: String,
     @SerializedName("passengerId")        val passengerId: String,
     @SerializedName("bookingId")          val bookingId: String,
+    @SerializedName("uid")                val uid: String?                = null,
     @SerializedName("currentStep")        val currentStep: String?,
     @SerializedName("passportScanUrl")    val passportScanUrl: String?    = null,
     @SerializedName("ocrValidation")      val ocrValidation: String?      = null,
@@ -17,7 +18,8 @@ data class CheckinSessionDto(
 
 data class CreateSessionRequest(
     @SerializedName("passengerId") val passengerId: String,
-    @SerializedName("bookingId")   val bookingId: String
+    @SerializedName("bookingId")   val bookingId: String,
+    @SerializedName("uid")         val uid: String? = null
 )
 
 data class CreateSessionResponse(

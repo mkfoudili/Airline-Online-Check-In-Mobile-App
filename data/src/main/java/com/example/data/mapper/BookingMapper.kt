@@ -14,7 +14,8 @@ fun BookingDto.toDomain(): Booking = Booking(
     flight              = flight.toDomain(),
     passengers          = passengers.map { it.toDomain() },
     bookingRef          = bookingRef,
-    checkinPassengerId  = checkinSession?.passengerId
+    checkinPassengerId  = checkinSession?.passengerId,
+    checkinSessionId    = checkinSession?.sessionId
 )
 
 fun PassengerDto.toDomain(): Passenger = Passenger(

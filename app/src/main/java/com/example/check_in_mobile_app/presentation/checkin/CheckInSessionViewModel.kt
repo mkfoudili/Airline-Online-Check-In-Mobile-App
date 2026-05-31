@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.model.CheckInSession
 import com.example.domain.model.Passenger
+import com.example.domain.repository.AuthRepository
 import com.example.domain.repository.CheckInRepository
 import com.example.domain.usecase.checkin.VerifyPassportUseCase
 import com.example.domain.usecase.ocr.ExtractPassportDataUseCase
@@ -29,7 +30,8 @@ data class CheckInSessionState(
 class CheckInSessionViewModel @Inject constructor(
     private val extractPassportDataUseCase: ExtractPassportDataUseCase,
     private val verifyPassportUseCase: VerifyPassportUseCase,
-    private val checkInRepository: CheckInRepository
+    private val checkInRepository: CheckInRepository,
+    private val authRepository: AuthRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(CheckInSessionState())
@@ -104,8 +106,11 @@ class CheckInSessionViewModel @Inject constructor(
                 // Étape 3 : Création/reprise de la session
                 _state.update { it.copy(ocrStatus = OcrStatus.CREATING_SESSION) }
 
+                val currentUid = authRepository.getCurrentUserId()
+
                 val sessionResult = checkInRepository.createOrResumeSession(
                     passengerId = passenger.passengerId,
+                    uid         = currentUid,
                     bookingId   = passenger.bookingId
                 )
 

@@ -21,11 +21,12 @@ class CheckInRepositoryImpl @Inject constructor(
 
     override suspend fun createOrResumeSession(
         passengerId: String,
-        bookingId: String
+        bookingId: String,
+        uid: String?
     ): Result<CheckInSession> {
         return try {
             val response = endpoint.createOrResumeSession(
-                CreateSessionRequest(passengerId = passengerId, bookingId = bookingId)
+                CreateSessionRequest(passengerId = passengerId, bookingId = bookingId, uid = uid)
             )
             val dto: CheckinSessionDto = response.data
             Result.success(dto.toDomain())

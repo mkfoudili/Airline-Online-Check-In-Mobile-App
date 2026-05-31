@@ -18,5 +18,6 @@ data class BookingDto(
 )
 
 data class CheckinSessionRefDto(
+    val sessionId: String?,
     val passengerId: String
 )
