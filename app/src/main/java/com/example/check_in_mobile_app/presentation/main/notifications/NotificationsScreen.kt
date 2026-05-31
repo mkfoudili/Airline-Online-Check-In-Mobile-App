@@ -97,7 +97,12 @@ fun NotificationsContent(
                 .padding(paddingValues)
         ) {
             if (uiState.isLoading) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(color = LocalAppColors.current.textAccent)
+                }
             } else if (uiState.errorMessage != null) {
                 Text(
                     text = uiState.errorMessage,
