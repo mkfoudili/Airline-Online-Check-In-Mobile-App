@@ -66,8 +66,6 @@
     <string name="auth_terms_prefix">بالمتابعة، فإنك توافق على </string>
     <string name="auth_terms_link">شروط الخدمة</string>
     <string name="auth_continue_with_google">المتابعة باستخدام جوجل</string>
-    <string name="common_or">أو</string>
-    <string name="common_password">كلمة المرور</string>
     <string name="auth_password_hint">يجب أن تتكون من 8 أحرف على الأقل.</string>
     <string name="auth_password_mismatch">كلمات المرور غير متطابقة.</string>
     <!-- Profile -->
@@ -93,7 +91,10 @@
     <string name="boarding_error_prefix">خطأ: %1$s</string>
     <string name="boarding_no_pass_found">لم يتم العثور على بطاقة الصعود.\nأتمّ تسجيل الوصول أولاً للحصول على بطاقة الصعود الخاصة بك.</string>
     <string name="boarding_starts_in">الصعود بعد 45 دقيقة</string>
-    <string name="boarding_gate_info">توجه إلى البوابة A12. وقت الانتظار في الأمن حوالي 15 دقيقة.</string>
+    <string name="boarding_gate_info">توجه إلى البوابة %1$s. وقت الانتظار في الأمن حوالي 15 دقيقة.</string>
+    <string name="boarding_label_at">الصعود عند %1$s</string>
+    <string name="boarding_label_now">الصعود الآن</string>
+    <string name="boarding_label_in">يبدأ الصعود خلال %1$s دقيقة</string>
     <!-- Confirmation Screen -->
     <string name="confirmation_title">اكتمل تسجيل الوصول</string>
     <string name="confirmation_success_title">أنت جاهز تماماً!</string>

@@ -39,7 +39,10 @@ fun RegisterScreen(
     val credentialManager = CredentialManager.create(context)
 
     LaunchedEffect(state.isSuccess) {
-        if (state.isSuccess) onRegisterSuccess()
+        if (state.isSuccess){
+            viewModel.registerFcmTokenAfterAuth()
+            onRegisterSuccess()
+        }
     }
 
     Scaffold(

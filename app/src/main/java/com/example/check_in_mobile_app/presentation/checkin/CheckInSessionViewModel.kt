@@ -93,6 +93,16 @@ class CheckInSessionViewModel @Inject constructor(
                     return@launch
                 }
 
+                if (passenger.checkinStatus == "CHECKED_IN") {
+                    _state.update {
+                        it.copy(
+                            ocrStatus    = OcrStatus.ERROR,
+                            errorMessage = "This passenger has already checked in."
+                        )
+                    }
+                    return@launch
+                }
+
                 // Étape 3 : Création/reprise de la session
                 _state.update { it.copy(ocrStatus = OcrStatus.CREATING_SESSION) }
 
@@ -100,8 +110,8 @@ class CheckInSessionViewModel @Inject constructor(
 
                 val sessionResult = checkInRepository.createOrResumeSession(
                     passengerId = passenger.passengerId,
-                    bookingId   = bookingId,
-                    uid         = currentUid
+                    uid         = currentUid,
+                    bookingId   = passenger.bookingId
                 )
 
                 sessionResult.fold(
@@ -141,49 +151,5 @@ class CheckInSessionViewModel @Inject constructor(
 
     fun clearError() {
         _state.update { it.copy(ocrStatus = OcrStatus.IDLE, errorMessage = null) }
-    }
-
-    fun skipPassportScan(passenger: Passenger, bookingId: String) {
-        viewModelScope.launch {
-            try {
-                _state.update { it.copy(ocrStatus = OcrStatus.CREATING_SESSION, errorMessage = null) }
-
-                val currentUid = authRepository.getCurrentUserId()
-
-                val sessionResult = checkInRepository.createOrResumeSession(
-                    passengerId = passenger.passengerId,
-                    bookingId   = bookingId,
-                    uid         = currentUid
-                )
-
-                sessionResult.fold(
-                    onSuccess = { session ->
-                        _state.update {
-                            it.copy(
-                                ocrStatus         = OcrStatus.SUCCESS,
-                                verifiedPassenger = passenger,
-                                activeSession     = session,
-                                errorMessage      = null
-                            )
-                        }
-                    },
-                    onFailure = { error ->
-                        _state.update {
-                            it.copy(
-                                ocrStatus    = OcrStatus.ERROR,
-                                errorMessage = error.message ?: "Failed to start check-in session."
-                            )
-                        }
-                    }
-                )
-            } catch (e: Exception) {
-                _state.update {
-                    it.copy(
-                        ocrStatus    = OcrStatus.ERROR,
-                        errorMessage = "An unexpected error occurred during skip."
-                    )
-                }
-            }
-        }
     }
 }

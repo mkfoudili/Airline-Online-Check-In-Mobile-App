@@ -1,57 +1,60 @@
 package com.example.check_in_mobile_app.presentation.main.profile
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.check_in_mobile_app.utils.LanguagePreferences
 import com.example.domain.usecase.profile.GetProfileUseCase
 import com.example.domain.usecase.profile.UpdateProfileUseCase
 import com.example.domain.usecase.profile.UpdatePasswordUseCase
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.domain.usecase.theme.GetDarkModeUseCase
+import com.example.domain.usecase.theme.SetDarkModeUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ProfileViewModel(
+@HiltViewModel
+class ProfileViewModel @Inject constructor(
     private val application: Application,
     private val getProfileUseCase: GetProfileUseCase,
     private val updateProfileUseCase: UpdateProfileUseCase,
-    private val updatePasswordUseCase: UpdatePasswordUseCase
+    private val updatePasswordUseCase: UpdatePasswordUseCase,
+    private val getDarkModeUseCase: GetDarkModeUseCase,
+    private val setDarkModeUseCase: SetDarkModeUseCase
 ): ViewModel() {
 
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as Application)
-                ProfileViewModel(
-                    application = application,
-                    getProfileUseCase = GetProfileUseCase(),
-                    updateProfileUseCase = UpdateProfileUseCase(),
-                    updatePasswordUseCase = UpdatePasswordUseCase()
-                )
-            }
-        }
-    }
     private val _uiState = MutableStateFlow(ProfileUiState())
     val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
 
     private val _uiAction = MutableSharedFlow<ProfileUiAction>()
     val uiAction: SharedFlow<ProfileUiAction> = _uiAction.asSharedFlow()
 
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
+
     init {
         // Load current language from prefs
         val currentCode = LanguagePreferences.getSavedLanguage(application)
         val currentName = LanguagePreferences.codeToDisplayName(currentCode)
         _uiState.value = _uiState.value.copy(language = currentName, editedLanguage = currentName)
-        
+
+        observeDarkMode()
         fetchProfile()
+    }
+
+    private fun observeDarkMode() {
+        viewModelScope.launch {
+            getDarkModeUseCase().collectLatest { isDarkMode ->
+                _uiState.value = _uiState.value.copy(isDarkMode = isDarkMode)
+            }
+        }
     }
 
     private fun fetchProfile() {
@@ -61,7 +64,7 @@ class ProfileViewModel(
             try {
                 val profile = getProfileUseCase()
 
-                _uiState.value = ProfileUiState(
+                _uiState.value = _uiState.value.copy(
                     name = profile.fullName,
                     email = profile.email,
                     phoneNumber = profile.phoneNumber,
@@ -79,6 +82,30 @@ class ProfileViewModel(
                     error = e.message ?: "Unknown error"
                 )
             }
+        }
+    }
+
+    /** Appelé par le pull-to-refresh de l'UI */
+    fun refresh() {
+        viewModelScope.launch {
+            _isRefreshing.value = true
+            try {
+                val profile = getProfileUseCase()
+                _uiState.value = _uiState.value.copy(
+                    name = profile.fullName,
+                    email = profile.email,
+                    phoneNumber = profile.phoneNumber,
+                    passwordMasked = "************",
+                    profileImageUrl = profile.avatarUrl,
+                    isVerified = profile.isVerified,
+                    securityLevel = profile.securityLevel,
+                    isOnline = profile.isOnline,
+                    error = null
+                )
+            } catch (e: Exception) {
+                _uiState.value = _uiState.value.copy(error = e.message ?: "Unknown error")
+            }
+            _isRefreshing.value = false
         }
     }
 
@@ -140,6 +167,9 @@ class ProfileViewModel(
                         editedLanguage = event.language,
                         isLanguageDropdownExpanded = false
                     )
+                }
+                is ProfileEvent.OnThemeToggled -> {
+                    setDarkModeUseCase(event.isDarkMode)
                 }
                 ProfileEvent.OnSaveClicked -> {
                     _uiState.value = _uiState.value.copy(isLoading = true)
@@ -242,6 +272,16 @@ class ProfileViewModel(
                             error = result.exceptionOrNull()?.message ?: "Update failed"
                         )
                     }
+                }
+                ProfileEvent.OnLogoutClicked -> {
+                    _uiState.value = _uiState.value.copy(showLogoutDialog = true)
+                }
+                ProfileEvent.OnLogoutConfirmClicked -> {
+                    _uiState.value = _uiState.value.copy(showLogoutDialog = false)
+                    _uiAction.emit(ProfileUiAction.Logout)
+                }
+                ProfileEvent.OnLogoutDismissClicked -> {
+                    _uiState.value = _uiState.value.copy(showLogoutDialog = false)
                 }
             }
         }

@@ -6,7 +6,6 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.data.local.dao.BoardingPassDao
 import com.example.data.local.dao.FlightDao
-import com.example.data.local.dao.NotificationDao
 import com.example.data.local.entity.BoardingPassEntity
 import com.example.data.local.entity.FlightEntity
 import com.example.data.local.entity.NotificationEntity
@@ -17,15 +16,13 @@ import com.example.data.local.entity.NotificationEntity
         FlightEntity::class,
         NotificationEntity::class
     ],
-    version = 7,
+    version = 8,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun boardingPassDao(): BoardingPassDao
     abstract fun flightDao(): FlightDao
-    abstract fun notificationDao(): NotificationDao
-
     companion object {
         @Volatile
         private var INSTANCE: AppDatabase? = null

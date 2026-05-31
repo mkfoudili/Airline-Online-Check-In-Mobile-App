@@ -137,6 +137,7 @@ fun ConfirmationScreen(
                         passengers = listOf(
                             Passenger(
                                 passengerId    = bp.passengerId,
+                                bookingId      = "",
                                 uid            = null,
                                 firstName      = firstName,
                                 lastName       = lastName,
@@ -182,10 +183,7 @@ fun ConfirmationScreen(
 
                     PassengerCard(
                         booking  = displayBooking,
-                        infoText = stringResource(
-                            R.string.confirmation_frequent_flyer,
-                            bp.passengerId
-                        )
+                        infoText = ""
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))

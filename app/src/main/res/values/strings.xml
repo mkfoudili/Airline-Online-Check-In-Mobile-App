@@ -68,8 +68,6 @@
     <string name="auth_terms_prefix">By continuing, you agree to our </string>
     <string name="auth_terms_link">Terms of Service</string>
     <string name="auth_continue_with_google">Continue with Google</string>
-    <string name="common_or">OR</string>
-    <string name="common_password">Password</string>
     <string name="auth_password_hint">Must be at least 8 characters long.</string>
     <string name="auth_password_mismatch">Passwords do not match.</string>
     <!-- Profile -->
@@ -95,7 +93,10 @@
     <string name="boarding_error_prefix">Error: %1$s</string>
     <string name="boarding_no_pass_found">No boarding pass found.\nComplete a check-in first to get your boarding pass.</string>
     <string name="boarding_starts_in">Boarding starts in 45m</string>
-    <string name="boarding_gate_info">Head to Gate A12. Security wait time is currently approximately 15 minutes.</string>
+    <string name="boarding_gate_info">Head to Gate %1$s. Security wait time is currently approximately 15 minutes.</string>
+    <string name="boarding_label_at">Boarding at %1$s</string>
+    <string name="boarding_label_now">Boarding now</string>
+    <string name="boarding_label_in">Boarding starts in %1$sm</string>
     <!-- Confirmation Screen -->
     <string name="confirmation_title">Check-In Completed</string>
     <string name="confirmation_success_title">You\'re All Set!</string>

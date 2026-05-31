@@ -66,8 +66,6 @@
     <string name="auth_terms_prefix">En continuant, vous acceptez nos </string>
     <string name="auth_terms_link">Conditions d\'utilisation</string>
     <string name="auth_continue_with_google">Continuer avec Google</string>
-    <string name="common_or">OU</string>
-    <string name="common_password">Mot de passe</string>
     <string name="auth_password_hint">Doit comporter au moins 8 caractères.</string>
     <string name="auth_password_mismatch">Les mots de passe ne correspondent pas.</string>
     <!-- Profile -->
@@ -93,7 +91,10 @@
     <string name="boarding_error_prefix">Erreur : %1$s</string>
     <string name="boarding_no_pass_found">Aucune carte d\'embarquement trouvée.\nEffectuez d\'abord un enregistrement pour obtenir votre carte d\'embarquement.</string>
     <string name="boarding_starts_in">Embarquement dans 45 min</string>
-    <string name="boarding_gate_info">Rendez-vous à la porte A12. Le temps d\'attente en sécurité est actuellement d\'environ 15 minutes.</string>
+    <string name="boarding_gate_info">Rendez-vous à la porte %1$s. Le temps d\'attente en sécurité est actuellement d\'environ 15 minutes.</string>
+    <string name="boarding_label_at">Embarquement à %1$s</string>
+    <string name="boarding_label_now">Embarquement en cours</string>
+    <string name="boarding_label_in">Embarquement dans %1$s min</string>
     <!-- Confirmation Screen -->
     <string name="confirmation_title">Enregistrement terminé</string>
     <string name="confirmation_success_title">Tout est prêt !</string>

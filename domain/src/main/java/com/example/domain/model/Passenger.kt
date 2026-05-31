@@ -2,6 +2,7 @@ package com.example.domain.model
 
 data class Passenger(
     val passengerId: String,
+    val bookingId: String,
     val uid: String?,
     val firstName: String,
     val lastName: String,

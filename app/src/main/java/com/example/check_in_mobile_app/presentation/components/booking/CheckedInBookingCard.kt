@@ -73,13 +73,25 @@ fun CheckedInBookingCard(
 
             Spacer(modifier = Modifier.width(8.dp))
 
-            Text(
-                text = booking.flight.flightNumber,
-                fontSize = 15.sp,
-                fontWeight = FontWeight.Bold,
-                color = LocalAppColors.current.textAccent,
-                modifier = Modifier.weight(1f)
-            )
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = booking.flight.flightNumber,
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = LocalAppColors.current.textAccent
+                )
+                val passenger = booking.passengers
+                    .firstOrNull { it.passengerId == booking.checkinPassengerId }
+                    ?: booking.passengers.firstOrNull()
+                if (passenger != null) {
+                    Text(
+                        text = "${passenger.firstName} ${passenger.lastName}",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Normal,
+                        color = LocalAppColors.current.textSecondary
+                    )
+                }
+            }
 
             // Badge : "Terminé" si vol passé, "Enregistré" sinon
             val (bgColor, textColor, labelRes) = if (isPassed) {

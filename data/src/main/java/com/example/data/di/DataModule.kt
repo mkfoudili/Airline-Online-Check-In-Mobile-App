@@ -8,6 +8,8 @@ import com.example.data.preferences.UserPreferencesRepository
 import com.example.data.remote.BookingDataSource
 import com.example.data.remote.FlightDataSource
 import com.example.data.remote.retrofit.Endpoint
+import com.example.domain.preferences.LanguageRepository
+import com.example.domain.preferences.ThemeRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -31,6 +33,18 @@ object DataModule {
     @Singleton
     fun provideUserPreferencesRepository(dataStore: DataStore<Preferences>): UserPreferencesRepository {
         return UserPreferencesRepository(dataStore)
+    }
+
+    @Provides
+    @Singleton
+    fun provideThemeRepository(userPreferencesRepository: UserPreferencesRepository): ThemeRepository {
+        return userPreferencesRepository
+    }
+
+    @Provides
+    @Singleton
+    fun provideLanguageRepository(userPreferencesRepository: UserPreferencesRepository): LanguageRepository {
+        return userPreferencesRepository
     }
 
     @Provides

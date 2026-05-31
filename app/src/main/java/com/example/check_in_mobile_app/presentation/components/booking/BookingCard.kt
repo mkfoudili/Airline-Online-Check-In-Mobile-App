@@ -40,7 +40,8 @@ import com.example.domain.model.CheckInStatus
 fun BookingCard(
     booking: Booking,
     onCheckInClick: (String) -> Unit = {},
-    onBoarding: (String) -> Unit = {}
+    onBoarding: (String) -> Unit = {},
+    showPassengerName: Boolean = true
 ) {
     Column(
         modifier = Modifier
@@ -74,13 +75,25 @@ fun BookingCard(
 
             Spacer(modifier = Modifier.width(8.dp))
 
-            Text(
-                text = booking.flight.flightNumber,
-                fontSize = 15.sp,
-                fontWeight = FontWeight.Bold,
-                color = LocalAppColors.current.textAccent,
-                modifier = Modifier.weight(1f)
-            )
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = booking.flight.flightNumber,
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = LocalAppColors.current.textAccent
+                )
+                val passenger = booking.passengers
+                    .firstOrNull { it.passengerId == booking.checkinPassengerId }
+                    ?: booking.passengers.firstOrNull()
+                if (showPassengerName && passenger != null) {
+                    Text(
+                        text = "${passenger.firstName} ${passenger.lastName}",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Normal,
+                        color = LocalAppColors.current.textSecondary
+                    )
+                }
+            }
 
             StatusBadge(status = booking.status)
         }

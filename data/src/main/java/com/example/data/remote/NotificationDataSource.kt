@@ -1,32 +1,29 @@
 package com.example.data.remote
 
-import com.example.data.remote.dto.NotificationDto
-import java.sql.PreparedStatement
-import java.sql.ResultSet
-import java.sql.SQLException
-import java.sql.Timestamp
-import java.util.UUID
+import com.example.data.remote.dto.NotificationListResponse
+import com.example.data.remote.dto.NotificationResponse
+import com.example.data.remote.dto.ReadAllResponse
+import com.example.data.remote.dto.RegisterTokenRequest
+import com.example.data.remote.retrofit.Endpoint
+import retrofit2.Response
+import javax.inject.Inject
 
-class NotificationDataSource {
-
-
-    fun sendCheckInConfirmation(passengerId: String, callback: (Result<Unit>) -> Unit) {
-
+class NotificationDataSource @Inject constructor(
+    private val endpoint: Endpoint
+) {
+    suspend fun getNotifications(): NotificationListResponse {
+        return endpoint.getNotifications()
     }
 
-    fun getNotifications(uid: String, callback: (Result<List<NotificationDto>>) -> Unit) {
-
+    suspend fun markAsRead(notificationId: String): NotificationResponse {
+        return endpoint.markAsRead(notificationId)
     }
 
-    fun getUnreadCount(uid: String, callback: (Result<Int>) -> Unit) {
-
+    suspend fun markAllAsRead(): ReadAllResponse {
+        return endpoint.markAllAsRead()
     }
 
-    fun markAsRead(notificationId: String, callback: (Result<Unit>) -> Unit) {
-
-    }
-
-    fun markAllAsRead(uid: String, callback: (Result<Unit>) -> Unit) {
-
+    suspend fun registerToken(token: String): Response<Unit> {
+        return endpoint.registerToken(RegisterTokenRequest(token))
     }
 }

@@ -47,6 +47,7 @@ fun LoginScreen(
 
     LaunchedEffect(uiState.isSuccess) {
         if (uiState.isSuccess) {
+            viewModel.registerFcmTokenAfterAuth()
             onLoginSuccess()
         }
     }

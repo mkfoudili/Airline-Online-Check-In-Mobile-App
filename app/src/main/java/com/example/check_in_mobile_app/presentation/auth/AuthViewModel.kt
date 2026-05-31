@@ -9,6 +9,8 @@ import com.example.check_in_mobile_app.presentation.utils.toUserFriendlyMessage
 import com.example.data.preferences.UserPreferencesRepository
 import com.example.domain.repository.AuthRepository
 import com.example.domain.validation.RegistrationRequest
+import com.google.firebase.messaging.FirebaseMessaging
+import com.example.domain.usecase.notification.RegisterFcmTokenUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,6 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     private val authRepository: AuthRepository,
+    private val registerFcmTokenUseCase: RegisterFcmTokenUseCase,
     private val userPrefs: UserPreferencesRepository
 ) : ViewModel() {
 
@@ -78,6 +81,7 @@ class AuthViewModel @Inject constructor(
         authRepository.loginWithGoogle(idToken) { result ->
             viewModelScope.launch {
                 result.onSuccess {
+                    registerFcmTokenAfterAuth()
                     uiState = uiState.copy(isLoading = false, isSuccess = true)
                 }.onFailure {
                     uiState = uiState.copy(
@@ -101,6 +105,14 @@ class AuthViewModel @Inject constructor(
         authRepository.logout {
             viewModelScope.launch {
                 isLoggedOut = true
+            }
+        }
+    }
+
+    fun registerFcmTokenAfterAuth() {
+        FirebaseMessaging.getInstance().token.addOnSuccessListener { token ->
+            viewModelScope.launch {
+                registerFcmTokenUseCase(token)
             }
         }
     }
