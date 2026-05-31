@@ -27,6 +27,8 @@ import com.example.check_in_mobile_app.presentation.main.profile.ProfileScreen
 
 @Composable
 fun MainNavGraph(
+    isDarkThemeEnabled: Boolean = false,
+    onThemeChanged: (Boolean) -> Unit = {},
     onCheckInClick: (bookingRef: String, passengerId: String, bookingId: String) -> Unit,
     onLogout: () -> Unit,                          // ← nouveau paramètre
     navigateToHome: State<Boolean> = mutableStateOf(false),
@@ -138,6 +140,8 @@ fun MainNavGraph(
 
         composable(Destination.Profile.route) {
             ProfileScreen(
+                isDarkThemeEnabled = isDarkThemeEnabled,
+                onThemeChanged = onThemeChanged,
                 onTabSelected = navigateToTab,
                 onLogout      = onLogout          // ← branché ici
             )

@@ -143,13 +143,17 @@ fun BoardingScreen(
                             .padding(horizontal = 16.dp)
                             .height(52.dp),
                         shape = RoundedCornerShape(14.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = NavyBlue,
-                            disabledContainerColor = NavyBlue)
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = NavyBlue,
+                            contentColor = Color.White,
+                            disabledContainerColor = NavyBlue,
+                            disabledContentColor = Color.White
+                        )
                     ) {
                         if (uiState.isDownloadingPdf) {
                             CircularProgressIndicator(
                                 modifier = Modifier.size(20.dp),
-                                color = MaterialTheme.colorScheme.surface,
+                                color = Color.White,
                                 strokeWidth = 4.dp
                             )
                         } else {
@@ -160,7 +164,6 @@ fun BoardingScreen(
                             Spacer(Modifier.width(8.dp))
                             Text(
                                 text = stringResource(R.string.boarding_download_pdf),
-                                color = MaterialTheme.colorScheme.surface,
                                 fontSize = 15.sp,
                                 fontWeight = FontWeight.SemiBold,
                                 maxLines = 1,
@@ -169,7 +172,10 @@ fun BoardingScreen(
                         }
                     }
                     Spacer(Modifier.height(12.dp))
-                    BoardingFooter()
+                    BoardingFooter(
+                        boardingTime = uiState.boardingTime,
+                        gate         = uiState.gate
+                    )
                     Spacer(Modifier.height(32.dp))
                 }
             }

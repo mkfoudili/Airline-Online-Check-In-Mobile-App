@@ -34,6 +34,8 @@ class NotificationsViewModel @Inject constructor(
     val uiState: StateFlow<NotificationsUiState> = _uiState.asStateFlow()
 
     val hasUnread: StateFlow<Boolean> = notificationManager.hasUnread
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
 
     private val userId: String
         get() = secureStorage.getUserId() ?: ""
@@ -85,12 +87,44 @@ class NotificationsViewModel @Inject constructor(
         }
     }
 
+    /** Appelé par le pull-to-refresh de l'UI */
+    fun refresh() {
+        if (userId.isBlank()) return
+        viewModelScope.launch {
+            _isRefreshing.value = true
+            getNotificationsUseCase(userId).onSuccess { domainNotifications ->
+                val items = domainNotifications.map { domain ->
+                    NotificationItem(
+                        id = domain.notificationId,
+                        title = domain.title,
+                        description = domain.body,
+                        timeAgo = formatTimeAgo(domain.createdAt),
+                        isRead = domain.isRead,
+                        type = domain.type,
+                        createdAt = domain.createdAt
+                    )
+                }
+                _uiState.update {
+                    it.copy(
+                        groupedNotifications = groupNotifications(items),
+                        errorMessage = null
+                    )
+                }
+            }.onFailure { error ->
+                _uiState.update {
+                    it.copy(errorMessage = error.message ?: "Failed to load notifications")
+                }
+            }
+            _isRefreshing.value = false
+        }
+    }
+
     /**
      * Marks all user notifications as read on the backend.
      */
     fun markAllAsRead() {
         if (userId.isBlank()) return
-        
+
         viewModelScope.launch {
             markAllNotificationsReadUseCase(userId).onSuccess {
                 notificationManager.setHasUnread(false)

@@ -4,6 +4,7 @@ import androidx.compose.material3.MaterialTheme
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -34,6 +35,7 @@ fun ActiveFlightCard(
 ) {
     val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
     val planeScaleX = if (isRtl) -1f else 1f
+    val isDark = isSystemInDarkTheme()
 
     Box(
         modifier = Modifier
@@ -74,7 +76,7 @@ fun ActiveFlightCard(
                     text = stringResource(R.string.active_now_badge),
                     fontSize = 10.sp,
                     fontWeight = FontWeight.Medium,
-                    color = MaterialTheme.colorScheme.surface,
+                    color = Color.White,  // toujours sur fond NavyBlue
                     letterSpacing = 0.8.sp,
                     maxLines = 1
                 )
@@ -86,7 +88,7 @@ fun ActiveFlightCard(
                 text = stringResource(R.string.active_ready_to_fly),
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.surface,
+                color = Color.White,  // toujours sur fond NavyBlue
                 letterSpacing = (-0.3).sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
@@ -135,8 +137,8 @@ fun ActiveFlightCard(
                     onClick = onCheckInClick,
                     shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.background,
-                        contentColor = MaterialTheme.colorScheme.primary
+                        containerColor = if (isDark) Color.White else MaterialTheme.colorScheme.background,
+                        contentColor   = if (isDark) NavyBlue else MaterialTheme.colorScheme.primary
                     ),
                     contentPadding = PaddingValues(horizontal = 22.dp, vertical = 11.dp),
                     elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp)

@@ -5,13 +5,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,8 +35,8 @@ fun NotificationsScreen(
     onNavigateToBooking: (String) -> Unit = {},
     onNavigateToCheckIn: () -> Unit = {}
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val hasUnread by viewModel.hasUnread.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsState()
+    val isRefreshing by viewModel.isRefreshing.collectAsState()
 
     // Handle routing events (e.g. from push notifications)
     LaunchedEffect(uiState.routingEvent) {
@@ -53,10 +53,11 @@ fun NotificationsScreen(
     NotificationsContent(
         uiState = uiState,
         hasUnread = hasUnread,
+        isRefreshing = isRefreshing,
+        onRefresh = { viewModel.refresh() },
         onMarkAllRead = { viewModel.markAllAsRead() },
         onNotificationClick = { notification ->
             viewModel.markSingleAsRead(notification.id)
-            // Handle navigation on click if needed
         },
         onTabSelected = onTabSelected
     )
@@ -67,6 +68,8 @@ fun NotificationsScreen(
 fun NotificationsContent(
     uiState: NotificationsUiState,
     hasUnread: Boolean = false,
+    isRefreshing: Boolean = false,
+    onRefresh: () -> Unit = {},
     onMarkAllRead: () -> Unit,
     onNotificationClick: (NotificationItem) -> Unit = {},
     onTabSelected: (TabItem) -> Unit = {}
@@ -124,71 +127,77 @@ fun NotificationsContent(
                     color = MaterialTheme.colorScheme.error
                 )
             } else {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                PullToRefreshBox(
+                    isRefreshing = isRefreshing,
+                    onRefresh = onRefresh,
+                    modifier = Modifier.fillMaxSize()
                 ) {
-                    val groups = listOf(
-                        "Today" to R.string.notification_group_today,
-                        "Yesterday" to R.string.notification_group_yesterday,
-                        "This Week" to R.string.notification_group_this_week,
-                        "Earlier" to R.string.notification_group_earlier
-                    )
-                    var hasNotifications = false
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        val groups = listOf(
+                            "Today" to R.string.notification_group_today,
+                            "Yesterday" to R.string.notification_group_yesterday,
+                            "This Week" to R.string.notification_group_this_week,
+                            "Earlier" to R.string.notification_group_earlier
+                        )
+                        var hasNotifications = false
 
-                    groups.forEach { (groupKey, groupResId) ->
-                        val notifications = uiState.groupedNotifications[groupKey]
-                        if (!notifications.isNullOrEmpty()) {
-                            hasNotifications = true
-                            item {
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(top = 8.dp, bottom = 8.dp),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Text(
-                                        text = stringResource(groupResId).uppercase(),
-                                        style = MaterialTheme.typography.labelLarge.copy(
-                                            fontWeight = FontWeight.Bold,
-                                            color = LocalAppColors.current.textSecondary,
-                                            letterSpacing = 1.sp
-                                        )
-                                    )
-                                    if (groupKey == "Today") {
-                                        TextButton(onClick = onMarkAllRead) {
-                                            Text(
-                                                text = stringResource(R.string.notification_mark_all_read),
-                                                style = MaterialTheme.typography.labelMedium.copy(
-                                                    color = LocalAppColors.current.textSecondary
-                                                )
+                        groups.forEach { (groupKey, groupResId) ->
+                            val notifications = uiState.groupedNotifications[groupKey]
+                            if (!notifications.isNullOrEmpty()) {
+                                hasNotifications = true
+                                item {
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(top = 8.dp, bottom = 8.dp),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Text(
+                                            text = stringResource(groupResId).uppercase(),
+                                            style = MaterialTheme.typography.labelLarge.copy(
+                                                fontWeight = FontWeight.Bold,
+                                                color = LocalAppColors.current.textSecondary,
+                                                letterSpacing = 1.sp
                                             )
+                                        )
+                                        if (groupKey == "Today") {
+                                            TextButton(onClick = onMarkAllRead) {
+                                                Text(
+                                                    text = stringResource(R.string.notification_mark_all_read),
+                                                    style = MaterialTheme.typography.labelMedium.copy(
+                                                        color = LocalAppColors.current.textSecondary
+                                                    )
+                                                )
+                                            }
                                         }
                                     }
                                 }
-                            }
 
-                            items(notifications) { notification ->
-                                NotificationCard(
-                                    notification = notification,
-                                    onClick = { onNotificationClick(notification) }
-                                )
+                                items(notifications) { notification ->
+                                    NotificationCard(
+                                        notification = notification,
+                                        onClick = { onNotificationClick(notification) }
+                                    )
+                                }
                             }
                         }
-                    }
 
-                    if (!hasNotifications) {
-                        item {
-                            Box(
-                                modifier = Modifier.fillParentMaxSize(),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = stringResource(R.string.notification_empty_state),
-                                    color = LocalAppColors.current.textSecondary
-                                )
+                        if (!hasNotifications) {
+                            item {
+                                Box(
+                                    modifier = Modifier.fillParentMaxSize(),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = stringResource(R.string.notification_empty_state),
+                                        color = LocalAppColors.current.textSecondary
+                                    )
+                                }
                             }
                         }
                     }

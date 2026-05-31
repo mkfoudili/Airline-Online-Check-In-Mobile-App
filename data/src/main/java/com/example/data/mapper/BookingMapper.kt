@@ -19,6 +19,7 @@ fun BookingDto.toDomain(): Booking = Booking(
 
 fun PassengerDto.toDomain(): Passenger = Passenger(
     passengerId    = passengerId,
+    bookingId      = bookingId,
     uid            = uid,
     firstName      = firstName,
     lastName       = lastName,

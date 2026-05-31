@@ -93,7 +93,10 @@
     <string name="boarding_error_prefix">Error: %1$s</string>
     <string name="boarding_no_pass_found">No boarding pass found.\nComplete a check-in first to get your boarding pass.</string>
     <string name="boarding_starts_in">Boarding starts in 45m</string>
-    <string name="boarding_gate_info">Head to Gate A12. Security wait time is currently approximately 15 minutes.</string>
+    <string name="boarding_gate_info">Head to Gate %1$s. Security wait time is currently approximately 15 minutes.</string>
+    <string name="boarding_label_at">Boarding at %1$s</string>
+    <string name="boarding_label_now">Boarding now</string>
+    <string name="boarding_label_in">Boarding starts in %1$sm</string>
     <!-- Confirmation Screen -->
     <string name="confirmation_title">Check-In Completed</string>
     <string name="confirmation_success_title">You\'re All Set!</string>

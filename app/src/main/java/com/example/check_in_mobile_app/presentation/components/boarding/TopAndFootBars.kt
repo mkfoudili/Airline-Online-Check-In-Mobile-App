@@ -20,10 +20,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -62,22 +62,67 @@ fun BoardingTopBar(onBack: () -> Unit) {
 }
 
 @Composable
-fun BoardingFooter() {
+fun BoardingFooter(boardingTime: String, gate: String) {
+    val minutesUntilBoarding = remember(boardingTime) {
+        try {
+            val sdf = java.text.SimpleDateFormat("HH:mm", java.util.Locale.getDefault())
+            val boarding = sdf.parse(boardingTime) ?: return@remember null
+            val now = java.util.Calendar.getInstance()
+            val cal = java.util.Calendar.getInstance().apply {
+                time = boarding
+                set(java.util.Calendar.YEAR, now.get(java.util.Calendar.YEAR))
+                set(java.util.Calendar.MONTH, now.get(java.util.Calendar.MONTH))
+                set(java.util.Calendar.DAY_OF_MONTH, now.get(java.util.Calendar.DAY_OF_MONTH))
+            }
+            val diff = (cal.timeInMillis - now.timeInMillis) / (1000 * 60)
+            if (diff >= 0) diff else null
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    // Labels entièrement traduits via stringResource
+    val boardingLabel = when {
+        minutesUntilBoarding == null -> stringResource(R.string.boarding_label_at, boardingTime)
+        minutesUntilBoarding == 0L   -> stringResource(R.string.boarding_label_now)
+        else                         -> stringResource(R.string.boarding_label_in, minutesUntilBoarding)
+    }
+
+    val gateInfo = stringResource(R.string.boarding_gate_info, gate)
+
     Row(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
-            .clip(RoundedCornerShape(12.dp)).background(MaterialTheme.colorScheme.surfaceVariant)
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .background(MaterialTheme.colorScheme.surfaceVariant)
             .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(12.dp))
             .padding(horizontal = 16.dp, vertical = 14.dp),
         verticalAlignment = Alignment.Top,
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        Icon(painterResource(R.drawable.clock), null, modifier = Modifier.padding(0.dp, 5.dp))
+        Icon(
+            painter = painterResource(R.drawable.clock),
+            contentDescription = null,
+            modifier = Modifier.padding(0.dp, 5.dp),
+            tint = LocalAppColors.current.textPrimary
+        )
         Column {
-            Text(stringResource(R.string.boarding_starts_in), fontWeight = FontWeight.Bold,
-                fontSize = 13.sp, color = LocalAppColors.current.textPrimary, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(
+                text = boardingLabel,
+                fontWeight = FontWeight.Bold,
+                fontSize = 13.sp,
+                color = LocalAppColors.current.textPrimary,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
             Spacer(Modifier.height(2.dp))
-            Text(stringResource(R.string.boarding_gate_info), fontSize = 11.sp,
-                color = LocalAppColors.current.textSubtle, lineHeight = 16.sp)
+            Text(
+                text = gateInfo,
+                fontSize = 11.sp,
+                color = LocalAppColors.current.textSubtle,
+                lineHeight = 16.sp
+            )
         }
     }
 }

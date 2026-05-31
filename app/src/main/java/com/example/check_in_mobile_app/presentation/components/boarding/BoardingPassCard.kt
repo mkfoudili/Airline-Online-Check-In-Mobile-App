@@ -6,6 +6,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -39,16 +40,28 @@ import com.example.check_in_mobile_app.presentation.checkin.boarding.BoardingUiS
 import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import com.example.check_in_mobile_app.ui.theme.NavyBlue
 import com.example.check_in_mobile_app.ui.theme.QrBorder
-import com.example.check_in_mobile_app.ui.theme.SubtitleWhite
 
 @Composable
 fun BoardingPassCard(uiState: BoardingUiState, modifier: Modifier = Modifier) {
+    val isDark = isSystemInDarkTheme()
+
+    // Déduction de la classe selon le numéro de rangée
+    val seatClass = run {
+        val row = uiState.seat.takeWhile { it.isDigit() }.toIntOrNull()
+        when {
+            row == null -> "ECONOMY"
+            row <= 4    -> "BUSINESS"
+            else        -> "ECONOMY"
+        }
+    }
+
     Column(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
             .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(16.dp))
     ) {
+        // ── Section supérieure : fond NavyBlue ──────────────────────
         Box(
             modifier = Modifier.fillMaxWidth().background(NavyBlue)
                 .padding(horizontal = 20.dp, vertical = 16.dp)
@@ -66,61 +79,98 @@ fun BoardingPassCard(uiState: BoardingUiState, modifier: Modifier = Modifier) {
                     Icon(painterResource(R.drawable.diamond), null, tint = Color.White)
                     Text(
                         text = stringResource(R.string.boarding_airline),
-                        fontSize = 13.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.surface,
-                        letterSpacing = 0.5.sp, maxLines = 1, overflow = TextOverflow.Ellipsis
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White,  // toujours sur fond NavyBlue
+                        letterSpacing = 0.5.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
                 }
-                Text("FLIGHT ${uiState.flightNumber}", fontSize = 11.sp,
-                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f), maxLines = 1)
+                Text(
+                    "FLIGHT ${uiState.flightNumber}",
+                    fontSize = 11.sp,
+                    color = Color.White.copy(alpha = 0.8f),  // toujours sur fond NavyBlue
+                    maxLines = 1
+                )
             }
         }
 
-        Box(modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface)
-            .padding(horizontal = 20.dp, vertical = 24.dp)) {
+        // ── Section codes IATA (ALG / CDG) ─────────────────────────
+        Box(
+            modifier = Modifier.fillMaxWidth()
+                .background(MaterialTheme.colorScheme.surface)
+                .padding(horizontal = 20.dp, vertical = 24.dp)
+        ) {
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {
-                    Text(uiState.departureCode, fontSize = 40.sp, fontWeight = FontWeight.Bold,
-                        color = NavyBlue, lineHeight = 42.sp, maxLines = 1)
-                    Text(uiState.departureCity.uppercase(), fontSize = 11.sp, color = LocalAppColors.current.textSubtle,
-                        letterSpacing = 0.5.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    Text(
+                        uiState.departureCode, fontSize = 40.sp, fontWeight = FontWeight.Bold,
+                        color = if (isDark) LocalAppColors.current.textPrimary else NavyBlue,
+                        lineHeight = 42.sp, maxLines = 1
+                    )
+                    Text(
+                        uiState.departureCity.uppercase(), fontSize = 11.sp,
+                        color = LocalAppColors.current.textSubtle,
+                        letterSpacing = 0.5.sp, maxLines = 1, overflow = TextOverflow.Ellipsis
+                    )
                 }
                 Column(Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
                     Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
                         Canvas(Modifier.weight(1f).height(8.dp)) {
-                            drawLine(Color(0xFFCBD5E1), Offset(0f, size.height / 2),
+                            drawLine(
+                                Color(0xFFCBD5E1), Offset(0f, size.height / 2),
                                 Offset(size.width, size.height / 2), 5f,
-                                pathEffect = PathEffect.dashPathEffect(floatArrayOf(12f, 8f)))
+                                pathEffect = PathEffect.dashPathEffect(floatArrayOf(12f, 8f))
+                            )
                         }
                         Icon(painterResource(R.drawable.plane2), null)
                         Canvas(Modifier.weight(1f).height(8.dp)) {
-                            drawLine(Color(0xFFCBD5E1), Offset(0f, size.height / 2),
+                            drawLine(
+                                Color(0xFFCBD5E1), Offset(0f, size.height / 2),
                                 Offset(size.width, size.height / 2), 5f,
-                                pathEffect = PathEffect.dashPathEffect(floatArrayOf(12f, 8f)))
+                                pathEffect = PathEffect.dashPathEffect(floatArrayOf(12f, 8f))
+                            )
                         }
                     }
                     Spacer(Modifier.height(4.dp))
-                    Text(stringResource(R.string.boarding_duration), fontSize = 11.sp,
-                        color = LocalAppColors.current.textSubtle, fontWeight = FontWeight.Bold, maxLines = 1)
+                    Text(
+                        stringResource(R.string.boarding_duration), fontSize = 11.sp,
+                        color = LocalAppColors.current.textSubtle,
+                        fontWeight = FontWeight.Bold, maxLines = 1
+                    )
                 }
                 Column(Modifier.weight(1f), horizontalAlignment = Alignment.End) {
-                    Text(uiState.arrivalCode, fontSize = 40.sp, fontWeight = FontWeight.Bold,
-                        color = NavyBlue, lineHeight = 42.sp, textAlign = TextAlign.End, maxLines = 1)
-                    Text(uiState.arrivalCity.uppercase(), fontSize = 11.sp, color = LocalAppColors.current.textSubtle,
-                        letterSpacing = 0.5.sp, textAlign = TextAlign.End, maxLines = 1,
-                        overflow = TextOverflow.Ellipsis)
+                    Text(
+                        uiState.arrivalCode, fontSize = 40.sp, fontWeight = FontWeight.Bold,
+                        color = if (isDark) LocalAppColors.current.textPrimary else NavyBlue,
+                        lineHeight = 42.sp, textAlign = TextAlign.End, maxLines = 1
+                    )
+                    Text(
+                        uiState.arrivalCity.uppercase(), fontSize = 11.sp,
+                        color = LocalAppColors.current.textSubtle,
+                        letterSpacing = 0.5.sp, textAlign = TextAlign.End,
+                        maxLines = 1, overflow = TextOverflow.Ellipsis
+                    )
                 }
             }
         }
 
+        // ── Séparateur pointillé ────────────────────────────────────
         Canvas(Modifier.fillMaxWidth().height(8.dp).padding(20.dp, 0.dp)) {
-            drawLine(Color(0xFFCBD5E1), Offset(0f, size.height / 2),
+            drawLine(
+                Color(0xFFCBD5E1), Offset(0f, size.height / 2),
                 Offset(size.width, size.height / 2), 5f,
-                pathEffect = PathEffect.dashPathEffect(floatArrayOf(12f, 8f)))
+                pathEffect = PathEffect.dashPathEffect(floatArrayOf(12f, 8f))
+            )
         }
 
-        Column(modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface)
-            .padding(horizontal = 20.dp, vertical = 20.dp)) {
-
+        // ── Section infos (porte, siège, QR) ───────────────────────
+        Column(
+            modifier = Modifier.fillMaxWidth()
+                .background(MaterialTheme.colorScheme.surface)
+                .padding(horizontal = 20.dp, vertical = 20.dp)
+        ) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                 LabelValueCell(stringResource(R.string.boarding_gate_label), uiState.gate)
                 LabelValueCell(stringResource(R.string.boarding_seat_label), uiState.seat, TextAlign.End)
@@ -128,8 +178,11 @@ fun BoardingPassCard(uiState: BoardingUiState, modifier: Modifier = Modifier) {
             Spacer(Modifier.height(20.dp))
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                 LabelValueCell(stringResource(R.string.boarding_boarding_label), uiState.boardingTime)
-                LabelValueCell(stringResource(R.string.boarding_zone_label),
-                    stringResource(R.string.boarding_zone_value), TextAlign.End)
+                LabelValueCell(
+                    stringResource(R.string.boarding_zone_label),
+                    stringResource(R.string.boarding_zone_value),
+                    TextAlign.End
+                )
             }
             Spacer(Modifier.height(24.dp))
 
@@ -140,25 +193,47 @@ fun BoardingPassCard(uiState: BoardingUiState, modifier: Modifier = Modifier) {
 
         HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 1.dp)
 
+        // ── Section bas : nom passager + classe ─────────────────────
         Row(
-            modifier = Modifier.fillMaxWidth().background(Color(0xFFF8FAFC))
+            modifier = Modifier.fillMaxWidth()
+                .background(MaterialTheme.colorScheme.surface)  // adaptatif dark/light
                 .padding(horizontal = 20.dp, vertical = 16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(Modifier.weight(1f)) {
-                Text(stringResource(R.string.boarding_passenger_label), fontSize = 12.sp,
-                    color = LocalAppColors.current.textSubtle, fontWeight = FontWeight.Bold, letterSpacing = 0.8.sp, maxLines = 1)
+                Text(
+                    stringResource(R.string.boarding_passenger_label),
+                    fontSize = 12.sp,
+                    color = LocalAppColors.current.textSubtle,
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 0.8.sp,
+                    maxLines = 1
+                )
                 Spacer(Modifier.height(2.dp))
-                Text(uiState.passengerName, fontSize = 16.sp, fontWeight = FontWeight.Bold,
-                    color = LocalAppColors.current.textPrimary, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text(
+                    uiState.passengerName,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = LocalAppColors.current.textPrimary,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
             }
-            Box(modifier = Modifier.clip(RoundedCornerShape(12.dp))
-                .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(16.dp))
-                .padding(horizontal = 10.dp, vertical = 5.dp)) {
-                Text(stringResource(R.string.boarding_economy_plus), fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold, color = LocalAppColors.current.textPrimary,
-                    letterSpacing = 0.5.sp, maxLines = 1)
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(12.dp))
+                    .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(16.dp))
+                    .padding(horizontal = 10.dp, vertical = 5.dp)
+            ) {
+                Text(
+                    text = seatClass,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = LocalAppColors.current.textPrimary,
+                    letterSpacing = 0.5.sp,
+                    maxLines = 1
+                )
             }
         }
     }
@@ -169,7 +244,8 @@ private fun QrCodeBox(bitmap: ImageBitmap?) {
     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
         Box(
             modifier = Modifier.size(192.dp).clip(RoundedCornerShape(16.dp))
-                .border(1.dp, QrBorder, RoundedCornerShape(16.dp)).background(MaterialTheme.colorScheme.surface),
+                .border(1.dp, QrBorder, RoundedCornerShape(16.dp))
+                .background(MaterialTheme.colorScheme.surface),
             contentAlignment = Alignment.Center
         ) {
             if (bitmap != null) {
@@ -184,10 +260,16 @@ private fun QrCodeBox(bitmap: ImageBitmap?) {
 @Composable
 private fun LabelValueCell(label: String, value: String, align: TextAlign = TextAlign.Start) {
     Column(horizontalAlignment = if (align == TextAlign.End) Alignment.End else Alignment.Start) {
-        Text(label, fontSize = 10.sp, color = LocalAppColors.current.textSubtle, fontWeight = FontWeight.SemiBold,
-            letterSpacing = 0.8.sp, textAlign = align, maxLines = 1)
+        Text(
+            label, fontSize = 10.sp, color = LocalAppColors.current.textSubtle,
+            fontWeight = FontWeight.SemiBold, letterSpacing = 0.8.sp,
+            textAlign = align, maxLines = 1
+        )
         Spacer(Modifier.height(2.dp))
-        Text(value, fontSize = 26.sp, fontWeight = FontWeight.Bold, color = LocalAppColors.current.textPrimary,
-            textAlign = align, maxLines = 1, overflow = TextOverflow.Ellipsis)
+        Text(
+            value, fontSize = 26.sp, fontWeight = FontWeight.Bold,
+            color = LocalAppColors.current.textPrimary,
+            textAlign = align, maxLines = 1, overflow = TextOverflow.Ellipsis
+        )
     }
 }

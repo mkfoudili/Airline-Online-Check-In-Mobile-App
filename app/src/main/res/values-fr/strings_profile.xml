@@ -48,4 +48,7 @@
     <!-- Logout Confirmation -->
     <string name="profile_logout_confirm_title">Déconnexion</string>
     <string name="profile_logout_confirm_message">Êtes-vous sûr de vouloir vous déconnecter ?</string>
+    <string name="profile_appearance_label">APPARENCE</string>
+    <string name="dark_mode_title">Mode sombre</string>
+    <string name="dark_mode_desc">Activer manuellement le thème sombre ou clair</string>
 </resources>

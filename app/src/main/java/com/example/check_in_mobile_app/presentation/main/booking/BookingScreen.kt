@@ -45,6 +45,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import com.example.check_in_mobile_app.presentation.components.booking.CheckedInBookingCard
 
 @Composable
@@ -55,14 +57,16 @@ fun BookingScreen(
     onTabSelected: (TabItem) -> Unit = {},
     onCheckInClick: (String) -> Unit = {}
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
-    val hasUnread by viewModel.hasUnread.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsState()
+    val isOnline by viewModel.isOnline.collectAsState()
+    val isRefreshing by viewModel.isRefreshing.collectAsState()
 
     BookingScreenContent(
         uiState = uiState,
         isOnline = isOnline,
         hasUnread = hasUnread,
+        isRefreshing = isRefreshing,
+        onRefresh = { viewModel.refresh() },
         onViewAllClick = onViewAllClick,
         onTabSelected = onTabSelected,
         onCheckInClick = onCheckInClick,
@@ -76,6 +80,8 @@ fun BookingScreenContent(
     uiState: BookingUiState,
     isOnline: Boolean = true,
     hasUnread: Boolean = false,
+    isRefreshing: Boolean = false,
+    onRefresh: () -> Unit = {},
     onViewAllClick: () -> Unit = {},
     onBoarding: (String) -> Unit = {},
     onTabSelected: (TabItem) -> Unit = {},
@@ -147,16 +153,21 @@ fun BookingScreenContent(
                         onActionClick = onViewAllClick
                     )
                     Spacer(modifier = Modifier.height(4.dp))
-                    LazyColumn(
+
+                    PullToRefreshBox(
+                        isRefreshing = isRefreshing,
+                        onRefresh = onRefresh,
                         modifier = Modifier
                             .fillMaxWidth()
                             .weight(1f)
                     ) {
-                        items(uiState.bookings) { booking ->
-                            CheckedInBookingCard(
-                                booking = booking,
-                                onBoarding = { passengerId -> onBoarding(passengerId) }
-                            )
+                        LazyColumn(modifier = Modifier.fillMaxSize()) {
+                            items(uiState.bookings) { booking ->
+                                CheckedInBookingCard(
+                                    booking = booking,
+                                    onBoarding = { passengerId -> onBoarding(passengerId) }
+                                )
+                            }
                         }
                     }
                 }

@@ -76,6 +76,7 @@ class CheckInRepositoryImpl @Inject constructor(
     override fun getPassengerForReview(): Passenger {
         return Passenger(
             passengerId    = "p_review",
+            bookingId      = "b_review",
             uid            = null,
             firstName      = "Batata",
             lastName       = "Sofiane",
