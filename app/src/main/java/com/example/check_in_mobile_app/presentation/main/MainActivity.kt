@@ -1,6 +1,5 @@
 package com.example.check_in_mobile_app.presentation.main
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +9,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.lifecycleScope
+import com.example.check_in_mobile_app.data.NotificationManager
 import com.example.check_in_mobile_app.presentation.auth.AuthViewModel
 import com.example.check_in_mobile_app.presentation.auth.LoginActivity
 import com.example.check_in_mobile_app.presentation.checkin.CheckInActivity
@@ -17,9 +18,14 @@ import com.example.check_in_mobile_app.presentation.navigation.MainNavGraph
 import com.example.check_in_mobile_app.ui.theme.CheckInMobileAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import com.google.firebase.messaging.FirebaseMessaging
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var notificationManager: NotificationManager
 
     private val authViewModel: AuthViewModel by viewModels()
 
@@ -35,6 +41,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        lifecycleScope.launch {
+            notificationManager.fetchInitialStatus()
+        }
+
         FirebaseMessaging.getInstance().token.addOnSuccessListener { token ->
             Log.d("FCM", "TOKEN = $token")
         }
