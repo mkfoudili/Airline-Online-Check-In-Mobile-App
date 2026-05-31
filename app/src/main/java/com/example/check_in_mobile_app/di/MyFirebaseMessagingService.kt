@@ -74,7 +74,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         bookingId: String?,
         data: Map<String, String>
     ) {
-        val channelId = "fcm_default_channel"
+        val channelId = "fcm_default_channel_v0"
         val notificationId = System.currentTimeMillis().toInt()
 
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -86,6 +86,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 "Flight Updates",
                 NotificationManager.IMPORTANCE_HIGH
             ).apply {
+                enableVibration(true)
+                enableLights(true)
                 description = "Notifications for flight status and check-in reminders"
             }
             notificationManager.createNotificationChannel(channel)
@@ -118,6 +120,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             .setAutoCancel(true)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setContentIntent(pendingIntent)
+            .setDefaults(NotificationCompat.DEFAULT_ALL)
+            .setCategory(NotificationCompat.CATEGORY_MESSAGE)
 
         notificationManager.notify(notificationId, notificationBuilder.build())
     }
