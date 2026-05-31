@@ -39,4 +39,13 @@
     <string name="profile_new_password_placeholder">Entrez le nouveau mot de passe</string>
     <string name="profile_confirm_password_label">Confirmer le nouveau mot de passe</string>
     <string name="profile_confirm_password_placeholder">Saisissez à nouveau le nouveau mot de passe</string>
+
+    <!-- Theme -->
+    <string name="profile_theme_label">Thème</string>
+    <string name="theme_light">Mode clair</string>
+    <string name="theme_dark">Mode sombre</string>
+
+    <!-- Logout Confirmation -->
+    <string name="profile_logout_confirm_title">Déconnexion</string>
+    <string name="profile_logout_confirm_message">Êtes-vous sûr de vouloir vous déconnecter ?</string>
 </resources>

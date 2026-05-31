@@ -9,6 +9,7 @@ data class NotificationEntity(
     val uid: String?,
     val passengerId: String?,
     val flightId: String?,
+    val bookingId: String? = null,
     val type: String?,
     val title: String?,
     val body: String?,

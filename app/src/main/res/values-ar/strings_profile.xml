@@ -39,4 +39,13 @@
     <string name="profile_new_password_placeholder">أدخل كلمة المرور الجديدة</string>
     <string name="profile_confirm_password_label">تأكيد كلمة المرور الجديدة</string>
     <string name="profile_confirm_password_placeholder">أعد كتابة كلمة المرور الجديدة</string>
+
+    <!-- Theme -->
+    <string name="profile_theme_label">المظهر</string>
+    <string name="theme_light">الوضع الفاتح</string>
+    <string name="theme_dark">الوضع الداكن</string>
+
+    <!-- Logout Confirmation -->
+    <string name="profile_logout_confirm_title">تسجيل الخروج</string>
+    <string name="profile_logout_confirm_message">هل أنت متأكد أنك تريد تسجيل الخروج؟</string>
 </resources>

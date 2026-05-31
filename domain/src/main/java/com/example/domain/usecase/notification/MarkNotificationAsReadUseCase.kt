@@ -4,9 +4,9 @@ import com.example.domain.repository.NotificationRepository
 import javax.inject.Inject
 
 /**
- * Use case to mark a single notification as read.
+ * Use case to mark a single notification as read by its ID.
  */
-class MarkNotificationReadUseCase @Inject constructor(
+class MarkNotificationAsReadUseCase @Inject constructor(
     private val repository: NotificationRepository
 ) {
     suspend operator fun invoke(notificationId: String): Result<Unit> {
