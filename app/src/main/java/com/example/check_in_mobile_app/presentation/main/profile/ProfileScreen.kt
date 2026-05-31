@@ -42,6 +42,7 @@ import com.example.check_in_mobile_app.presentation.components.TabBarMenu
 import com.example.check_in_mobile_app.presentation.components.TabItem
 import com.example.check_in_mobile_app.presentation.components.profile.ProfileAvatar
 import com.example.check_in_mobile_app.presentation.components.profile.ProfileInfoCard
+import com.example.check_in_mobile_app.presentation.main.booking.BookingUiState
 import com.example.check_in_mobile_app.ui.theme.BorderLight
 import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import com.example.check_in_mobile_app.ui.theme.NavyBlue
@@ -117,36 +118,42 @@ fun ProfileScreen(
         )
     }
 
-    if (uiState.isLoading) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator()
+    when {
+        uiState.isLoading -> {
+            ProfileBaseScreen(
+                title = stringResource(R.string.profile_title)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 100.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(color = LocalAppColors.current.textAccent)
+                }
+            }
         }
-    } else {
-        when {
-            uiState.isChangingPassword -> {
-                ChangePasswordScreen(
-                    uiState = uiState,
-                    onEvent = viewModel::onEvent
-                )
-            }
 
-            uiState.isEditing -> {
-                EditProfileScreen(
-                    uiState = uiState,
-                    onEvent = viewModel::onEvent
-                )
-            }
+        uiState.isChangingPassword -> {
+            ChangePasswordScreen(
+                uiState = uiState,
+                onEvent = viewModel::onEvent
+            )
+        }
 
-            else -> {
-                ProfileScreenContent(
-                    uiState = uiState,
-                    onEvent = viewModel::onEvent,
-                    onTabSelected = onTabSelected
-                )
-            }
+        uiState.isEditing -> {
+            EditProfileScreen(
+                uiState = uiState,
+                onEvent = viewModel::onEvent
+            )
+        }
+
+        else -> {
+            ProfileScreenContent(
+                uiState = uiState,
+                onEvent = viewModel::onEvent,
+                onTabSelected = onTabSelected
+            )
         }
     }
 }
