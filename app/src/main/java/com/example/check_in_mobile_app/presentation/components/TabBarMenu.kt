@@ -9,6 +9,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -38,6 +40,7 @@ enum class TabItem(@DrawableRes val icon: Int, val labelRes: Int) {
 @Composable
 fun TabBarMenu(
     selectedTab: TabItem,
+    hasUnreadNotifications: Boolean = false,
     onTabSelected: (TabItem) -> Unit
 ) {
     NavigationBar(
@@ -53,11 +56,19 @@ fun TabBarMenu(
                 selected = isSelected,
                 onClick = { onTabSelected(tab) },
                 icon = {
-                    Icon(
-                        painter = painterResource(id = tab.icon),
-                        contentDescription = label,
-                        modifier = Modifier.size(24.dp)
-                    )
+                    BadgedBox(
+                        badge = {
+                            if (tab == TabItem.NOTIFICATIONS && hasUnreadNotifications) {
+                                Badge(containerColor = Color.Red)
+                            }
+                        }
+                    ) {
+                        Icon(
+                            painter = painterResource(id = tab.icon),
+                            contentDescription = label,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
                 },
                 label = {
                     Text(

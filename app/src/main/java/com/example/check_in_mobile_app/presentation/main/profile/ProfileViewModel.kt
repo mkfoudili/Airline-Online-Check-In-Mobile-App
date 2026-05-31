@@ -3,6 +3,7 @@ package com.example.check_in_mobile_app.presentation.main.profile
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.check_in_mobile_app.data.NotificationManager
 import com.example.check_in_mobile_app.utils.LanguagePreferences
 import com.example.domain.usecase.profile.GetProfileUseCase
 import com.example.domain.usecase.profile.UpdateProfileUseCase
@@ -27,7 +28,8 @@ class ProfileViewModel @Inject constructor(
     private val updateProfileUseCase: UpdateProfileUseCase,
     private val updatePasswordUseCase: UpdatePasswordUseCase,
     private val getDarkModeUseCase: GetDarkModeUseCase,
-    private val setDarkModeUseCase: SetDarkModeUseCase
+    private val setDarkModeUseCase: SetDarkModeUseCase,
+    notificationManager: NotificationManager
 ): ViewModel() {
 
     private val _uiState = MutableStateFlow(ProfileUiState())
@@ -36,6 +38,7 @@ class ProfileViewModel @Inject constructor(
     private val _uiAction = MutableSharedFlow<ProfileUiAction>()
     val uiAction: SharedFlow<ProfileUiAction> = _uiAction.asSharedFlow()
 
+    val hasUnread: StateFlow<Boolean> = notificationManager.hasUnread
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
 

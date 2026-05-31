@@ -16,7 +16,7 @@ import com.example.check_in_mobile_app.presentation.components.TabBarMenu
 import com.example.check_in_mobile_app.presentation.components.TabItem
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.check_in_mobile_app.presentation.utils.rememberScreenWidth
-
+import com.example.check_in_mobile_app.data.NotificationManager
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
@@ -38,12 +38,14 @@ fun HomeScreen(
 
     val scrollState = remember(isOnline) { ScrollState(initial = 0) }
     val screenWidth: Dp = rememberScreenWidth()
+    val hasUnread by viewModel.hasUnread.collectAsStateWithLifecycle()
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         bottomBar = {
             TabBarMenu(
                 selectedTab = TabItem.HOME,
+                hasUnreadNotifications = hasUnread,
                 onTabSelected = onTabSelected
             )
         }

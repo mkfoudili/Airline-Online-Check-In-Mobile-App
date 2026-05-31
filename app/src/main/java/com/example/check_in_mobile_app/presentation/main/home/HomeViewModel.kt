@@ -3,6 +3,7 @@ package com.example.check_in_mobile_app.presentation.main.home
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.check_in_mobile_app.data.NotificationManager
 import com.example.check_in_mobile_app.di.NetworkMonitor
 import com.example.data.preferences.UserPreferencesRepository
 import com.example.domain.model.CheckInStatus
@@ -32,7 +33,8 @@ class HomeViewModel @Inject constructor(
     private val flightRepository: FlightRepository,
     private val authRepository: AuthRepository,
     private val networkMonitor: NetworkMonitor,
-    private val userPrefs: UserPreferencesRepository
+    private val userPrefs: UserPreferencesRepository,
+    notificationManager: NotificationManager
 ) : AndroidViewModel(application) {
 
     val isOnline: StateFlow<Boolean> = networkMonitor.isOnline
@@ -42,10 +44,14 @@ class HomeViewModel @Inject constructor(
             initialValue = networkMonitor.currentlyOnline()
         )
 
+    val hasUnread: StateFlow<Boolean> = notificationManager.hasUnread
+
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
     private val _navigateToFlightDetails = MutableSharedFlow<String>(extraBufferCapacity = 1)
-    val navigateToFlightDetails = _navigateToFlightDetails.asSharedFlow()
+    val navigateToFlightDetails = _navigateToSharedFlow() // Error here? No, I should use asSharedFlow()
+
+    private fun _navigateToSharedFlow() = _navigateToFlightDetails.asSharedFlow()
 
     init {
         loadUserName()

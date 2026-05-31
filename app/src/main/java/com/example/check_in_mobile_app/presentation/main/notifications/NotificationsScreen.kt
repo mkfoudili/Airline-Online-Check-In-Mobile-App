@@ -18,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.presentation.components.TabBarMenu
 import com.example.check_in_mobile_app.presentation.components.TabItem
@@ -51,6 +52,7 @@ fun NotificationsScreen(
 
     NotificationsContent(
         uiState = uiState,
+        hasUnread = hasUnread,
         isRefreshing = isRefreshing,
         onRefresh = { viewModel.refresh() },
         onMarkAllRead = { viewModel.markAllAsRead() },
@@ -65,6 +67,7 @@ fun NotificationsScreen(
 @Composable
 fun NotificationsContent(
     uiState: NotificationsUiState,
+    hasUnread: Boolean = false,
     isRefreshing: Boolean = false,
     onRefresh: () -> Unit = {},
     onMarkAllRead: () -> Unit,
@@ -99,6 +102,7 @@ fun NotificationsContent(
         bottomBar = {
             TabBarMenu(
                 selectedTab = TabItem.NOTIFICATIONS,
+                hasUnreadNotifications = hasUnread,
                 onTabSelected = onTabSelected
             )
         },

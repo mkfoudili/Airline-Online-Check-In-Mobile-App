@@ -61,6 +61,7 @@ fun ProfileScreen(
     onLogout: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val hasUnread by viewModel.hasUnread.collectAsStateWithLifecycle()
     val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
@@ -156,6 +157,7 @@ fun ProfileScreen(
         else -> {
             ProfileScreenContent(
                 uiState = uiState,
+                hasUnread = hasUnread,
                 isRefreshing = isRefreshing,
                 onRefresh = { viewModel.refresh() },
                 isDarkThemeEnabled = isDarkThemeEnabled,
@@ -268,6 +270,7 @@ private fun ProfileBottomActions(
 @Composable
 fun ProfileScreenContent(
     uiState: ProfileUiState,
+    hasUnread: Boolean,
     isRefreshing: Boolean = false,
     onRefresh: () -> Unit = {},
     isDarkThemeEnabled: Boolean,
@@ -309,6 +312,7 @@ fun ProfileScreenContent(
         bottomBar = {
             TabBarMenu(
                 selectedTab = TabItem.PROFILE,
+                hasUnreadNotifications = hasUnread,
                 onTabSelected = onTabSelected
             )
         }
