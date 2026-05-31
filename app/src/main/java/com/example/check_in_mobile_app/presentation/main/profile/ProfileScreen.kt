@@ -16,6 +16,7 @@ import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -44,7 +45,6 @@ import com.example.check_in_mobile_app.presentation.components.TabItem
 import com.example.check_in_mobile_app.presentation.components.profile.ProfileAvatar
 import com.example.check_in_mobile_app.presentation.components.profile.ProfileInfoCard
 import com.example.check_in_mobile_app.presentation.components.profile.SecurityStatusBanner
-import com.example.check_in_mobile_app.presentation.main.booking.BookingUiState
 import com.example.check_in_mobile_app.ui.theme.BorderLight
 import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import com.example.check_in_mobile_app.ui.theme.NavyBlue
@@ -61,6 +61,7 @@ fun ProfileScreen(
     onLogout: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
@@ -155,6 +156,8 @@ fun ProfileScreen(
         else -> {
             ProfileScreenContent(
                 uiState = uiState,
+                isRefreshing = isRefreshing,
+                onRefresh = { viewModel.refresh() },
                 isDarkThemeEnabled = isDarkThemeEnabled,
                 onThemeChanged = onThemeChanged,
                 onEvent = viewModel::onEvent,
@@ -261,27 +264,46 @@ private fun ProfileBottomActions(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreenContent(
     uiState: ProfileUiState,
+    isRefreshing: Boolean = false,
+    onRefresh: () -> Unit = {},
     isDarkThemeEnabled: Boolean,
     onThemeChanged: (Boolean) -> Unit,
     onEvent: (ProfileEvent) -> Unit = {},
     onTabSelected: (TabItem) -> Unit = {}
 ) {
-    ProfileBaseScreen(
-        title = stringResource(R.string.profile_title),
-        titleFontSize = 22,
-        actions = {
-            TextButton(
-                onClick = {
-                    onEvent(ProfileEvent.OnEditProfileClicked)
-                }
-            ) {
-                Text(
-                    text = stringResource(R.string.common_edit),
-                    color = MaterialTheme.colorScheme.primary
+    Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
+        topBar = {
+            Column {
+                TopAppBar(
+                    title = {
+                        Text(
+                            text = stringResource(R.string.profile_title),
+                            fontFamily = Poppins,
+                            fontSize = 25.sp,
+                            color = LocalAppColors.current.textPrimary,
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = (-0.5).sp
+                        )
+                    },
+                    actions = {
+                        TextButton(onClick = { onEvent(ProfileEvent.OnEditProfileClicked) }) {
+                            Text(
+                                text = stringResource(R.string.common_edit),
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.background
+                    )
                 )
+                HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f), thickness = 1.dp)
+                Spacer(modifier = Modifier.height(16.dp))
             }
         },
         bottomBar = {
@@ -290,162 +312,159 @@ fun ProfileScreenContent(
                 onTabSelected = onTabSelected
             )
         }
-    ) {
-        Spacer(modifier = Modifier.height(32.dp))
-
-        ProfileAvatar(
-            isOnline = uiState.isOnline
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.clickable {
-                onEvent(ProfileEvent.OnEditProfileClicked)
-            }
+    ) { innerPadding ->
+        PullToRefreshBox(
+            isRefreshing = isRefreshing,
+            onRefresh = onRefresh,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
         ) {
-            Text(
-                text = uiState.name,
-                fontSize = 28.sp,
-                fontWeight = FontWeight.Bold,
-                color = LocalAppColors.current.textAccent,
-                fontFamily = Poppins,
-                letterSpacing = (-0.5).sp
-            )
-
-            Spacer(modifier = Modifier.width(8.dp))
-
-            Icon(
-                imageVector = Icons.Default.Edit,
-                contentDescription = stringResource(R.string.profile_edit_name_desc),
-                modifier = Modifier.size(20.dp),
-                tint = LocalAppColors.current.textAccent.copy(alpha = 0.5f)
-            )
-        }
-
-        Spacer(modifier = Modifier.height(40.dp))
-
-        SectionLabel(
-            text = stringResource(R.string.profile_personal_info_label),
-            modifier = Modifier.align(Alignment.Start)
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        ProfileInfoCard(
-            email = uiState.email,
-            phoneNumber = uiState.phoneNumber,
-            language = uiState.language,
-            onEditEmailClick = {
-                onEvent(ProfileEvent.OnEditEmailClicked)
-            },
-            onEditPhoneClick = {
-                onEvent(ProfileEvent.OnEditPhoneClicked)
-            },
-            onEditPasswordClick = {
-                onEvent(ProfileEvent.OnEditPasswordClicked)
-            },
-            onEditLanguageClick = {
-                onEvent(ProfileEvent.OnEditProfileClicked)
-            }
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // Appearance / Dark Mode Section
-        SectionLabel(
-            text = stringResource(R.string.profile_appearance_label),
-            modifier = Modifier.align(Alignment.Start)
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp),
-            color = MaterialTheme.colorScheme.surface,
-            border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
-        ) {
-            Row(
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 16.dp, horizontal = 16.dp),
-                verticalAlignment = Alignment.CenterVertically
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Moon/Dark Mode Icon in circle
-                Box(
-                    modifier = Modifier
-                        .size(40.dp)
-                        .border(1.dp, MaterialTheme.colorScheme.outlineVariant, CircleShape),
-                    contentAlignment = Alignment.Center
+                Spacer(modifier = Modifier.height(32.dp))
+
+                ProfileAvatar(isOnline = uiState.isOnline)
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.clickable { onEvent(ProfileEvent.OnEditProfileClicked) }
                 ) {
+                    Text(
+                        text = uiState.name,
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = LocalAppColors.current.textAccent,
+                        fontFamily = Poppins,
+                        letterSpacing = (-0.5).sp
+                    )
+
+                    Spacer(modifier = Modifier.width(8.dp))
+
                     Icon(
-                        imageVector = Icons.Default.DarkMode,
-                        contentDescription = null,
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = stringResource(R.string.profile_edit_name_desc),
                         modifier = Modifier.size(20.dp),
-                        tint = LocalAppColors.current.textAccent
+                        tint = LocalAppColors.current.textAccent.copy(alpha = 0.5f)
                     )
                 }
 
-                Spacer(modifier = Modifier.width(16.dp))
+                Spacer(modifier = Modifier.height(40.dp))
 
-                // Label and Description
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = stringResource(R.string.dark_mode_title),
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = LocalAppColors.current.textPrimary
-                    )
-                    Spacer(modifier = Modifier.height(2.dp))
-                    Text(
-                        text = stringResource(R.string.dark_mode_desc),
-                        fontSize = 12.sp,
-                        color = LocalAppColors.current.textSubtle
-                    )
-                }
-
-                // Switch
-                Switch(
-                    checked = isDarkThemeEnabled,
-                    onCheckedChange = { isChecked ->
-                        onThemeChanged(isChecked)
-                    },
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = Color.White,
-                        checkedTrackColor = MaterialTheme.colorScheme.primary,
-                        uncheckedThumbColor = LocalAppColors.current.textSubtle,
-                        uncheckedTrackColor = LocalAppColors.current.chipUnselected
-                    )
+                SectionLabel(
+                    text = stringResource(R.string.profile_personal_info_label),
+                    modifier = Modifier.align(Alignment.Start)
                 )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                ProfileInfoCard(
+                    email = uiState.email,
+                    phoneNumber = uiState.phoneNumber,
+                    language = uiState.language,
+                    onEditEmailClick = { onEvent(ProfileEvent.OnEditEmailClicked) },
+                    onEditPhoneClick = { onEvent(ProfileEvent.OnEditPhoneClicked) },
+                    onEditPasswordClick = { onEvent(ProfileEvent.OnEditPasswordClicked) },
+                    onEditLanguageClick = { onEvent(ProfileEvent.OnEditProfileClicked) }
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                SectionLabel(
+                    text = stringResource(R.string.profile_appearance_label),
+                    modifier = Modifier.align(Alignment.Start)
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(16.dp),
+                    color = MaterialTheme.colorScheme.surface,
+                    border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 16.dp, horizontal = 16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(40.dp)
+                                .border(1.dp, MaterialTheme.colorScheme.outlineVariant, CircleShape),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.DarkMode,
+                                contentDescription = null,
+                                modifier = Modifier.size(20.dp),
+                                tint = LocalAppColors.current.textAccent
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.width(16.dp))
+
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = stringResource(R.string.dark_mode_title),
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                color = LocalAppColors.current.textPrimary
+                            )
+                            Spacer(modifier = Modifier.height(2.dp))
+                            Text(
+                                text = stringResource(R.string.dark_mode_desc),
+                                fontSize = 12.sp,
+                                color = LocalAppColors.current.textSubtle
+                            )
+                        }
+
+                        Switch(
+                            checked = isDarkThemeEnabled,
+                            onCheckedChange = { isChecked -> onThemeChanged(isChecked) },
+                            colors = SwitchDefaults.colors(
+                                checkedThumbColor = Color.White,
+                                checkedTrackColor = MaterialTheme.colorScheme.primary,
+                                uncheckedThumbColor = LocalAppColors.current.textSubtle,
+                                uncheckedTrackColor = LocalAppColors.current.chipUnselected
+                            )
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                SecurityStatusBanner()
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                ProfileSecondaryActionButton(
+                    text = stringResource(R.string.common_logout),
+                    onClick = { onEvent(ProfileEvent.OnLogoutClicked) },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ExitToApp,
+                            contentDescription = stringResource(R.string.common_logout),
+                            modifier = Modifier.size(18.dp),
+                            tint = LocalAppColors.current.textAccent
+                        )
+                    }
+                )
+
+                Spacer(modifier = Modifier.height(32.dp))
             }
         }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        SecurityStatusBanner()
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        ProfileSecondaryActionButton(
-            text = stringResource(R.string.common_logout),
-            onClick = {
-                onEvent(ProfileEvent.OnLogoutClicked)
-            },
-            icon = {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ExitToApp,
-                    contentDescription = stringResource(R.string.common_logout),
-                    modifier = Modifier.size(18.dp),
-                    tint = LocalAppColors.current.textAccent
-                )
-            }
-        )
-
-        Spacer(modifier = Modifier.height(32.dp))
     }
 }
+
 @Composable
 fun EditProfileScreen(
     uiState: ProfileUiState,
@@ -481,11 +500,8 @@ fun EditProfileScreen(
     ) {
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Avatar Section
         Box(contentAlignment = Alignment.BottomEnd) {
-            ProfileAvatar(
-                isOnline = false
-            )
+            ProfileAvatar(isOnline = false)
             Box(
                 modifier = Modifier
                     .size(32.dp)
@@ -715,9 +731,7 @@ fun LanguageDropdownField(
                                 color = LocalAppColors.current.textPrimary
                             )
                         },
-                        onClick = {
-                            onLanguageSelected(languageValue)
-                        },
+                        onClick = { onLanguageSelected(languageValue) },
                         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp)
                     )
                 }
@@ -745,7 +759,6 @@ fun ChangePasswordScreen(
     ) {
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Security Info Banner
         Surface(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),

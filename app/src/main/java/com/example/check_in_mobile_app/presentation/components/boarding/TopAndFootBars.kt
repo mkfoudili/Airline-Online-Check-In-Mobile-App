@@ -81,11 +81,14 @@ fun BoardingFooter(boardingTime: String, gate: String) {
         }
     }
 
+    // Labels entièrement traduits via stringResource
     val boardingLabel = when {
-        minutesUntilBoarding == null -> "Boarding at $boardingTime"
-        minutesUntilBoarding == 0L   -> "Boarding now"
-        else                         -> "Boarding starts in ${minutesUntilBoarding}m"
+        minutesUntilBoarding == null -> stringResource(R.string.boarding_label_at, boardingTime)
+        minutesUntilBoarding == 0L   -> stringResource(R.string.boarding_label_now)
+        else                         -> stringResource(R.string.boarding_label_in, minutesUntilBoarding)
     }
+
+    val gateInfo = stringResource(R.string.boarding_gate_info, gate)
 
     Row(
         modifier = Modifier
@@ -115,7 +118,7 @@ fun BoardingFooter(boardingTime: String, gate: String) {
             )
             Spacer(Modifier.height(2.dp))
             Text(
-                text = "Head to Gate $gate. Security wait time is currently approximately 15 minutes.",
+                text = gateInfo,
                 fontSize = 11.sp,
                 color = LocalAppColors.current.textSubtle,
                 lineHeight = 16.sp

@@ -36,12 +36,15 @@ class ProfileViewModel @Inject constructor(
     private val _uiAction = MutableSharedFlow<ProfileUiAction>()
     val uiAction: SharedFlow<ProfileUiAction> = _uiAction.asSharedFlow()
 
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
+
     init {
         // Load current language from prefs
         val currentCode = LanguagePreferences.getSavedLanguage(application)
         val currentName = LanguagePreferences.codeToDisplayName(currentCode)
         _uiState.value = _uiState.value.copy(language = currentName, editedLanguage = currentName)
-        
+
         observeDarkMode()
         fetchProfile()
     }
@@ -79,6 +82,30 @@ class ProfileViewModel @Inject constructor(
                     error = e.message ?: "Unknown error"
                 )
             }
+        }
+    }
+
+    /** Appelé par le pull-to-refresh de l'UI */
+    fun refresh() {
+        viewModelScope.launch {
+            _isRefreshing.value = true
+            try {
+                val profile = getProfileUseCase()
+                _uiState.value = _uiState.value.copy(
+                    name = profile.fullName,
+                    email = profile.email,
+                    phoneNumber = profile.phoneNumber,
+                    passwordMasked = "************",
+                    profileImageUrl = profile.avatarUrl,
+                    isVerified = profile.isVerified,
+                    securityLevel = profile.securityLevel,
+                    isOnline = profile.isOnline,
+                    error = null
+                )
+            } catch (e: Exception) {
+                _uiState.value = _uiState.value.copy(error = e.message ?: "Unknown error")
+            }
+            _isRefreshing.value = false
         }
     }
 

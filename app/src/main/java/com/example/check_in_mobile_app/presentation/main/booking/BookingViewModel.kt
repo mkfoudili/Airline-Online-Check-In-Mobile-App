@@ -37,6 +37,9 @@ class BookingViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<BookingUiState>(BookingUiState.Loading)
     val uiState: StateFlow<BookingUiState> = _uiState
 
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean> = _isRefreshing
+
     init {
         if (networkMonitor.currentlyOnline()) {
             fetchBookings()
@@ -54,6 +57,24 @@ class BookingViewModel @Inject constructor(
                 .collect { online ->
                     if (online) fetchBookings() else loadFromCache()
                 }
+        }
+    }
+
+    /** Appelé par le pull-to-refresh de l'UI */
+    fun refresh() {
+        viewModelScope.launch {
+            _isRefreshing.value = true
+            if (networkMonitor.currentlyOnline()) {
+                val result = getUpcomingBookingsUseCase()
+                result.onSuccess { bookings ->
+                    _uiState.value = BookingUiState.Success(bookings)
+                }.onFailure {
+                    loadFromCacheInternal()
+                }
+            } else {
+                loadFromCacheInternal()
+            }
+            _isRefreshing.value = false
         }
     }
 
@@ -75,41 +96,45 @@ class BookingViewModel @Inject constructor(
      */
     private fun loadFromCache() {
         viewModelScope.launch {
-            val uid = authRepository.getCurrentUserId()
-            if (uid == null) {
-                _uiState.value = BookingUiState.Success(emptyList())
-                return@launch
-            }
-
-            val boardingPasses = boardingPassRepository.getBoardingPassesByUid(uid)
-            val offlineBookings = boardingPasses.map { bp ->
-                Booking(
-                    bookingId  = bp.flightId,
-                    bookingRef = bp.bookingReference,
-                    pnr        = bp.bookingReference,
-                    lastName   = "",
-                    status     = CheckInStatus.CHECKED_IN,
-                    checkinPassengerId  = bp.passengerId,
-                    flight     = Flight(
-                        flightId         = bp.flightId,
-                        flightNumber     = bp.flightNumber,
-                        origin           = bp.origin,
-                        originCity       = bp.originCity,
-                        destination      = bp.destination,
-                        destinationCity  = bp.destinationCity,
-                        departureTime    = bp.departureTime ?: 0L,
-                        arrivalTime      = bp.arrivalTime ?: 0L,
-                        gate             = bp.gate ?: "",
-                        terminal         = bp.terminal ?: "",
-                        boardingTime     = bp.boardingTime ?: "",
-                        checkInOpensTime = "",
-                        aircraftType     = null,
-                        status           = null
-                    ),
-                    passengers = emptyList()
-                )
-            }
-            _uiState.value = BookingUiState.Success(offlineBookings)
+            loadFromCacheInternal()
         }
+    }
+
+    private suspend fun loadFromCacheInternal() {
+        val uid = authRepository.getCurrentUserId()
+        if (uid == null) {
+            _uiState.value = BookingUiState.Success(emptyList())
+            return
+        }
+
+        val boardingPasses = boardingPassRepository.getBoardingPassesByUid(uid)
+        val offlineBookings = boardingPasses.map { bp ->
+            Booking(
+                bookingId  = bp.flightId,
+                bookingRef = bp.bookingReference,
+                pnr        = bp.bookingReference,
+                lastName   = "",
+                status     = CheckInStatus.CHECKED_IN,
+                checkinPassengerId  = bp.passengerId,
+                flight     = Flight(
+                    flightId         = bp.flightId,
+                    flightNumber     = bp.flightNumber,
+                    origin           = bp.origin,
+                    originCity       = bp.originCity,
+                    destination      = bp.destination,
+                    destinationCity  = bp.destinationCity,
+                    departureTime    = bp.departureTime ?: 0L,
+                    arrivalTime      = bp.arrivalTime ?: 0L,
+                    gate             = bp.gate ?: "",
+                    terminal         = bp.terminal ?: "",
+                    boardingTime     = bp.boardingTime ?: "",
+                    checkInOpensTime = "",
+                    aircraftType     = null,
+                    status           = null
+                ),
+                passengers = emptyList()
+            )
+        }
+        _uiState.value = BookingUiState.Success(offlineBookings)
     }
 }
