@@ -68,22 +68,5 @@ fun ProfileInfoRow(
                 color = LocalAppColors.current.textPrimary
             )
         }
-
-        // Action Icons
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                imageVector = Icons.Outlined.Edit,
-                contentDescription = "Edit",
-                modifier = Modifier.size(20.dp),
-                tint = LocalAppColors.current.textSubtle
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Icon(
-                imageVector = Icons.Outlined.KeyboardArrowRight,
-                contentDescription = null,
-                modifier = Modifier.size(20.dp),
-                tint = LocalAppColors.current.borderLight
-            )
-        }
     }
 }

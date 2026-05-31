@@ -42,7 +42,6 @@ import com.example.check_in_mobile_app.presentation.components.TabBarMenu
 import com.example.check_in_mobile_app.presentation.components.TabItem
 import com.example.check_in_mobile_app.presentation.components.profile.ProfileAvatar
 import com.example.check_in_mobile_app.presentation.components.profile.ProfileInfoCard
-import com.example.check_in_mobile_app.presentation.components.profile.SecurityStatusBanner
 import com.example.check_in_mobile_app.ui.theme.BorderLight
 import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import com.example.check_in_mobile_app.ui.theme.NavyBlue
@@ -340,8 +339,6 @@ fun ProfileScreenContent(
         )
 
         Spacer(modifier = Modifier.height(24.dp))
-
-        SecurityStatusBanner()
 
         Spacer(modifier = Modifier.height(32.dp))
 
