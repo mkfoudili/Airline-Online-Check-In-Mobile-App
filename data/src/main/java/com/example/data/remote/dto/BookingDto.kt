@@ -9,7 +9,7 @@ data class BookingDto(
     val pnr: String,
     val lastName: String,
     val bookingRef: String,
-    val status: CheckInStatus,
+    val status: CheckInStatus?,
     val checkinDeadline: Date?,
     val createdAt: Date?,
     val flight: FlightDto,

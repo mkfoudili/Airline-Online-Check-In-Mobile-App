@@ -1,6 +1,7 @@
 package com.example.data.repository
 
 import com.example.data.local.dao.FlightDao
+import com.example.data.local.entity.FlightEntity
 import com.example.data.mapper.toDomain
 import com.example.data.mapper.toEntity
 import com.example.data.remote.BookingDataSource
@@ -34,18 +35,34 @@ class FlightRepositoryImpl @Inject constructor(
 
     override suspend fun refreshFlightsFromRemote(uid: String): Result<Unit> {
         return try {
+
             val bookingDtos = bookingDataSource.getBookingsByUid(uid)
+            val flightsToCache = mutableListOf<FlightEntity>()
             bookingDtos.forEach { bookingDto ->
-                try {
-                    val freshFlight = flightDataSource.getFlightById(bookingDto.flight.flightId)
-                    flightDao.insertFlight(freshFlight.toDomain().toEntity())
+
+                val flightEntity = try {
+                    val freshFlight =
+                        flightDataSource.getFlightById(
+                            bookingDto.flight.flightId
+                        )
+                    freshFlight.toDomain().toEntity()
+
                 } catch (e: Exception) {
-                    // Fallback : utiliser les données du booking si le fetch individuel échoue
-                    flightDao.insertFlight(bookingDto.flight.toDomain().toEntity())
+                    // fallback sur les données du booking
+                    bookingDto.flight.toDomain().toEntity()
                 }
+
+                flightsToCache.add(flightEntity)
             }
+
+            // remplacer le cache uniquement quand tout est prêt
+            flightDao.deleteAllFlights()
+            flightDao.insertFlights(flightsToCache)
+
             Result.success(Unit)
+
         } catch (e: Exception) {
+            // on garde l'ancien cache intact
             Result.failure(e)
         }
     }

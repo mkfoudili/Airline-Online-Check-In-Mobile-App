@@ -21,9 +21,9 @@ class GenerateQRCodeUseCase @Inject constructor() {
 
     operator fun invoke(boardingPass: BoardingPass): String {
         // Server-generated passes already carry the correct payload
-        if (!boardingPass.qrCodeData.isNullOrBlank()) {
+        /*if (!boardingPass.qrCodeData.isNullOrBlank()) {
             return boardingPass.qrCodeData
-        }
+        }*/
         // Fallback: reconstruct from passId (offline / mock passes)
         return "${BuildConfig.URL}boarding/verify/${boardingPass.passId}"
     }
