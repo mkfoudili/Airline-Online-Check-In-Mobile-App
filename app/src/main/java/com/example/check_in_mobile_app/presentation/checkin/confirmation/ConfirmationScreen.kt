@@ -137,6 +137,7 @@ fun ConfirmationScreen(
                         passengers = listOf(
                             Passenger(
                                 passengerId    = bp.passengerId,
+                                bookingId      = "",
                                 uid            = null,
                                 firstName      = firstName,
                                 lastName       = lastName,

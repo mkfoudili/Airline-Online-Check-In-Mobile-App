@@ -265,6 +265,7 @@ fun FlightDetailsScreenPreview() {
             passengers = listOf(
                 Passenger(
                     passengerId    = "passenger-fatma-001",
+                    bookingId      = "",
                     uid            = "u1",
                     firstName      = "Djerfi",
                     lastName       = "Fatma",

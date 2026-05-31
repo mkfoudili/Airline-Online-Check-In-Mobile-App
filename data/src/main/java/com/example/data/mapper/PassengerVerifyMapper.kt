@@ -9,6 +9,7 @@ import com.example.domain.model.Passenger
  */
 fun PassengerVerifyDto.toDomain(): Passenger = Passenger(
     passengerId   = this.passengerId,
+    bookingId      = this.bookingId,
     uid           = this.uid,
     firstName     = this.firstName,
     lastName      = this.lastName,
