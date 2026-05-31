@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.check_in_mobile_app.di.NetworkMonitor
 import com.example.domain.model.Booking
+import com.example.domain.model.CheckInStatus
 import com.example.domain.usecase.booking.SearchBookingsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -62,22 +63,35 @@ class AllBookingsViewModel @Inject constructor(
         _selectedDate,
         _selectedStatus
     ) { bookings, query, date, status ->
-        bookings.filter { booking ->
-            val matchesQuery = query.isBlank() || 
-                               booking.flight.destinationCity.contains(query, ignoreCase = true) ||                            
-                               booking.flight.destination.contains(query, ignoreCase = true)
-            
-            val sdfDate = java.text.SimpleDateFormat("MMM dd, yyyy", java.util.Locale.getDefault()).apply {
-                timeZone = java.util.TimeZone.getTimeZone("UTC")
+        bookings
+            .filter { booking ->
+                val isValidStatus = when (booking.status) {
+                    CheckInStatus.CHECKED_IN,
+                    CheckInStatus.CONFIRMED,
+                    CheckInStatus.CHECK_IN_OPEN -> true
+                    CheckInStatus.PASSED -> {
+                        val diffMs = System.currentTimeMillis() - booking.flight.departureTime
+                        diffMs <= 3 * 24 * 60 * 60 * 1000L
+                    }
+                }
+                if (!isValidStatus) return@filter false
+
+                val matchesQuery = query.isBlank() || 
+                                   booking.flight.destinationCity.contains(query, ignoreCase = true) ||                            
+                                   booking.flight.destination.contains(query, ignoreCase = true)
+                
+                val sdfDate = java.text.SimpleDateFormat("MMM dd, yyyy", java.util.Locale.getDefault()).apply {
+                    timeZone = java.util.TimeZone.getTimeZone("UTC")
+                }
+                val depDateStr = sdfDate.format(java.util.Date(booking.flight.departureTime))
+                val matchesDate = date == null || depDateStr == date
+
+                val matchesStatus = status == "All" ||
+                        booking.status.name.replace("_", " ").equals(status, ignoreCase = true)
+
+                matchesQuery && matchesDate && matchesStatus
             }
-            val depDateStr = sdfDate.format(java.util.Date(booking.flight.departureTime))
-            val matchesDate = date == null || depDateStr == date
-
-            val matchesStatus = status == "All" ||
-                    booking.status.name.replace("_", " ").equals(status, ignoreCase = true)
-
-            matchesQuery && matchesDate && matchesStatus
-        }
+            .sortedByDescending { it.flight.departureTime }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     fun updateSearchQuery(query: String) {

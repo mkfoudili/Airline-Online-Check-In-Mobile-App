@@ -39,4 +39,7 @@
     <string name="profile_new_password_placeholder">أدخل كلمة المرور الجديدة</string>
     <string name="profile_confirm_password_label">تأكيد كلمة المرور الجديدة</string>
     <string name="profile_confirm_password_placeholder">أعد كتابة كلمة المرور الجديدة</string>
+    <string name="profile_appearance_label">المظهر</string>
+    <string name="dark_mode_title">الوضع الداكن</string>
+    <string name="dark_mode_desc">التبديل يدوياً بين الوضع الداكن والفاتح</string>
 </resources>

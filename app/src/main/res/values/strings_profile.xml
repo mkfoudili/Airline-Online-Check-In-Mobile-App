@@ -39,4 +39,7 @@
     <string name="profile_new_password_placeholder">Enter new password</string>
     <string name="profile_confirm_password_label">Confirm New Password</string>
     <string name="profile_confirm_password_placeholder">Re-type new password</string>
+    <string name="profile_appearance_label">APPEARANCE</string>
+    <string name="dark_mode_title">Dark Mode</string>
+    <string name="dark_mode_desc">Manually toggle dark or light theme</string>
 </resources>

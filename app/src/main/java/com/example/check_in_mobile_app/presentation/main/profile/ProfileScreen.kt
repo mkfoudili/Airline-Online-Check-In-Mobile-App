@@ -3,6 +3,7 @@ package com.example.check_in_mobile_app.presentation.main.profile
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -60,6 +61,8 @@ import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun ProfileScreen(
+    isDarkThemeEnabled: Boolean,
+    onThemeChanged: (Boolean) -> Unit,
     viewModel: ProfileViewModel = viewModel(factory = ProfileViewModel.Factory),
     onTabSelected: (TabItem) -> Unit = {},
     onLogout: () -> Unit = {}
@@ -106,6 +109,8 @@ fun ProfileScreen(
             else -> {
                 ProfileScreenContent(
                     uiState = uiState,
+                    isDarkThemeEnabled = isDarkThemeEnabled,
+                    onThemeChanged = onThemeChanged,
                     onEvent = viewModel::onEvent,
                     onTabSelected = onTabSelected,
                     onLogout = onLogout
@@ -209,6 +214,8 @@ private fun ProfileBottomActions(
 @Composable
 fun ProfileScreenContent(
     uiState: ProfileUiState,
+    isDarkThemeEnabled: Boolean,
+    onThemeChanged: (Boolean) -> Unit,
     onEvent: (ProfileEvent) -> Unit = {},
     onTabSelected: (TabItem) -> Unit = {},
     onLogout: () -> Unit = {}
@@ -286,6 +293,77 @@ fun ProfileScreenContent(
                 onEvent(ProfileEvent.OnEditProfileClicked)
             }
         )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Appearance / Dark Mode Section
+        SectionLabel(
+            text = stringResource(R.string.profile_appearance_label),
+            modifier = Modifier.align(Alignment.Start)
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
+            color = MaterialTheme.colorScheme.surface,
+            border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp, horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Moon/Dark Mode Icon in circle
+                Box(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .border(1.dp, MaterialTheme.colorScheme.outlineVariant, CircleShape),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.DarkMode,
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp),
+                        tint = LocalAppColors.current.textAccent
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(16.dp))
+
+                // Label and Description
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = stringResource(R.string.dark_mode_title),
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = LocalAppColors.current.textPrimary
+                    )
+                    Spacer(modifier = Modifier.height(2.dp))
+                    Text(
+                        text = stringResource(R.string.dark_mode_desc),
+                        fontSize = 12.sp,
+                        color = LocalAppColors.current.textSubtle
+                    )
+                }
+
+                // Switch
+                Switch(
+                    checked = isDarkThemeEnabled,
+                    onCheckedChange = { isChecked ->
+                        onThemeChanged(isChecked)
+                    },
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = Color.White,
+                        checkedTrackColor = MaterialTheme.colorScheme.primary,
+                        uncheckedThumbColor = LocalAppColors.current.textSubtle,
+                        uncheckedTrackColor = LocalAppColors.current.chipUnselected
+                    )
+                )
+            }
+        }
 
         Spacer(modifier = Modifier.height(24.dp))
 

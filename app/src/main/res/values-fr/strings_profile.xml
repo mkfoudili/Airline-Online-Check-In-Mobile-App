@@ -39,4 +39,7 @@
     <string name="profile_new_password_placeholder">Entrez le nouveau mot de passe</string>
     <string name="profile_confirm_password_label">Confirmer le nouveau mot de passe</string>
     <string name="profile_confirm_password_placeholder">Saisissez à nouveau le nouveau mot de passe</string>
+    <string name="profile_appearance_label">APPARENCE</string>
+    <string name="dark_mode_title">Mode sombre</string>
+    <string name="dark_mode_desc">Activer manuellement le thème sombre ou clair</string>
 </resources>

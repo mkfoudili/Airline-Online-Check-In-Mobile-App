@@ -62,7 +62,8 @@ class BookingViewModel @Inject constructor(
             _uiState.value = BookingUiState.Loading
             val result = getUpcomingBookingsUseCase()
             result.onSuccess { bookings ->
-                _uiState.value = BookingUiState.Success(bookings)
+                val checkedInBookings = bookings.filter { it.status == CheckInStatus.CHECKED_IN }
+                _uiState.value = BookingUiState.Success(checkedInBookings)
             }.onFailure {
                 loadFromCache()
             }
