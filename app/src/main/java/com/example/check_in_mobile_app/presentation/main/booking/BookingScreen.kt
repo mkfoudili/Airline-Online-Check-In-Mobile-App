@@ -20,7 +20,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,19 +33,18 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.domain.model.Booking
 import com.example.domain.model.CheckInStatus
-import com.example.check_in_mobile_app.presentation.components.booking.BookingCard
 import com.example.check_in_mobile_app.presentation.components.booking.ViewAllButton
 import com.example.check_in_mobile_app.presentation.components.TabBarMenu
 import com.example.check_in_mobile_app.presentation.components.TabItem
 import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import com.example.check_in_mobile_app.ui.theme.Poppins
-import com.example.check_in_mobile_app.ui.theme.Slate500
 import com.example.domain.model.Flight
 import androidx.compose.ui.res.stringResource
 import com.example.check_in_mobile_app.R
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.check_in_mobile_app.presentation.components.booking.CheckedInBookingCard
 
 @Composable
@@ -57,11 +55,14 @@ fun BookingScreen(
     onTabSelected: (TabItem) -> Unit = {},
     onCheckInClick: (String) -> Unit = {}
 ) {
-    val uiState by viewModel.uiState.collectAsState()
-    val isOnline by viewModel.isOnline.collectAsState()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
+    val hasUnread by viewModel.hasUnread.collectAsStateWithLifecycle()
+
     BookingScreenContent(
         uiState = uiState,
         isOnline = isOnline,
+        hasUnread = hasUnread,
         onViewAllClick = onViewAllClick,
         onTabSelected = onTabSelected,
         onCheckInClick = onCheckInClick,
@@ -74,6 +75,7 @@ fun BookingScreen(
 fun BookingScreenContent(
     uiState: BookingUiState,
     isOnline: Boolean = true,
+    hasUnread: Boolean = false,
     onViewAllClick: () -> Unit = {},
     onBoarding: (String) -> Unit = {},
     onTabSelected: (TabItem) -> Unit = {},
@@ -101,6 +103,7 @@ fun BookingScreenContent(
         bottomBar = {
             TabBarMenu(
                 selectedTab = TabItem.TICKETS,
+                hasUnreadNotifications = hasUnread,
                 onTabSelected = onTabSelected
             )
         }
@@ -115,7 +118,6 @@ fun BookingScreenContent(
             Spacer(modifier = Modifier.height(16.dp))
 
             when {
-                // État offline — on affiche une bannière mais on reste dans le flow normal
                 uiState is BookingUiState.Loading -> {
                     Box(
                         modifier = Modifier.fillMaxSize(),
@@ -163,10 +165,6 @@ fun BookingScreenContent(
     }
 }
 
-/**
- * Bannière inline affichée dans BookingScreen (et AllBookingsScreen) quand hors ligne.
- * Pas un screen dédié — s'intègre dans le flux existant.
- */
 @Composable
 fun BookingOfflineBanner(modifier: Modifier = Modifier) {
     Column(
@@ -215,7 +213,6 @@ fun BookingOfflineBanner(modifier: Modifier = Modifier) {
     }
 }
 
-
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun BookingScreenPreview() {
@@ -243,46 +240,10 @@ fun BookingScreenPreview() {
             flight = mockFlight,
             passengers = emptyList(),
             bookingRef = "REF001"
-        ),
-        Booking(
-            bookingId = "b2",
-            pnr = "REF002",
-            lastName = "Smith",
-            status = CheckInStatus.CHECK_IN_OPEN,
-            flight = mockFlight,
-            passengers = emptyList(),
-            bookingRef = "REF002"
-        ),
-        Booking(
-            bookingId = "b3",
-            pnr = "REF003",
-            lastName = "Smith",
-            status = CheckInStatus.CONFIRMED,
-            flight = mockFlight,
-            passengers = emptyList(),
-            bookingRef = "REF003"
-        ),
-        Booking(
-            bookingId = "b4",
-            pnr = "REF004",
-            lastName = "Smith",
-            status = CheckInStatus.PASSED,
-            flight = mockFlight,
-            passengers = emptyList(),
-            bookingRef = "REF004"
         )
     )
     BookingScreenContent(
         uiState = BookingUiState.Success(dummyBookings),
         isOnline = true
-    )
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun BookingScreenOfflinePreview() {
-    BookingScreenContent(
-        uiState = BookingUiState.Loading,
-        isOnline = false
     )
 }

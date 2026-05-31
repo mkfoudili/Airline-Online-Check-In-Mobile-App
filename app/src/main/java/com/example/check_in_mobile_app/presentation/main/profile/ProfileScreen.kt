@@ -42,7 +42,6 @@ import com.example.check_in_mobile_app.presentation.components.TabBarMenu
 import com.example.check_in_mobile_app.presentation.components.TabItem
 import com.example.check_in_mobile_app.presentation.components.profile.ProfileAvatar
 import com.example.check_in_mobile_app.presentation.components.profile.ProfileInfoCard
-import com.example.check_in_mobile_app.presentation.main.booking.BookingUiState
 import com.example.check_in_mobile_app.ui.theme.BorderLight
 import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import com.example.check_in_mobile_app.ui.theme.NavyBlue
@@ -57,6 +56,7 @@ fun ProfileScreen(
     onLogout: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val hasUnread by viewModel.hasUnread.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
@@ -151,6 +151,7 @@ fun ProfileScreen(
         else -> {
             ProfileScreenContent(
                 uiState = uiState,
+                hasUnread = hasUnread,
                 onEvent = viewModel::onEvent,
                 onTabSelected = onTabSelected
             )
@@ -258,6 +259,7 @@ private fun ProfileBottomActions(
 @Composable
 fun ProfileScreenContent(
     uiState: ProfileUiState,
+    hasUnread: Boolean,
     onEvent: (ProfileEvent) -> Unit = {},
     onTabSelected: (TabItem) -> Unit = {}
 ) {
@@ -279,6 +281,7 @@ fun ProfileScreenContent(
         bottomBar = {
             TabBarMenu(
                 selectedTab = TabItem.PROFILE,
+                hasUnreadNotifications = hasUnread,
                 onTabSelected = onTabSelected
             )
         }
@@ -365,6 +368,7 @@ fun ProfileScreenContent(
         Spacer(modifier = Modifier.height(32.dp))
     }
 }
+
 @Composable
 fun EditProfileScreen(
     uiState: ProfileUiState,

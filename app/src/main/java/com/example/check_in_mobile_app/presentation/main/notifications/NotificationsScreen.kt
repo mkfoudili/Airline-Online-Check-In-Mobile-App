@@ -18,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.presentation.components.TabBarMenu
 import com.example.check_in_mobile_app.presentation.components.TabItem
@@ -25,7 +26,6 @@ import com.example.check_in_mobile_app.presentation.components.notifications.Not
 import com.example.check_in_mobile_app.ui.theme.CheckInMobileAppTheme
 import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import com.example.check_in_mobile_app.ui.theme.Poppins
-import com.example.check_in_mobile_app.ui.theme.SurfaceGray
 import com.example.domain.model.NotificationType
 
 @Composable
@@ -35,7 +35,8 @@ fun NotificationsScreen(
     onNavigateToBooking: (String) -> Unit = {},
     onNavigateToCheckIn: () -> Unit = {}
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val hasUnread by viewModel.hasUnread.collectAsStateWithLifecycle()
 
     // Handle routing events (e.g. from push notifications)
     LaunchedEffect(uiState.routingEvent) {
@@ -51,6 +52,7 @@ fun NotificationsScreen(
 
     NotificationsContent(
         uiState = uiState,
+        hasUnread = hasUnread,
         onMarkAllRead = { viewModel.markAllAsRead() },
         onNotificationClick = { notification ->
             viewModel.markSingleAsRead(notification.id)
@@ -64,6 +66,7 @@ fun NotificationsScreen(
 @Composable
 fun NotificationsContent(
     uiState: NotificationsUiState,
+    hasUnread: Boolean = false,
     onMarkAllRead: () -> Unit,
     onNotificationClick: (NotificationItem) -> Unit = {},
     onTabSelected: (TabItem) -> Unit = {}
@@ -96,6 +99,7 @@ fun NotificationsContent(
         bottomBar = {
             TabBarMenu(
                 selectedTab = TabItem.NOTIFICATIONS,
+                hasUnreadNotifications = hasUnread,
                 onTabSelected = onTabSelected
             )
         },

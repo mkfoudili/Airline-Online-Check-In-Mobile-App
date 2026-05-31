@@ -1,6 +1,7 @@
 package com.example.check_in_mobile_app.presentation.main.booking
 
 import androidx.lifecycle.ViewModel
+import com.example.check_in_mobile_app.data.NotificationManager
 import com.example.check_in_mobile_app.di.NetworkMonitor
 import com.example.domain.model.Booking
 import com.example.domain.model.CheckInStatus
@@ -24,7 +25,8 @@ class BookingViewModel @Inject constructor(
     private val getUpcomingBookingsUseCase: GetUpcomingBookingsUseCase,
     private val boardingPassRepository: BoardingPassRepository,
     private val authRepository: AuthRepository,
-    private val networkMonitor: NetworkMonitor
+    private val networkMonitor: NetworkMonitor,
+    notificationManager: NotificationManager
 ) : ViewModel() {
 
     val isOnline: StateFlow<Boolean> = networkMonitor.isOnline
@@ -33,6 +35,8 @@ class BookingViewModel @Inject constructor(
             started = SharingStarted.Eagerly,
             initialValue = networkMonitor.currentlyOnline()
         )
+
+    val hasUnread: StateFlow<Boolean> = notificationManager.hasUnread
 
     private val _uiState = MutableStateFlow<BookingUiState>(BookingUiState.Loading)
     val uiState: StateFlow<BookingUiState> = _uiState

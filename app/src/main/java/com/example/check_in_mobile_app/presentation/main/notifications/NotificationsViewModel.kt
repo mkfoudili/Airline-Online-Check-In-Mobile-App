@@ -3,6 +3,7 @@ package com.example.check_in_mobile_app.presentation.main.notifications
 import android.content.Intent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.check_in_mobile_app.data.NotificationManager
 import com.example.data.security.SecureStorage
 import com.example.domain.usecase.notification.GetNotificationsUseCase
 import com.example.domain.usecase.notification.MarkAllNotificationsReadUseCase
@@ -25,11 +26,14 @@ class NotificationsViewModel @Inject constructor(
     private val getNotificationsUseCase: GetNotificationsUseCase,
     private val markAllNotificationsReadUseCase: MarkAllNotificationsReadUseCase,
     private val markNotificationReadUseCase: MarkNotificationReadUseCase,
-    private val secureStorage: SecureStorage
+    private val secureStorage: SecureStorage,
+    private val notificationManager: NotificationManager
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(NotificationsUiState())
     val uiState: StateFlow<NotificationsUiState> = _uiState.asStateFlow()
+
+    val hasUnread: StateFlow<Boolean> = notificationManager.hasUnread
 
     private val userId: String
         get() = secureStorage.getUserId() ?: ""
@@ -61,7 +65,8 @@ class NotificationsViewModel @Inject constructor(
                         createdAt = domain.createdAt
                     )
                 }
-
+                val hasUnread = items.any { !it.isRead }
+                notificationManager.setHasUnread(hasUnread)
                 _uiState.update {
                     it.copy(
                         isLoading = false,
@@ -88,6 +93,7 @@ class NotificationsViewModel @Inject constructor(
         
         viewModelScope.launch {
             markAllNotificationsReadUseCase(userId).onSuccess {
+                notificationManager.setHasUnread(false)
                 loadNotifications()
             }
         }
