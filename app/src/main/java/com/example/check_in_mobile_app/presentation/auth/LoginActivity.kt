@@ -10,7 +10,12 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import com.example.check_in_mobile_app.presentation.main.MainActivity
 import com.example.check_in_mobile_app.presentation.navigation.LoginNavGraph
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.LocalContext
 import com.example.check_in_mobile_app.ui.theme.CheckInMobileAppTheme
+import com.example.check_in_mobile_app.utils.ThemePreferences
 import com.example.check_in_mobile_app.utils.LanguagePreferences
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -32,7 +37,13 @@ class LoginActivity : AppCompatActivity() {
         val fromLogout = intent.getBooleanExtra("FROM_LOGOUT", false)
 
         setContent {
-            CheckInMobileAppTheme {
+            val context = LocalContext.current
+            val systemDark = isSystemInDarkTheme()
+            val darkThemeEnabled = remember {
+                mutableStateOf(ThemePreferences.isDarkModeEnabled(context) ?: systemDark)
+            }
+
+            CheckInMobileAppTheme(darkTheme = darkThemeEnabled.value) {
                 LoginNavGraph(
                     viewModel = viewModel,
                     startFromLogout = fromLogout,

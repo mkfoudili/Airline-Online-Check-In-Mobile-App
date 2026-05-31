@@ -147,6 +147,7 @@ fun AllBookingsScreenContent(
             // Filters
             val statusOptions = listOf(
                 "All" to stringResource(R.string.status_all),
+                "Confirmed" to stringResource(R.string.status_confirmed),
                 "Check In open" to stringResource(R.string.status_check_in_open),
                 "Passed" to stringResource(R.string.status_passed)
             )

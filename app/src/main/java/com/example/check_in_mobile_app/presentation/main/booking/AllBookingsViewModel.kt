@@ -66,7 +66,7 @@ class AllBookingsViewModel @Inject constructor(
         bookings
             .filter { booking ->
                 val isValidStatus = when (booking.status) {
-                    CheckInStatus.CHECKED_IN,
+                    CheckInStatus.CHECKED_IN -> false
                     CheckInStatus.CONFIRMED,
                     CheckInStatus.CHECK_IN_OPEN -> true
                     CheckInStatus.PASSED -> {

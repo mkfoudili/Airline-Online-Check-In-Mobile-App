@@ -43,6 +43,7 @@ import com.example.check_in_mobile_app.presentation.components.TabBarMenu
 import com.example.check_in_mobile_app.presentation.components.TabItem
 import com.example.check_in_mobile_app.presentation.components.profile.ProfileAvatar
 import com.example.check_in_mobile_app.presentation.components.profile.ProfileInfoCard
+import com.example.check_in_mobile_app.presentation.components.profile.SecurityStatusBanner
 import com.example.check_in_mobile_app.presentation.main.booking.BookingUiState
 import com.example.check_in_mobile_app.ui.theme.BorderLight
 import com.example.check_in_mobile_app.ui.theme.LocalAppColors
@@ -154,6 +155,8 @@ fun ProfileScreen(
         else -> {
             ProfileScreenContent(
                 uiState = uiState,
+                isDarkThemeEnabled = isDarkThemeEnabled,
+                onThemeChanged = onThemeChanged,
                 onEvent = viewModel::onEvent,
                 onTabSelected = onTabSelected
             )
@@ -420,6 +423,8 @@ fun ProfileScreenContent(
         }
 
         Spacer(modifier = Modifier.height(24.dp))
+
+        SecurityStatusBanner()
 
         Spacer(modifier = Modifier.height(32.dp))
 

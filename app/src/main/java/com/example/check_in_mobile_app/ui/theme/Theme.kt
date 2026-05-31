@@ -120,7 +120,7 @@ private val DarkColorScheme = darkColorScheme(
 
 @Composable
 fun CheckInMobileAppTheme(
-    darkTheme: Boolean = ThemePreferences.isDarkModeEnabled(LocalContext.current) ?: isSystemInDarkTheme(),
+    darkTheme: Boolean = isSystemInDarkTheme(),
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
