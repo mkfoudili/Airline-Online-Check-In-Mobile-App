@@ -190,7 +190,8 @@ fun AllBookingsScreenContent(
                         BookingCard(
                             booking = booking,
                             onCheckInClick = onCheckInClick,
-                            onBoarding = onBoarding
+                            onBoarding = onBoarding,
+                            showPassengerName = false
                         )
                     }
                 }

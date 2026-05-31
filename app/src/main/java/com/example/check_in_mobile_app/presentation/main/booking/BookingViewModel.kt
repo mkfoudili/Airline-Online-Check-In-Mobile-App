@@ -5,6 +5,7 @@ import com.example.check_in_mobile_app.di.NetworkMonitor
 import com.example.domain.model.Booking
 import com.example.domain.model.CheckInStatus
 import com.example.domain.model.Flight
+import com.example.domain.model.Passenger
 import com.example.domain.repository.AuthRepository
 import com.example.domain.repository.BoardingPassRepository
 import com.example.domain.usecase.booking.GetUpcomingBookingsUseCase
@@ -65,15 +66,13 @@ class BookingViewModel @Inject constructor(
         viewModelScope.launch {
             _isRefreshing.value = true
             if (networkMonitor.currentlyOnline()) {
-                val result = getUpcomingBookingsUseCase()
-                result.onSuccess { bookings ->
-                    _uiState.value = BookingUiState.Success(bookings)
-                }.onFailure {
-                    loadFromCacheInternal()
+                val uid = authRepository.getCurrentUserId()
+                if (uid != null) {
+                    boardingPassRepository.refreshBoardingPassesFromRemote(uid)
                 }
-            } else {
-                loadFromCacheInternal()
             }
+            val uid = authRepository.getCurrentUserId()
+            loadFromCacheInternal(uid)
             _isRefreshing.value = false
         }
     }
@@ -81,12 +80,16 @@ class BookingViewModel @Inject constructor(
     private fun fetchBookings() {
         viewModelScope.launch {
             _uiState.value = BookingUiState.Loading
-            val result = getUpcomingBookingsUseCase()
-            result.onSuccess { bookings ->
-                _uiState.value = BookingUiState.Success(bookings)
-            }.onFailure {
-                loadFromCache()
+            val uid = authRepository.getCurrentUserId()
+            if (uid == null) {
+                _uiState.value = BookingUiState.Success(emptyList())
+                return@launch
             }
+            // Sync boarding passes depuis le serveur, puis reconstruire
+            // exactement comme en offline : 1 carte par passager checké.
+            boardingPassRepository.refreshBoardingPassesFromRemote(uid)
+                .onFailure { /* on continue avec le cache existant */ }
+            loadFromCacheInternal(uid)
         }
     }
 
@@ -96,18 +99,23 @@ class BookingViewModel @Inject constructor(
      */
     private fun loadFromCache() {
         viewModelScope.launch {
-            loadFromCacheInternal()
+            val uid = authRepository.getCurrentUserId()
+            if (uid == null) {
+                _uiState.value = BookingUiState.Success(emptyList())
+                return@launch
+            }
+            loadFromCacheInternal(uid)
         }
     }
 
-    private suspend fun loadFromCacheInternal() {
-        val uid = authRepository.getCurrentUserId()
-        if (uid == null) {
+    private suspend fun loadFromCacheInternal(uid: String? = null) {
+        val resolvedUid = uid ?: authRepository.getCurrentUserId()
+        if (resolvedUid == null) {
             _uiState.value = BookingUiState.Success(emptyList())
             return
         }
 
-        val boardingPasses = boardingPassRepository.getBoardingPassesByUid(uid)
+        val boardingPasses = boardingPassRepository.getBoardingPassesByUid(resolvedUid)
         val offlineBookings = boardingPasses.map { bp ->
             Booking(
                 bookingId  = bp.flightId,
@@ -132,7 +140,24 @@ class BookingViewModel @Inject constructor(
                     aircraftType     = null,
                     status           = null
                 ),
-                passengers = emptyList()
+                passengers = run {
+                    val parts = bp.passengerName.trim().split(" ", limit = 2)
+                    listOf(
+                        Passenger(
+                            passengerId    = bp.passengerId,
+                            bookingId      = bp.flightId,
+                            uid            = null,
+                            firstName      = parts.getOrElse(0) { "" },
+                            lastName       = parts.getOrElse(1) { "" },
+                            passportNumber = null,
+                            nationality    = null,
+                            dateOfBirth    = null,
+                            expiryDate     = null,
+                            seatNumber     = bp.seatNumber,
+                            checkinStatus  = null
+                        )
+                    )
+                }
             )
         }
         _uiState.value = BookingUiState.Success(offlineBookings)
