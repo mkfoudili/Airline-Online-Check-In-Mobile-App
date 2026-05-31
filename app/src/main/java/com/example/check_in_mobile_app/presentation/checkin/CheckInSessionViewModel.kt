@@ -91,6 +91,16 @@ class CheckInSessionViewModel @Inject constructor(
                     return@launch
                 }
 
+                if (passenger.checkinStatus == "CHECKED_IN") {
+                    _state.update {
+                        it.copy(
+                            ocrStatus    = OcrStatus.ERROR,
+                            errorMessage = "This passenger has already checked in."
+                        )
+                    }
+                    return@launch
+                }
+
                 // Étape 3 : Création/reprise de la session
                 _state.update { it.copy(ocrStatus = OcrStatus.CREATING_SESSION) }
 
