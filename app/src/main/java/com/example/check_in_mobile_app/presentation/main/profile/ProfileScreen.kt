@@ -1,6 +1,5 @@
 package com.example.check_in_mobile_app.presentation.main.profile
 
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -25,17 +24,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.os.LocaleListCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.check_in_mobile_app.R
 import com.example.check_in_mobile_app.presentation.components.BookingInputField
 import com.example.check_in_mobile_app.presentation.components.ProfileActionButton
@@ -45,17 +43,11 @@ import com.example.check_in_mobile_app.presentation.components.TabBarMenu
 import com.example.check_in_mobile_app.presentation.components.TabItem
 import com.example.check_in_mobile_app.presentation.components.profile.ProfileAvatar
 import com.example.check_in_mobile_app.presentation.components.profile.ProfileInfoCard
-import com.example.check_in_mobile_app.presentation.components.profile.SecurityStatusBanner
-import com.example.check_in_mobile_app.presentation.main.MainActivity
+import com.example.check_in_mobile_app.presentation.main.booking.BookingUiState
 import com.example.check_in_mobile_app.ui.theme.BorderLight
-import com.example.check_in_mobile_app.ui.theme.DarkText
+import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import com.example.check_in_mobile_app.ui.theme.NavyBlue
 import com.example.check_in_mobile_app.ui.theme.Poppins
-import com.example.check_in_mobile_app.ui.theme.SubtleText
-import com.example.check_in_mobile_app.ui.theme.DividerColor
-import com.example.check_in_mobile_app.ui.theme.SurfaceGray
-import com.example.check_in_mobile_app.ui.theme.LocalAppColors
-import androidx.core.os.LocaleListCompat
 import com.example.check_in_mobile_app.utils.LanguagePreferences
 import kotlinx.coroutines.flow.collectLatest
 
@@ -63,7 +55,7 @@ import kotlinx.coroutines.flow.collectLatest
 fun ProfileScreen(
     isDarkThemeEnabled: Boolean,
     onThemeChanged: (Boolean) -> Unit,
-    viewModel: ProfileViewModel = viewModel(factory = ProfileViewModel.Factory),
+    viewModel: ProfileViewModel = hiltViewModel(),
     onTabSelected: (TabItem) -> Unit = {},
     onLogout: () -> Unit = {}
 ) {
@@ -74,48 +66,97 @@ fun ProfileScreen(
         viewModel.uiAction.collectLatest { action ->
             when (action) {
                 is ProfileUiAction.ChangeLanguage -> {
-                    // Save to preferences for legacy/backup support
-                    LanguagePreferences.saveLanguage(context, action.languageCode)
+                    LanguagePreferences.saveLanguage(
+                        context,
+                        action.languageCode
+                    )
 
-                    // Trigger global language change
-                    val appLocale: LocaleListCompat = LocaleListCompat.forLanguageTags(action.languageCode)
+                    val appLocale: LocaleListCompat =
+                        LocaleListCompat.forLanguageTags(action.languageCode)
+
                     AppCompatDelegate.setApplicationLocales(appLocale)
                 }
-                ProfileUiAction.NavigateBack -> {
-                    // Back logic
-                }
+
+                ProfileUiAction.NavigateBack -> {}
+
+                ProfileUiAction.Logout -> onLogout()
             }
         }
     }
 
-    if (uiState.isLoading) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            CircularProgressIndicator()
+    if (uiState.showLogoutDialog) {
+        AlertDialog(
+            onDismissRequest = {
+                viewModel.onEvent(ProfileEvent.OnLogoutDismissClicked)
+            },
+            title = {
+                Text(text = stringResource(R.string.profile_logout_confirm_title))
+            },
+            text = {
+                Text(text = stringResource(R.string.profile_logout_confirm_message))
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        viewModel.onEvent(ProfileEvent.OnLogoutConfirmClicked)
+                    }
+                ) {
+                    Text(
+                        text = stringResource(R.string.common_logout),
+                        color = Color.Red
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        viewModel.onEvent(ProfileEvent.OnLogoutDismissClicked)
+                    }
+                ) {
+                    Text(text = stringResource(R.string.common_cancel))
+                }
+            },
+            containerColor = MaterialTheme.colorScheme.surface,
+            shape = RoundedCornerShape(16.dp)
+        )
+    }
+
+    when {
+        uiState.isLoading -> {
+            ProfileBaseScreen(
+                title = stringResource(R.string.profile_title)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 100.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(color = LocalAppColors.current.textAccent)
+                }
+            }
         }
-    } else {
-        when {
-            uiState.isChangingPassword -> {
-                ChangePasswordScreen(
-                    uiState = uiState,
-                    onEvent = viewModel::onEvent
-                )
-            }
-            uiState.isEditing -> {
-                EditProfileScreen(
-                    uiState = uiState,
-                    onEvent = viewModel::onEvent
-                )
-            }
-            else -> {
-                ProfileScreenContent(
-                    uiState = uiState,
-                    isDarkThemeEnabled = isDarkThemeEnabled,
-                    onThemeChanged = onThemeChanged,
-                    onEvent = viewModel::onEvent,
-                    onTabSelected = onTabSelected,
-                    onLogout = onLogout
-                )
-            }
+
+        uiState.isChangingPassword -> {
+            ChangePasswordScreen(
+                uiState = uiState,
+                onEvent = viewModel::onEvent
+            )
+        }
+
+        uiState.isEditing -> {
+            EditProfileScreen(
+                uiState = uiState,
+                onEvent = viewModel::onEvent
+            )
+        }
+
+        else -> {
+            ProfileScreenContent(
+                uiState = uiState,
+                onEvent = viewModel::onEvent,
+                onTabSelected = onTabSelected
+            )
         }
     }
 }
@@ -139,9 +180,10 @@ private fun ProfileBaseScreen(
                         Text(
                             text = title,
                             fontFamily = Poppins,
-                            fontSize = titleFontSize.sp,
-                            color = LocalAppColors.current.textAccent,
-                            fontWeight = FontWeight.Bold
+                            fontSize = 25.sp,
+                            color = LocalAppColors.current.textPrimary,
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = (-0.5).sp
                         )
                     },
                     navigationIcon = {
@@ -160,7 +202,8 @@ private fun ProfileBaseScreen(
                         containerColor = MaterialTheme.colorScheme.background
                     )
                 )
-                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 1.dp)
+                HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f), thickness = 1.dp)
+                Spacer(modifier = Modifier.height(16.dp))
             }
         },
         bottomBar = bottomBar
@@ -192,7 +235,11 @@ private fun ProfileBottomActions(
             .background(MaterialTheme.colorScheme.surface)
             .padding(horizontal = 24.dp, vertical = 20.dp)
     ) {
-        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 1.dp)
+        HorizontalDivider(
+            color = MaterialTheme.colorScheme.outlineVariant,
+            thickness = 1.dp
+        )
+
         Spacer(modifier = Modifier.height(24.dp))
 
         ProfileActionButton(
@@ -217,15 +264,21 @@ fun ProfileScreenContent(
     isDarkThemeEnabled: Boolean,
     onThemeChanged: (Boolean) -> Unit,
     onEvent: (ProfileEvent) -> Unit = {},
-    onTabSelected: (TabItem) -> Unit = {},
-    onLogout: () -> Unit = {}
+    onTabSelected: (TabItem) -> Unit = {}
 ) {
     ProfileBaseScreen(
         title = stringResource(R.string.profile_title),
         titleFontSize = 22,
         actions = {
-            TextButton(onClick = { onEvent(ProfileEvent.OnEditProfileClicked) }) {
-                Text(text = stringResource(R.string.common_edit), color = MaterialTheme.colorScheme.primary)
+            TextButton(
+                onClick = {
+                    onEvent(ProfileEvent.OnEditProfileClicked)
+                }
+            ) {
+                Text(
+                    text = stringResource(R.string.common_edit),
+                    color = MaterialTheme.colorScheme.primary
+                )
             }
         },
         bottomBar = {
@@ -237,17 +290,17 @@ fun ProfileScreenContent(
     ) {
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Avatar Section
         ProfileAvatar(
             isOnline = uiState.isOnline
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // User Name with Edit Icon
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.clickable { onEvent(ProfileEvent.OnEditProfileClicked) }
+            modifier = Modifier.clickable {
+                onEvent(ProfileEvent.OnEditProfileClicked)
+            }
         ) {
             Text(
                 text = uiState.name,
@@ -257,7 +310,9 @@ fun ProfileScreenContent(
                 fontFamily = Poppins,
                 letterSpacing = (-0.5).sp
             )
+
             Spacer(modifier = Modifier.width(8.dp))
+
             Icon(
                 imageVector = Icons.Default.Edit,
                 contentDescription = stringResource(R.string.profile_edit_name_desc),
@@ -268,7 +323,6 @@ fun ProfileScreenContent(
 
         Spacer(modifier = Modifier.height(40.dp))
 
-        // Personal Information Section
         SectionLabel(
             text = stringResource(R.string.profile_personal_info_label),
             modifier = Modifier.align(Alignment.Start)
@@ -367,17 +421,17 @@ fun ProfileScreenContent(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        SecurityStatusBanner()
-
         Spacer(modifier = Modifier.height(32.dp))
 
         ProfileSecondaryActionButton(
-            text = stringResource(R.string.profile_logout),
-            onClick = onLogout,
+            text = stringResource(R.string.common_logout),
+            onClick = {
+                onEvent(ProfileEvent.OnLogoutClicked)
+            },
             icon = {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ExitToApp,
-                    contentDescription = stringResource(R.string.profile_logout),
+                    contentDescription = stringResource(R.string.common_logout),
                     modifier = Modifier.size(18.dp),
                     tint = LocalAppColors.current.textAccent
                 )
@@ -387,7 +441,6 @@ fun ProfileScreenContent(
         Spacer(modifier = Modifier.height(32.dp))
     }
 }
-
 @Composable
 fun EditProfileScreen(
     uiState: ProfileUiState,

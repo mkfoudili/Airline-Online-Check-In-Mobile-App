@@ -18,18 +18,27 @@ class SecureStorage @Inject constructor(
         private const val KEY_USER_ID = "user_id"
     }
 
-    private val sharedPreferences: android.content.SharedPreferences by lazy {
+    private fun createEncryptedPrefs(): android.content.SharedPreferences {
         val masterKey = MasterKey.Builder(context)
             .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
             .build()
 
-        EncryptedSharedPreferences.create(
+        return EncryptedSharedPreferences.create(
             context,
             FILE_NAME,
             masterKey,
             EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
             EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
         )
+    }
+
+    private val sharedPreferences: android.content.SharedPreferences by lazy {
+        try{
+            createEncryptedPrefs()
+        }catch (e: Exception){
+            context.deleteSharedPreferences(FILE_NAME)
+            createEncryptedPrefs()
+        }
     }
 
     // ── Access Token ──────────────────────────────────────────

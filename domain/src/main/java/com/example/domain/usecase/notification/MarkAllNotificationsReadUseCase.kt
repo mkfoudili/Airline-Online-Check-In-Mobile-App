@@ -1,12 +1,15 @@
 package com.example.domain.usecase.notification
 
 import com.example.domain.repository.NotificationRepository
+import javax.inject.Inject
 
-class MarkAllNotificationsReadUseCase(
+/**
+ * Use case to mark all notifications as read for a specific user.
+ */
+class MarkAllNotificationsReadUseCase @Inject constructor(
     private val repository: NotificationRepository
 ) {
-    operator fun invoke(uid: String, callback: (Result<Unit>) -> Unit) {
-        // Mocking behavior: immediately returning success
-        callback(Result.success(Unit))
+    suspend operator fun invoke(uid: String): Result<Unit> {
+        return repository.markAllAsRead(uid)
     }
 }
