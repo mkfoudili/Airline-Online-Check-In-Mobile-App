@@ -177,9 +177,10 @@ private fun ProfileBaseScreen(
                         Text(
                             text = title,
                             fontFamily = Poppins,
-                            fontSize = titleFontSize.sp,
-                            color = LocalAppColors.current.textAccent,
-                            fontWeight = FontWeight.Bold
+                            fontSize = 25.sp,
+                            color = LocalAppColors.current.textPrimary,
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = (-0.5).sp
                         )
                     },
                     navigationIcon = {
@@ -198,11 +199,8 @@ private fun ProfileBaseScreen(
                         containerColor = MaterialTheme.colorScheme.background
                     )
                 )
-
-                HorizontalDivider(
-                    color = MaterialTheme.colorScheme.outlineVariant,
-                    thickness = 1.dp
-                )
+                HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f), thickness = 1.dp)
+                Spacer(modifier = Modifier.height(16.dp))
             }
         },
         bottomBar = bottomBar
