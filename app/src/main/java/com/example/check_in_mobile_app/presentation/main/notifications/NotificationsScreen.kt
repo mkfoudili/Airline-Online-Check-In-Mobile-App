@@ -189,12 +189,15 @@ fun NotificationsContent(
                             "This Week" to R.string.notification_group_this_week,
                             "Earlier" to R.string.notification_group_earlier
                         )
-                        var hasNotifications = false
+                        
+                        val firstVisibleGroupKey = groups.find { 
+                            !uiState.groupedNotifications[it.first].isNullOrEmpty() 
+                        }?.first
+                        val hasNotifications = firstVisibleGroupKey != null
 
                         groups.forEach { (groupKey, groupResId) ->
                             val notifications = uiState.groupedNotifications[groupKey]
                             if (!notifications.isNullOrEmpty()) {
-                                hasNotifications = true
                                 item {
                                     Row(
                                         modifier = Modifier
@@ -211,12 +214,19 @@ fun NotificationsContent(
                                                 letterSpacing = 1.sp
                                             )
                                         )
-                                        if (groupKey == "Today" && !uiState.isOffline) {
-                                            TextButton(onClick = onMarkAllRead) {
+
+                                        if (groupKey == firstVisibleGroupKey && !uiState.isOffline) {
+                                            TextButton(
+                                                onClick = onMarkAllRead,
+                                                contentPadding = PaddingValues(0.dp),
+                                                modifier = Modifier.heightIn(min = 1.dp)
+                                            ) {
                                                 Text(
-                                                    text = stringResource(R.string.notification_mark_all_read),
-                                                    style = MaterialTheme.typography.labelMedium.copy(
-                                                        color = LocalAppColors.current.textSecondary
+                                                    text = stringResource(R.string.notification_mark_all_read).uppercase(),
+                                                    style = MaterialTheme.typography.labelLarge.copy(
+                                                        fontWeight = FontWeight.Bold,
+                                                        color = LocalAppColors.current.textSecondary,
+                                                        letterSpacing = 1.sp
                                                     )
                                                 )
                                             }
