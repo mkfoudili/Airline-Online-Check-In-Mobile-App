@@ -52,6 +52,7 @@ fun NotificationsScreen(
 
     NotificationsContent(
         uiState = uiState,
+        hasUnread = hasUnread,
         isRefreshing = isRefreshing,
         onRefresh = { viewModel.refresh() },
         onMarkAllRead = { viewModel.markAllAsRead() },
