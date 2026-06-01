@@ -115,6 +115,7 @@ interface Endpoint {
 
     @GET("boarding/my/all")
     suspend fun getMyBoardingPasses(): BoardingPassListResponse
+
     @POST("baggage")
     suspend fun declareBaggage(@Header("Authorization") token: String, @Body request: BaggageRequest): Response<BaggageResponse>
 

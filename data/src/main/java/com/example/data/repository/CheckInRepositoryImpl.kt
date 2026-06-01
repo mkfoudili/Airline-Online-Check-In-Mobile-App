@@ -7,16 +7,22 @@ import com.example.data.remote.dto.AdvanceStepRequest
 import com.example.data.remote.dto.CheckinSessionDto
 import com.example.data.remote.dto.ConcludeCheckinRequest
 import com.example.data.remote.dto.CreateSessionRequest
+import com.example.data.remote.dto.BaggageRequest
+import com.example.data.remote.dto.BaggageResponse
 import com.example.data.remote.retrofit.Endpoint
+import com.example.data.security.SecureStorage
+import com.example.domain.model.BaggageDeclaration
 import com.example.domain.model.CheckInSession
 import com.example.domain.model.Passenger
 import com.example.domain.model.SpecialRequests
 import com.example.domain.repository.CheckInRepository
+import retrofit2.Response
 import javax.inject.Inject
 
 class CheckInRepositoryImpl @Inject constructor(
     private val endpoint: Endpoint,
-    private val passengerVerifyDataSource: PassengerVerifyDataSource
+    private val passengerVerifyDataSource: PassengerVerifyDataSource,
+    private val secureStorage: SecureStorage
 ) : CheckInRepository {
 
     override suspend fun createOrResumeSession(
@@ -127,6 +133,30 @@ class CheckInRepositoryImpl @Inject constructor(
                 Result.success(Unit)
             } else {
                 Result.failure(Exception(response.message))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun declareBaggage(declaration: BaggageDeclaration): Result<Unit> {
+        return try {
+            val request = BaggageRequest(
+                checkedBaggageCount = declaration.checkedBaggageCount,
+                specialEquipmentCount = declaration.specialEquipmentCount
+            )
+            val token = secureStorage.getAuthToken() ?: throw Exception("Not authenticated")
+            val response: Response<BaggageResponse> = endpoint.declareBaggage("Bearer $token", request)
+            if (response.isSuccessful) {
+                val body = response.body()
+                if (body?.success == true) {
+                    Result.success(Unit)
+                } else {
+                    Result.failure(Exception(body?.message ?: "Failed to declare baggage"))
+                }
+            } else {
+                val errorMsg = response.errorBody()?.string() ?: "Error: ${response.code()}"
+                Result.failure(Exception(errorMsg))
             }
         } catch (e: Exception) {
             Result.failure(e)

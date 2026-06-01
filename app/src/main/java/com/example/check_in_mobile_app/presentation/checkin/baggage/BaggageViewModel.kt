@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -29,11 +30,14 @@ class BaggageViewModel @Inject constructor(
     fun onContinueClick(onSuccess: () -> Unit) {
         _uiState.update { it.copy(isLoading = true, error = null) }
         
-        selectBaggageUseCase(
-            checkedBaggageCount = _uiState.value.checkedBaggageCount,
-            specialEquipmentCount = _uiState.value.specialEquipmentCount
-        ) { result ->
+        viewModelScope.launch {
+            val result = selectBaggageUseCase(
+                checkedBaggageCount = _uiState.value.checkedBaggageCount,
+                specialEquipmentCount = _uiState.value.specialEquipmentCount
+            )
+            
             _uiState.update { it.copy(isLoading = false) }
+
             result.onSuccess {
                 onSuccess()
             }.onFailure { throwable ->
