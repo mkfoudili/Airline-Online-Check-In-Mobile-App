@@ -94,7 +94,9 @@
     <string name="boarding_gate_info">Rendez-vous à la porte %1$s. Le temps d\'attente en sécurité est actuellement d\'environ 15 minutes.</string>
     <string name="boarding_label_at">Embarquement à %1$s</string>
     <string name="boarding_label_now">Embarquement en cours</string>
-    <string name="boarding_label_in">Embarquement dans %1$s min</string>
+    <string name="boarding_label_in_minutes">Embarquement dans %1$d min</string>
+    <string name="boarding_label_in_hours">Embarquement dans %1$dh</string>
+    <string name="boarding_label_in_hours_minutes">Embarquement dans %1$dh %2$d min</string>
     <!-- Confirmation Screen -->
     <string name="confirmation_title">Enregistrement terminé</string>
     <string name="confirmation_success_title">Tout est prêt !</string>

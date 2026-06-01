@@ -81,11 +81,19 @@ fun BoardingFooter(boardingTime: String, gate: String) {
         }
     }
 
-    // Labels entièrement traduits via stringResource
+    // Formate les minutes en label humain lisible
     val boardingLabel = when {
-        minutesUntilBoarding == null -> stringResource(R.string.boarding_label_at, boardingTime)
-        minutesUntilBoarding == 0L   -> stringResource(R.string.boarding_label_now)
-        else                         -> stringResource(R.string.boarding_label_in, minutesUntilBoarding)
+        minutesUntilBoarding == null  -> stringResource(R.string.boarding_label_at, boardingTime)
+        minutesUntilBoarding == 0L    -> stringResource(R.string.boarding_label_now)
+        minutesUntilBoarding < 60L    -> stringResource(R.string.boarding_label_in_minutes, minutesUntilBoarding)
+        else -> {
+            val hours = minutesUntilBoarding / 60
+            val mins  = minutesUntilBoarding % 60
+            if (mins == 0L)
+                stringResource(R.string.boarding_label_in_hours, hours)
+            else
+                stringResource(R.string.boarding_label_in_hours_minutes, hours, mins)
+        }
     }
 
     val gateInfo = stringResource(R.string.boarding_gate_info, gate)

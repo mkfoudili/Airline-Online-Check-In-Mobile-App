@@ -183,7 +183,7 @@ fun ConfirmationScreen(
 
                     PassengerCard(
                         booking  = displayBooking,
-                        infoText = ""
+                        infoText = "PNR : ${bp.bookingReference}"
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))

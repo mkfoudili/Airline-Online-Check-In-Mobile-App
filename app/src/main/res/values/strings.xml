@@ -96,7 +96,9 @@
     <string name="boarding_gate_info">Head to Gate %1$s. Security wait time is currently approximately 15 minutes.</string>
     <string name="boarding_label_at">Boarding at %1$s</string>
     <string name="boarding_label_now">Boarding now</string>
-    <string name="boarding_label_in">Boarding starts in %1$sm</string>
+    <string name="boarding_label_in_minutes">Boarding in %1$d min</string>
+    <string name="boarding_label_in_hours">Boarding in %1$dh</string>
+    <string name="boarding_label_in_hours_minutes">Boarding in %1$dh %2$d min</string>
     <!-- Confirmation Screen -->
     <string name="confirmation_title">Check-In Completed</string>
     <string name="confirmation_success_title">You\'re All Set!</string>
