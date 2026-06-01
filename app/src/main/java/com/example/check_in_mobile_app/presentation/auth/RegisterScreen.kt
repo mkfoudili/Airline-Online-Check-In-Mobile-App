@@ -122,8 +122,13 @@ fun RegisterScreen(
                                 request = request
                             )
                             val credential = result.credential
-                            if (credential is GoogleIdTokenCredential) {
-                                viewModel.signInWithGoogle(credential.idToken)
+                            if (credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
+                                try {
+                                    val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
+                                    viewModel.signInWithGoogle(googleIdTokenCredential.idToken)
+                                } catch (e: Exception) {
+                                    viewModel.setError("Failed to parse Google credential")
+                                }
                             } else {
                                 viewModel.setError("Authentication method not supported.")
                             }
