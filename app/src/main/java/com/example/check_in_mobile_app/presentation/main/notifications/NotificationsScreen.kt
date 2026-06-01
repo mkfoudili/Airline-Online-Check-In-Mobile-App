@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.material3.HorizontalDivider
@@ -18,12 +19,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.check_in_mobile_app.R
-import com.example.check_in_mobile_app.presentation.components.OfflineBanner
 import com.example.check_in_mobile_app.presentation.components.TabBarMenu
 import com.example.check_in_mobile_app.presentation.components.TabItem
 import com.example.check_in_mobile_app.presentation.components.notifications.NotificationCard
@@ -166,104 +167,145 @@ fun NotificationsContent(
                     onRefresh = onRefresh,
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        if (uiState.isOffline) {
-                            item {
-                                OfflineBanner(
-                                    iconId = R.drawable.cloud_off,
-                                    iconDescription = "offline",
-                                    title = stringResource(R.string.offline_viewing_cached),
-                                    description = stringResource(R.string.offline_features_require_internet)
-                                )
-                            }
-                        }
+                    if (uiState.isOffline) {
+                        NotificationsOfflineContent()
+                    } else {
+                        LazyColumn(
+                            modifier = Modifier.fillMaxSize(),
+                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            item { Spacer(modifier = Modifier.height(4.dp)) }
 
-                        item { Spacer(modifier = Modifier.height(4.dp)) }
+                            val groups = listOf(
+                                "Today" to R.string.notification_group_today,
+                                "Yesterday" to R.string.notification_group_yesterday,
+                                "This Week" to R.string.notification_group_this_week,
+                                "Earlier" to R.string.notification_group_earlier
+                            )
 
-                        val groups = listOf(
-                            "Today" to R.string.notification_group_today,
-                            "Yesterday" to R.string.notification_group_yesterday,
-                            "This Week" to R.string.notification_group_this_week,
-                            "Earlier" to R.string.notification_group_earlier
-                        )
-                        
-                        val firstVisibleGroupKey = groups.find { 
-                            !uiState.groupedNotifications[it.first].isNullOrEmpty() 
-                        }?.first
-                        val hasNotifications = firstVisibleGroupKey != null
+                            val firstVisibleGroupKey = groups.find {
+                                !uiState.groupedNotifications[it.first].isNullOrEmpty()
+                            }?.first
+                            val hasNotifications = firstVisibleGroupKey != null
 
-                        groups.forEach { (groupKey, groupResId) ->
-                            val notifications = uiState.groupedNotifications[groupKey]
-                            if (!notifications.isNullOrEmpty()) {
-                                item {
-                                    Row(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(horizontal = 16.dp, vertical = 8.dp),
-                                        horizontalArrangement = Arrangement.SpaceBetween,
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        Text(
-                                            text = stringResource(groupResId).uppercase(),
-                                            style = MaterialTheme.typography.labelLarge.copy(
-                                                fontWeight = FontWeight.Bold,
-                                                color = LocalAppColors.current.textSecondary,
-                                                letterSpacing = 1.sp
-                                            )
-                                        )
-
-                                        if (groupKey == firstVisibleGroupKey && !uiState.isOffline) {
-                                            TextButton(
-                                                onClick = onMarkAllRead,
-                                                contentPadding = PaddingValues(0.dp),
-                                                modifier = Modifier.heightIn(min = 1.dp)
-                                            ) {
-                                                Text(
-                                                    text = stringResource(R.string.notification_mark_all_read).uppercase(),
-                                                    style = MaterialTheme.typography.labelLarge.copy(
-                                                        fontWeight = FontWeight.Bold,
-                                                        color = LocalAppColors.current.textSecondary,
-                                                        letterSpacing = 1.sp
-                                                    )
+                            groups.forEach { (groupKey, groupResId) ->
+                                val notifications = uiState.groupedNotifications[groupKey]
+                                if (!notifications.isNullOrEmpty()) {
+                                    item {
+                                        Row(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(horizontal = 16.dp, vertical = 8.dp),
+                                            horizontalArrangement = Arrangement.SpaceBetween,
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Text(
+                                                text = stringResource(groupResId).uppercase(),
+                                                style = MaterialTheme.typography.labelLarge.copy(
+                                                    fontWeight = FontWeight.Bold,
+                                                    color = LocalAppColors.current.textSecondary,
+                                                    letterSpacing = 1.sp
                                                 )
+                                            )
+
+                                            if (groupKey == firstVisibleGroupKey && !uiState.isOffline) {
+                                                TextButton(
+                                                    onClick = onMarkAllRead,
+                                                    contentPadding = PaddingValues(0.dp),
+                                                    modifier = Modifier.heightIn(min = 1.dp)
+                                                ) {
+                                                    Text(
+                                                        text = stringResource(R.string.notification_mark_all_read).uppercase(),
+                                                        style = MaterialTheme.typography.labelLarge.copy(
+                                                            fontWeight = FontWeight.Bold,
+                                                            color = LocalAppColors.current.textSecondary,
+                                                            letterSpacing = 1.sp
+                                                        )
+                                                    )
+                                                }
                                             }
                                         }
                                     }
-                                }
 
-                                items(notifications) { notification ->
-                                    Box(modifier = Modifier.padding(horizontal = 16.dp)) {
-                                        NotificationCard(
-                                            notification = notification,
-                                            onClick = { onNotificationClick(notification) }
+                                    items(notifications) { notification ->
+                                        Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+                                            NotificationCard(
+                                                notification = notification,
+                                                onClick = { onNotificationClick(notification) }
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (!hasNotifications) {
+                                item {
+                                    Box(
+                                        modifier = Modifier.fillParentMaxSize(),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Text(
+                                            text = stringResource(R.string.notification_empty_state),
+                                            color = LocalAppColors.current.textSecondary
                                         )
                                     }
                                 }
                             }
-                        }
 
-                        if (!hasNotifications) {
-                            item {
-                                Box(
-                                    modifier = Modifier.fillParentMaxSize(),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Text(
-                                        text = stringResource(R.string.notification_empty_state),
-                                        color = LocalAppColors.current.textSecondary
-                                    )
-                                }
-                            }
+                            item { Spacer(modifier = Modifier.height(16.dp)) }
                         }
-                        
-                        item { Spacer(modifier = Modifier.height(16.dp)) }
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun NotificationsOfflineContent() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 32.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Box(
+            modifier = Modifier
+                .size(96.dp)
+                .background(MaterialTheme.colorScheme.surfaceVariant, shape = CircleShape),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.wifi_off),
+                contentDescription = null,
+                tint = Color.Unspecified,
+                modifier = Modifier.size(44.dp)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(28.dp))
+
+        Text(
+            text = stringResource(R.string.connection_timed_out),
+            fontFamily = Poppins,
+            fontSize = 22.sp,
+            fontWeight = FontWeight.Bold,
+            color = LocalAppColors.current.textPrimary,
+            textAlign = TextAlign.Center
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            text = stringResource(R.string.connection_error_description),
+            fontFamily = Poppins,
+            fontSize = 15.sp,
+            fontWeight = FontWeight.Normal,
+            color = LocalAppColors.current.textSecondary,
+            textAlign = TextAlign.Center,
+            lineHeight = 22.sp
+        )
     }
 }
 
