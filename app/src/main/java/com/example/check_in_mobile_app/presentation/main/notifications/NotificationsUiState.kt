@@ -9,6 +9,7 @@ data class NotificationsUiState(
     val isLoading: Boolean = false,
     val groupedNotifications: Map<String, List<NotificationItem>> = emptyMap(),
     val errorMessage: String? = null,
+    val isOffline: Boolean = false,
     val routingEvent: RoutingEvent? = null
 )
 

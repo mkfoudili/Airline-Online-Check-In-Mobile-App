@@ -1,8 +1,10 @@
 package com.example.check_in_mobile_app.presentation.main.notifications
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -12,18 +14,21 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.check_in_mobile_app.R
+import com.example.check_in_mobile_app.presentation.components.OfflineBanner
 import com.example.check_in_mobile_app.presentation.components.TabBarMenu
 import com.example.check_in_mobile_app.presentation.components.TabItem
 import com.example.check_in_mobile_app.presentation.components.notifications.NotificationCard
 import com.example.check_in_mobile_app.ui.theme.CheckInMobileAppTheme
+import com.example.check_in_mobile_app.ui.theme.ErrorRed
 import com.example.check_in_mobile_app.ui.theme.LocalAppColors
 import com.example.check_in_mobile_app.ui.theme.Poppins
 import com.example.domain.model.NotificationType
@@ -78,14 +83,40 @@ fun NotificationsContent(
             Column {
                 TopAppBar(
                     title = {
-                        Text(
-                            text = stringResource(R.string.notification_title),
-                            fontFamily = Poppins,
-                            fontSize = 25.sp,
-                            color = LocalAppColors.current.textPrimary,
-                            fontWeight = FontWeight.Bold,
-                            letterSpacing = (-0.5).sp
-                        )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier.fillMaxWidth().padding(end = 16.dp)
+                        ) {
+                            Text(
+                                text = stringResource(R.string.notification_title),
+                                fontFamily = Poppins,
+                                fontSize = 25.sp,
+                                color = LocalAppColors.current.textPrimary,
+                                fontWeight = FontWeight.Bold,
+                                letterSpacing = (-0.5).sp
+                            )
+
+                            if (uiState.isOffline) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                ) {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.wifi_off2),
+                                        contentDescription = null,
+                                        tint = ErrorRed,
+                                        modifier = Modifier.size(12.dp)
+                                    )
+                                    Text(
+                                        text = stringResource(R.string.offline_badge),
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = ErrorRed
+                                    )
+                                }
+                            }
+                        }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = MaterialTheme.colorScheme.background
@@ -95,7 +126,6 @@ fun NotificationsContent(
                     color = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f),
                     thickness = 1.dp
                 )
-                Spacer(modifier = Modifier.height(16.dp))
             }
         },
         bottomBar = {
@@ -119,12 +149,17 @@ fun NotificationsContent(
                 ) {
                     CircularProgressIndicator(color = LocalAppColors.current.textAccent)
                 }
-            } else if (uiState.errorMessage != null) {
-                Text(
-                    text = uiState.errorMessage,
-                    modifier = Modifier.align(Alignment.Center),
-                    color = MaterialTheme.colorScheme.error
-                )
+            } else if (uiState.errorMessage != null && !uiState.isOffline) {
+                Box(
+                    modifier = Modifier.fillMaxSize().padding(24.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = uiState.errorMessage,
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
             } else {
                 PullToRefreshBox(
                     isRefreshing = isRefreshing,
@@ -133,9 +168,21 @@ fun NotificationsContent(
                 ) {
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(16.dp),
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
+                        if (uiState.isOffline) {
+                            item {
+                                OfflineBanner(
+                                    iconId = R.drawable.cloud_off,
+                                    iconDescription = "offline",
+                                    title = stringResource(R.string.offline_viewing_cached),
+                                    description = stringResource(R.string.offline_features_require_internet)
+                                )
+                            }
+                        }
+
+                        item { Spacer(modifier = Modifier.height(4.dp)) }
+
                         val groups = listOf(
                             "Today" to R.string.notification_group_today,
                             "Yesterday" to R.string.notification_group_yesterday,
@@ -152,7 +199,7 @@ fun NotificationsContent(
                                     Row(
                                         modifier = Modifier
                                             .fillMaxWidth()
-                                            .padding(top = 8.dp, bottom = 8.dp),
+                                            .padding(horizontal = 16.dp, vertical = 8.dp),
                                         horizontalArrangement = Arrangement.SpaceBetween,
                                         verticalAlignment = Alignment.CenterVertically
                                     ) {
@@ -164,7 +211,7 @@ fun NotificationsContent(
                                                 letterSpacing = 1.sp
                                             )
                                         )
-                                        if (groupKey == "Today") {
+                                        if (groupKey == "Today" && !uiState.isOffline) {
                                             TextButton(onClick = onMarkAllRead) {
                                                 Text(
                                                     text = stringResource(R.string.notification_mark_all_read),
@@ -178,10 +225,12 @@ fun NotificationsContent(
                                 }
 
                                 items(notifications) { notification ->
-                                    NotificationCard(
-                                        notification = notification,
-                                        onClick = { onNotificationClick(notification) }
-                                    )
+                                    Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+                                        NotificationCard(
+                                            notification = notification,
+                                            onClick = { onNotificationClick(notification) }
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -199,6 +248,8 @@ fun NotificationsContent(
                                 }
                             }
                         }
+                        
+                        item { Spacer(modifier = Modifier.height(16.dp)) }
                     }
                 }
             }

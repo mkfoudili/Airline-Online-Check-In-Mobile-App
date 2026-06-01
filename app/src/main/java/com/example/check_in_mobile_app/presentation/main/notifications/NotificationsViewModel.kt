@@ -73,14 +73,16 @@ class NotificationsViewModel @Inject constructor(
                     it.copy(
                         isLoading = false,
                         groupedNotifications = groupNotifications(items),
-                        errorMessage = null
+                        errorMessage = null,
+                        isOffline = false
                     )
                 }
             }.onFailure { error ->
                 _uiState.update {
                     it.copy(
                         isLoading = false,
-                        errorMessage = error.message ?: "Failed to load notifications"
+                        errorMessage = if (it.groupedNotifications.isEmpty()) error.message ?: "Failed to load notifications" else null,
+                        isOffline = true
                     )
                 }
             }
@@ -107,12 +109,16 @@ class NotificationsViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         groupedNotifications = groupNotifications(items),
-                        errorMessage = null
+                        errorMessage = null,
+                        isOffline = false
                     )
                 }
             }.onFailure { error ->
                 _uiState.update {
-                    it.copy(errorMessage = error.message ?: "Failed to load notifications")
+                    it.copy(
+                        errorMessage = if (it.groupedNotifications.isEmpty()) error.message ?: "Failed to load notifications" else null,
+                        isOffline = true
+                    )
                 }
             }
             _isRefreshing.value = false
