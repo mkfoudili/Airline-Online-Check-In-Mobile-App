@@ -134,7 +134,7 @@ fun ProfileScreen(
         uiState.isLoading -> {
             ProfileBaseScreen(
                 title = stringResource(R.string.profile_title),
-                isOnline = uiState.isOnline,
+                isOnline = true, // Force true to show CircularProgressIndicator instead of offline UI while loading
                 isRefreshing = isRefreshing,
                 onRefresh = { viewModel.refresh() }
             ) {
