@@ -39,7 +39,7 @@ import java.util.TimeZone
 @Composable
 fun AllBookingsScreen(
     onNavigateBack: () -> Unit = {},
-    onBoarding: () -> Unit = {},
+    onBoarding: (String) -> Unit = {},
     onCheckInClick: (String) -> Unit = {},
     viewModel: AllBookingsViewModel = hiltViewModel()
 ) {
@@ -71,7 +71,7 @@ fun AllBookingsScreen(
 @Composable
 fun AllBookingsScreenContent(
     onNavigateBack: () -> Unit,
-    onBoarding: () -> Unit,
+    onBoarding: (String) -> Unit,
     searchQuery: String,
     onSearchQueryChange: (String) -> Unit,
     selectedDate: String?,

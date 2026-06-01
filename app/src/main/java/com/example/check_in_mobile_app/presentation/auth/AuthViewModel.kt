@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.check_in_mobile_app.presentation.utils.toUserFriendlyMessage
 import com.example.data.preferences.UserPreferencesRepository
 import com.example.domain.repository.AuthRepository
 import com.example.domain.validation.RegistrationRequest
@@ -49,7 +50,7 @@ class AuthViewModel @Inject constructor(
                 }.onFailure {
                     uiState = uiState.copy(
                         isLoading = false,
-                        errorMessage = it.message ?: "Registration failed"
+                        errorMessage = it.toUserFriendlyMessage()
                     )
                 }
             }
@@ -66,7 +67,7 @@ class AuthViewModel @Inject constructor(
                 }.onFailure {
                     uiState = uiState.copy(
                         isLoading = false,
-                        errorMessage = it.message ?: "Login failed"
+                        errorMessage = it.toUserFriendlyMessage()
                     )
                 }
             }
@@ -85,7 +86,7 @@ class AuthViewModel @Inject constructor(
                 }.onFailure {
                     uiState = uiState.copy(
                         isLoading = false,
-                        errorMessage = it.message ?: "Google Sign-In failed"
+                        errorMessage = it.toUserFriendlyMessage()
                     )
                 }
             }

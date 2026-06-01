@@ -27,7 +27,21 @@ fun SeatGrid(
     onSeatSelected: (SeatModel) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
-    val rows = seats.chunked(6)
+    val sortedSeats = remember(seats) {
+        seats.sortedWith(
+            compareByDescending<SeatModel> { it.isPremium }
+                .thenBy {
+                    // Extraction du numéro de rangée (ex: "12" de "12A")
+                    it.seatNumber.filter { char -> char.isDigit() }.toIntOrNull() ?: 0
+                }
+                .thenBy {
+                    // Extraction de la lettre du siège (ex: 'A' de "12A")
+                    it.seatNumber.filter { char -> char.isLetter() }
+                }
+        )
+    }
+
+    val rows = sortedSeats.chunked(6)
 
     LazyColumn(
         modifier = modifier.padding(16.dp)
@@ -58,9 +72,13 @@ fun SeatGrid(
                     )
                 }
 
+                // Row Number Indicator
+                val displayRowNumber = rowSeats.firstOrNull()?.let {
+                    it.seatNumber.filter { char -> char.isDigit() }
+                } ?: (rowIndex + 1).toString()
 
                 Text(
-                    text = "${rowIndex + 1}",
+                    text = displayRowNumber,
                     modifier = Modifier.padding(horizontal = 8.dp),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
@@ -84,9 +102,7 @@ fun SeatGrid(
                             }
                         }
                     )
-
                 }
-
             }
             Spacer(modifier = Modifier.height(12.dp))
         }

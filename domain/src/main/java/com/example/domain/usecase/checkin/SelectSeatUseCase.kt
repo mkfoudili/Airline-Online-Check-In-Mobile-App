@@ -7,9 +7,9 @@ import javax.inject.Inject
 class SelectSeatUseCase @Inject constructor(
     private val repository: SeatRepository
 ) {
-    suspend operator fun invoke(passengerId: String, seatNumber: String): Result<Seat> {
+    suspend operator fun invoke(passengerId: String, seatNumber: String, uid: String? = null): Result<Seat> {
         return try {
-            val seat = repository.selectSeat(passengerId, seatNumber)
+            val seat = repository.selectSeat(passengerId, seatNumber, uid)
             Result.success(seat)
         } catch (e: Exception) {
             Result.failure(e)

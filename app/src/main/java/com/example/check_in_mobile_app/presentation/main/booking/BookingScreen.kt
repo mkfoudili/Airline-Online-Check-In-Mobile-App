@@ -124,6 +124,7 @@ fun BookingScreenContent(
             Spacer(modifier = Modifier.height(16.dp))
 
             when {
+                // État offline — on affiche une bannière mais on reste dans le flow normal
                 uiState is BookingUiState.Loading -> {
                     Box(
                         modifier = Modifier.fillMaxSize(),

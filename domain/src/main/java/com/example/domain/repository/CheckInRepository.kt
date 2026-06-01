@@ -8,7 +8,8 @@ interface CheckInRepository {
 
     suspend fun createOrResumeSession(
         passengerId: String,
-        bookingId: String
+        bookingId: String,
+        uid: String?
     ): Result<CheckInSession>
 
     suspend fun advanceSessionStep(

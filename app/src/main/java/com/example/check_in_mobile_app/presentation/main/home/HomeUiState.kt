@@ -23,6 +23,9 @@ data class HomeUiState(
             status == CheckInStatus.CHECK_IN_OPEN
         } ?: false
 
+    val isCheckedIn: Boolean
+        get() = activeFlight?.status == CheckInStatus.CHECKED_IN
+
     val activeFlightDestination: String
         get() = activeFlight?.flight?.let {
             "${it.destinationCity} (${it.destination})"

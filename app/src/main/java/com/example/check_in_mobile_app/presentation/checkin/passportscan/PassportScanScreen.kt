@@ -35,6 +35,7 @@ import com.example.check_in_mobile_app.presentation.checkin.OcrStatus
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
@@ -78,7 +79,7 @@ fun PassportScanScreen(
             onPassportCaptured = { bitmap ->
                 viewModel.onPassportCaptured(bitmap)
             },
-            isLoading = sessionState.ocrStatus == OcrStatus.SCANNING || sessionState.ocrStatus == OcrStatus.VERIFYING
+            isLoading = sessionState.ocrStatus == OcrStatus.SCANNING || sessionState.ocrStatus == OcrStatus.VERIFYING || sessionState.ocrStatus == OcrStatus.CREATING_SESSION
         )
 
         // Error snackbar host

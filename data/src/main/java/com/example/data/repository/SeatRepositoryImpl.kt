@@ -19,8 +19,8 @@ class SeatRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun selectSeat(passengerId: String, seatNumber: String): Seat {
-        val request = SelectSeatRequest(seatNumber = seatNumber)
+    override suspend fun selectSeat(passengerId: String, seatNumber: String, uid: String?): Seat {
+        val request = SelectSeatRequest(seatNumber = seatNumber, uid = uid)
         val dto = api.selectSeat(passengerId, request)
         return dto.toDomain()
     }

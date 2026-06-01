@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName
 data class BoardingPassDto(
     @SerializedName("passId")          val passId: String,
     @SerializedName("passengerId")     val passengerId: String,
+    @SerializedName("uid")             val uid: String? = null,
     @SerializedName("flightId")        val flightId: String,
     @SerializedName("flightNumber")    val flightNumber: String,
     @SerializedName("origin")          val origin: String,

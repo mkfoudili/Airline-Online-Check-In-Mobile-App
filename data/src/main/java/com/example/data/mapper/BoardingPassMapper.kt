@@ -80,9 +80,9 @@ fun BoardingPass.toEntity(): BoardingPassEntity = BoardingPassEntity(
 
 // DTO → Domain (uid vient du contexte appelant, pas du DTO)
 
-fun BoardingPassDto.toDomain(uid: String = ""): BoardingPass = BoardingPass(
+fun BoardingPassDto.toDomain(contextUid: String = ""): BoardingPass = BoardingPass(
     passId             = passId,
-    uid                = uid,
+    uid                = if (uid.isNullOrEmpty()) contextUid else uid,
     passengerId        = passengerId,
     flightId           = flightId,
     flightNumber       = flightNumber,
