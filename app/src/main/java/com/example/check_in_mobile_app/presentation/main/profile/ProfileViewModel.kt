@@ -82,7 +82,8 @@ class ProfileViewModel @Inject constructor(
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,
-                    error = e.message ?: "Unknown error"
+                    error = e.message ?: "Unknown error",
+                    isOnline = false
                 )
             }
         }
@@ -106,7 +107,10 @@ class ProfileViewModel @Inject constructor(
                     error = null
                 )
             } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(error = e.message ?: "Unknown error")
+                _uiState.value = _uiState.value.copy(
+                    error = e.message ?: "Unknown error",
+                    isOnline = false
+                )
             }
             _isRefreshing.value = false
         }
@@ -175,6 +179,10 @@ class ProfileViewModel @Inject constructor(
                     setDarkModeUseCase(event.isDarkMode)
                 }
                 ProfileEvent.OnSaveClicked -> {
+                    if (!_uiState.value.isOnline) {
+                        _uiState.value = _uiState.value.copy(error = "No internet connection")
+                        return@launch
+                    }
                     _uiState.value = _uiState.value.copy(isLoading = true)
                     try {
                         val updatedProfile = updateProfileUseCase(
@@ -204,7 +212,8 @@ class ProfileViewModel @Inject constructor(
                     } catch (e: Exception) {
                         _uiState.value = _uiState.value.copy(
                             isLoading = false,
-                            error = e.message ?: "Update failed"
+                            error = e.message ?: "Update failed",
+                            isOnline = false
                         )
                     }
                 }
@@ -252,6 +261,10 @@ class ProfileViewModel @Inject constructor(
                     )
                 }
                 ProfileEvent.OnSavePasswordClicked -> {
+                    if (!_uiState.value.isOnline) {
+                        _uiState.value = _uiState.value.copy(error = "No internet connection")
+                        return@launch
+                    }
                     if (_uiState.value.newPassword != _uiState.value.confirmPassword) {
                         _uiState.value = _uiState.value.copy(error = "Passwords do not match")
                         return@launch
@@ -272,7 +285,8 @@ class ProfileViewModel @Inject constructor(
                     } else {
                         _uiState.value = _uiState.value.copy(
                             isLoading = false,
-                            error = result.exceptionOrNull()?.message ?: "Update failed"
+                            error = result.exceptionOrNull()?.message ?: "Update failed",
+                            isOnline = false
                         )
                     }
                 }
