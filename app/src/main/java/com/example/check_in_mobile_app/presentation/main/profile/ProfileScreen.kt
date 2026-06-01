@@ -133,7 +133,10 @@ fun ProfileScreen(
     when {
         uiState.isLoading -> {
             ProfileBaseScreen(
-                title = stringResource(R.string.profile_title)
+                title = stringResource(R.string.profile_title),
+                isOnline = uiState.isOnline,
+                isRefreshing = isRefreshing,
+                onRefresh = { viewModel.refresh() }
             ) {
                 Box(
                     modifier = Modifier
@@ -149,14 +152,18 @@ fun ProfileScreen(
         uiState.isChangingPassword -> {
             ChangePasswordScreen(
                 uiState = uiState,
-                onEvent = viewModel::onEvent
+                onEvent = viewModel::onEvent,
+                isRefreshing = isRefreshing,
+                onRefresh = { viewModel.refresh() }
             )
         }
 
         uiState.isEditing -> {
             EditProfileScreen(
                 uiState = uiState,
-                onEvent = viewModel::onEvent
+                onEvent = viewModel::onEvent,
+                isRefreshing = isRefreshing,
+                onRefresh = { viewModel.refresh() }
             )
         }
 
@@ -183,6 +190,9 @@ private fun ProfileBaseScreen(
     onBackClick: (() -> Unit)? = null,
     actions: @Composable RowScope.() -> Unit = {},
     bottomBar: @Composable () -> Unit = {},
+    isOnline: Boolean = true,
+    isRefreshing: Boolean = false,
+    onRefresh: () -> Unit = {},
     content: @Composable ColumnScope.() -> Unit
 ) {
     Scaffold(
@@ -220,17 +230,28 @@ private fun ProfileBaseScreen(
                 Spacer(modifier = Modifier.height(16.dp))
             }
         },
-        bottomBar = bottomBar
+        bottomBar = { if (isOnline) bottomBar() }
     ) { innerPadding ->
-        Column(
+        PullToRefreshBox(
+            isRefreshing = isRefreshing,
+            onRefresh = onRefresh,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            content = content
-        )
+        ) {
+            if (!isOnline) {
+                ProfileOfflineContent()
+            } else {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                        .padding(horizontal = 24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    content = content
+                )
+            }
+        }
     }
 }
 
@@ -570,7 +591,9 @@ private fun ProfileOfflineContent() {
 @Composable
 fun EditProfileScreen(
     uiState: ProfileUiState,
-    onEvent: (ProfileEvent) -> Unit
+    onEvent: (ProfileEvent) -> Unit,
+    isRefreshing: Boolean = false,
+    onRefresh: () -> Unit = {}
 ) {
     val photoPickerLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.PickVisualMedia()
@@ -581,6 +604,9 @@ fun EditProfileScreen(
     ProfileBaseScreen(
         title = stringResource(R.string.profile_edit_title),
         onBackClick = { onEvent(ProfileEvent.OnBackClicked) },
+        isOnline = uiState.isOnline,
+        isRefreshing = isRefreshing,
+        onRefresh = onRefresh,
         bottomBar = {
             ProfileBottomActions(
                 primaryText = stringResource(R.string.common_save_changes),
@@ -867,11 +893,16 @@ fun LanguageDropdownField(
 @Composable
 fun ChangePasswordScreen(
     uiState: ProfileUiState,
-    onEvent: (ProfileEvent) -> Unit
+    onEvent: (ProfileEvent) -> Unit,
+    isRefreshing: Boolean = false,
+    onRefresh: () -> Unit = {}
 ) {
     ProfileBaseScreen(
         title = stringResource(R.string.profile_change_password_title),
         onBackClick = { onEvent(ProfileEvent.OnBackClicked) },
+        isOnline = uiState.isOnline,
+        isRefreshing = isRefreshing,
+        onRefresh = onRefresh,
         bottomBar = {
             ProfileBottomActions(
                 primaryText = stringResource(R.string.profile_save_password),
