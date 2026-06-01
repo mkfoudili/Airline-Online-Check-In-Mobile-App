@@ -166,7 +166,7 @@ fun BaggageScreenPreview() {
                     modifier = Modifier.padding(start = 8.dp)
                 )
             }
-            
+
             HorizontalDivider()
 
             BaggageContent(

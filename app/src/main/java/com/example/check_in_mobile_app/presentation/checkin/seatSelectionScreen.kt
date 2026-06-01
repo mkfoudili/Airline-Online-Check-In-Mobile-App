@@ -72,6 +72,9 @@ fun SeatSelection(
 
     LaunchedEffect(uiState.isSuccess) {
         if (uiState.isSuccess) {
+            // Reset BEFORE navigating so that coming back via popBackStack()
+            // doesn't retrigger this effect and loop back to BaggageScreen
+            viewModel.resetSuccess()
             onContinue()
         }
     }
