@@ -8,6 +8,7 @@ import com.example.check_in_mobile_app.utils.LanguagePreferences
 import com.example.domain.usecase.profile.GetProfileUseCase
 import com.example.domain.usecase.profile.UpdateProfileUseCase
 import com.example.domain.usecase.profile.UpdatePasswordUseCase
+import com.example.domain.usecase.profile.UploadProfilePhotoUseCase
 import com.example.domain.usecase.theme.GetDarkModeUseCase
 import com.example.domain.usecase.theme.SetDarkModeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,6 +30,7 @@ class ProfileViewModel @Inject constructor(
     private val updatePasswordUseCase: UpdatePasswordUseCase,
     private val getDarkModeUseCase: GetDarkModeUseCase,
     private val setDarkModeUseCase: SetDarkModeUseCase,
+    private val uploadProfilePhotoUseCase: UploadProfilePhotoUseCase,
     notificationManager: NotificationManager
 ): ViewModel() {
 
@@ -299,6 +301,20 @@ class ProfileViewModel @Inject constructor(
                 }
                 ProfileEvent.OnLogoutDismissClicked -> {
                     _uiState.value = _uiState.value.copy(showLogoutDialog = false)
+                }
+                is ProfileEvent.OnPhotoSelected -> {
+                    viewModelScope.launch {
+                        _uiState.value = _uiState.value.copy(isLoading = true)
+                        try {
+                            val updated = uploadProfilePhotoUseCase(event.uri, application)
+                            _uiState.value = _uiState.value.copy(
+                                profileImageUrl = updated.avatarUrl,
+                                isLoading = false
+                            )
+                        } catch (e: Exception) {
+                            _uiState.value = _uiState.value.copy(isLoading = false, error = e.message)
+                        }
+                    }
                 }
             }
         }

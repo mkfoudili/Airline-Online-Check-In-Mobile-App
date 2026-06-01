@@ -1,5 +1,8 @@
 package com.example.check_in_mobile_app.presentation.main.profile
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -281,6 +284,12 @@ fun ProfileScreenContent(
     onEvent: (ProfileEvent) -> Unit = {},
     onTabSelected: (TabItem) -> Unit = {}
 ) {
+    val photoPickerLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.PickVisualMedia()
+    ) { uri ->
+        uri?.let { onEvent(ProfileEvent.OnPhotoSelected(it)) }
+    }
+
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
@@ -364,7 +373,15 @@ fun ProfileScreenContent(
                     ) {
                         Spacer(modifier = Modifier.height(32.dp))
 
-                        ProfileAvatar(isOnline = uiState.isOnline)
+                        ProfileAvatar(
+                            imageUrl = uiState.profileImageUrl,
+                            isOnline = uiState.isOnline,
+                            modifier = Modifier.clickable {
+                                photoPickerLauncher.launch(
+                                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                                )
+                            }
+                        )
 
                         Spacer(modifier = Modifier.height(16.dp))
 
@@ -555,6 +572,12 @@ fun EditProfileScreen(
     uiState: ProfileUiState,
     onEvent: (ProfileEvent) -> Unit
 ) {
+    val photoPickerLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.PickVisualMedia()
+    ) { uri ->
+        uri?.let { onEvent(ProfileEvent.OnPhotoSelected(it)) }
+    }
+
     ProfileBaseScreen(
         title = stringResource(R.string.profile_edit_title),
         onBackClick = { onEvent(ProfileEvent.OnBackClicked) },
@@ -586,14 +609,26 @@ fun EditProfileScreen(
         Spacer(modifier = Modifier.height(32.dp))
 
         Box(contentAlignment = Alignment.BottomEnd) {
-            ProfileAvatar(isOnline = false)
+            ProfileAvatar(
+                imageUrl = uiState.profileImageUrl,
+                isOnline = false,
+                modifier = Modifier.clickable {
+                    photoPickerLauncher.launch(
+                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                    )
+                }
+            )
             Box(
                 modifier = Modifier
                     .size(32.dp)
                     .clip(CircleShape)
                     .background(NavyBlue)
                     .padding(8.dp)
-                    .clickable { onEvent(ProfileEvent.OnChangePhotoClicked) },
+                    .clickable {
+                        photoPickerLauncher.launch(
+                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                        )
+                    },
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
@@ -613,7 +648,11 @@ fun EditProfileScreen(
                 fontWeight = FontWeight.SemiBold,
                 color = LocalAppColors.current.textAccent
             ),
-            modifier = Modifier.clickable { onEvent(ProfileEvent.OnChangePhotoClicked) }
+            modifier = Modifier.clickable {
+                photoPickerLauncher.launch(
+                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                )
+            }
         )
 
         Spacer(modifier = Modifier.height(32.dp))
