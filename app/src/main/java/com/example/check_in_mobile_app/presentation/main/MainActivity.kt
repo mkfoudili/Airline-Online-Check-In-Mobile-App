@@ -16,6 +16,10 @@ import com.example.check_in_mobile_app.presentation.auth.LoginActivity
 import com.example.check_in_mobile_app.presentation.checkin.CheckInActivity
 import com.example.check_in_mobile_app.presentation.navigation.MainNavGraph
 import com.example.check_in_mobile_app.ui.theme.CheckInMobileAppTheme
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.core.content.ContextCompat
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
@@ -43,12 +47,32 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private val notificationPermissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted ->
+            Log.d("NOTIFICATION", "Permission granted: $isGranted")
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         lifecycleScope.launch {
             notificationManager.fetchInitialStatus()
         }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                notificationPermissionLauncher.launch(
+                    Manifest.permission.POST_NOTIFICATIONS
+                )
+            }
+        }
+
 
         FirebaseMessaging.getInstance().token.addOnSuccessListener { token ->
             Log.d("FCM", "TOKEN = $token")
