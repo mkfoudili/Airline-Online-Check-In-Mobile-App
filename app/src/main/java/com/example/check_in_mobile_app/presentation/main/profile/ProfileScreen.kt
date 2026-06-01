@@ -1,5 +1,8 @@
 package com.example.check_in_mobile_app.presentation.main.profile
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -130,7 +133,10 @@ fun ProfileScreen(
     when {
         uiState.isLoading -> {
             ProfileBaseScreen(
-                title = stringResource(R.string.profile_title)
+                title = stringResource(R.string.profile_title),
+                isOnline = true, // Force true to show CircularProgressIndicator instead of offline UI while loading
+                isRefreshing = isRefreshing,
+                onRefresh = { viewModel.refresh() }
             ) {
                 Box(
                     modifier = Modifier
@@ -146,14 +152,18 @@ fun ProfileScreen(
         uiState.isChangingPassword -> {
             ChangePasswordScreen(
                 uiState = uiState,
-                onEvent = viewModel::onEvent
+                onEvent = viewModel::onEvent,
+                isRefreshing = isRefreshing,
+                onRefresh = { viewModel.refresh() }
             )
         }
 
         uiState.isEditing -> {
             EditProfileScreen(
                 uiState = uiState,
-                onEvent = viewModel::onEvent
+                onEvent = viewModel::onEvent,
+                isRefreshing = isRefreshing,
+                onRefresh = { viewModel.refresh() }
             )
         }
 
@@ -180,6 +190,9 @@ private fun ProfileBaseScreen(
     onBackClick: (() -> Unit)? = null,
     actions: @Composable RowScope.() -> Unit = {},
     bottomBar: @Composable () -> Unit = {},
+    isOnline: Boolean = true,
+    isRefreshing: Boolean = false,
+    onRefresh: () -> Unit = {},
     content: @Composable ColumnScope.() -> Unit
 ) {
     Scaffold(
@@ -217,17 +230,28 @@ private fun ProfileBaseScreen(
                 Spacer(modifier = Modifier.height(16.dp))
             }
         },
-        bottomBar = bottomBar
+        bottomBar = { if (isOnline) bottomBar() }
     ) { innerPadding ->
-        Column(
+        PullToRefreshBox(
+            isRefreshing = isRefreshing,
+            onRefresh = onRefresh,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            content = content
-        )
+        ) {
+            if (!isOnline) {
+                ProfileOfflineContent()
+            } else {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                        .padding(horizontal = 24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    content = content
+                )
+            }
+        }
     }
 }
 
@@ -281,6 +305,12 @@ fun ProfileScreenContent(
     onEvent: (ProfileEvent) -> Unit = {},
     onTabSelected: (TabItem) -> Unit = {}
 ) {
+    val photoPickerLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.PickVisualMedia()
+    ) { uri ->
+        uri?.let { onEvent(ProfileEvent.OnPhotoSelected(it)) }
+    }
+
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
@@ -364,7 +394,15 @@ fun ProfileScreenContent(
                     ) {
                         Spacer(modifier = Modifier.height(32.dp))
 
-                        ProfileAvatar(isOnline = uiState.isOnline)
+                        ProfileAvatar(
+                            imageUrl = uiState.profileImageUrl,
+                            isOnline = uiState.isOnline,
+                            modifier = Modifier.clickable {
+                                photoPickerLauncher.launch(
+                                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                                )
+                            }
+                        )
 
                         Spacer(modifier = Modifier.height(16.dp))
 
@@ -553,11 +591,22 @@ private fun ProfileOfflineContent() {
 @Composable
 fun EditProfileScreen(
     uiState: ProfileUiState,
-    onEvent: (ProfileEvent) -> Unit
+    onEvent: (ProfileEvent) -> Unit,
+    isRefreshing: Boolean = false,
+    onRefresh: () -> Unit = {}
 ) {
+    val photoPickerLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.PickVisualMedia()
+    ) { uri ->
+        uri?.let { onEvent(ProfileEvent.OnPhotoSelected(it)) }
+    }
+
     ProfileBaseScreen(
         title = stringResource(R.string.profile_edit_title),
         onBackClick = { onEvent(ProfileEvent.OnBackClicked) },
+        isOnline = uiState.isOnline,
+        isRefreshing = isRefreshing,
+        onRefresh = onRefresh,
         bottomBar = {
             ProfileBottomActions(
                 primaryText = stringResource(R.string.common_save_changes),
@@ -586,14 +635,26 @@ fun EditProfileScreen(
         Spacer(modifier = Modifier.height(32.dp))
 
         Box(contentAlignment = Alignment.BottomEnd) {
-            ProfileAvatar(isOnline = false)
+            ProfileAvatar(
+                imageUrl = uiState.profileImageUrl,
+                isOnline = false,
+                modifier = Modifier.clickable {
+                    photoPickerLauncher.launch(
+                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                    )
+                }
+            )
             Box(
                 modifier = Modifier
                     .size(32.dp)
                     .clip(CircleShape)
                     .background(NavyBlue)
                     .padding(8.dp)
-                    .clickable { onEvent(ProfileEvent.OnChangePhotoClicked) },
+                    .clickable {
+                        photoPickerLauncher.launch(
+                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                        )
+                    },
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
@@ -613,7 +674,11 @@ fun EditProfileScreen(
                 fontWeight = FontWeight.SemiBold,
                 color = LocalAppColors.current.textAccent
             ),
-            modifier = Modifier.clickable { onEvent(ProfileEvent.OnChangePhotoClicked) }
+            modifier = Modifier.clickable {
+                photoPickerLauncher.launch(
+                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                )
+            }
         )
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -828,11 +893,16 @@ fun LanguageDropdownField(
 @Composable
 fun ChangePasswordScreen(
     uiState: ProfileUiState,
-    onEvent: (ProfileEvent) -> Unit
+    onEvent: (ProfileEvent) -> Unit,
+    isRefreshing: Boolean = false,
+    onRefresh: () -> Unit = {}
 ) {
     ProfileBaseScreen(
         title = stringResource(R.string.profile_change_password_title),
         onBackClick = { onEvent(ProfileEvent.OnBackClicked) },
+        isOnline = uiState.isOnline,
+        isRefreshing = isRefreshing,
+        onRefresh = onRefresh,
         bottomBar = {
             ProfileBottomActions(
                 primaryText = stringResource(R.string.profile_save_password),

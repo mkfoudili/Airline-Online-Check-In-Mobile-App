@@ -1,13 +1,16 @@
 package com.example.data.remote.retrofit
 
 import com.example.data.remote.dto.*
+import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.Multipart
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Part
 import retrofit2.http.Query
 import retrofit2.http.Path
 
@@ -86,6 +89,10 @@ interface Endpoint {
 
     @PUT("auth/profile/password")
     suspend fun updatePassword(@Header("Authorization") token: String, @Body request: UpdatePasswordRequest): Response<MessageResponse>
+
+    @Multipart
+    @POST("auth/profile/photo")
+    suspend fun uploadProfilePhoto(@Header("Authorization") token: String, @Part photo: MultipartBody.Part): Response<ProfileResponse>
 
     @GET("selectseats/flights/{flightId}/seats")
     suspend fun getSeatMap(@Path("flightId") flightId: String): List<SeatMapDto>

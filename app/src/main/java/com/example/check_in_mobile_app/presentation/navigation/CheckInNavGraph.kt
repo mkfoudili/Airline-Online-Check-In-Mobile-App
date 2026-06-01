@@ -92,23 +92,26 @@ fun CheckInNavGraph(
 
         composable(Destination.Selection.route) {
             val flightId = booking?.flight?.flightId ?: ""
-            val passengerId = sessionState.verifiedPassenger?.passengerId
+            val currentPid = sessionState.verifiedPassenger?.passengerId
                 ?: booking?.passengers?.firstOrNull()?.passengerId
                 ?: ""
             
             SeatSelection(
                 flightId = flightId,
-                passengerId = passengerId,
+                passengerId = currentPid,
                 onNavigateBack = { navController.popBackStack() },
-                onContinue = { navController.navigate(Destination.Baggage.route) }
+                onContinue = { navController.navigate(Destination.Baggage.routeWithArg(currentPid)) }
             )
         }
-        composable(Destination.Baggage.route) {
+        composable(
+            route = Destination.Baggage.route,
+            arguments = listOf(navArgument("passengerId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val pid = backStackEntry.arguments?.getString("passengerId") ?: (sessionState.verifiedPassenger?.passengerId ?: passengerId)
             BaggageScreen(
                 viewModel       = hiltViewModel<BaggageViewModel>(),
                 onBackClick     = { navController.popBackStack() },
                 onContinueClick = {
-                    val pid = sessionState.verifiedPassenger?.passengerId ?: passengerId
                     navController.navigate(Destination.preference.routeWithArg(pid))
                 }
             )

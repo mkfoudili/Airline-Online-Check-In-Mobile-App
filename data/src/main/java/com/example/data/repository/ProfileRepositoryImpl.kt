@@ -1,5 +1,7 @@
 package com.example.data.repository
 
+import android.content.Context
+import android.net.Uri
 import com.example.data.mapper.toDomain
 import com.example.data.preferences.UserPreferencesRepository
 import com.example.data.remote.dto.UpdatePasswordRequest
@@ -10,6 +12,9 @@ import com.example.domain.model.Profile
 import com.example.domain.repository.ProfileRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import javax.inject.Inject
 
 class ProfileRepositoryImpl @Inject constructor(
@@ -94,4 +99,23 @@ class ProfileRepositoryImpl @Inject constructor(
             Result.failure(e)
         }
     }
+
+    override suspend fun uploadProfilePhoto(imageUri: Uri, context: Context): Profile =
+        withContext(Dispatchers.IO) {
+            val token = secureStorage.getAuthToken() ?: throw Exception("Not authenticated")
+
+            val bytes = context.contentResolver.openInputStream(imageUri)!!.readBytes()
+            val requestBody = bytes.toRequestBody("image/*".toMediaType())
+            val part = MultipartBody.Part.createFormData("photo", "photo.jpg", requestBody)
+
+            val response = api.uploadProfilePhoto("Bearer $token", part)
+
+            if (response.isSuccessful) {
+                val body = response.body() ?: throw Exception("Empty response")
+                if (body.success && body.data != null) body.data.toDomain()
+                else throw Exception(body.message ?: "Upload failed")
+            } else {
+                throw Exception("Error: ${response.code()}")
+            }
+        }
 }

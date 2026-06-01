@@ -1,5 +1,7 @@
 package com.example.check_in_mobile_app.presentation.main.profile
 
+import android.net.Uri
+
 sealed class ProfileEvent {
     object OnEditEmailClicked : ProfileEvent()
     object OnEditPhoneClicked : ProfileEvent()
@@ -22,6 +24,8 @@ sealed class ProfileEvent {
     object OnToggleNewPasswordVisibility : ProfileEvent()
     object OnToggleConfirmPasswordVisibility : ProfileEvent()
     object OnSavePasswordClicked : ProfileEvent()
+
+    data class OnPhotoSelected(val uri: Uri) : ProfileEvent()
 
     // Logout Events
     object OnLogoutClicked : ProfileEvent()

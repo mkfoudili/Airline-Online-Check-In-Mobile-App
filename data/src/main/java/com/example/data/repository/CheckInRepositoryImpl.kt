@@ -142,6 +142,7 @@ class CheckInRepositoryImpl @Inject constructor(
     override suspend fun declareBaggage(declaration: BaggageDeclaration): Result<Unit> {
         return try {
             val request = BaggageRequest(
+                passengerId = declaration.passengerId,
                 checkedBaggageCount = declaration.checkedBaggageCount,
                 specialEquipmentCount = declaration.specialEquipmentCount
             )

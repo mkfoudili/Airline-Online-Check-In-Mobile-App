@@ -13,7 +13,7 @@ data class ProfileUiState(
     val profileImageUrl: String? = null,
     val isVerified: Boolean = false,
     val securityLevel: SecurityLevel = SecurityLevel.HIGH,
-    val isOnline: Boolean = false,
+    val isOnline: Boolean = true,
 
     // --- Edit mode ---
     val isEditing: Boolean = false,
@@ -36,6 +36,6 @@ data class ProfileUiState(
     val showLogoutDialog: Boolean = false,
 
     // --- Async state ---
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = true,
     val error: String? = null
 )
