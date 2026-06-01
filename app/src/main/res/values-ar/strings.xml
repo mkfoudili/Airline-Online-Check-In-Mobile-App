@@ -94,7 +94,9 @@
     <string name="boarding_gate_info">توجه إلى البوابة %1$s. وقت الانتظار في الأمن حوالي 15 دقيقة.</string>
     <string name="boarding_label_at">الصعود عند %1$s</string>
     <string name="boarding_label_now">الصعود الآن</string>
-    <string name="boarding_label_in">يبدأ الصعود خلال %1$s دقيقة</string>
+    <string name="boarding_label_in_minutes">الصعود خلال %1$d دقيقة</string>
+    <string name="boarding_label_in_hours">الصعود خلال %1$d ساعة</string>
+    <string name="boarding_label_in_hours_minutes">الصعود خلال %1$d س %2$d د</string>
     <!-- Confirmation Screen -->
     <string name="confirmation_title">اكتمل تسجيل الوصول</string>
     <string name="confirmation_success_title">أنت جاهز تماماً!</string>
