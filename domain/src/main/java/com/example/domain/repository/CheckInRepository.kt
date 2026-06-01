@@ -3,6 +3,7 @@ package com.example.domain.repository
 import com.example.domain.model.CheckInSession
 import com.example.domain.model.Passenger
 import com.example.domain.model.SpecialRequests
+import com.example.domain.model.BaggageDeclaration
 
 interface CheckInRepository {
 
@@ -29,9 +30,14 @@ interface CheckInRepository {
     fun getPassengerForReview(): Passenger
 
     suspend fun getUserPreferences(uid: String): Result<SpecialRequests>
+    
     suspend fun concludeCheckin(
         passengerId: String,
         uid: String,
         specialRequests: SpecialRequests
+    ): Result<Unit>
+
+    suspend fun declareBaggage(
+        declaration: BaggageDeclaration
     ): Result<Unit>
 }
