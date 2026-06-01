@@ -64,7 +64,6 @@ fun BookingScreen(
     BookingScreenContent(
         uiState = uiState,
         isOnline = isOnline,
-        hasUnread = hasUnread,
         isRefreshing = isRefreshing,
         onRefresh = { viewModel.refresh() },
         onViewAllClick = onViewAllClick,
