@@ -8,7 +8,9 @@ sealed class Destination(val route: String) {
         fun createRoute(bookingRef: String) = "flight_details/$bookingRef"
     }
     object PassportScan : Destination("passport_scan")
-    object Baggage : Destination("baggage")
+    object Baggage : Destination("baggage/{passengerId}") {
+        fun routeWithArg(passengerId: String) = "baggage/$passengerId"
+    }
     object CheckingDetailsReview : Destination("checking_details_review")
     object Register : Destination("register")
     object Login : Destination("login")

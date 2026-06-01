@@ -1,6 +1,7 @@
 package com.example.data.remote.dto
 
 data class BaggageRequest(
+    val passengerId: String,
     val checkedBaggageCount: Int,
     val specialEquipmentCount: Int
 )

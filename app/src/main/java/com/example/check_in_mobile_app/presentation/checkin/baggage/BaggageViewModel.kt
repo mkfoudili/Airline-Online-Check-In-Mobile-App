@@ -1,5 +1,6 @@
 package com.example.check_in_mobile_app.presentation.checkin.baggage
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.usecase.checkin.SelectBaggageUseCase
@@ -13,8 +14,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BaggageViewModel @Inject constructor(
-    private val selectBaggageUseCase: SelectBaggageUseCase
+    private val selectBaggageUseCase: SelectBaggageUseCase,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    private val passengerId: String = checkNotNull(savedStateHandle["passengerId"])
 
     private val _uiState = MutableStateFlow(BaggageUiState())
     val uiState: StateFlow<BaggageUiState> = _uiState.asStateFlow()
@@ -32,6 +36,7 @@ class BaggageViewModel @Inject constructor(
         
         viewModelScope.launch {
             val result = selectBaggageUseCase(
+                passengerId = passengerId,
                 checkedBaggageCount = _uiState.value.checkedBaggageCount,
                 specialEquipmentCount = _uiState.value.specialEquipmentCount
             )
