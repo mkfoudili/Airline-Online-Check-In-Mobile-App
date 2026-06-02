@@ -86,12 +86,21 @@ Le projet applique les principes de la **Clean Architecture** avec une séparati
 ## Fonctionnalités
 
 | # | Fonctionnalité | Description |
-|---|---------------|-------------|
+
 | 1 | **Inscription / Connexion** | Création de compte (email, téléphone, mot de passe) ou connexion via Google |
+<img width="1695" height="1128" alt="Auth screens" src="https://github.com/user-attachments/assets/80a79eb9-e527-46e1-9c40-9f20bf7d69cd" />
+
 | 2 | **Recherche de vol** | Récupération de la réservation par numéro de dossier et nom de famille |
-| 3 | **Enregistrement en ligne** | Disponible 24h avant le départ — scan de passeport (OCR), revue des informations, sélection du siège, déclaration de bagages et demandes spéciales |
-| 4 | **Carte d'embarquement** | Génération d'un QR Code unique, téléchargement en PDF, accès hors ligne |
-| 5 | **Mode hors ligne** | Données mises en cache localement (Room) avec synchronisation automatique au retour de la connexion |
+
+<img width="613" height="1128" alt="Recherche vol" src="https://github.com/user-attachments/assets/b97eaf99-f8ba-415f-abca-b0053bda934c" />
+
+| 3 | **Enregistrement en ligne et génération de carte d'embarquement** | Disponible 24h avant le départ — scan de passeport (OCR), revue des informations, sélection du siège, déclaration de bagages et demandes spéciales |
+
+<img width="5596" height="2174" alt="Checking process" src="https://github.com/user-attachments/assets/8a857fcf-bd6a-4436-afb9-aef43c49f26a" />
+
+| 4 | **Mode hors ligne, notifications et profile** | Données mises en cache localement (Room) avec synchronisation automatique au retour de la connexion |
+
+<img width="2152" height="1191" alt="Offline and norifications and profile edit" src="https://github.com/user-attachments/assets/8ddf0708-b5ea-49c0-8fec-cffab24ee8c3" />
 
 ---
 
