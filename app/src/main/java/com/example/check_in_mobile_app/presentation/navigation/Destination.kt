@@ -22,10 +22,10 @@ sealed class Destination(val route: String) {
     object preference : Destination("preference/{passengerId}") {
         fun routeWithArg(passengerId: String) = "preference/$passengerId"
     }
-    object Confirmation : Destination("confirmation/{passengerId}") {
-        fun routeWithArg(passengerId: String) = "confirmation/$passengerId"
+    object Confirmation : Destination("confirmation/{passengerId}/{checkedBaggage}/{specialEquipment}") {
+        fun routeWithArg(passengerId: String, checkedBaggage: Int, specialEquipment: Int) =
+            "confirmation/$passengerId/$checkedBaggage/$specialEquipment"
     }
-
     object Boarding : Destination("boarding/{passengerId}") {
         fun createRoute(passengerId: String) = "boarding/$passengerId"
     }

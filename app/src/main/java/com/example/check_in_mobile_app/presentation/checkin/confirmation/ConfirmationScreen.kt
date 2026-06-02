@@ -36,6 +36,8 @@ import com.example.domain.model.*
 @Composable
 fun ConfirmationScreen(
     passengerId: String,
+    checkedBaggageCount: Int = 0,
+    specialEquipmentCount: Int = 0,
     viewModel: ConfirmationViewModel = hiltViewModel(),
     onNavigateToHomeScreen: () -> Unit = {}
 ) {
@@ -210,7 +212,7 @@ fun ConfirmationScreen(
                                 .background(MaterialTheme.colorScheme.surface)
                                 .height(91.dp),
                             title     = stringResource(R.string.confirmation_baggage_label),
-                            value     = "01",
+                            value     = "%02d".format(checkedBaggageCount + specialEquipmentCount),
                             iconResId = com.example.data.R.drawable.briefcase
                         )
                     }

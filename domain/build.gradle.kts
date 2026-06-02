@@ -28,7 +28,7 @@ android {
         buildConfigField(
             "String",
             "URL",
-            localProps["URL"].toString().quoted()
+            localProps["BASE_URL"].toString().quoted()
         )
     }
 

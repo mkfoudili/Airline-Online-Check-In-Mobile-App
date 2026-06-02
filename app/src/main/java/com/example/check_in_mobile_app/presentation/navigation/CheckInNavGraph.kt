@@ -13,7 +13,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.domain.model.Passenger
 import com.example.check_in_mobile_app.presentation.checkin.CheckInSessionViewModel
 import com.example.check_in_mobile_app.presentation.checkin.CheckInViewModel
 import com.example.check_in_mobile_app.presentation.checkin.SeatSelection
@@ -38,6 +37,10 @@ fun CheckInNavGraph(
     val sessionViewModel: CheckInSessionViewModel = hiltViewModel()
     val sessionState by sessionViewModel.state.collectAsStateWithLifecycle()
     val booking by viewModel.booking.collectAsState()
+
+    // Baggage counts stored here so they survive the Preference step
+    var savedCheckedBaggage   by remember { mutableStateOf(0) }
+    var savedSpecialEquipment by remember { mutableStateOf(0) }
 
     LaunchedEffect(bookingRef) {
         viewModel.loadBooking(bookingRef)
@@ -78,14 +81,14 @@ fun CheckInNavGraph(
         ) {
             val verifiedPassenger = sessionState.verifiedPassenger
             if (verifiedPassenger != null) {
-                val viewModel: CheckingDetailsReviewViewModel = hiltViewModel()
+                val reviewViewModel: CheckingDetailsReviewViewModel = hiltViewModel()
                 LaunchedEffect(verifiedPassenger) {
-                    viewModel.setPassenger(verifiedPassenger)
+                    reviewViewModel.setPassenger(verifiedPassenger)
                 }
                 CheckingDetailsReviewScreen(
                     onBack     = { navController.popBackStack() },
                     onContinue = { navController.navigate(Destination.Selection.route) },
-                    viewModel  = viewModel
+                    viewModel  = reviewViewModel
                 )
             }
         }
@@ -95,48 +98,85 @@ fun CheckInNavGraph(
             val currentPid = sessionState.verifiedPassenger?.passengerId
                 ?: booking?.passengers?.firstOrNull()?.passengerId
                 ?: ""
-            
+
             SeatSelection(
-                flightId = flightId,
-                passengerId = currentPid,
+                flightId       = flightId,
+                passengerId    = currentPid,
                 onNavigateBack = { navController.popBackStack() },
-                onContinue = { navController.navigate(Destination.Baggage.routeWithArg(currentPid)) }
+                // Guard: only navigate if passengerId is valid,
+                // otherwise checkNotNull in BaggageViewModel will crash
+                onContinue     = {
+                    if (currentPid.isNotBlank()) {
+                        navController.navigate(Destination.Baggage.routeWithArg(currentPid))
+                    }
+                }
             )
         }
+
         composable(
-            route = Destination.Baggage.route,
+            route     = Destination.Baggage.route,
             arguments = listOf(navArgument("passengerId") { type = NavType.StringType })
         ) { backStackEntry ->
-            val pid = backStackEntry.arguments?.getString("passengerId") ?: (sessionState.verifiedPassenger?.passengerId ?: passengerId)
+            val pid = backStackEntry.arguments?.getString("passengerId")
+                ?.takeIf { it.isNotBlank() }
+                ?: sessionState.verifiedPassenger?.passengerId
+                ?: passengerId
+
+            val baggageViewModel = hiltViewModel<BaggageViewModel>()
+            val baggageUiState by baggageViewModel.uiState.collectAsStateWithLifecycle()
+
             BaggageScreen(
-                viewModel       = hiltViewModel<BaggageViewModel>(),
-                onBackClick     = { navController.popBackStack() },
+                viewModel       = baggageViewModel,
+                // onBackClick is handled here only — BaggageScreen no longer calls
+                // viewModel.onBackClick() itself to avoid the double-call bug
+                onBackClick     = {
+                    baggageViewModel.onBackClick()
+                    navController.popBackStack()
+                },
                 onContinueClick = {
+                    // Capture counts before the ViewModel is destroyed
+                    savedCheckedBaggage   = baggageUiState.checkedBaggageCount
+                    savedSpecialEquipment = baggageUiState.specialEquipmentCount
                     navController.navigate(Destination.preference.routeWithArg(pid))
                 }
             )
         }
+
         composable(
-            route = Destination.preference.route,
+            route     = Destination.preference.route,
             arguments = listOf(navArgument("passengerId") { type = NavType.StringType })
         ) { backStackEntry ->
-            val pid = backStackEntry.arguments?.getString("passengerId") ?: (sessionState.verifiedPassenger?.passengerId ?: "")
+            val pid = backStackEntry.arguments?.getString("passengerId")
+                ?: sessionState.verifiedPassenger?.passengerId
+                ?: ""
+
             specialRequest(
-                passengerId = pid,
-                onNavigateBack = { navController.popBackStack() },
+                passengerId     = pid,
+                onNavigateBack  = { navController.popBackStack() },
                 onFinishCheckIn = {
-                    navController.navigate(Destination.Confirmation.routeWithArg(pid))
+                    navController.navigate(
+                        Destination.Confirmation.routeWithArg(pid, savedCheckedBaggage, savedSpecialEquipment)
+                    )
                 }
             )
         }
 
         composable(
             route     = Destination.Confirmation.route,
-            arguments = listOf(navArgument("passengerId") { type = NavType.StringType })
+            arguments = listOf(
+                navArgument("passengerId")      { type = NavType.StringType },
+                navArgument("checkedBaggage")   { type = NavType.IntType; defaultValue = 0 },
+                navArgument("specialEquipment") { type = NavType.IntType; defaultValue = 0 }
+            )
         ) { backStackEntry ->
-            val pid = backStackEntry.arguments?.getString("passengerId") ?: passengerId
+            val pid              = backStackEntry.arguments?.getString("passengerId") ?: passengerId
+            val checkedBaggage   = backStackEntry.arguments?.getInt("checkedBaggage") ?: 0
+            val specialEquipment = backStackEntry.arguments?.getInt("specialEquipment") ?: 0
+
             ConfirmationScreen(
-                passengerId            = pid,
+                passengerId           = pid,
+                checkedBaggageCount   = checkedBaggage,
+                specialEquipmentCount = specialEquipment,
                 onNavigateToHomeScreen = { onCheckInComplete() }
             )
         }

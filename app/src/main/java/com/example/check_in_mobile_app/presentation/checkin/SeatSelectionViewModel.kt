@@ -52,6 +52,10 @@ class SeatSelectionViewModel @Inject constructor(
         }
     }
 
+    fun resetSuccess() {
+        uiState = uiState.copy(isSuccess = false)
+    }
+
     fun selectSeat(passengerId: String, seatNumber: String) {
         viewModelScope.launch {
             uiState = uiState.copy(isLoading = true, errorMessage = null)
