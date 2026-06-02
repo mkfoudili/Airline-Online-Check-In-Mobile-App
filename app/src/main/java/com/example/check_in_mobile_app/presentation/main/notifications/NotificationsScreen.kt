@@ -4,8 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -150,24 +151,28 @@ fun NotificationsContent(
                 ) {
                     CircularProgressIndicator(color = LocalAppColors.current.textAccent)
                 }
-            } else if (uiState.errorMessage != null && !uiState.isOffline) {
-                Box(
-                    modifier = Modifier.fillMaxSize().padding(24.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = uiState.errorMessage,
-                        color = MaterialTheme.colorScheme.error,
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                }
             } else {
                 PullToRefreshBox(
                     isRefreshing = isRefreshing,
                     onRefresh = onRefresh,
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    if (uiState.isOffline) {
+                    if (uiState.errorMessage != null && !uiState.isOffline) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .verticalScroll(rememberScrollState())
+                                .padding(24.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = uiState.errorMessage,
+                                color = MaterialTheme.colorScheme.error,
+                                style = MaterialTheme.typography.bodyLarge,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    } else if (uiState.isOffline) {
                         NotificationsOfflineContent()
                     } else {
                         LazyColumn(
@@ -266,6 +271,7 @@ private fun NotificationsOfflineContent() {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
             .padding(horizontal = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
