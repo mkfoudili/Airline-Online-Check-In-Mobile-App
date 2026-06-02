@@ -228,7 +228,7 @@ fun OnlineHomeScreen(
             Spacer(modifier = Modifier.height(20.dp))
             SearchResultPreview(
                 booking = booking,
-                onViewDetails = { onNavigateToFlightDetails(booking.bookingRef) }
+                onViewDetails = { onNavigateToFlightDetails(booking.flight.flightId) }
             )
         }
     }
